@@ -221,13 +221,28 @@ confirmed market-reports pages, matching the design system established by
   otherwise.
 
 **Still placeholder, by design — not a launch blocker for the template
-itself:** the live-data snapshot (3 stat tiles) and the 6 report/video
-cards are illustrative, clearly labeled as such on the page. Real data
-needs the RentCast pipeline wired up (see "Market report data points"
-further down); real cards need the blog migration done first. **The other
-8 pages still need to be built** — same template, each with its own
+itself:** the live-data snapshot (3 stat tiles) and the report/video cards
+are illustrative, clearly labeled as such on the page. Real data needs the
+RentCast pipeline wired up (see "Market report data points" further down);
+real cards need the blog migration done first.
+
+✅ **Second page built (Sep 17): `fishers-market-reports.html`.** Same
+template, genuinely different intro copy — pulled from real researched
+Fishers facts in `claude/red-door-city-facts-research.md` (grew from
+~38,000 in 2000 to ~105,000 today; didn't incorporate as a city until
+January 2015). Also links a real, already-live blog post ("Is Fishers,
+Indiana Still a Strong Rental Market for Investors?") as a featured link
+under the headline, rather than blending it into the placeholder card grid
+where it would sit indistinguishably next to five fake ones — the one real
+link and the six illustrative cards are kept visually and structurally
+separate so neither misrepresents the other.
+
+**7 pages still need to be built** — Indianapolis, Noblesville, Westfield,
+Greenwood, Anderson, Lebanon, Greenfield. Same template, each with its own
 genuinely-written intro copy per the no-thin-content rule, not a find-and-
-replace of this one.
+replace. Noblesville and Westfield also already have one real blog post
+each (visible in `index.html`'s Landlord Library section) that should get
+the same featured-link treatment when built.
 
 - ✅ **URL/content scoping: one page per cluster, not per city.** The
   recurring report content (e.g. "Westside Market Report") is written at
