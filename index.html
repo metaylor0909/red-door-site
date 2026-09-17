@@ -1616,91 +1616,198 @@
       border-radius: 50%;
     }
 
-    .area-grid {
+    .areas-visual,
+    .areas-copy {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .areas-copy > .section-kicker {
+      justify-self: center;
+      margin-bottom: 10px;
+    }
+
+    .areas-copy > h2 {
+      max-width: 1080px;
+      margin: 0 auto 12px;
+      text-align: center;
+    }
+
+    .areas-copy > h2 span {
+      display: block;
+    }
+
+    .areas-copy > .lead {
+      max-width: 1080px;
+      margin: 0 auto 24px;
+      text-align: center;
+    }
+
+    .county-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .county-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+      align-content: start;
+      min-height: 0;
+      padding: 20px 22px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(250, 251, 252, .98)),
+        var(--white);
+      border: 1px solid #e7e9ee;
+      border-radius: 8px;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, .92) inset,
+        0 18px 38px rgba(23, 23, 23, .075),
+        0 4px 12px rgba(23, 23, 23, .045);
+    }
+
+    .county-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      box-shadow: inset 0 -18px 28px rgba(23, 23, 23, .025);
+    }
+
+    .county-card > div {
+      grid-column: 1 / -1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .county-card > .city-list {
+      grid-column: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .county-card h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(1.1rem, 2vw, 1.32rem);
+      line-height: 1.1;
+    }
+
+    .county-card p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: .86rem;
+      font-weight: 750;
+      line-height: 1.35;
+    }
+
+    .county-card.is-wide {
+      grid-column: 1 / -1;
+    }
+
+    .county-card.is-wide .city-list {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px 24px;
+    }
+
+    .city-list {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
     }
 
     .area-link {
-      min-height: 76px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items: center;
-      padding: 14px 16px;
-      color: var(--charcoal);
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      font-weight: 900;
-      transition: border-color .18s ease, color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease;
+      display: inline;
+      color: var(--red);
+      font-size: .9rem;
+      font-weight: 700;
+      line-height: 1.35;
+      text-decoration: none;
+      transition: color .18s ease, text-decoration-color .18s ease;
     }
 
     .area-link:hover,
-    .area-link:focus-visible,
-    .area-link.is-active {
-      color: var(--red);
-      background: #fff7f7;
-      border-color: rgba(140, 12, 3, .28);
-      box-shadow: 0 12px 26px rgba(23, 23, 23, .08);
-      transform: translateY(-2px);
+    .area-link:focus-visible {
+      color: var(--red-dark);
+      text-decoration: underline;
+      text-decoration-color: currentColor;
+      text-underline-offset: 4px;
     }
 
-    .area-link span {
-      display: block;
-    }
-
-    .area-link small {
-      display: block;
-      margin-top: 5px;
-      color: #747981;
-      font-size: .72rem;
-      font-weight: 800;
-      line-height: 1.25;
-    }
-
-    .area-link em {
-      color: var(--red);
-      font-size: .72rem;
-      font-style: normal;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .area-link::after {
-      content: none;
-    }
-
-    .townships .area-link {
-      min-height: 54px;
-      display: flex;
-      justify-content: space-between;
-      padding: 12px 14px;
-    }
-
-    .townships .area-link::after {
-      content: "View";
-      color: var(--red);
-      font-size: .72rem;
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
+    .city-list .area-text {
+      display: inline;
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 700;
+      line-height: 1.35;
     }
 
     .townships {
-      margin-top: 16px;
+      overflow: hidden;
+      margin-top: 18px;
       padding: 20px;
       background: #fbfbfc;
       border: 1px solid var(--line);
-      border-radius: var(--radius);
+      border-radius: 8px;
     }
 
-    .townships h3 {
-      margin: 0 0 12px;
-      font-size: 1rem;
+    .townships summary {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
+      color: var(--charcoal);
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .townships summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .townships summary strong,
+    .townships summary small {
+      display: block;
+    }
+
+    .townships summary strong {
+      color: var(--ink);
+      font-size: 1.04rem;
+      font-weight: 900;
+    }
+
+    .townships summary small {
+      margin-top: 4px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .townships summary::after {
+      content: "+";
+      flex: 0 0 auto;
+      color: var(--red);
+      font-size: 1.6rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .townships[open] summary::after {
+      content: "-";
+    }
+
+    .township-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px 18px;
+      margin-top: 18px;
     }
 
     .library-grid,
@@ -2077,6 +2184,14 @@
         grid-template-columns: 1fr;
       }
 
+      .county-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .county-card.is-wide .city-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .reviews-grid {
         grid-auto-columns: minmax(238px, 286px);
       }
@@ -2085,6 +2200,12 @@
     @media (max-width: 720px) {
       body {
         padding-bottom: 72px;
+      }
+
+      .county-grid,
+      .township-grid,
+      .county-card.is-wide .city-list {
+        grid-template-columns: 1fr;
       }
 
       .container,
@@ -2271,10 +2392,6 @@
     .section-dark .eyebrow { color: var(--brand-light); }
     .section-dark a:not([class*="btn"]) { color: var(--brand-light); }
     .site-footer a:hover { color: var(--brand-light); }
-
-    /* ---------- Areas served, simplified for this revision ---------- */
-    #areas-served .townships { margin-top: 22px; }
-    #areas-served .townships h3 { font-size: 1.05rem; }
 
     @media (max-width: 900px) {
       .brand-logo { height: 44px; }
@@ -2679,44 +2796,145 @@
     </section>
 
     <section id="areas-served">
-      <div class="container">
-        <div class="section-head center reveal">
+      <div class="container areas-visual">
+        <div class="areas-copy reveal">
           <div class="section-kicker">Local Expertise Across Central Indiana</div>
-          <h2>Indianapolis Property Management Where You Need It</h2>
-          <p>Red Door manages rental homes in Indianapolis and surrounding Central Indiana communities.</p>
-        </div>
-
-        <!-- ===== CITY MARKET PANEL SLOT =====================================
-             The interactive market-coverage card and the per-city cards that
-             fed it were removed for this revision. The JavaScript that drives
-             the panel is still present further down and is guarded by
-             `if (marketLinks.length)`, so it no-ops with nothing to bind to.
-             To restore: put the .market-coverage-card and the .area-grid of
-             .area-link elements carrying data-market-* attributes back here,
-             inside a wrapper with class "container areas-visual".
-             Before restoring, resolve the Fair Housing copy noted in the
-             project to-do list.
-             ===== END CITY MARKET PANEL SLOT ============================== -->
-
-        <div class="townships reveal">
-          <h3>Cities We Serve</h3>
-          <div class="area-grid">
-              <a class="area-link" href="/indianapolis-property-management">Indianapolis</a>
-              <a class="area-link" href="/carmel-property-management">Carmel</a>
-              <a class="area-link" href="/fishers-property-management">Fishers</a>
-              <a class="area-link" href="/noblesville-property-management">Noblesville</a>
-              <a class="area-link" href="/westfield-property-management">Westfield</a>
-              <a class="area-link" href="/zionsville-property-management">Zionsville</a>
-              <a class="area-link" href="/greenwood-property-management">Greenwood</a>
-              <a class="area-link" href="/avon-property-management">Avon</a>
-              <a class="area-link" href="/brownsburg-property-management">Brownsburg</a>
-              <a class="area-link" href="/broad-ripple-property-management">Broad Ripple</a>
+          <h2><span>Indianapolis Property Management</span><span>Where You Need It</span></h2>
+          <p class="lead">Red Door manages rental homes across Indianapolis and the surrounding Central Indiana communities where owners need steady leasing, responsive maintenance, and clear local guidance.</p>
+          <div class="county-grid" aria-label="Cities served by county">
+            <article class="county-card">
+              <div>
+                <h3>Marion County</h3>
+                <p>Indianapolis core, southside neighborhoods, and close-in rental markets.</p>
+              </div>
+              <ul class="city-list">
+                <li><a class="area-link" href="/indianapolis-property-management">Indianapolis</a></li>
+                <li><span class="area-text">Southport</span></li>
+                <li><span class="area-text">Beech Grove</span></li>
+                <li><span class="area-text">Lawrence</span></li>
+                <li><span class="area-text">Speedway</span></li>
+              </ul>
+            </article>
+            <article class="county-card">
+              <div>
+                <h3>Hamilton County</h3>
+                <p>Northside suburbs with strong single-family and executive rental demand.</p>
+              </div>
+              <ul class="city-list">
+                <li><a class="area-link" href="/carmel-property-management">Carmel</a></li>
+                <li><a class="area-link" href="/fishers-property-management">Fishers</a></li>
+                <li><a class="area-link" href="/noblesville-property-management">Noblesville</a></li>
+                <li><a class="area-link" href="/westfield-property-management">Westfield</a></li>
+              </ul>
+            </article>
+            <article class="county-card">
+              <div>
+                <h3>Madison County</h3>
+                <p>Northeast communities with commuter access and affordable rental options.</p>
+              </div>
+              <ul class="city-list">
+                <li><span class="area-text">Anderson</span></li>
+                <li><span class="area-text">Pendleton</span></li>
+                <li><span class="area-text">Lapel</span></li>
+                <li><span class="area-text">Ingalls</span></li>
+              </ul>
+            </article>
+            <article class="county-card">
+              <div>
+                <h3>Hendricks County</h3>
+                <p>Westside communities popular with commuters and long-term rental owners.</p>
+              </div>
+              <ul class="city-list">
+                <li><a class="area-link" href="/avon-property-management">Avon</a></li>
+                <li><a class="area-link" href="/brownsburg-property-management">Brownsburg</a></li>
+                <li><span class="area-text">Danville</span></li>
+                <li><span class="area-text">Plainfield</span></li>
+              </ul>
+            </article>
+            <article class="county-card">
+              <div>
+                <h3>Johnson County</h3>
+                <p>South metro rentals with steady demand from commuters and long-term renters.</p>
+              </div>
+              <ul class="city-list">
+                <li><a class="area-link" href="/greenwood-property-management">Greenwood</a></li>
+                <li><span class="area-text">Franklin</span></li>
+                <li><span class="area-text">Whiteland</span></li>
+                <li><span class="area-text">Bargersville</span></li>
+              </ul>
+            </article>
+            <article class="county-card">
+              <div>
+                <h3>Hancock County</h3>
+                <p>Eastside growth areas with newer-home inventory and suburban appeal.</p>
+              </div>
+              <ul class="city-list">
+                <li><span class="area-text">Greenfield</span></li>
+                <li><span class="area-text">McCordsville</span></li>
+                <li><span class="area-text">New Palestine</span></li>
+                <li><span class="area-text">Fortville</span></li>
+                <li><span class="area-text">Cumberland</span></li>
+              </ul>
+            </article>
+            <article class="county-card">
+              <div>
+                <h3>Shelby County</h3>
+                <p>Southeast rental markets serving owners near the Indianapolis outer ring.</p>
+              </div>
+              <ul class="city-list">
+                <li><span class="area-text">Shelbyville</span></li>
+                <li><span class="area-text">Fairland</span></li>
+                <li><span class="area-text">Morristown</span></li>
+                <li><span class="area-text">Boggstown</span></li>
+              </ul>
+            </article>
+            <article class="county-card">
+              <div>
+                <h3>Boone &amp; Morgan Counties</h3>
+                <p>Northwest and southwest communities around the Indianapolis rental ring.</p>
+              </div>
+              <ul class="city-list">
+                <li><a class="area-link" href="/zionsville-property-management">Zionsville</a></li>
+                <li><span class="area-text">Whitestown</span></li>
+                <li><span class="area-text">Lebanon</span></li>
+                <li><span class="area-text">Mooresville</span></li>
+                <li><span class="area-text">Martinsville</span></li>
+              </ul>
+            </article>
+            <article class="county-card is-wide">
+              <div>
+                <h3>Indianapolis Neighborhoods</h3>
+                <p>Close-in neighborhoods where property condition, tenant fit, and responsiveness matter.</p>
+              </div>
+              <ul class="city-list">
+                <li><a class="area-link" href="/broad-ripple-property-management">Broad Ripple</a></li>
+                <li><span class="area-text">Fountain Square</span></li>
+                <li><span class="area-text">Fletcher Place</span></li>
+                <li><span class="area-text">Irvington</span></li>
+                <li><span class="area-text">Downtown Indianapolis</span></li>
+                <li><span class="area-text">Mass Ave</span></li>
+                <li><span class="area-text">Wholesale District</span></li>
+                <li><span class="area-text">Indiana Avenue</span></li>
+                <li><span class="area-text">SoBro</span></li>
+                <li><span class="area-text">Meridian-Kessler</span></li>
+                <li><span class="area-text">Butler-Tarkington</span></li>
+                <li><span class="area-text">Herron-Morton</span></li>
+                <li><span class="area-text">Old Northside</span></li>
+                <li><span class="area-text">Lockerbie Square</span></li>
+                <li><span class="area-text">Chatham Arch</span></li>
+                <li><span class="area-text">Holy Cross</span></li>
+                <li><span class="area-text">Cottage Home</span></li>
+                <li><span class="area-text">Fall Creek Place</span></li>
+                <li><span class="area-text">Garfield Park</span></li>
+                <li><span class="area-text">Bates-Hendricks</span></li>
+                <li><span class="area-text">Woodruff Place</span></li>
+                <li><span class="area-text">Riverside</span></li>
+              </ul>
+            </article>
           </div>
-        </div>
-
-        <div class="townships reveal">
-          <h3>Indianapolis Townships</h3>
-          <div class="area-grid">
+          <details class="townships">
+            <summary><span><strong>Indianapolis Townships</strong><small>Click to view the township service areas Red Door manages.</small></span></summary>
+            <div class="township-grid">
               <a class="area-link" href="/lawrence-township-property-management">Lawrence Township</a>
               <a class="area-link" href="/warren-township-property-management">Warren Township</a>
               <a class="area-link" href="/wayne-township-property-management">Wayne Township</a>
@@ -2726,7 +2944,8 @@
               <a class="area-link" href="/washington-township-property-management">Washington Township</a>
               <a class="area-link" href="/decatur-township-property-management">Decatur Township</a>
               <a class="area-link" href="/center-township-property-management">Center Township</a>
-          </div>
+            </div>
+          </details>
         </div>
       </div>
     </section>
