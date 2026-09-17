@@ -14,6 +14,17 @@ behavior, button color, reviews auto-scroll, and the full Areas Served
 rebuild. Two bugs were also found and fixed along the way (not previously
 tracked as open items): see "Resolved this pass" for detail.
 
+**Same-day update (Sep 17, later still):** the header nav now matches the
+locked Sep 17 structure (Owner Portal added, utility-bar logins removed,
+"Application" dropped from Tenants per Michael's decision — see "Header
+navigation" below). Two brand-new standalone pages were also built:
+`application-criteria.html` (fair-housing-researched; see that section
+below) and all 9 confirmed `-market-reports` pages (see "Market-reports
+page design" below) — `indianapolis-`, `fishers-`, `noblesville-`,
+`westfield-`, `greenwood-`, `westside-`, `anderson-`, `lebanon-`, and
+`greenfield-market-reports.html`. All of this is committed and pushed to
+`main`.
+
 **Three standing documents govern this project:**
 
 - **This file** — status and open items.
@@ -35,11 +46,21 @@ tracked as open items): see "Resolved this pass" for detail.
 archived locally and backed up to Google Drive. Content audit complete —
 `content-fixes.csv` (173 fixes) and `pillar-page-seo-fixes.csv` (7 fixes,
 reviewed and approved) hold every verified title/meta replacement. Homepage
-base is built. Logo is the real vector, brand colors finalized. Hosting
-(Cloudflare Workers Paid), CMS, the city three-page content model, the
-listings API architecture, and the CMA tool are all decided. What's left is
-a handful of small open sub-decisions (mostly listings-specific) plus the
-actual build phases.
+base is built, including the Sep 17 header/nav/Areas Served rebuild. Logo
+is the real vector, brand colors finalized. Hosting (Cloudflare Workers
+Paid), CMS, the city three-page content model, the listings API
+architecture, and the CMA tool are all decided. What's left is a handful
+of small open sub-decisions (mostly listings-specific) plus the actual
+build phases.
+
+**Real pages built so far (all standalone static HTML, matching one shared
+design system, ready to drop into Astro templates later):** `index.html`
+(homepage), `application-criteria.html`, and all 9 confirmed
+`-market-reports` pages (Indianapolis, Fishers, Noblesville, Westfield,
+Greenwood, Westside, Anderson, Lebanon, Greenfield). None of the
+`-homes-for-rent` or `-property-management` pages exist as files in this
+repo yet (the Avon pilot lives in a separate artifact, not this repo) —
+that's still the actual build phase work.
 
 ---
 
@@ -552,7 +573,8 @@ per-city pages with a "homes nearby" fallback), `/[city]-property-management`
 (owner-transactional, now the highest-priority page type, needs real
 strengthening not just a template port — Avon pilot built), and
 `/[city]-market-reports` (informational, only for cities with active report
-coverage — city list still needed). Full detail, RentCast pipeline
+coverage — 9-city list confirmed Sep 17, all 9 built as templates, see
+"Market-reports page design" above). Full detail, RentCast pipeline
 ($74/month Foundation plan), and ZIP mapping in `claude/listings-build-notes.md`.
 
 **Listings SEO/URL architecture (LOCKED Sep 9):** 20 real per-city pages, no
@@ -745,7 +767,10 @@ one.
 ### Templates and migration
 - [ ] Pillar page template, port the 8 existing pillar pages
 - [ ] City pages: three-page model per `CLAUDE.md`/listings notes — not a
-      name-swap template
+      name-swap template. **Partially done:** all 9 `-market-reports` pages
+      are built (Sep 17, see above). `-homes-for-rent` (20 pages) and
+      `-property-management` (20 pages) are not started in this repo — the
+      Avon pilot exists only as a separate artifact, not a file here.
 - [ ] One-off pages: About, Contact, Testimonials, Tenants, verification
       pages, Eviction Protection, Guaranteed Lease, Airbnb
 - [ ] Blog index, post template, categories, migrate all posts (join
