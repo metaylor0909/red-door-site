@@ -51,10 +51,14 @@ actual build phases.
       in the For Tenants menu points to
       `reddoorrents.com/https://app.findigs.com/...` — the site URL is
       prepended to the Findigs URL. 404 on the highest-intent tenant action.
-      Fix on the live site now, don't wait for the rebuild. (Related but
-      separate: confirm with Michael whether the new site's "Apply now"
-      should point at `custom_application_url` — AppFolio, confirmed real —
-      instead of Findigs at all; see listings notes.)
+      Fix on the live site now, don't wait for the rebuild. **Note (Sep 17):**
+      on the new site, the "Application" nav item has been removed entirely
+      (Michael's decision) rather than pointed at a fixed URL — applicants
+      apply per-listing via each listing's own Apply button
+      (`custom_application_url`, AppFolio, confirmed real) once the listings
+      build exists. That resolves the "what should the nav link point to"
+      question by removing the question, but doesn't touch the live PMW
+      site, which still 404s today and still needs its own fix now.
 - [ ] **Decide what happens to blog posts published during migration.** At
       12–13/month, a six-week migration window means ~20 posts land mid-move.
       Not blocking the build — revisit closer to actual cutover.
@@ -117,12 +121,11 @@ Full structure as dictated:
   8. Eviction Protection Program
   9. Owner Portal
 - **Pricing**
-- **Tenants** (dropdown, 5 items):
+- **Tenants** (dropdown, 4 items — see removal note below):
   1. Tenant Resources
   2. Maintenance Request
-  3. Application
-  4. Tenant Qualification Criteria
-  5. Tenant Portal
+  3. Tenant Qualification Criteria
+  4. Tenant Portal
 - **About Us**
 - **Watch & Learn**
 - **Free Rental Analysis** (CTA button, not a dropdown)
@@ -138,6 +141,14 @@ Matches the locked step order (Maintenance=5, Communication=6).
   dropdowns) replace the top utility bar's "Owner Login | Tenant Login."**
   Drop the utility-bar login links entirely — the dropdown entries are the
   only portal links going forward.
+- ✅ **"Application" removed from the Tenants dropdown entirely (Sep 17,
+  later same-day decision).** Originally dictated as a 5th item — a plain
+  link to the live application (RentEngine → AppFolio). Michael later
+  decided to drop it rather than pick an interim target while the real
+  apply URL is unconfirmed; applicants will apply per-listing via each
+  listing's own Apply button once the listings build exists. See
+  "Genuinely open" above for the still-open live-site Findigs link this
+  doesn't touch.
 
 Nothing left open on nav structure — ready for the header/footer build.
 
@@ -280,9 +291,49 @@ review): https://claude.ai/artifact/UrouCisinFyHKg8MSJiJkm
 
 ## Decided, not yet executed
 
-- [ ] **Write `/application-criteria` from scratch.** Doesn't exist anywhere
-      yet, live or in the mock, but the new nav links to it. Also fixes the
-      broken Findigs link above.
+- ✅ **`/application-criteria` written and built (Sep 17).** Standalone
+  static page (`application-criteria.html`), matching `index.html`'s design
+  system, ready to drop into Astro templates later. Michael provided the
+  live application's pre-submission disclosure text, the internal
+  Application Score Sheet (Google Sheet), and the pet/screening policy
+  language; built from all three plus fair-housing research:
+  - **Curated, not the full score sheet.** Two categories were cut
+    entirely — "Time on Market" and "Number of Applications Received" —
+    since they score the *listing's* market conditions, not the applicant,
+    and publishing "your approval depends on who else applied" would
+    undercut the page's own fairness argument. Everything else applicant-
+    controllable (income, DTI, credit, payment/NSF history, bankruptcy,
+    auto credit history) is presented as pass/fail standards, not the
+    underlying point values or the 90/75/74 score bands — those stay
+    internal.
+  - **580 credit score boundary fixed.** The source sheet had a genuine
+    off-by-one bug (580–620 band gave points, but "580 and below" was also
+    listed as an automatic denial, both including 580). Confirmed with
+    Michael: 580 passes, 579 does not.
+  - **Criminal history language researched and confirmed compliant, with
+    two fixes.** Michael's phrasing ("recent misdemeanors or felonies that
+    demonstrate a risk to resident safety/property") traces almost
+    verbatim to HUD's June 2022 OGC implementation memo. That memo (and
+    the 2016 guidance under it) was rescinded by HUD Dec 9, 2025, but the
+    Fair Housing Center of Central Indiana's own fact sheets (dated 2025,
+    i.e. current, post-rescission) state the identical standard as a
+    matter of Indiana law, so the underlying standard still holds. Fixed
+    to specify **convictions only** (not "records" broadly — excludes
+    arrests, sealed records, expunged records) and added a stated
+    opportunity for the applicant to explain circumstances before a final
+    decision. **This clause still needs actual attorney sign-off before
+    launch** — flagged to Michael, not yet obtained.
+  - **Eviction criterion narrowed.** "No evictions on rental history" →
+    "no eviction judgments" — FHCCI guidance is explicit that an eviction
+    *filing* that didn't result in a judgment, or a sealed record,
+    shouldn't count against an applicant.
+  - **Pet policy gained a service/assistance-animal carve-out that didn't
+    exist in Michael's draft at all.** Breed restrictions, pet fees, and
+    pet deposits legally cannot apply to a documented service or
+    assistance animal; the page now states this explicitly.
+  - Full research trail (exact HUD/FHCCI quotes, source PDFs) is in this
+    conversation, not yet copied into a standing repo file — worth doing
+    if this page needs revisiting later.
 - [ ] **Tune header/footer logo sizes.** 52px header, 60px footer are
       unmeasured guesses in the homepage CSS. Visual polish only, not urgent.
 - [ ] **Fix the `og:image` tag** — currently a relative path, so social
