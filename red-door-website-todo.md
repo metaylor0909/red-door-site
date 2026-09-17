@@ -257,9 +257,17 @@ defaulting to positive trends on every page. Real live blog post ("Is
 Westfield, Indiana Still Worth Investing In With 127 Rental Days on
 Market?") linked the same way as the other pages.
 
-**5 pages still need to be built** — Indianapolis, Greenwood, Anderson,
-Lebanon, Greenfield. Same template, each with its own genuinely-written
-intro copy per the no-thin-content rule, not a find-and-replace.
+✅ **Fifth page built (Sep 17): `greenwood-market-reports.html`.** Real
+Greenwood facts — steady southside growth (36,000 → 69,000 since 2000,
+Greenwood Park Mall, an Amazon fulfillment center) framed deliberately as
+"steadier... rather than a dramatic growth story," in contrast to
+Fishers/Westfield's explosive-growth framing. No real Greenwood blog post
+exists yet (unlike Fishers/Noblesville/Westfield), so this page has no
+featured-link line — omitted rather than fabricated.
+
+**4 pages still need to be built** — Indianapolis, Anderson, Lebanon,
+Greenfield. Same template, each with its own genuinely-written intro copy
+per the no-thin-content rule, not a find-and-replace.
 
 - ✅ **URL/content scoping: one page per cluster, not per city.** The
   recurring report content (e.g. "Westside Market Report") is written at
