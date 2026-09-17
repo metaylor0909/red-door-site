@@ -265,9 +265,35 @@ Fishers/Westfield's explosive-growth framing. No real Greenwood blog post
 exists yet (unlike Fishers/Noblesville/Westfield), so this page has no
 featured-link line — omitted rather than fabricated.
 
-**4 pages still need to be built** — Indianapolis, Anderson, Lebanon,
-Greenfield. Same template, each with its own genuinely-written intro copy
-per the no-thin-content rule, not a find-and-replace.
+✅ **Sixth page built (Sep 17): `anderson-market-reports.html`.** Anderson
+isn't in `claude/red-door-city-facts-research.md` (that file only covers
+the Hamilton/Boone/Johnson suburbs), so facts were verified fresh via web
+search rather than assumed: Madison County seat, ~35 mi NE of Indianapolis,
+1880s natural gas boom, decades as a major GM manufacturing center,
+Anderson University and two hospital systems as current anchor employers.
+
+**Fair Housing note — deliberately left out:** Anderson's Wikipedia
+history includes median household income, poverty rate, and population
+decline since a 1970 peak — all *demographic/resident* facts, not
+property-market facts. None of that made it into the page. What's on the
+page instead is framed entirely as a market/property characteristic
+("housing stock tends to be older and rents run below the Hamilton County
+suburbs") — the safe way to say the same underlying thing without
+describing the area by who lives there, per the Fair Housing section of
+`CLAUDE.md`.
+
+**No property-management page to link to.** Anderson only has
+market-reports coverage (confirmed in the 9-city list), not one of the 20
+`-property-management` pages. The CTA band's "See How We Manage" button
+points to `/indianapolis-property-management` instead of a nonexistent
+`/anderson-property-management` — flag this if Red Door wants a dedicated
+Anderson owner page built later.
+
+**3 pages still need to be built** — Indianapolis, Lebanon, Greenfield.
+Same template, each with its own genuinely-written intro copy per the
+no-thin-content rule, not a find-and-replace. Lebanon and Greenfield will
+likely need the same fresh-research approach as Anderson (neither is in
+the city-facts file either).
 
 - ✅ **URL/content scoping: one page per cluster, not per city.** The
   recurring report content (e.g. "Westside Market Report") is written at
