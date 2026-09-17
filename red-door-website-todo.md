@@ -8,6 +8,12 @@ plus the city-pages chat's CLAUDE.md updates. Nothing was discarded;
 detailed listings research moved to its own file so this one stays
 scannable.
 
+**Same-day update (Sep 17, later pass):** four of the homepage mockup-review
+items below are now built and pushed to `index.html` — header/CTA sticky
+behavior, button color, reviews auto-scroll, and the full Areas Served
+rebuild. Two bugs were also found and fixed along the way (not previously
+tracked as open items): see "Resolved this pass" for detail.
+
 **Three standing documents govern this project:**
 
 - **This file** — status and open items.
@@ -135,45 +141,76 @@ Matches the locked step order (Maintenance=5, Communication=6).
 
 Nothing left open on nav structure — ready for the header/footer build.
 
-### Header/CTA — sticky on scroll + button color
+### Header/CTA — sticky on scroll + button color — ✅ DONE (Sep 17)
 
-- [ ] **Make the header, including the "Free Rental Analysis" button,
-      sticky/pinned on scroll** — stay visible all the way down the page,
-      not just at the top. Currently inconsistent: the Avon
-      `-property-management` pilot page's CTA button disappears on scroll;
-      same fix needed there once the homepage header behavior is decided.
-- [ ] **"Free Rental Analysis" button color.** Michael wants it changed to
-      match his mockup. Sampled directly from the screenshot he sent: the
-      button reads **#bc181a–#bd181a**, which is effectively identical to
-      the existing `--brand-mid` token (`#bc1719`) already defined in
-      `CLAUDE.md`. If the button is currently rendered in `--brand`
-      (`#8b0e04`, the darker maroon), this is a straight swap to
-      `--brand-mid` — no new color token needed. Confirm before
-      implementing in case a different shade was intended.
+- ✅ **Header/CTA sticky on scroll.** The homepage header was already
+      `position: fixed`, but the desktop nav had no "Free Rental Analysis"
+      button at all — only the mobile-sticky bar had one. Added it as the
+      last nav item; since it lives inside the fixed header it now stays
+      visible at any scroll position, verified at `scrollY: 2000`. The Avon
+      pilot page (a separate file, not in this repo) still needs the
+      equivalent fix applied to it separately.
+- ✅ **Button color.** `.btn-primary` swapped from `--brand` to
+      `--brand-mid` (`#bc1719`), matching the sampled mockup color, hover
+      now darkens to `--brand`. Affects the hero CTA, mobile-sticky bar,
+      and the new header CTA consistently.
 
-### Reviews
+### Reviews — ✅ DONE (Sep 17)
 
-- [ ] **Auto-scroll from first view.** The testimonial carousel currently
-      only auto-advances after a user manually advances it once. Should
-      auto-scroll immediately on load, without waiting for a first manual
-      interaction.
+- ✅ **Auto-scroll from first view.** Root cause: a single `setTimeout(fn,
+      0)` measured card width before the tripled card set had finished
+      laying out, so `reviewsCanScroll()` read false and autoplay never
+      started until a manual prev/next click or window resize retried it.
+      Replaced with retries at 0/250/800ms. Verified in-browser: scrollLeft
+      advances on its own with zero interaction.
 - (Google reviews source decision — see "Resolved this pass" above: static/
   curated, confirmed.)
 
-### Areas Served / cities-we-serve section
+### Areas Served / cities-we-serve section — ✅ DONE (Sep 17)
 
-- [ ] **Redesign to match the screenshot Michael attached** — a card grid
-      grouped by county (Marion, Hamilton, Madison, Hendricks, Johnson,
-      Hancock counties shown in the reference), one card per county with a
-      short description and a list of red-linked city names underneath.
-      **Flag:** the "Areas Served panel" section further down this doc says
-      this content was "removed from the homepage base entirely, deferred
-      to a later revision" as of the last update — worth confirming with
-      Michael whether that note is stale (some version of this section
-      already exists and just needs restyling to match the screenshot) or
-      whether this is reintroducing deferred content now. Either way, the
-      Fair Housing fixes already listed under that section apply to any
-      city blurbs used here.
+Rebuilt twice this pass. First pass matched only the 6 counties visible in
+Michael's cropped screenshot (7 cards including a Boone County add-on for
+Zionsville), no blurbs. Michael then supplied the full reference file
+(`red-door-homepage-mock-main`, a separate local mockup repo, not part of
+this repo) showing the complete, intended version, and asked for as close a
+match as possible — the final build replaces the first pass entirely:
+
+- ✅ **9 county cards** (Marion, Hamilton, Madison, Hendricks, Johnson,
+  Hancock, Shelby, Boone & Morgan) plus a wide "Indianapolis Neighborhoods"
+  card (21 neighborhoods), matching the reference file's visual design
+  (card shadows, grid, typography) closely.
+- ✅ **Blurbs restored**, matching the reference text, with one fix: the
+  Johnson County blurb carried the reference's exact Fair Housing
+  violation ("steady demand from families and commuters") — rewritten to
+  CLAUDE.md's prescribed phrasing ("steady demand from commuters and
+  long-term renters"). Worth a fresh look at the source mockup repo for
+  this same pattern elsewhere before assuming it's isolated there too.
+- ✅ **Only real pages are linked.** The reference file names ~65 places
+  total; only ~20 have an actual `-property-management` page in the
+  confirmed build scope (Indianapolis, Carmel, Fishers, Noblesville,
+  Westfield, Avon, Brownsburg, Greenwood, Zionsville, Broad Ripple, and the
+  9 townships). Everything else (Southport, Beech Grove, Speedway,
+  Pendleton, Lapel, Ingalls, Danville, Plainfield, Franklin (IN),
+  Whiteland, Bargersville, Greenfield, McCordsville, New Palestine,
+  Fortville, Cumberland, all of Shelby County, Whitestown, Lebanon,
+  Mooresville, Martinsville, and 20 of the 21 Indianapolis neighborhoods)
+  renders as plain gray text, not a link — confirmed decision, to avoid
+  both broken links and the doorway-page pattern CLAUDE.md already flags
+  as the site's biggest SEO liability. **If any of these are meant to get
+  real pages, that's new, unscoped work** — not something this pass
+  decided.
+- ✅ **9 real township pages** moved into a collapsible `<details>` "+/−"
+  panel below the grid, matching the reference file. Verified the toggle
+  works on desktop and mobile (tap target).
+- ✅ **Responsive verified** at desktop (3-col), tablet/768px (2-col), and
+  mobile/375px (1-col) — including the wide neighborhoods card (4→2→1 col)
+  and the township panel (3→3→1 col, matches the reference's own
+  breakpoints).
+- Two reference screenshots (`archive/images/header example.png`,
+  `archive/images/areas served example.png`) committed for the record.
+
+This supersedes the "Areas Served panel — deferred to a later revision"
+section further down — see the note added there.
 
 ### Market-reports page design (Sep 17) — decided, mockup built
 
@@ -269,8 +306,22 @@ review): https://claude.ai/artifact/UrouCisinFyHKg8MSJiJkm
 ## Resolved this pass (previously shown open in one branch or the other)
 
 - ✅ **Step order:** Maintenance = 5, Communication = 6. Matches live site.
+  **Correction (Sep 17):** the built homepage actually had this backwards —
+  both the Owner Services nav dropdown and the Owner Roadmap section
+  labeled Communication as step 5 and Maintenance as step 6, contradicting
+  this entry. Fixed in both places plus the roadmap's intro sentence.
 - ✅ **Airbnb URLs:** both retired, 301 to `/`. Confirmed no distinct
   Airbnb/short-term-rental service page exists on the new site.
+  **Found live in the built homepage nav too (Sep 17):** a "Short-Term
+  Rentals" top-level nav item still linked to `/airbnb-management`. Removed
+  it — it was also silently causing the nav to overflow past the viewport
+  edge once the "Free Rental Analysis" CTA button was added, so this was
+  the fix for both problems at once.
+- 🚩 **Flagged, not fixed:** the built homepage's `--brand` token is
+  `#8c0c03`, not the `#8b0e04` CLAUDE.md documents as canonical (sampled
+  from the recovered vector logo). Didn't change it — it touches every use
+  of the color sitewide and deserves a deliberate look, not a drive-by fix
+  buried in an unrelated pass.
 - ✅ **PropertyMeld URL mismatch** — being fixed directly (Michael), no
   longer a to-do item.
 - ✅ **Nav mockup received (Sep 17)** — full structure captured below under
@@ -441,10 +492,20 @@ Full research, API findings, and design iteration history:
 
 ---
 
-## Areas Served panel — deferred to a later revision
+## Areas Served panel — superseded (Sep 17)
 
-Removed from the homepage base entirely. Direction: evergreen content, no
-monthly data maintenance.
+**This section describes an older, evergreen-panel design that was never
+built.** The homepage's Areas Served section is now built — see "Homepage
+mockup review" → "Areas Served / cities-we-serve section" above for what
+actually shipped (9 county cards + neighborhoods card + townships panel,
+matching Michael's reference mockup). The items below (rent-range data,
+per-city operating notes, tenure tiles) were not part of that build and
+remain genuinely open if this richer per-city data layer is still wanted —
+kept here for reference, not deleted, since none of it was decided against,
+just superseded by a different design direction.
+
+Original framing, unchanged: removed from the homepage base entirely.
+Direction: evergreen content, no monthly data maintenance.
 
 - [ ] Build the city data file — one entry per area.
 - [ ] Per area: rent **range**, tenure in the market, 2–3 local operating
@@ -505,9 +566,13 @@ one.
 ## Build phases
 
 ### Design system
-- [ ] Header and footer with final navigation (nav structure locked Sep 17
-      — see "Homepage mockup review" above; also build in the sticky-on-
-      scroll header/CTA behavior and the button-color swap noted there)
+- [ ] Header and footer with final navigation — **partially built (Sep 17)
+      on the homepage:** sticky-on-scroll CTA and button color are done
+      (see "Homepage mockup review" above). Still missing from the actual
+      nav markup: the "Owner Portal"/"Tenant Portal" dropdown entries, and
+      removing the utility bar's "Owner Login | Tenant Login" links —
+      both locked Sep 17 but not yet built into the header component
+      itself. Footer not started.
 - [ ] Component library: hero, CTA band, testimonial carousel, service card,
       video embed, FAQ accordion, form
 - [ ] Self-host Literata + Inter as woff2, two weights per family max
