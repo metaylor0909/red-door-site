@@ -303,11 +303,27 @@ rental-market page and not something to wade into. No property-management
 page exists for Lebanon either, so the CTA falls back to
 `/indianapolis-property-management` same as Anderson.
 
-**2 pages still need to be built** — Indianapolis, Greenfield. Greenfield
-will likely need the same fresh-research approach as Anderson and Lebanon.
-Indianapolis has its own existing property-management page content
-elsewhere (not researched fresh here) that's worth pulling from instead of
-re-researching from scratch.
+✅ **Eighth page built (Sep 17): `greenfield-market-reports.html`.** Also
+web-researched fresh: Hancock County seat, ~14 mi east of Indianapolis,
+birthplace of poet James Whitcomb Riley (childhood home preserved as a
+museum). The genuinely distinctive current-market angle: Hancock County
+was Indiana's fastest-growing county in 2023, driven by new subdivisions
+and the $460M Hancock Gateway Park master-planned community near I-70/Mt.
+Comfort Road — and one of its newest apartment communities is, fittingly,
+named Riley Crossing, which ties the historic and current-growth angles
+together instead of treating them as two disconnected facts. No property-
+management page exists for Greenfield either, so the CTA falls back to
+`/indianapolis-property-management`, same as Anderson and Lebanon.
+
+**1 page left: Indianapolis.** Unlike the other 8, Indianapolis already has
+its own built, real `/indianapolis-property-management` page with existing
+content — that page (not fresh web research) is the right source to pull
+from for the market-reports intro, since re-researching Indianapolis from
+scratch would risk drifting from what's already been said about it
+elsewhere on the site. Once built, all 9 confirmed market-reports pages
+are done as templates — remaining work becomes real-data wiring
+(RentCast pipeline) and blog-tag population once that CMS import exists,
+not more page-building.
 
 - ✅ **URL/content scoping: one page per cluster, not per city.** The
   recurring report content (e.g. "Westside Market Report") is written at
