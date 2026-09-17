@@ -47,31 +47,9 @@ actual build phases.
 
 - [ ] **Read the PMW contract** — notice period, whether content export is
       included.
-- [ ] **Fix the broken live-site application link.** The "Application" item
-      in the For Tenants menu points to
-      `reddoorrents.com/https://app.findigs.com/...` — the site URL is
-      prepended to the Findigs URL. 404 on the highest-intent tenant action.
-      Fix on the live site now, don't wait for the rebuild. **Note (Sep 17):**
-      on the new site, the "Application" nav item has been removed entirely
-      (Michael's decision) rather than pointed at a fixed URL — applicants
-      apply per-listing via each listing's own Apply button
-      (`custom_application_url`, AppFolio, confirmed real) once the listings
-      build exists. That resolves the "what should the nav link point to"
-      question by removing the question, but doesn't touch the live PMW
-      site, which still 404s today and still needs its own fix now.
 - [ ] **Decide what happens to blog posts published during migration.** At
       12–13/month, a six-week migration window means ~20 posts land mid-move.
       Not blocking the build — revisit closer to actual cutover.
-- [ ] **Fix a live Fair Housing violation missed by the original 173-fix
-      audit.** Found while building the Avon pilot page (Sep 11): the July
-      2026 "Westside Market Report" blog post's meta description reads
-      "...strong school-driven fundamentals in July 2026." Same banned
-      pattern already fixed elsewhere ("School-calendar timing" → "summer
-      leasing season") — missed here because it read as area trivia, not
-      obvious marketing copy. Not yet in `content-fixes.csv`. Fix: drop
-      "school-driven," reframe as leasing seasonality. Worth a fresh scan of
-      the archive for this same phrasing elsewhere before assuming it's
-      isolated.
 - ✅ **Market-reports market list — confirmed (Sep 17).** 9 pages total:
   Indianapolis, Fishers, Noblesville, Westfield, Greenwood, West Side
   (the Avon/Brownsburg/Plainfield cluster — one page, per the Sep 17
@@ -223,10 +201,33 @@ match as possible — the final build replaces the first pass entirely:
 This supersedes the "Areas Served panel — deferred to a later revision"
 section further down — see the note added there.
 
-### Market-reports page design (Sep 17) — decided, mockup built
+### Market-reports page design (Sep 17) — decided, template built
 
-Mockup (Westside/Avon-Brownsburg-Plainfield cluster, for layout/content
-review): https://claude.ai/artifact/UrouCisinFyHKg8MSJiJkm
+✅ **Template built (Sep 17, same day as the design pass):**
+`westside-market-reports.html` — standalone static page, first of the 9
+confirmed market-reports pages, matching the design system established by
+`index.html`/`application-criteria.html`. Built from the original mockup
+(https://claude.ai/artifact/UrouCisinFyHKg8MSJiJkm) plus
+`claude/red-door-market-reports-mockup.html`, with two corrections:
+
+- **"Nearby markets" was linking to Carmel**, which isn't one of the 9
+  confirmed market-reports cities (Carmel has Homes for Rent + Property
+  Management pages but no market-reports coverage — see the note under the
+  confirmed market list above). Fixed to link the other 8: Indianapolis,
+  Fishers, Noblesville, Westfield, Greenwood, Anderson, Lebanon, Greenfield.
+- **Slug decided as `/westside-market-reports`** (not
+  `/west-side-market-reports`) — matches the existing "Westside Market
+  Report" blog branding, per the flag below. Revisit if Michael intended
+  otherwise.
+
+**Still placeholder, by design — not a launch blocker for the template
+itself:** the live-data snapshot (3 stat tiles) and the 6 report/video
+cards are illustrative, clearly labeled as such on the page. Real data
+needs the RentCast pipeline wired up (see "Market report data points"
+further down); real cards need the blog migration done first. **The other
+8 pages still need to be built** — same template, each with its own
+genuinely-written intro copy per the no-thin-content rule, not a find-and-
+replace of this one.
 
 - ✅ **URL/content scoping: one page per cluster, not per city.** The
   recurring report content (e.g. "Westside Market Report") is written at
