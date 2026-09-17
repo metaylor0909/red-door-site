@@ -246,12 +246,20 @@ incorporation" story so the two pages don't read as a template with the
 city name swapped. Real live blog post ("Is Noblesville, Indiana the Best
 Rental Market Near Indianapolis?") linked the same way as Fishers'.
 
-**6 pages still need to be built** — Indianapolis, Westfield, Greenwood,
-Anderson, Lebanon, Greenfield. Same template, each with its own genuinely-
-written intro copy per the no-thin-content rule, not a find-and-replace.
-Westfield also already has one real blog post (visible in `index.html`'s
-Landlord Library section) that should get the same featured-link treatment
-when built.
+✅ **Fourth page built (Sep 17): `westfield-market-reports.html`.** Real
+Westfield facts — one of the fastest-growing suburbs in the metro (up more
+than 7x since 2000), Grand Park Sports Complex as the defining landmark.
+Deliberately doesn't oversell the growth story: the real linked post's own
+headline flags 127 rental days on market, so the intro explicitly notes
+that Westfield's growth "doesn't always show up the same way on the rental
+side," and the snapshot uses a down arrow on median rent rather than
+defaulting to positive trends on every page. Real live blog post ("Is
+Westfield, Indiana Still Worth Investing In With 127 Rental Days on
+Market?") linked the same way as the other pages.
+
+**5 pages still need to be built** — Indianapolis, Greenwood, Anderson,
+Lebanon, Greenfield. Same template, each with its own genuinely-written
+intro copy per the no-thin-content rule, not a find-and-replace.
 
 - ✅ **URL/content scoping: one page per cluster, not per city.** The
   recurring report content (e.g. "Westside Market Report") is written at
