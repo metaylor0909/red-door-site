@@ -237,12 +237,21 @@ where it would sit indistinguishably next to five fake ones — the one real
 link and the six illustrative cards are kept visually and structurally
 separate so neither misrepresents the other.
 
-**7 pages still need to be built** — Indianapolis, Noblesville, Westfield,
-Greenwood, Anderson, Lebanon, Greenfield. Same template, each with its own
-genuinely-written intro copy per the no-thin-content rule, not a find-and-
-replace. Noblesville and Westfield also already have one real blog post
-each (visible in `index.html`'s Landlord Library section) that should get
-the same featured-link treatment when built.
+✅ **Third page built (Sep 17): `noblesville-market-reports.html`.** Real
+Noblesville facts from `claude/red-door-city-facts-research.md` — one of
+Hamilton County's oldest cities (founded 1823, city since 1887,
+courthouse-square downtown, National Register historic districts),
+deliberately framed as the opposite angle from Fishers' "newest
+incorporation" story so the two pages don't read as a template with the
+city name swapped. Real live blog post ("Is Noblesville, Indiana the Best
+Rental Market Near Indianapolis?") linked the same way as Fishers'.
+
+**6 pages still need to be built** — Indianapolis, Westfield, Greenwood,
+Anderson, Lebanon, Greenfield. Same template, each with its own genuinely-
+written intro copy per the no-thin-content rule, not a find-and-replace.
+Westfield also already has one real blog post (visible in `index.html`'s
+Landlord Library section) that should get the same featured-link treatment
+when built.
 
 - ✅ **URL/content scoping: one page per cluster, not per city.** The
   recurring report content (e.g. "Westside Market Report") is written at
