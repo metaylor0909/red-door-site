@@ -289,11 +289,25 @@ points to `/indianapolis-property-management` instead of a nonexistent
 `/anderson-property-management` — flag this if Red Door wants a dedicated
 Anderson owner page built later.
 
-**3 pages still need to be built** — Indianapolis, Lebanon, Greenfield.
-Same template, each with its own genuinely-written intro copy per the
-no-thin-content rule, not a find-and-replace. Lebanon and Greenfield will
-likely need the same fresh-research approach as Anderson (neither is in
-the city-facts file either).
+✅ **Seventh page built (Sep 17): `lebanon-market-reports.html`.** Also not
+in the city-facts file — facts verified fresh via web search: Boone County
+seat, ~28 mi NW of Indianapolis, population ~17,500, and the genuinely
+distinctive story here is the LEAP Innovation and Research District
+(Eli Lilly's $3.7B pharma manufacturing campus broke ground 2023, a
+planned Meta data center) — one of the largest economic development
+projects in state history, right at Lebanon's edge. Framed as forward-
+looking but hedged ("typically brings rental demand... over time"), not
+an overpromise. **Deliberately left out:** the LEAP water-pipeline eminent
+domain controversy that comes up in the same searches — off-topic for a
+rental-market page and not something to wade into. No property-management
+page exists for Lebanon either, so the CTA falls back to
+`/indianapolis-property-management` same as Anderson.
+
+**2 pages still need to be built** — Indianapolis, Greenfield. Greenfield
+will likely need the same fresh-research approach as Anderson and Lebanon.
+Indianapolis has its own existing property-management page content
+elsewhere (not researched fresh here) that's worth pulling from instead of
+re-researching from scratch.
 
 - ✅ **URL/content scoping: one page per cluster, not per city.** The
   recurring report content (e.g. "Westside Market Report") is written at
