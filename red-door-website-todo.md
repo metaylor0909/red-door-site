@@ -315,15 +315,32 @@ together instead of treating them as two disconnected facts. No property-
 management page exists for Greenfield either, so the CTA falls back to
 `/indianapolis-property-management`, same as Anderson and Lebanon.
 
-**1 page left: Indianapolis.** Unlike the other 8, Indianapolis already has
-its own built, real `/indianapolis-property-management` page with existing
-content — that page (not fresh web research) is the right source to pull
-from for the market-reports intro, since re-researching Indianapolis from
-scratch would risk drifting from what's already been said about it
-elsewhere on the site. Once built, all 9 confirmed market-reports pages
-are done as templates — remaining work becomes real-data wiring
-(RentCast pipeline) and blog-tag population once that CMS import exists,
-not more page-building.
+✅ **Ninth and final page built (Sep 17): `indianapolis-market-reports.html`.**
+**Correction to the note above:** there is no `indianapolis-property-management.html`
+file anywhere in this repo — that page's real content lives outside this
+repo (on the live site / elsewhere), not something to "pull from" as a
+file. Built with fresh, verifiable facts instead (state capital, ~911,000
+in city limits, Marion County ~992,000) plus one genuinely distinctive,
+Red-Door-specific angle sourced from this repo's own
+`claude/red-door-rentcast-zip-mapping.md`: this is the broadest market Red
+Door tracks — a countywide average across the 37 standard-delivery ZIP
+codes, versus a single neighborhood or small cluster on every other page —
+and the snapshot note says so explicitly rather than presenting it as a
+directly-comparable number. **This page is entirely separate from
+`/indianapolis-property-management`** (linked from the CTA band, a real
+cross-link since that page exists on the live site) — confirmed with
+Michael this is not a replacement or overwrite of that page, just a
+same-name-prefix sibling with a different search intent (informational vs.
+transactional), per the site's intent-separation rule.
+
+**All 9 confirmed market-reports pages are now built as templates.**
+Remaining work is real-data wiring (RentCast pipeline) and blog-tag
+population once the CMS import exists, not more page-building. Full list:
+`indianapolis-market-reports.html`, `fishers-market-reports.html`,
+`noblesville-market-reports.html`, `westfield-market-reports.html`,
+`greenwood-market-reports.html`, `westside-market-reports.html`,
+`anderson-market-reports.html`, `lebanon-market-reports.html`,
+`greenfield-market-reports.html`.
 
 - ✅ **URL/content scoping: one page per cluster, not per city.** The
   recurring report content (e.g. "Westside Market Report") is written at
