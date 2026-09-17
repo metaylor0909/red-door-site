@@ -89,9 +89,13 @@ tenants use the portals, owners are who the marketing speaks to.
   301 to `/`.** Both retired; confirmed no distinct Airbnb/short-term-rental
   service page exists on the new site, so no more specific redirect target
   applies.
-- **`/application-criteria` needs to be written from scratch.** Doesn't exist
-  anywhere yet. The new nav links to it, and it's also the fix for the
-  currently-broken Findigs application link on the live site.
+- ✅ **`/application-criteria` built (Sep 17).** Standalone page
+  (`application-criteria.html`), fair-housing-researched; criminal history
+  clause still needs attorney sign-off before launch. See
+  `red-door-website-todo.md` for full detail. The Tenants nav dropdown links
+  to it directly; the separate "Application" link (to the live apply flow)
+  was removed from the nav entirely rather than pointed at an unconfirmed
+  URL.
 ## Brand tokens
  
 Anchored to the logo red, sampled from the source file as `#8b0e04`.
@@ -349,8 +353,6 @@ Still open:
   and its DNS records, the Calendly link, sender identity, and the Zapier
   webhook). Nothing external is left blocking it. Full detail and current
   status: `claude/rental-analysis-tool-build.md`.
-- The live site's tenant Application link has the site URL prepended to the
-  Findigs URL, producing a 404. Fix on the live site now, don't wait for launch.
 - The homepage has no JSON-LD at all. `LocalBusiness` schema matters far more
   here than `FAQPage` — Google deprecated FAQ rich results in May 2026, so FAQ
   markup no longer produces any Google result. It's still parsed by Bing and
