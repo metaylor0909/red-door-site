@@ -365,12 +365,72 @@ against real unit 44214. v4 added: a prominent primary "Schedule a showing"
 CTA above Apply now, a real "Total move-in cost" breakdown ($1,940 for unit
 44214), and a "Rental requirements" section using the real
 `min_resident_qualifications` text. A "Features" section (laundry/parking)
-was tried and removed the next day. **Still to do:** real showing-booking
-submission (API confirmed to exist, see the correction above; built as a
-simple lead-capture form for now). ✅ Apply now wired to
+was tried and removed the next day. ✅ Apply now wired to
 `custom_application_url`, ✅ real hotlinked photos, and ✅ a live Mapbox
 embed (on the Indianapolis page only) are all built — see
 `red-door-website-todo.md`, "Listings — real data wired."
+
+**v5 rebuild (Sep 18) — matched against RentEngine's real live listing page
+and our own real "Schedule a showing" flow, not just the static reference
+mockup.** Navigated directly to the real embedded widget
+(`rentengine.io/c/reddoorpm?...`, pulled from the live site's own
+`<iframe src>`) and opened a real listing to confirm actual behavior before
+building, rather than guessing from screenshots:
+
+- **Gallery matches the real layout**: 1 large main photo (left, ~60%) + a
+  2×2 grid of up to 4 thumbnails (right, ~40%), not a horizontal strip.
+  Clicking any photo opens a full-screen lightbox (close/prev/next, photo
+  count, keyboard arrows + Escape) — confirmed against RentEngine's own real
+  MUI modal lightbox behavior. Below 760px the gallery collapses to a single
+  stacked photo with a "+N photos" tap target.
+- **Button order fixed to match the real RentEngine listing page**:
+  "Schedule a Showing" is primary (solid) and first; "Apply Now" is
+  secondary (outline) and second — everywhere a CTA pair appears (header,
+  sidebar, footer band). The old build had this reversed.
+- **"Schedule a showing" now links out to RentEngine's own real hosted
+  booking page** — `https://app.rentengine.io/public/schedule-showing/
+  {unitId}?accounts={accountId}` — instead of the custom lead-capture form
+  the v4 build used. Confirmed by using the real flow directly: this URL
+  works standalone with just those two params (everything else in the live
+  site's carried-over query string is unnecessary). **This also sidesteps
+  the read-only-token limitation** — the token available to this build can
+  call `GET /showings/availability` but not `POST /showings/create` (that
+  requires a non-read-only token), so a fully custom-built calendar/slot UI
+  can't actually book anything today. Linking to RentEngine's real page is
+  simpler and functionally correct; the `showings` API notes above remain
+  accurate if a custom flow is revisited once a write-capable token exists.
+- **Sidebar's old `<form data-showing-form>` lead-capture form removed
+  entirely**, replaced with a plain CTA stack (Schedule a Showing → Apply
+  Now → "Ask a Question" link to `/contact`) plus a short "Managed by Red
+  Door" blurb, matching the reference mockup.
+- **Move-in cost card restructured** to match the reference mockup: a big
+  total-due-at-move-in number, then first month's rent + security deposit,
+  then itemized move-in fees under their own subtotal, then itemized
+  recurring monthly fees (marked "/mo") under theirs.
+- **Location map added** — single-pin Mapbox GL embed centered on the unit's
+  real coordinates.
+- **"Other Red Door Homes Nearby" added** — real haversine distance against
+  the actual 28-unit dataset, same city first then nearest by distance, top
+  4, each a real card (photo/price/address/specs) linking to that unit's own
+  detail page.
+- **Real bug found and fixed: Mapbox script-loading order.** The
+  `<script src="mapbox-gl.js">` tag was placed after the inline script that
+  calls `new mapboxgl.Map(...)`, so `typeof mapboxgl !== "undefined"` was
+  always false and the map silently never initialized (empty gray box, no
+  console error). Fixed by loading the Mapbox script immediately after
+  `<main>`, before the body content that references it — **script tags that
+  define a global must precede any inline script that reads that global.**
+- **Real bug found and fixed: lightbox backdrop bled through.** The
+  lightbox backdrop was `rgba(10,10,10,.94)` — legible enough at 6%
+  transparency that the page's own "Schedule a Showing" button (and other
+  text) was still readable through the dimmed overlay on mobile, looking
+  like a z-index bug (it wasn't — z-index/stacking was correct throughout).
+  Fixed by making the backdrop fully opaque (`#0a0a0a`).
+- All 28 real listing detail pages regenerated from the updated
+  `build_listing_detail.js`. Verified on both desktop and a 375px mobile
+  viewport: gallery/lightbox open-close-next-prev, button order, removed
+  form, move-in cost card, live map tiles, and nearby-homes cards all
+  checked out with real data and no console errors.
 
 ---
 

@@ -18,6 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap">
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css">
   <style>
     :root {
       /* Brand ramp — anchored to the logo red #8c0c03 */
@@ -2403,17 +2404,44 @@
     .fee-details div:last-child { border-bottom: 0; }
     .fee-details span { color: var(--charcoal); font-weight: 800; }
     .fee-details strong { color: var(--red); font-size: 1.05rem; white-space: nowrap; }
+    .fee-details-subhead { grid-column: 1 / -1; margin-top: 8px; padding-top: 12px; border-top: 1px dashed var(--line); color: var(--muted); font-weight: 900; font-size: .76rem; letter-spacing: .06em; text-transform: uppercase; }
+
     .listing-hero { padding: clamp(148px, 20vw, 176px) 0 0; }
     .listing-breadcrumb { margin-bottom: 14px; color: var(--muted); font-size: .88rem; }
     .listing-breadcrumb a { color: var(--red-dark); font-weight: 800; }
-    .listing-gallery { display: grid; gap: 8px; }
-    .listing-gallery-main { aspect-ratio: 16/9; max-height: 560px; overflow: hidden; border-radius: var(--radius); background: #000; }
-    .listing-gallery-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .listing-gallery-strip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
-    .listing-thumb { flex: 0 0 auto; width: 90px; height: 64px; padding: 0; border: 2px solid transparent; border-radius: 6px; overflow: hidden; cursor: pointer; background: none; }
-    .listing-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .listing-thumb.is-active { border-color: var(--red); }
-    .listing-gallery-empty { display: grid; place-items: center; aspect-ratio: 16/9; background: var(--soft); border-radius: var(--radius); color: var(--muted); }
+
+    /* ---------- Real gallery grid + lightbox ---------- */
+    .listing-gallery { display: grid; grid-template-columns: 1.5fr 1fr; gap: 8px; height: 460px; }
+    .gallery-main { position: relative; padding: 0; border: 0; border-radius: var(--radius) 0 0 var(--radius); overflow: hidden; cursor: pointer; background: #000; }
+    .gallery-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery-thumbs { display: grid; gap: 8px; height: 100%; }
+    .gallery-thumbs-4 { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
+    .gallery-thumbs-3 { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
+    .gallery-thumbs-2 { grid-template-columns: 1fr; grid-template-rows: repeat(2, 1fr); }
+    .gallery-thumbs-1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+    .gallery-thumb { position: relative; padding: 0; border: 0; overflow: hidden; cursor: pointer; background: var(--soft); }
+    .gallery-thumbs-4 .gallery-thumb:nth-child(2) { border-radius: 0 var(--radius) 0 0; }
+    .gallery-thumbs-4 .gallery-thumb:nth-child(4) { border-radius: 0 0 var(--radius) 0; }
+    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery-more-overlay { position: absolute; inset: 0; display: grid; place-items: center; color: var(--white); background: rgba(23, 23, 23, .55); font-weight: 900; font-size: 1.05rem; }
+    .listing-gallery-empty { display: grid; place-items: center; height: 320px; background: var(--soft); border-radius: var(--radius); color: var(--muted); }
+    @media (max-width: 760px) {
+      .listing-gallery { grid-template-columns: 1fr; height: auto; }
+      .gallery-main { border-radius: var(--radius); aspect-ratio: 4/3; }
+      .gallery-thumbs { display: none; }
+    }
+
+    .gallery-lightbox { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; background: #0a0a0a; }
+    .gallery-lightbox[hidden] { display: none; }
+    .gallery-lightbox-img, #gallery-lightbox-img { max-width: 88vw; max-height: 84vh; object-fit: contain; }
+    .gallery-lightbox-close { position: absolute; top: 20px; right: 24px; width: 40px; height: 40px; display: grid; place-items: center; color: var(--white); background: rgba(255,255,255,.12); border: 0; border-radius: 50%; font-size: 1.4rem; cursor: pointer; }
+    .gallery-lightbox-close:hover { background: rgba(255,255,255,.22); }
+    .gallery-lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 52px; height: 52px; display: grid; place-items: center; color: var(--white); background: rgba(255,255,255,.12); border: 0; border-radius: 50%; font-size: 2rem; cursor: pointer; line-height: 1; }
+    .gallery-lightbox-nav:hover { background: rgba(255,255,255,.22); }
+    .gallery-lightbox-prev { left: 20px; }
+    .gallery-lightbox-next { right: 20px; }
+    .gallery-lightbox-count { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: var(--white); font-size: .88rem; font-weight: 700; }
+
     .listing-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); gap: clamp(28px, 4vw, 48px); align-items: start; padding: 44px 0; }
     .listing-headline h1 { margin-bottom: 4px; font-size: clamp(1.6rem, 3vw, 2.1rem); }
     .listing-location { color: var(--muted); font-weight: 700; margin-bottom: 14px; }
@@ -2421,8 +2449,22 @@
     .listing-rent span { font-size: 1rem; color: var(--muted); font-weight: 700; }
     .listing-specs-row { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-bottom: 20px; color: var(--charcoal); font-size: .95rem; }
     .listing-sidebar { position: sticky; top: 100px; }
-    .listing-sidebar form { display: grid; gap: 10px; }
-    .listing-sidebar form label { font-size: .82rem; }
+
+    .sidebar-cta-stack { display: grid; gap: 10px; }
+    .sidebar-cta-stack .btn { width: 100%; box-sizing: border-box; }
+    .sidebar-ask-link { text-align: center; padding: 10px 0 2px; color: var(--red-dark); font-weight: 800; font-size: .9rem; }
+    .sidebar-managed-note { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .sidebar-managed-note strong { display: block; margin-bottom: 6px; color: var(--ink); font-size: .92rem; }
+    .sidebar-managed-note p { color: var(--muted); font-size: .86rem; line-height: 1.5; margin: 0; }
+
+    .movein-cost-card { max-width: 560px; padding: 26px; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .movein-cost-total { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 16px; border-bottom: 2px solid var(--ink); }
+    .movein-cost-total span { color: var(--muted); font-weight: 800; }
+    .movein-cost-total strong { color: var(--ink); font-family: var(--font-head); font-size: 1.7rem; font-weight: 500; }
+    .movein-cost-note { margin: 18px 0 0; color: var(--muted); font-size: .84rem; }
+
+    .listing-map { height: 340px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); }
+
     @media (max-width: 900px) { .listing-grid { grid-template-columns: 1fr; } .listing-sidebar { position: static; } }
   
   </style>
@@ -2481,15 +2523,24 @@
   </header>
 
   <main id="main">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
     <section class="listing-hero">
       <div class="container">
         <p class="listing-breadcrumb"><a href="/greenwood-homes-for-rent">Greenwood Homes for Rent</a> &rsaquo; 2746 Salem Place</p>
         <div class="listing-gallery" data-listing-gallery>
-          <div class="listing-gallery-main">
-            <img src="https://images.cdn.appfolio.com/reddoor/images/f2ae5135-910f-40b8-a4c2-1fe13a47ba73/large.png" alt="2746 Salem Place" id="listing-hero-photo" loading="eager">
-          </div>
+          <button type="button" class="gallery-main" data-photo-index="0">
+            <img src="https://images.cdn.appfolio.com/reddoor/images/f2ae5135-910f-40b8-a4c2-1fe13a47ba73/large.png" alt="2746 Salem Place" loading="eager">
+          </button>
           
         </div>
+        <div class="gallery-lightbox" id="gallery-lightbox" hidden>
+          <button type="button" class="gallery-lightbox-close" id="gallery-lightbox-close" aria-label="Close gallery">&times;</button>
+          
+          <img id="gallery-lightbox-img" src="" alt="2746 Salem Place">
+          
+          <p class="gallery-lightbox-count" id="gallery-lightbox-count"></p>
+        </div>
+        <script type="application/json" id="gallery-photos-data">["https://images.cdn.appfolio.com/reddoor/images/f2ae5135-910f-40b8-a4c2-1fe13a47ba73/large.png"]</script>
       </div>
     </section>
 
@@ -2507,8 +2558,8 @@
               <span>SINGLE FAMILY RESIDENCE</span>
             </div>
             <div class="cta-row">
-              <a class="btn btn-primary" href="https://reddoor.appfolio.com/listings/rental_applications/new?listable_uid=ba65ba9f-ddab-4412-be9e-b02ad0655010&amp;source=RentEngine" target="_blank" rel="noopener">Apply Now</a>
-              <a class="btn btn-secondary" href="#schedule-showing">Schedule a Showing</a>
+              <a class="btn btn-primary" href="https://app.rentengine.io/public/schedule-showing/88782?accounts=6ecca3ec-8e5a-42ed-87ea-af21f97d546e" target="_blank" rel="noopener">Schedule a Showing</a>
+              <a class="btn btn-secondary" href="https://reddoor.appfolio.com/listings/rental_applications/new?listable_uid=ba65ba9f-ddab-4412-be9e-b02ad0655010&amp;source=RentEngine" target="_blank" rel="noopener">Apply Now</a>
             </div>
           </div>
 
@@ -2536,7 +2587,6 @@
               <div><span>Parking</span><strong>Garage, Driveway</strong></div>
               <div><span>Laundry</span><strong>In Unit</strong></div>
               <div><span>Pets</span><strong>Yes</strong></div>
-              <div><span>Available</span><strong>September 13, 2026</strong></div>
               <div><span>Lease Term</span><strong>12 months</strong></div>
             </div>
             
@@ -2549,35 +2599,100 @@
         </div>
 
         <aside class="listing-sidebar reveal">
-          <div class="fee-block" id="schedule-showing">
+          <div class="fee-block">
             <span class="badge">Self Guided Showing</span>
-            <h3 style="font-size:1.3rem;margin-bottom:10px">Schedule a Showing</h3>
-            <p style="color:var(--muted);font-size:.92rem;margin-bottom:16px">Request a time to see this home. Our team will follow up to confirm.</p>
-            <form data-showing-form novalidate>
-              <label>Name
-                <input name="name" autocomplete="name" required>
-              </label>
-              <label>Email
-                <input type="email" name="email" autocomplete="email" required>
-              </label>
-              <label>Phone
-                <input type="tel" name="phone" autocomplete="tel" required>
-              </label>
-              <label>Preferred Day/Time
-                <input name="preferred_time" placeholder="e.g. Saturday afternoon">
-              </label>
-              <div class="form-actions" style="justify-content:flex-end;margin-top:14px">
-                <button class="btn btn-primary" type="submit" style="width:100%">Request Showing</button>
-              </div>
-              <div class="confirmation" data-confirmation tabindex="-1" style="margin-top:14px">
-                <h3 style="font-size:1.05rem">Request received.</h3>
-                <p style="font-size:.9rem">In a production version, this should connect to Red Door&rsquo;s lead-delivery workflow and RentEngine&rsquo;s showing-booking API. For this mockup, the accessible confirmation state is shown here.</p>
-              </div>
-            </form>
-            <a class="btn btn-secondary" href="https://reddoor.appfolio.com/listings/rental_applications/new?listable_uid=ba65ba9f-ddab-4412-be9e-b02ad0655010&amp;source=RentEngine" target="_blank" rel="noopener" style="width:100%;margin-top:12px;box-sizing:border-box">Apply Now</a>
+            <p class="listing-rent" style="margin-bottom:6px">$2,995<span>/month</span></p>
+            <p style="color:var(--muted);font-size:.88rem;margin-bottom:18px">Available September 13, 2026 &middot; 12-month lease</p>
+            <div class="sidebar-cta-stack">
+              <a class="btn btn-primary" href="https://app.rentengine.io/public/schedule-showing/88782?accounts=6ecca3ec-8e5a-42ed-87ea-af21f97d546e" target="_blank" rel="noopener">Schedule a Showing</a>
+              <a class="btn btn-secondary" href="https://reddoor.appfolio.com/listings/rental_applications/new?listable_uid=ba65ba9f-ddab-4412-be9e-b02ad0655010&amp;source=RentEngine" target="_blank" rel="noopener">Apply Now</a>
+              <a class="sidebar-ask-link" href="/contact">Ask a Question</a>
+            </div>
+            <div class="sidebar-managed-note">
+              <strong>Managed by Red Door</strong>
+              <p>Self-guided showings available. Digital lockbox on site &mdash; schedule a tour any time before applying.</p>
+            </div>
           </div>
           <p style="text-align:center;margin-top:14px"><a class="area-link" href="/greenwood-homes-for-rent">&larr; See all homes for rent in Greenwood</a></p>
         </aside>
+      </div>
+    </section>
+
+    <section class="section-soft">
+      <div class="container content-block reveal">
+        <div class="section-kicker">Cost to Move In</div>
+        <h2>Total Move-In Cost</h2>
+        <div class="movein-cost-card">
+          <div class="movein-cost-total">
+            <span>Due at move-in</span>
+            <strong>$6,300</strong>
+          </div>
+          <div class="fee-details">
+            <div><span>First month&rsquo;s rent</span><strong>$2,995</strong></div>
+            <div><span>Security deposit</span><strong>$2,995</strong></div>
+            <div class="fee-details-subhead">Move-in fees &mdash; $220</div><div><span>Lease Prep Fee</span><strong>$195</strong></div>
+              <div><span>Utility Activation Fee</span><strong>$25</strong></div>
+            <div class="fee-details-subhead">First month&rsquo;s recurring fees &mdash; $90</div><div><span>Resident's Benefits Package /mo</span><strong>$45</strong></div>
+              <div><span>Pet Rent(If applicable) /mo</span><strong>$45</strong></div>
+          </div>
+          <p class="movein-cost-note">Estimates for illustration; actual amount may vary based on approval and lease start date.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-soft">
+      <div class="container content-block reveal">
+        <h2>Location</h2>
+        <p style="color:var(--muted);margin-bottom:16px">2746 Salem Place, Greenwood, IN 46143</p>
+        <div class="listing-map" id="listing-map" aria-label="Map showing this home's location"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container reveal">
+        <div class="section-head center">
+          <div class="section-kicker">Keep Looking</div>
+          <h2>Other Red Door Homes Nearby</h2>
+        </div>
+        <div class="listing-grid-real">
+          <a class="listing-card" href="/homes-for-rent/indianapolis/6533-newstead-drive">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/1a57455a-af68-4884-8707-1dc06fcf8a19/large.jpeg" alt="6533 Newstead Drive" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$1,900<span>/mo</span></p>
+              <p class="listing-card-address">6533 Newstead Drive</p>
+              <p class="listing-card-city">Indianapolis, IN</p>
+              <p class="listing-card-specs">3 bd &middot; 2.5 ba &middot; 2,154 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/728-parkway-avenue">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/f88b67cd-6e67-48fe-9cb2-bcdffc1e3d3e/large.jpeg" alt="728 Parkway Avenue" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$1,650<span>/mo</span></p>
+              <p class="listing-card-address">728 Parkway Avenue</p>
+              <p class="listing-card-city">Indianapolis, IN</p>
+              <p class="listing-card-specs">3 bd &middot; 2 ba &middot; 1,250 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/726-parkway-avenue">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/80cc29db-2471-430c-8a7a-cbdb51b535b6/large.jpeg" alt="726 Parkway Avenue" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$1,550<span>/mo</span></p>
+              <p class="listing-card-address">726 Parkway Avenue</p>
+              <p class="listing-card-city">Indianapolis, IN</p>
+              <p class="listing-card-specs">3 bd &middot; 2 ba &middot; 1,250 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/1337-east-market-street-unit-8">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/0d540c1e-2146-4ebc-a969-c6b44c130018/large.jpg" alt="1337 East Market Street #8" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$995<span>/mo</span></p>
+              <p class="listing-card-address">1337 East Market Street #8</p>
+              <p class="listing-card-city">Indianapolis, IN</p>
+              <p class="listing-card-specs">1 bd &middot; 1 ba &middot; 480 sq ft</p>
+            </div>
+          </a>
+        </div>
+        <p style="text-align:center;margin-top:24px"><a class="area-link" href="/greenwood-homes-for-rent">See all homes for rent in Greenwood &rarr;</a></p>
       </div>
     </section>
 
@@ -2585,25 +2700,67 @@
       (function () {
         var gallery = document.querySelector("[data-listing-gallery]");
         if (gallery) {
-          var heroImg = document.getElementById("listing-hero-photo");
-          gallery.querySelectorAll(".listing-thumb").forEach(function (thumb) {
-            thumb.addEventListener("click", function () {
-              heroImg.src = thumb.getAttribute("data-photo-src");
-              gallery.querySelectorAll(".listing-thumb").forEach(function (t) { t.classList.remove("is-active"); });
-              thumb.classList.add("is-active");
+          var photosDataEl = document.getElementById("gallery-photos-data");
+          var photos = photosDataEl ? JSON.parse(photosDataEl.textContent) : [];
+          var lightbox = document.getElementById("gallery-lightbox");
+          var lightboxImg = document.getElementById("gallery-lightbox-img");
+          var lightboxCount = document.getElementById("gallery-lightbox-count");
+          var currentIndex = 0;
+
+          function showPhoto(index) {
+            currentIndex = (index + photos.length) % photos.length;
+            lightboxImg.src = photos[currentIndex];
+            if (lightboxCount) lightboxCount.textContent = (currentIndex + 1) + " / " + photos.length;
+          }
+
+          function openLightbox(index) {
+            showPhoto(index);
+            lightbox.hidden = false;
+            document.body.style.overflow = "hidden";
+          }
+
+          function closeLightbox() {
+            lightbox.hidden = true;
+            document.body.style.overflow = "";
+          }
+
+          document.querySelectorAll("[data-photo-index]").forEach(function (el) {
+            el.addEventListener("click", function () {
+              openLightbox(parseInt(el.getAttribute("data-photo-index"), 10));
             });
+          });
+
+          var closeBtn = document.getElementById("gallery-lightbox-close");
+          if (closeBtn) closeBtn.addEventListener("click", closeLightbox);
+          var prevBtn = document.getElementById("gallery-lightbox-prev");
+          if (prevBtn) prevBtn.addEventListener("click", function () { showPhoto(currentIndex - 1); });
+          var nextBtn = document.getElementById("gallery-lightbox-next");
+          if (nextBtn) nextBtn.addEventListener("click", function () { showPhoto(currentIndex + 1); });
+
+          lightbox.addEventListener("click", function (e) {
+            if (e.target === lightbox) closeLightbox();
+          });
+          document.addEventListener("keydown", function (e) {
+            if (lightbox.hidden) return;
+            if (e.key === "Escape") closeLightbox();
+            if (e.key === "ArrowLeft") showPhoto(currentIndex - 1);
+            if (e.key === "ArrowRight") showPhoto(currentIndex + 1);
           });
         }
 
-        var form = document.querySelector("[data-showing-form]");
-        if (form) {
-          var confirmation = form.querySelector("[data-confirmation]");
-          form.addEventListener("submit", function (event) {
-            event.preventDefault();
-            form.querySelectorAll("label, .form-actions").forEach(function (el) { el.style.display = "none"; });
-            confirmation.classList.add("is-visible");
-            confirmation.focus();
+        if (document.getElementById("listing-map") && typeof mapboxgl !== "undefined") {
+          mapboxgl.accessToken = "pk.eyJ1IjoibWV0YXlsb3IwOTA5IiwiYSI6ImNtdTdmZXJ5MzBpM3cyenB1eXMwNWdwaXkifQ.0sGI21TcAeEe9v_Pa91a9A";
+          var map = new mapboxgl.Map({
+            container: "listing-map",
+            style: "mapbox://styles/mapbox/light-v11",
+            center: [-86.087369, 39.5776038],
+            zoom: 14,
+            interactive: true
           });
+          map.addControl(new mapboxgl.NavigationControl(), "top-right");
+          new mapboxgl.Marker({ color: "#8c0c03" })
+            .setLngLat([-86.087369, 39.5776038])
+            .addTo(map);
         }
       })();
     </script>
@@ -2611,10 +2768,10 @@
     <section class="section-dark final-cta">
       <div class="container reveal">
         <h2>Interested in This Home?</h2>
-        <p>Apply now or schedule a showing to see it in person.</p>
+        <p>Schedule a showing or apply now to see it in person.</p>
         <div class="cta-row">
-          <a class="btn btn-primary" href="https://reddoor.appfolio.com/listings/rental_applications/new?listable_uid=ba65ba9f-ddab-4412-be9e-b02ad0655010&amp;source=RentEngine" target="_blank" rel="noopener">Apply Now</a>
-          <a class="btn btn-secondary" href="#schedule-showing">Schedule a Showing</a>
+          <a class="btn btn-primary" href="https://app.rentengine.io/public/schedule-showing/88782?accounts=6ecca3ec-8e5a-42ed-87ea-af21f97d546e" target="_blank" rel="noopener">Schedule a Showing</a>
+          <a class="btn btn-secondary" href="https://reddoor.appfolio.com/listings/rental_applications/new?listable_uid=ba65ba9f-ddab-4412-be9e-b02ad0655010&amp;source=RentEngine" target="_blank" rel="noopener">Apply Now</a>
           <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
         </div>
       </div>
@@ -2640,7 +2797,7 @@
       <div>
         <h3>Main Navigation</h3>
         <a href="/">Home</a>
-        <a href="/indianapolis-homes-for-rent?areas=all">Homes for Rent</a>
+        <a href="/indianapolis-homes-for-rent">Homes for Rent</a>
         <a href="/pricing">Pricing</a>
         <a href="/about">About Us</a>
         <a href="/contact">Contact</a>

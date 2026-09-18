@@ -18,6 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap">
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css">
   <style>
     :root {
       /* Brand ramp — anchored to the logo red #8c0c03 */
@@ -2403,17 +2404,44 @@
     .fee-details div:last-child { border-bottom: 0; }
     .fee-details span { color: var(--charcoal); font-weight: 800; }
     .fee-details strong { color: var(--red); font-size: 1.05rem; white-space: nowrap; }
+    .fee-details-subhead { grid-column: 1 / -1; margin-top: 8px; padding-top: 12px; border-top: 1px dashed var(--line); color: var(--muted); font-weight: 900; font-size: .76rem; letter-spacing: .06em; text-transform: uppercase; }
+
     .listing-hero { padding: clamp(148px, 20vw, 176px) 0 0; }
     .listing-breadcrumb { margin-bottom: 14px; color: var(--muted); font-size: .88rem; }
     .listing-breadcrumb a { color: var(--red-dark); font-weight: 800; }
-    .listing-gallery { display: grid; gap: 8px; }
-    .listing-gallery-main { aspect-ratio: 16/9; max-height: 560px; overflow: hidden; border-radius: var(--radius); background: #000; }
-    .listing-gallery-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .listing-gallery-strip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
-    .listing-thumb { flex: 0 0 auto; width: 90px; height: 64px; padding: 0; border: 2px solid transparent; border-radius: 6px; overflow: hidden; cursor: pointer; background: none; }
-    .listing-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .listing-thumb.is-active { border-color: var(--red); }
-    .listing-gallery-empty { display: grid; place-items: center; aspect-ratio: 16/9; background: var(--soft); border-radius: var(--radius); color: var(--muted); }
+
+    /* ---------- Real gallery grid + lightbox ---------- */
+    .listing-gallery { display: grid; grid-template-columns: 1.5fr 1fr; gap: 8px; height: 460px; }
+    .gallery-main { position: relative; padding: 0; border: 0; border-radius: var(--radius) 0 0 var(--radius); overflow: hidden; cursor: pointer; background: #000; }
+    .gallery-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery-thumbs { display: grid; gap: 8px; height: 100%; }
+    .gallery-thumbs-4 { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
+    .gallery-thumbs-3 { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
+    .gallery-thumbs-2 { grid-template-columns: 1fr; grid-template-rows: repeat(2, 1fr); }
+    .gallery-thumbs-1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+    .gallery-thumb { position: relative; padding: 0; border: 0; overflow: hidden; cursor: pointer; background: var(--soft); }
+    .gallery-thumbs-4 .gallery-thumb:nth-child(2) { border-radius: 0 var(--radius) 0 0; }
+    .gallery-thumbs-4 .gallery-thumb:nth-child(4) { border-radius: 0 0 var(--radius) 0; }
+    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery-more-overlay { position: absolute; inset: 0; display: grid; place-items: center; color: var(--white); background: rgba(23, 23, 23, .55); font-weight: 900; font-size: 1.05rem; }
+    .listing-gallery-empty { display: grid; place-items: center; height: 320px; background: var(--soft); border-radius: var(--radius); color: var(--muted); }
+    @media (max-width: 760px) {
+      .listing-gallery { grid-template-columns: 1fr; height: auto; }
+      .gallery-main { border-radius: var(--radius); aspect-ratio: 4/3; }
+      .gallery-thumbs { display: none; }
+    }
+
+    .gallery-lightbox { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; background: #0a0a0a; }
+    .gallery-lightbox[hidden] { display: none; }
+    .gallery-lightbox-img, #gallery-lightbox-img { max-width: 88vw; max-height: 84vh; object-fit: contain; }
+    .gallery-lightbox-close { position: absolute; top: 20px; right: 24px; width: 40px; height: 40px; display: grid; place-items: center; color: var(--white); background: rgba(255,255,255,.12); border: 0; border-radius: 50%; font-size: 1.4rem; cursor: pointer; }
+    .gallery-lightbox-close:hover { background: rgba(255,255,255,.22); }
+    .gallery-lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 52px; height: 52px; display: grid; place-items: center; color: var(--white); background: rgba(255,255,255,.12); border: 0; border-radius: 50%; font-size: 2rem; cursor: pointer; line-height: 1; }
+    .gallery-lightbox-nav:hover { background: rgba(255,255,255,.22); }
+    .gallery-lightbox-prev { left: 20px; }
+    .gallery-lightbox-next { right: 20px; }
+    .gallery-lightbox-count { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: var(--white); font-size: .88rem; font-weight: 700; }
+
     .listing-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); gap: clamp(28px, 4vw, 48px); align-items: start; padding: 44px 0; }
     .listing-headline h1 { margin-bottom: 4px; font-size: clamp(1.6rem, 3vw, 2.1rem); }
     .listing-location { color: var(--muted); font-weight: 700; margin-bottom: 14px; }
@@ -2421,8 +2449,22 @@
     .listing-rent span { font-size: 1rem; color: var(--muted); font-weight: 700; }
     .listing-specs-row { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-bottom: 20px; color: var(--charcoal); font-size: .95rem; }
     .listing-sidebar { position: sticky; top: 100px; }
-    .listing-sidebar form { display: grid; gap: 10px; }
-    .listing-sidebar form label { font-size: .82rem; }
+
+    .sidebar-cta-stack { display: grid; gap: 10px; }
+    .sidebar-cta-stack .btn { width: 100%; box-sizing: border-box; }
+    .sidebar-ask-link { text-align: center; padding: 10px 0 2px; color: var(--red-dark); font-weight: 800; font-size: .9rem; }
+    .sidebar-managed-note { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .sidebar-managed-note strong { display: block; margin-bottom: 6px; color: var(--ink); font-size: .92rem; }
+    .sidebar-managed-note p { color: var(--muted); font-size: .86rem; line-height: 1.5; margin: 0; }
+
+    .movein-cost-card { max-width: 560px; padding: 26px; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .movein-cost-total { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 16px; border-bottom: 2px solid var(--ink); }
+    .movein-cost-total span { color: var(--muted); font-weight: 800; }
+    .movein-cost-total strong { color: var(--ink); font-family: var(--font-head); font-size: 1.7rem; font-weight: 500; }
+    .movein-cost-note { margin: 18px 0 0; color: var(--muted); font-size: .84rem; }
+
+    .listing-map { height: 340px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); }
+
     @media (max-width: 900px) { .listing-grid { grid-template-columns: 1fr; } .listing-sidebar { position: static; } }
   
   </style>
@@ -2481,32 +2523,29 @@
   </header>
 
   <main id="main">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
     <section class="listing-hero">
       <div class="container">
         <p class="listing-breadcrumb"><a href="/westfield-homes-for-rent">Westfield Homes for Rent</a> &rsaquo; 13340 East Golden Gate Dr</p>
         <div class="listing-gallery" data-listing-gallery>
-          <div class="listing-gallery-main">
-            <img src="https://images.cdn.appfolio.com/reddoor/images/fa6690dc-068e-4141-8333-32863bc6b626/large.png" alt="13340 East Golden Gate Dr" id="listing-hero-photo" loading="eager">
-          </div>
-          <div class="listing-gallery-strip">
-            <button type="button" class="listing-thumb is-active" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/fa6690dc-068e-4141-8333-32863bc6b626/large.png" aria-label="View photo 1"><img src="https://images.cdn.appfolio.com/reddoor/images/fa6690dc-068e-4141-8333-32863bc6b626/large.png" alt="" loading="lazy"></button>
-            <button type="button" class="listing-thumb" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/6bfdab37-649b-435d-9ad2-87159a9fe811/large.png" aria-label="View photo 2"><img src="https://images.cdn.appfolio.com/reddoor/images/6bfdab37-649b-435d-9ad2-87159a9fe811/large.png" alt="" loading="lazy"></button>
-            <button type="button" class="listing-thumb" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/fde6c747-8d02-48ee-8a36-243634ae24b8/large.png" aria-label="View photo 3"><img src="https://images.cdn.appfolio.com/reddoor/images/fde6c747-8d02-48ee-8a36-243634ae24b8/large.png" alt="" loading="lazy"></button>
-            <button type="button" class="listing-thumb" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/5025f35f-b365-401b-8777-2f126c871556/large.png" aria-label="View photo 4"><img src="https://images.cdn.appfolio.com/reddoor/images/5025f35f-b365-401b-8777-2f126c871556/large.png" alt="" loading="lazy"></button>
-            <button type="button" class="listing-thumb" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/efd77d2c-c156-43c9-a51b-04ff1e7994ae/large.jpg" aria-label="View photo 5"><img src="https://images.cdn.appfolio.com/reddoor/images/efd77d2c-c156-43c9-a51b-04ff1e7994ae/large.jpg" alt="" loading="lazy"></button>
-            <button type="button" class="listing-thumb" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/7de3b042-3304-49c4-9a86-6ade4d4e66ce/large.jpg" aria-label="View photo 6"><img src="https://images.cdn.appfolio.com/reddoor/images/7de3b042-3304-49c4-9a86-6ade4d4e66ce/large.jpg" alt="" loading="lazy"></button>
-            <button type="button" class="listing-thumb" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/c25ece92-8e16-4fd6-bf1d-702d976bb44e/large.jpg" aria-label="View photo 7"><img src="https://images.cdn.appfolio.com/reddoor/images/c25ece92-8e16-4fd6-bf1d-702d976bb44e/large.jpg" alt="" loading="lazy"></button>
-            <button type="button" class="listing-thumb" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/274b5487-8418-47ea-b340-68c4ba38bcf6/large.jpg" aria-label="View photo 8"><img src="https://images.cdn.appfolio.com/reddoor/images/274b5487-8418-47ea-b340-68c4ba38bcf6/large.jpg" alt="" loading="lazy"></button>
-            <button type="button" class="listing-thumb" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/c3a89171-8745-4d94-a7a8-f19e69b6159a/large.jpg" aria-label="View photo 9"><img src="https://images.cdn.appfolio.com/reddoor/images/c3a89171-8745-4d94-a7a8-f19e69b6159a/large.jpg" alt="" loading="lazy"></button>
-            <button type="button" class="listing-thumb" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/e41e617e-c7cc-40df-8914-7c6c0cfb54d1/large.jpg" aria-label="View photo 10"><img src="https://images.cdn.appfolio.com/reddoor/images/e41e617e-c7cc-40df-8914-7c6c0cfb54d1/large.jpg" alt="" loading="lazy"></button>
-            <button type="button" class="listing-thumb" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/a4588ece-20c8-454e-aa83-71976633492f/large.jpg" aria-label="View photo 11"><img src="https://images.cdn.appfolio.com/reddoor/images/a4588ece-20c8-454e-aa83-71976633492f/large.jpg" alt="" loading="lazy"></button>
-            <button type="button" class="listing-thumb" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/e67d74cb-854f-4dd8-a85c-956c20c7c73b/large.jpg" aria-label="View photo 12"><img src="https://images.cdn.appfolio.com/reddoor/images/e67d74cb-854f-4dd8-a85c-956c20c7c73b/large.jpg" alt="" loading="lazy"></button>
-            <button type="button" class="listing-thumb" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/5bfc5996-0a97-46ba-b05e-989ed6ead5d9/large.jpg" aria-label="View photo 13"><img src="https://images.cdn.appfolio.com/reddoor/images/5bfc5996-0a97-46ba-b05e-989ed6ead5d9/large.jpg" alt="" loading="lazy"></button>
-            <button type="button" class="listing-thumb" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/e6c26637-dc48-4239-a9d2-490aaf17aa76/large.jpg" aria-label="View photo 14"><img src="https://images.cdn.appfolio.com/reddoor/images/e6c26637-dc48-4239-a9d2-490aaf17aa76/large.jpg" alt="" loading="lazy"></button>
-            <button type="button" class="listing-thumb" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/4edb6adb-f24f-4d2c-8bbe-290d2d0fc136/large.jpg" aria-label="View photo 15"><img src="https://images.cdn.appfolio.com/reddoor/images/4edb6adb-f24f-4d2c-8bbe-290d2d0fc136/large.jpg" alt="" loading="lazy"></button>
-            <button type="button" class="listing-thumb" data-photo-src="https://images.cdn.appfolio.com/reddoor/images/190749f0-dac6-4c56-8b85-435f2dbbebe7/large.jpg" aria-label="View photo 16"><img src="https://images.cdn.appfolio.com/reddoor/images/190749f0-dac6-4c56-8b85-435f2dbbebe7/large.jpg" alt="" loading="lazy"></button>
+          <button type="button" class="gallery-main" data-photo-index="0">
+            <img src="https://images.cdn.appfolio.com/reddoor/images/fa6690dc-068e-4141-8333-32863bc6b626/large.png" alt="13340 East Golden Gate Dr" loading="eager">
+          </button>
+          <div class="gallery-thumbs gallery-thumbs-4">
+            <button type="button" class="gallery-thumb" data-photo-index="1"><img src="https://images.cdn.appfolio.com/reddoor/images/6bfdab37-649b-435d-9ad2-87159a9fe811/large.png" alt="" loading="lazy"></button>
+            <button type="button" class="gallery-thumb" data-photo-index="2"><img src="https://images.cdn.appfolio.com/reddoor/images/fde6c747-8d02-48ee-8a36-243634ae24b8/large.png" alt="" loading="lazy"></button>
+            <button type="button" class="gallery-thumb" data-photo-index="3"><img src="https://images.cdn.appfolio.com/reddoor/images/5025f35f-b365-401b-8777-2f126c871556/large.png" alt="" loading="lazy"></button>
+            <button type="button" class="gallery-thumb" data-photo-index="4"><img src="https://images.cdn.appfolio.com/reddoor/images/efd77d2c-c156-43c9-a51b-04ff1e7994ae/large.jpg" alt="" loading="lazy"><span class="gallery-more-overlay">+40 photos</span></button>
           </div>
         </div>
+        <div class="gallery-lightbox" id="gallery-lightbox" hidden>
+          <button type="button" class="gallery-lightbox-close" id="gallery-lightbox-close" aria-label="Close gallery">&times;</button>
+          <button type="button" class="gallery-lightbox-nav gallery-lightbox-prev" id="gallery-lightbox-prev" aria-label="Previous photo">&lsaquo;</button>
+          <img id="gallery-lightbox-img" src="" alt="13340 East Golden Gate Dr">
+          <button type="button" class="gallery-lightbox-nav gallery-lightbox-next" id="gallery-lightbox-next" aria-label="Next photo">&rsaquo;</button>
+          <p class="gallery-lightbox-count" id="gallery-lightbox-count"></p>
+        </div>
+        <script type="application/json" id="gallery-photos-data">["https://images.cdn.appfolio.com/reddoor/images/fa6690dc-068e-4141-8333-32863bc6b626/large.png","https://images.cdn.appfolio.com/reddoor/images/6bfdab37-649b-435d-9ad2-87159a9fe811/large.png","https://images.cdn.appfolio.com/reddoor/images/fde6c747-8d02-48ee-8a36-243634ae24b8/large.png","https://images.cdn.appfolio.com/reddoor/images/5025f35f-b365-401b-8777-2f126c871556/large.png","https://images.cdn.appfolio.com/reddoor/images/efd77d2c-c156-43c9-a51b-04ff1e7994ae/large.jpg","https://images.cdn.appfolio.com/reddoor/images/7de3b042-3304-49c4-9a86-6ade4d4e66ce/large.jpg","https://images.cdn.appfolio.com/reddoor/images/c25ece92-8e16-4fd6-bf1d-702d976bb44e/large.jpg","https://images.cdn.appfolio.com/reddoor/images/274b5487-8418-47ea-b340-68c4ba38bcf6/large.jpg","https://images.cdn.appfolio.com/reddoor/images/c3a89171-8745-4d94-a7a8-f19e69b6159a/large.jpg","https://images.cdn.appfolio.com/reddoor/images/e41e617e-c7cc-40df-8914-7c6c0cfb54d1/large.jpg","https://images.cdn.appfolio.com/reddoor/images/a4588ece-20c8-454e-aa83-71976633492f/large.jpg","https://images.cdn.appfolio.com/reddoor/images/e67d74cb-854f-4dd8-a85c-956c20c7c73b/large.jpg","https://images.cdn.appfolio.com/reddoor/images/5bfc5996-0a97-46ba-b05e-989ed6ead5d9/large.jpg","https://images.cdn.appfolio.com/reddoor/images/e6c26637-dc48-4239-a9d2-490aaf17aa76/large.jpg","https://images.cdn.appfolio.com/reddoor/images/4edb6adb-f24f-4d2c-8bbe-290d2d0fc136/large.jpg","https://images.cdn.appfolio.com/reddoor/images/190749f0-dac6-4c56-8b85-435f2dbbebe7/large.jpg","https://images.cdn.appfolio.com/reddoor/images/63bb6a20-6eda-4d46-9f0c-0483c3af19fb/large.jpg","https://images.cdn.appfolio.com/reddoor/images/8cdf8b4a-cbd6-4def-9479-8a6bf3c83894/large.jpg","https://images.cdn.appfolio.com/reddoor/images/89f492f1-0e84-47fc-9fb9-afaa173a5422/large.jpg","https://images.cdn.appfolio.com/reddoor/images/353020f6-0800-433c-8e5b-eae66f1948c7/large.jpg","https://images.cdn.appfolio.com/reddoor/images/5eab9aec-a9a8-4e43-8cb4-e76f2681983f/large.jpg","https://images.cdn.appfolio.com/reddoor/images/6619b8f4-f3f5-40e5-9a44-853e304aefaf/large.jpg","https://images.cdn.appfolio.com/reddoor/images/509bc2bb-6210-4b56-989d-d233d9a62e27/large.jpg","https://images.cdn.appfolio.com/reddoor/images/81841c97-ccff-4cc3-9dad-f7187346b329/large.jpg","https://images.cdn.appfolio.com/reddoor/images/f4877a5c-7f88-435e-8411-8e62ceb2cdfc/large.jpg","https://images.cdn.appfolio.com/reddoor/images/144fba8b-478f-4322-a402-cdf3affab2f9/large.jpg","https://images.cdn.appfolio.com/reddoor/images/c658e54b-3969-48d4-9edf-c511e4188109/large.jpg","https://images.cdn.appfolio.com/reddoor/images/f010f7f2-8457-4860-b03c-3c9258d3247a/large.jpg","https://images.cdn.appfolio.com/reddoor/images/1fed315b-0fa6-47f1-afea-258269741dc9/large.jpg","https://images.cdn.appfolio.com/reddoor/images/6f0ec252-6b1c-4188-8352-3101c9340e24/large.jpg","https://images.cdn.appfolio.com/reddoor/images/0811b934-9b19-4e23-ba66-a253dae7922b/large.jpg","https://images.cdn.appfolio.com/reddoor/images/27849e16-d0fb-4aa3-a677-c82b62e53dc2/large.jpg","https://images.cdn.appfolio.com/reddoor/images/7ad150b3-0957-4e88-bd15-b146e5c67686/large.jpg","https://images.cdn.appfolio.com/reddoor/images/08694378-58a2-49f1-a92c-407be7a198d1/large.jpg","https://images.cdn.appfolio.com/reddoor/images/cce0b119-3d8a-40d0-a68c-08d23d3b577b/large.jpg","https://images.cdn.appfolio.com/reddoor/images/607e1ff2-0855-4639-928d-3d026ad83a23/large.jpg","https://images.cdn.appfolio.com/reddoor/images/a8ce9604-be42-4580-9d37-44569c20906e/large.jpg","https://images.cdn.appfolio.com/reddoor/images/4dd6f027-42b8-4097-8679-cd86b4b090d5/large.jpg","https://images.cdn.appfolio.com/reddoor/images/dd4efb91-4b3b-44c2-9464-44a46880fe07/large.jpg","https://images.cdn.appfolio.com/reddoor/images/77814b41-6669-4351-8977-b9ad2d47d7f5/large.jpg","https://images.cdn.appfolio.com/reddoor/images/477662ed-edc0-4f0c-bd0c-b7590df1632a/large.jpg","https://images.cdn.appfolio.com/reddoor/images/b9dab9de-03eb-4c92-b141-faa47aa5cd63/large.jpg","https://images.cdn.appfolio.com/reddoor/images/ac4ee58d-56ca-4d61-b612-ca008564e412/large.jpg","https://images.cdn.appfolio.com/reddoor/images/172ae1f6-ac3b-4b31-a22a-1d1dc647cdc8/large.jpg","https://images.cdn.appfolio.com/reddoor/images/860a4faf-e28c-412e-b051-19f13b0a58b0/large.jpg"]</script>
       </div>
     </section>
 
@@ -2524,8 +2563,8 @@
               <span>Townhouse</span>
             </div>
             <div class="cta-row">
-              <a class="btn btn-primary" href="https://reddoor.appfolio.com/listings/rental_applications/new?listable_uid=e7cce56c-05ed-4454-860f-03b7417a08f0&amp;source=RentEngine" target="_blank" rel="noopener">Apply Now</a>
-              <a class="btn btn-secondary" href="#schedule-showing">Schedule a Showing</a>
+              <a class="btn btn-primary" href="https://app.rentengine.io/public/schedule-showing/68673?accounts=6ecca3ec-8e5a-42ed-87ea-af21f97d546e" target="_blank" rel="noopener">Schedule a Showing</a>
+              <a class="btn btn-secondary" href="https://reddoor.appfolio.com/listings/rental_applications/new?listable_uid=e7cce56c-05ed-4454-860f-03b7417a08f0&amp;source=RentEngine" target="_blank" rel="noopener">Apply Now</a>
             </div>
           </div>
 
@@ -2548,7 +2587,6 @@
               <div><span>Parking</span><strong>Private Garage</strong></div>
               <div><span>Laundry</span><strong>In Unit</strong></div>
               <div><span>Pets</span><strong>Dogs only</strong></div>
-              <div><span>Available</span><strong>June 21, 2026</strong></div>
               <div><span>Lease Term</span><strong>12 months</strong></div>
             </div>
             <p class="callout-note">2 SMALL dogs</p>
@@ -2561,35 +2599,99 @@
         </div>
 
         <aside class="listing-sidebar reveal">
-          <div class="fee-block" id="schedule-showing">
+          <div class="fee-block">
             <span class="badge">Self Guided Showing</span>
-            <h3 style="font-size:1.3rem;margin-bottom:10px">Schedule a Showing</h3>
-            <p style="color:var(--muted);font-size:.92rem;margin-bottom:16px">Request a time to see this home. Our team will follow up to confirm.</p>
-            <form data-showing-form novalidate>
-              <label>Name
-                <input name="name" autocomplete="name" required>
-              </label>
-              <label>Email
-                <input type="email" name="email" autocomplete="email" required>
-              </label>
-              <label>Phone
-                <input type="tel" name="phone" autocomplete="tel" required>
-              </label>
-              <label>Preferred Day/Time
-                <input name="preferred_time" placeholder="e.g. Saturday afternoon">
-              </label>
-              <div class="form-actions" style="justify-content:flex-end;margin-top:14px">
-                <button class="btn btn-primary" type="submit" style="width:100%">Request Showing</button>
-              </div>
-              <div class="confirmation" data-confirmation tabindex="-1" style="margin-top:14px">
-                <h3 style="font-size:1.05rem">Request received.</h3>
-                <p style="font-size:.9rem">In a production version, this should connect to Red Door&rsquo;s lead-delivery workflow and RentEngine&rsquo;s showing-booking API. For this mockup, the accessible confirmation state is shown here.</p>
-              </div>
-            </form>
-            <a class="btn btn-secondary" href="https://reddoor.appfolio.com/listings/rental_applications/new?listable_uid=e7cce56c-05ed-4454-860f-03b7417a08f0&amp;source=RentEngine" target="_blank" rel="noopener" style="width:100%;margin-top:12px;box-sizing:border-box">Apply Now</a>
+            <p class="listing-rent" style="margin-bottom:6px">$2,465<span>/month</span></p>
+            <p style="color:var(--muted);font-size:.88rem;margin-bottom:18px">Available June 21, 2026 &middot; 12-month lease</p>
+            <div class="sidebar-cta-stack">
+              <a class="btn btn-primary" href="https://app.rentengine.io/public/schedule-showing/68673?accounts=6ecca3ec-8e5a-42ed-87ea-af21f97d546e" target="_blank" rel="noopener">Schedule a Showing</a>
+              <a class="btn btn-secondary" href="https://reddoor.appfolio.com/listings/rental_applications/new?listable_uid=e7cce56c-05ed-4454-860f-03b7417a08f0&amp;source=RentEngine" target="_blank" rel="noopener">Apply Now</a>
+              <a class="sidebar-ask-link" href="/contact">Ask a Question</a>
+            </div>
+            <div class="sidebar-managed-note">
+              <strong>Managed by Red Door</strong>
+              <p>Self-guided showings available. Digital lockbox on site &mdash; schedule a tour any time before applying.</p>
+            </div>
           </div>
           <p style="text-align:center;margin-top:14px"><a class="area-link" href="/westfield-homes-for-rent">&larr; See all homes for rent in Westfield</a></p>
         </aside>
+      </div>
+    </section>
+
+    <section class="section-soft">
+      <div class="container content-block reveal">
+        <div class="section-kicker">Cost to Move In</div>
+        <h2>Total Move-In Cost</h2>
+        <div class="movein-cost-card">
+          <div class="movein-cost-total">
+            <span>Due at move-in</span>
+            <strong>$5,215</strong>
+          </div>
+          <div class="fee-details">
+            <div><span>First month&rsquo;s rent</span><strong>$2,465</strong></div>
+            <div><span>Security deposit</span><strong>$2,465</strong></div>
+            <div class="fee-details-subhead">Move-in fees &mdash; $195</div><div><span>Lease Prep Fee</span><strong>$195</strong></div>
+            <div class="fee-details-subhead">First month&rsquo;s recurring fees &mdash; $90</div><div><span>Resident's Benefits Package /mo</span><strong>$45</strong></div>
+              <div><span>Pet Rent(If applicable) /mo</span><strong>$45</strong></div>
+          </div>
+          <p class="movein-cost-note">Estimates for illustration; actual amount may vary based on approval and lease start date.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-soft">
+      <div class="container content-block reveal">
+        <h2>Location</h2>
+        <p style="color:var(--muted);margin-bottom:16px">13340 East Golden Gate Dr, Westfield, IN 46074</p>
+        <div class="listing-map" id="listing-map" aria-label="Map showing this home's location"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container reveal">
+        <div class="section-head center">
+          <div class="section-kicker">Keep Looking</div>
+          <h2>Other Red Door Homes Nearby</h2>
+        </div>
+        <div class="listing-grid-real">
+          <a class="listing-card" href="/homes-for-rent/carmel/12420-brookline-street">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/59a0388b-bb09-4450-a27d-e64fc1e7f8e7/large.jpeg" alt="12420 Brookline Street" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$1,895<span>/mo</span></p>
+              <p class="listing-card-address">12420 Brookline Street</p>
+              <p class="listing-card-city">Carmel, IN</p>
+              <p class="listing-card-specs">2 bd &middot; 1.5 ba &middot; 1,156 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/carmel/331-1st-avenue-northwest-unit-2">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/6c7d71da-98cd-42ff-8573-2efbcc24c05c/large.png" alt="331 1st Avenue Northwest #2" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$1,250<span>/mo</span></p>
+              <p class="listing-card-address">331 1st Avenue Northwest #2</p>
+              <p class="listing-card-city">Carmel, IN</p>
+              <p class="listing-card-specs">2 bd &middot; 1 ba &middot; 900 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/carmel/331-1st-avenue-northwest-unit-5">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/ab28a6d7-e5cb-416f-ad3d-18d3b07029cd/large.png" alt="331 1st Avenue Northwest #5" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$1,295<span>/mo</span></p>
+              <p class="listing-card-address">331 1st Avenue Northwest #5</p>
+              <p class="listing-card-city">Carmel, IN</p>
+              <p class="listing-card-specs">2 bd &middot; 1 ba &middot; 900 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/4948-potomac-square-place-unit-4">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/7bc9b863-dd4c-440b-81e9-0ac852e306f4/large.jpeg" alt="4948 Potomac Square Place #4" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$1,640<span>/mo</span></p>
+              <p class="listing-card-address">4948 Potomac Square Place #4</p>
+              <p class="listing-card-city">Indianapolis, IN</p>
+              <p class="listing-card-specs">2 bd &middot; 2 ba &middot; 1,300 sq ft</p>
+            </div>
+          </a>
+        </div>
+        <p style="text-align:center;margin-top:24px"><a class="area-link" href="/westfield-homes-for-rent">See all homes for rent in Westfield &rarr;</a></p>
       </div>
     </section>
 
@@ -2597,25 +2699,67 @@
       (function () {
         var gallery = document.querySelector("[data-listing-gallery]");
         if (gallery) {
-          var heroImg = document.getElementById("listing-hero-photo");
-          gallery.querySelectorAll(".listing-thumb").forEach(function (thumb) {
-            thumb.addEventListener("click", function () {
-              heroImg.src = thumb.getAttribute("data-photo-src");
-              gallery.querySelectorAll(".listing-thumb").forEach(function (t) { t.classList.remove("is-active"); });
-              thumb.classList.add("is-active");
+          var photosDataEl = document.getElementById("gallery-photos-data");
+          var photos = photosDataEl ? JSON.parse(photosDataEl.textContent) : [];
+          var lightbox = document.getElementById("gallery-lightbox");
+          var lightboxImg = document.getElementById("gallery-lightbox-img");
+          var lightboxCount = document.getElementById("gallery-lightbox-count");
+          var currentIndex = 0;
+
+          function showPhoto(index) {
+            currentIndex = (index + photos.length) % photos.length;
+            lightboxImg.src = photos[currentIndex];
+            if (lightboxCount) lightboxCount.textContent = (currentIndex + 1) + " / " + photos.length;
+          }
+
+          function openLightbox(index) {
+            showPhoto(index);
+            lightbox.hidden = false;
+            document.body.style.overflow = "hidden";
+          }
+
+          function closeLightbox() {
+            lightbox.hidden = true;
+            document.body.style.overflow = "";
+          }
+
+          document.querySelectorAll("[data-photo-index]").forEach(function (el) {
+            el.addEventListener("click", function () {
+              openLightbox(parseInt(el.getAttribute("data-photo-index"), 10));
             });
+          });
+
+          var closeBtn = document.getElementById("gallery-lightbox-close");
+          if (closeBtn) closeBtn.addEventListener("click", closeLightbox);
+          var prevBtn = document.getElementById("gallery-lightbox-prev");
+          if (prevBtn) prevBtn.addEventListener("click", function () { showPhoto(currentIndex - 1); });
+          var nextBtn = document.getElementById("gallery-lightbox-next");
+          if (nextBtn) nextBtn.addEventListener("click", function () { showPhoto(currentIndex + 1); });
+
+          lightbox.addEventListener("click", function (e) {
+            if (e.target === lightbox) closeLightbox();
+          });
+          document.addEventListener("keydown", function (e) {
+            if (lightbox.hidden) return;
+            if (e.key === "Escape") closeLightbox();
+            if (e.key === "ArrowLeft") showPhoto(currentIndex - 1);
+            if (e.key === "ArrowRight") showPhoto(currentIndex + 1);
           });
         }
 
-        var form = document.querySelector("[data-showing-form]");
-        if (form) {
-          var confirmation = form.querySelector("[data-confirmation]");
-          form.addEventListener("submit", function (event) {
-            event.preventDefault();
-            form.querySelectorAll("label, .form-actions").forEach(function (el) { el.style.display = "none"; });
-            confirmation.classList.add("is-visible");
-            confirmation.focus();
+        if (document.getElementById("listing-map") && typeof mapboxgl !== "undefined") {
+          mapboxgl.accessToken = "pk.eyJ1IjoibWV0YXlsb3IwOTA5IiwiYSI6ImNtdTdmZXJ5MzBpM3cyenB1eXMwNWdwaXkifQ.0sGI21TcAeEe9v_Pa91a9A";
+          var map = new mapboxgl.Map({
+            container: "listing-map",
+            style: "mapbox://styles/mapbox/light-v11",
+            center: [-86.217967, 39.9806389],
+            zoom: 14,
+            interactive: true
           });
+          map.addControl(new mapboxgl.NavigationControl(), "top-right");
+          new mapboxgl.Marker({ color: "#8c0c03" })
+            .setLngLat([-86.217967, 39.9806389])
+            .addTo(map);
         }
       })();
     </script>
@@ -2623,10 +2767,10 @@
     <section class="section-dark final-cta">
       <div class="container reveal">
         <h2>Interested in This Home?</h2>
-        <p>Apply now or schedule a showing to see it in person.</p>
+        <p>Schedule a showing or apply now to see it in person.</p>
         <div class="cta-row">
-          <a class="btn btn-primary" href="https://reddoor.appfolio.com/listings/rental_applications/new?listable_uid=e7cce56c-05ed-4454-860f-03b7417a08f0&amp;source=RentEngine" target="_blank" rel="noopener">Apply Now</a>
-          <a class="btn btn-secondary" href="#schedule-showing">Schedule a Showing</a>
+          <a class="btn btn-primary" href="https://app.rentengine.io/public/schedule-showing/68673?accounts=6ecca3ec-8e5a-42ed-87ea-af21f97d546e" target="_blank" rel="noopener">Schedule a Showing</a>
+          <a class="btn btn-secondary" href="https://reddoor.appfolio.com/listings/rental_applications/new?listable_uid=e7cce56c-05ed-4454-860f-03b7417a08f0&amp;source=RentEngine" target="_blank" rel="noopener">Apply Now</a>
           <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
         </div>
       </div>
@@ -2652,7 +2796,7 @@
       <div>
         <h3>Main Navigation</h3>
         <a href="/">Home</a>
-        <a href="/indianapolis-homes-for-rent?areas=all">Homes for Rent</a>
+        <a href="/indianapolis-homes-for-rent">Homes for Rent</a>
         <a href="/pricing">Pricing</a>
         <a href="/about">About Us</a>
         <a href="/contact">Contact</a>

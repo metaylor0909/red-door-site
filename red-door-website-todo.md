@@ -911,14 +911,28 @@ exists; On Hold and photo-hosting decisions are made).
       URL structure in `CLAUDE.md`). Real photos (hotlinked from
       AppFolio's CDN, per the Sep 18 decision), real specs/fees/
       description, Apply Now wired to each unit's real
-      `custom_application_url`, and a "Schedule a Showing" lead-capture
-      form (name/email/phone — not yet calling the real
-      `POST /showings/create` API, see open item below). Rental
-      Requirements section deliberately does **not** render the raw
-      `min_resident_qualifications` API field — it's identical across
-      every unit and contains the same non-compliant eviction/felony
-      language already fixed on `tenant-screening.html`; links to
-      `/application-criteria` instead.
+      `custom_application_url`. Rental Requirements section deliberately
+      does **not** render the raw `min_resident_qualifications` API
+      field — it's identical across every unit and contains the same
+      non-compliant eviction/felony language already fixed on
+      `tenant-screening.html`; links to `/application-criteria` instead.
+      **v5 rebuild, same day, against the real RentEngine listing page and
+      our own real schedule-a-showing flow (not just the reference
+      mockup) — see `claude/listings-build-notes.md` for the full
+      writeup:** real 1-large+4-thumbnail gallery with a full-screen
+      lightbox, Schedule-a-Showing/Apply-Now button order fixed to match
+      RentEngine's real page (Schedule primary/first), the old lead-
+      capture form removed and replaced with a link out to RentEngine's
+      real hosted booking page (`app.rentengine.io/public/schedule-showing/
+      {unitId}?accounts={accountId}` — see open item below, this
+      supersedes the plan to build a custom booking form), a real
+      itemized "Total Move-In Cost" card, a live single-pin Mapbox
+      location map, and an "Other Red Door Homes Nearby" section (real
+      haversine-ranked units from the same 28-unit dataset). Two real
+      bugs found and fixed in this pass: a Mapbox script-load-order bug
+      (map silently never initialized) and a lightbox backdrop that
+      wasn't fully opaque (page content behind it stayed legible).
+      Verified on desktop and a 375px mobile viewport.
 - [x] Empty/thin-inventory handling — resolved into the city-page
       architecture (default-city + "homes nearby" fallback), **and now
       live:** each of the 20 `-homes-for-rent` pages either shows real
@@ -945,13 +959,16 @@ exists; On Hold and photo-hosting decisions are made).
       as the RentCast-fed homes-for-rent content above; needs the same
       Cloudflare Worker/Cron approach, or a webhook per `CLAUDE.md`'s
       locked "no debounce" decision for `units` table changes.
-- [ ] **Real "Schedule a Showing" booking, using the now-confirmed API**
-      (`GET /showings/availability` + `POST /showings/create`, see
-      `claude/listings-build-notes.md`). Deliberately built as a simple
-      lead-capture form instead this pass (Michael's call, Sep 18) —
-      the full prescreening `questionAnswers` set isn't documented, so
-      building the real submission now risked guessing at required
-      fields. Swap in the real flow once that's confirmed.
+- ✅ **"Schedule a Showing" resolved (Sep 18, v5 rebuild) — links out to
+      RentEngine's own real hosted booking page** instead of a custom
+      in-page form. Simpler than building against `POST /showings/create`
+      directly, and sidesteps a real limitation: the read-only token this
+      build uses cannot call that endpoint (it's not read-only), so a
+      fully custom flow couldn't actually book anything today anyway. The
+      `GET /showings/availability` + `POST /showings/create` API notes in
+      `claude/listings-build-notes.md` remain accurate if a custom flow is
+      revisited once a write-capable token exists and the full
+      prescreening `questionAnswers` set is documented.
 - ✅ **Indianapolis page rebuilt as the real search/filter/map experience
       (Sep 18) — the "All areas" control is built.** Michael's call: this
       page (not a separate `/homes-for-rent` catch-all, matching the
