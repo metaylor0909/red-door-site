@@ -258,18 +258,22 @@ pages share the literal same component.
   it's click-triggered client-side state rather than present in the initial
   render, it doesn't get indexed as part of that URL, so it doesn't dilute
   Indianapolis's own indexed content.
-- **Header nav's "Homes for Rent" link points at
-  `/indianapolis-homes-for-rent?areas=all`** (exact param name TBD at build
-  time) — a real visitor gets the full inventory immediately, while a
-  self-referencing canonical tag on the bare URL keeps Google treating the
-  Indianapolis-scoped version as authoritative, so the param variant never
-  competes with the other 19 city pages. **Open: finalize the exact
-  query-param convention and confirm the canonical tag.**
-- The mockup's city pills (Indianapolis/Westfield/Carmel/Fishers/
-  Noblesville/Pendleton/All areas) are a **review convenience only** — not
-  the production nav pattern. In production, each pill's destination (other
-  than "All areas" on Indianapolis) is a normal link to that city's own
-  page.
+- ✅ **Built (Sep 18): header nav's "Homes for Rent" link points at
+  `/indianapolis-homes-for-rent?areas=all`** sitewide (93 pages + the
+  shared header fragment) — a real visitor gets the full inventory
+  immediately, while the self-referencing canonical tag on the bare URL
+  (confirmed present) keeps Google treating the Indianapolis-scoped
+  version as authoritative, so the param variant never competes with the
+  other 19 city pages.
+- ✅ **Built (Sep 18): the Indianapolis page's pills, search, filters, and
+  a live Mapbox GL JS map** — see `red-door-website-todo.md`, "Listings —
+  real data wired," for the full writeup. Pills: Indianapolis (current
+  page)/Westfield/Carmel/Fishers/Noblesville are real links to each
+  city's own page, "All areas" is the only client-side toggle — matches
+  the production pattern the mockup's pills were only a review
+  convenience for. Pendleton's pill dropped (real listing, no served-city
+  page). This is Indianapolis-only, per Michael's explicit instruction —
+  the other 19 `-homes-for-rent` pages keep their plain grid.
 - **Every listing detail page's title, meta, H1, and schema must include the
   city plainly** — individual listings rank for "[city] homes for rent" in
   addition to the city hub page, so the city can't live only in the URL
@@ -313,15 +317,18 @@ CTA above Apply now, a real "Total move-in cost" breakdown ($1,940 for unit
 44214), and a "Rental requirements" section using the real
 `min_resident_qualifications` text. A "Features" section (laundry/parking)
 was tried and removed the next day. **Still to do:** real showing-booking
-destination (open), Apply now wired to `custom_application_url`, live Mapbox
-embed, real hotlinked photos once this is an Astro page.
+submission (API confirmed to exist, see the correction above; built as a
+simple lead-capture form for now). ✅ Apply now wired to
+`custom_application_url`, ✅ real hotlinked photos, and ✅ a live Mapbox
+embed (on the Indianapolis page only) are all built — see
+`red-door-website-todo.md`, "Listings — real data wired."
 
 ---
 
 ## Open items summary (also tracked in the main to-do list)
 
-- Finalize the exact `?areas=all`-style query-param convention and confirm
-  the canonical tag on the Indianapolis page.
+- ✅ **Resolved (Sep 18): `?areas=all` query-param convention built and
+  live** — see the correction above.
 - ✅ **Resolved (Sep 18): "Schedule a showing" has a real API** —
   `GET /showings/availability` + `POST /showings/create`, see the
   correction above. Still need the full prescreening `questionAnswers` set

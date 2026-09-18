@@ -316,13 +316,12 @@ Judgment calls / open items carried forward from this build:
   pages, shown in the Areas Served county cards) but isn't on this list —
   expected, since market-reports pages are opt-in based on active
   recurring report coverage, not every served city.
-- [ ] **Two listings-specific open items remain** (four of the original six
-      resolved Sep 18 — see "Listings — real data wired" above): the
-      `?areas=all` query-param convention + canonical tag for the
-      Indianapolis "All areas" control, and the `accepts_vouchers`
-      mismatch (still null on every real unit despite marketing copy
-      advertising Section 8 acceptance on at least one listing). Full
-      detail in `claude/listings-build-notes.md`, "Open items summary."
+- [ ] **One listings-specific open item remains** (five of the original
+      six resolved Sep 18 — see "Listings — real data wired" above): the
+      `accepts_vouchers` mismatch (still null on every real unit despite
+      marketing copy advertising Section 8 acceptance on at least one
+      listing). Full detail in `claude/listings-build-notes.md`, "Open
+      items summary."
 - ✅ **Per-listing title/meta/H1/schema generation — built (Sep 18).**
       Templated from address, beds, baths, city in `build_listing_detail.js`;
       all 28 real listing pages have it.
@@ -953,18 +952,50 @@ exists; On Hold and photo-hosting decisions are made).
       the full prescreening `questionAnswers` set isn't documented, so
       building the real submission now risked guessing at required
       fields. Swap in the real flow once that's confirmed.
-- [ ] Rebuild the listings **index/search page** against real data (only
-      the detail pages and city-page grids were built this pass — no
-      separate `/homes-for-rent` catch-all is planned per the locked SEO
-      architecture, but the "All areas" control on the Indianapolis page
-      mentioned in that architecture still isn't built).
+- ✅ **Indianapolis page rebuilt as the real search/filter/map experience
+      (Sep 18) — the "All areas" control is built.** Michael's call: this
+      page (not a separate `/homes-for-rent` catch-all, matching the
+      locked architecture) is the site's actual main entry point, so it
+      needed real search, filters, and a map, not just a plain grid. The
+      other 19 `-homes-for-rent` pages are unchanged — plain grid only,
+      by design, per the "not for all city pages" instruction. Built:
+      - City pills: Indianapolis (current page) / Westfield / Carmel /
+        Fishers / Noblesville are real links to each city's own page;
+        "All areas" is the only client-side toggle, exactly per the
+        locked reasoning (doesn't dilute the page's own indexed content
+        since revealed listings aren't in the initial render). Pendleton
+        dropped from the pill row (real listing there, but no served-city
+        page to link to — Michael's call, Sep 18).
+      - Search (`city, ZIP, or address`) and filters (beds/price/sqft/
+        pets) run client-side against all 28 real listings; the 20
+        Indianapolis cards are genuinely server-rendered, the other 8
+        live in a JSON script blob and only get injected into the DOM
+        when a search/filter/"All areas" match needs them.
+      - ✅ **`?areas=all` query-param convention decided and built** —
+        resolves that open item. Self-referencing canonical tag on the
+        bare URL confirmed unaffected. Header nav's "Homes for Rent" link
+        updated sitewide (93 pages + the shared header fragment) to
+        `/indianapolis-homes-for-rent?areas=all`, per the locked spec.
+      - ✅ **Live Mapbox GL JS map, not a static mock** — real interactive
+        map with a pin per visible listing (real `address.coordinates`),
+        popups with photo/price/address/View details, synced to
+        whatever the current search/filter/area state shows. Uses a
+        public Mapbox token (pk.…, safe to embed client-side, not a
+        secret like the RentCast/RentEngine keys) pasted in chat Sep 18.
+      - Found and fixed while building: `history.replaceState` on the
+        `?areas=all` URL update needs a try/catch — it can throw in
+        some environments (confirmed in this session's own preview
+        sandbox, which renders local files via a `data:` URL); wrapped
+        so a URL-update failure never blocks the actual filtering.
+- [ ] Rebuild the listings **index/search page** design draft (v3
+      mockup) into something reusable, or fold it into work on the other
+      19 city pages later if they ever need the same treatment — not
+      requested this pass.
 - [ ] Sorting UI, pagination/infinite-scroll (not urgent at 28 listings).
-- [ ] Live Mapbox GL JS embed (provider decided, integration not built;
-      real `address.coordinates` are already in the pulled unit data).
 - [ ] Per-listing sitemap entries (28 real URLs now exist and should be
       in `sitemap.xml` once that's built).
 - [ ] The remaining open sub-decisions listed under "Genuinely open"
-      above (`?areas=all` query-param convention, `accepts_vouchers`
+      above (`accepts_vouchers`
       mismatch — confirmed again in the real Sep 18 pull, still null on
       every unit despite marketing copy advertising Section 8 on at
       least one listing).
