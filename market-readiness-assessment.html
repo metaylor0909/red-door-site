@@ -2442,6 +2442,38 @@
     .step-card p { color: var(--muted); font-size: .95rem; margin-bottom: 10px; }
     .step-card ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: .92rem; }
     .step-card li { margin-bottom: 6px; }
+    .step-icon {
+      position: relative;
+      z-index: 1;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      color: var(--white);
+      background: linear-gradient(150deg, var(--red), var(--red-dark));
+      border-radius: 11px;
+      box-shadow: 0 12px 22px -8px rgba(140, 12, 3, .28);
+    }
+    .step-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    .step-grid.is-five-across {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+    @media (max-width: 1180px) {
+      .step-grid.is-five-across { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .step-grid.is-five-across { grid-template-columns: 1fr; }
+    }
     .content-block { max-width: 900px; }
     .content-block.is-centered { margin-inline: auto; text-align: center; }
     .content-block h2 { margin-bottom: 14px; }
@@ -2649,16 +2681,25 @@
           <div class="section-kicker">How It Works</div>
           <h2>Five Steps to a Rent-Ready Home</h2>
         </div>
-        <div class="step-grid">
+        <div class="step-grid is-five-across">
           <article class="step-card" data-step="1">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 20V11"></path><path d="M10 20V6"></path><path d="M16 20v-8"></path><path d="M4 20h16"></path></svg>
+            </span>
             <h3>Free Rental Market Analysis</h3>
             <p>Overpricing leads to longer vacancies; underpricing leaves money on the table. We build a comparative market analysis using current listings, recently rented comparable homes, and seasonal and economic rental trends so your home enters the market competitively.</p>
           </article>
           <article class="step-card" data-step="2">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M3 9h3l2.5-2.5h7L17 9h4v9H3z"></path><circle cx="12" cy="13.5" r="3.4"></circle></svg>
+            </span>
             <h3>Video Walkthrough &amp; Photo Inspection</h3>
             <p>A professional video walkthrough and room-by-room photo inspection documents every visible aspect of the property&rsquo;s condition &mdash; identifying needed repairs, highlighting strong features for marketing, and protecting you from future disputes.</p>
           </article>
           <article class="step-card" data-step="3">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"></rect><path d="M9 4h6v3H9z"></path><path d="M8.5 13l2 2 4-4.5"></path></svg>
+            </span>
             <h3>Detailed Market Readiness Report</h3>
             <p>Findings are compiled into an MRA report grouped into four priority categories, each with a description, estimated cost, and clear justification:</p>
             <ul>
@@ -2669,10 +2710,16 @@
             </ul>
           </article>
           <article class="step-card" data-step="4">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M14.7 6.3a3.7 3.7 0 0 0-4.9 4.9l-5.1 5.1a1.6 1.6 0 0 0 2.3 2.3l5.1-5.1a3.7 3.7 0 0 0 4.9-4.9l-2.2 2.2-2-2z"></path></svg>
+            </span>
             <h3>Preventative Maintenance Recommendations</h3>
             <p>Not all improvements are urgent, but many are smart investments. Common proactive services include semi-annual HVAC clean &amp; check, water heater flush, dryer vent cleaning, gutter cleaning, and perimeter pest control &mdash; protecting the property long-term and reducing emergency calls.</p>
           </article>
           <article class="step-card" data-step="5">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 12.5l2.5 2.5 4.5-5"></path></svg>
+            </span>
             <h3>Owner Approval &amp; Immediate Execution</h3>
             <p>You review and approve the suggested work. Once approved, our in-house maintenance team and trusted vendors get to work while Red Door coordinates scheduling, access, and quality control &mdash; with updates throughout, not surprises. A final punch walkthrough confirms the home is fully ready for showings.</p>
           </article>
