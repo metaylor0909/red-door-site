@@ -237,8 +237,9 @@
       .browser-layout { grid-template-columns: 1fr; }
       .browser-layout .listing-grid-real { grid-template-columns: repeat(2, 1fr); }
       .browser-layout.is-map-hidden .listing-grid-real { grid-template-columns: repeat(2, 1fr); }
-      .map-panel { position: static; height: 340px; }
-      .browser-layout.is-map-only .map-panel { height: 480px; }
+      .map-panel { position: relative; height: 340px; }
+      .browser-layout.is-map-only .map-panel { height: 600px; }
+      .map-detail-photo { aspect-ratio: 16/10; }
       .view-toggle { margin-left: 0; }
       .map-detail-drawer { width: 100%; max-width: 100%; }
     }

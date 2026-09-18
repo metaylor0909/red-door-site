@@ -304,6 +304,25 @@ pages share the literal same component.
   page) instead of the small native Mapbox popup used in Split/List —
   markers are rebuilt on every view-mode change so the right click
   behavior (popup vs. drawer) is always attached for the current mode.
+- ✅ **Mobile testing pass (Sep 18) — one real bug found and fixed.** The
+  map-detail drawer is `position: absolute` against `.map-panel`; the
+  panel's mobile override (`position: static`, to kill the desktop
+  `sticky` behavior) broke that containing-block relationship, so the
+  closed drawer rendered relative to `<body>` instead — visible as a
+  listing card bleeding out from behind the hero at the top of the
+  page. Fixed by using `position: relative` instead of `static` on
+  mobile (keeps the position context, drops the sticky). Also bumped
+  the mobile Map-view panel height from 480px to 600px and shortened
+  the drawer's photo aspect ratio (16/10, was 4/3) after finding the
+  drawer's content (556px) taller than its old box (480px) — the "View
+  Full Details" button was reachable only by scrolling inside the
+  drawer, not visibly indicated. Confirmed fits without internal
+  scrolling now. Everything else (pills wrapping, filter row wrapping,
+  range-slider popovers staying on-screen, Split/List/Map switching,
+  card grid columns collapsing to 2 then 1) checked out on a 375px
+  viewport with no other issues. Scrolling directly over the map
+  zooms it instead of scrolling the page — standard behavior for any
+  embedded interactive map (Mapbox, Google Maps, etc.), not a bug.
 - **Every listing detail page's title, meta, H1, and schema must include the
   city plainly** — individual listings rank for "[city] homes for rent" in
   addition to the city hub page, so the city can't live only in the URL
