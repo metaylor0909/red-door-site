@@ -267,13 +267,33 @@ pages share the literal same component.
   other 19 city pages.
 - ✅ **Built (Sep 18): the Indianapolis page's pills, search, filters, and
   a live Mapbox GL JS map** — see `red-door-website-todo.md`, "Listings —
-  real data wired," for the full writeup. Pills: Indianapolis (current
-  page)/Westfield/Carmel/Fishers/Noblesville are real links to each
-  city's own page, "All areas" is the only client-side toggle — matches
-  the production pattern the mockup's pills were only a review
-  convenience for. Pendleton's pill dropped (real listing, no served-city
-  page). This is Indianapolis-only, per Michael's explicit instruction —
-  the other 19 `-homes-for-rent` pages keep their plain grid.
+  real data wired," for the full writeup. Pills reflect whichever cities
+  actually have current inventory, not a fixed guess: Indianapolis
+  (current page), Carmel, Westfield, Noblesville, Greenwood, Avon are
+  real links to each city's own page (Fishers dropped — zero current
+  units despite appearing in the reference mockup; Greenwood/Avon added
+  — one unit each, missed in the first pass), "All areas" is the only
+  client-side toggle. Pendleton's pill dropped (real listing, no
+  served-city page). This is Indianapolis-only, per Michael's explicit
+  instruction — the other 19 `-homes-for-rent` pages keep their plain
+  grid.
+- ✅ **Follow-up refinement pass (Sep 18), against a reference mockup
+  Michael provided:** moved the whole browser section (pills/search/
+  filters/map/grid) to directly below the hero, ahead of the RentCast
+  snapshot and "What to Expect" sections. Map is 50/50 with the grid by
+  default (2 cards per row); a "Hide map" toggle switches to a 3-per-row
+  full-width grid. Hovering a card highlights (enlarges) its map pin and
+  vice versa. Price and square-footage filters are real dual-handle
+  range sliders with a histogram computed from the actual 28-listing
+  dataset (not the placeholder dropdowns from the first pass), each in
+  its own popover matching the reference mockup's pattern. **The map
+  defaults to showing every available home in every area** (not
+  Indianapolis-scoped) and stays that way regardless of which city pill
+  is active — only the search box and beds/price/sqft/pets filters
+  narrow what the map shows; the Indianapolis/All areas pill only
+  controls the card grid below it, per the locked SEO reasoning (the
+  map's pins aren't indexable text content the way the cards are, so
+  there's no dilution risk in showing all of them by default).
 - **Every listing detail page's title, meta, H1, and schema must include the
   city plainly** — individual listings rank for "[city] homes for rent" in
   addition to the city hub page, so the city can't live only in the URL
