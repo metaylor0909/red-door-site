@@ -294,6 +294,16 @@ pages share the literal same component.
   controls the card grid below it, per the locked SEO reasoning (the
   map's pins aren't indexable text content the way the cards are, so
   there's no dilution risk in showing all of them by default).
+- ✅ **Second follow-up pass (Sep 18): three-way view toggle (Split /
+  List / Map), replacing the single "Hide map" button.** Split is the
+  default 50/50 layout; List hides the map for a 3-per-row grid (same
+  as the "Hide map" behavior from the first refinement pass); Map goes
+  full-width and hides the card grid entirely. In Map view, clicking a
+  marker opens a wide slide-in detail panel on the right (photo, rent,
+  address, specs, pets, a "View Full Details" link to the real listing
+  page) instead of the small native Mapbox popup used in Split/List —
+  markers are rebuilt on every view-mode change so the right click
+  behavior (popup vs. drawer) is always attached for the current mode.
 - **Every listing detail page's title, meta, H1, and schema must include the
   city plainly** — individual listings rank for "[city] homes for rent" in
   addition to the city hub page, so the city can't live only in the URL

@@ -159,8 +159,10 @@
     .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; position: relative; }
     .filter-row select { min-height: 44px; padding: 8px 34px 8px 14px; color: var(--ink); background: var(--white); border: 1px solid var(--line); border-radius: 8px; font-weight: 700; font-size: .9rem; }
     .reset-filters { padding: 8px 4px; color: var(--red-dark); background: none; border: 0; font-weight: 800; font-size: .88rem; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
-    .map-toggle-btn { margin-left: auto; min-height: 40px; padding: 8px 18px; color: var(--ink); background: var(--white); border: 1px solid var(--line); border-radius: 8px; font-weight: 800; font-size: .86rem; cursor: pointer; }
-    .map-toggle-btn:hover { border-color: var(--brand-light); color: var(--red); }
+    .view-toggle { margin-left: auto; display: flex; gap: 2px; padding: 3px; background: var(--soft); border: 1px solid var(--line); border-radius: 9px; }
+    .view-toggle-btn { min-height: 34px; padding: 6px 16px; color: var(--muted); background: transparent; border: 0; border-radius: 6px; font-weight: 800; font-size: .84rem; cursor: pointer; }
+    .view-toggle-btn:hover { color: var(--ink); }
+    .view-toggle-btn.is-active { color: var(--white); background: var(--red); }
 
     /* ---------- Price / sqft range-slider dropdowns ---------- */
     .range-dropdown { position: relative; }
@@ -192,6 +194,23 @@
     .browser-layout.is-map-hidden { grid-template-columns: 1fr; }
     .browser-layout.is-map-hidden .map-panel { display: none; }
     .browser-layout.is-map-hidden .listing-grid-real { grid-template-columns: repeat(3, 1fr); }
+    .browser-layout.is-map-only { grid-template-columns: 1fr; }
+    .browser-layout.is-map-only .listing-grid-real { display: none; }
+    .browser-layout.is-map-only .map-panel { height: 720px; }
+
+    .map-detail-drawer { position: absolute; top: 0; right: 0; bottom: 0; width: 380px; max-width: 88%; padding: 0; background: var(--white); box-shadow: -14px 0 34px rgba(23, 23, 23, .22); transform: translateX(105%); transition: transform .28s ease; z-index: 15; overflow-y: auto; }
+    .map-detail-drawer.is-open { transform: translateX(0); }
+    .map-detail-close { position: sticky; top: 10px; left: 100%; margin: 10px 10px -34px 0; width: 30px; height: 30px; display: grid; place-items: center; color: var(--ink); background: var(--white); border: 1px solid var(--line); border-radius: 50%; cursor: pointer; font-size: 1rem; line-height: 1; box-shadow: 0 4px 10px rgba(0,0,0,.15); z-index: 2; }
+    .map-detail-photo { aspect-ratio: 4/3; background: var(--soft); overflow: hidden; }
+    .map-detail-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .map-detail-body { padding: 18px 20px 22px; }
+    .map-detail-rent { font-family: var(--font-head, inherit); font-size: 1.6rem; font-weight: 700; color: var(--red); margin-bottom: 4px; }
+    .map-detail-rent span { font-size: .9rem; color: var(--muted); font-weight: 600; }
+    .map-detail-address { color: var(--ink); font-weight: 800; font-size: 1.05rem; margin-bottom: 2px; }
+    .map-detail-city { color: var(--muted); font-size: .88rem; font-weight: 700; margin-bottom: 12px; }
+    .map-detail-specs { display: flex; flex-wrap: wrap; gap: 8px 18px; color: var(--charcoal); font-size: .92rem; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--soft); }
+    .map-detail-pets { color: var(--red-dark); font-weight: 800; font-size: .88rem; margin-bottom: 18px; }
+    .map-detail-actions { display: grid; gap: 10px; }
 
     .listing-card-photo { position: relative; }
     .listing-card-photocount { position: absolute; left: 8px; bottom: 8px; padding: 3px 9px; color: var(--white); background: rgba(23, 23, 23, .68); border-radius: 999px; font-size: .74rem; font-weight: 800; }
@@ -219,7 +238,9 @@
       .browser-layout .listing-grid-real { grid-template-columns: repeat(2, 1fr); }
       .browser-layout.is-map-hidden .listing-grid-real { grid-template-columns: repeat(2, 1fr); }
       .map-panel { position: static; height: 340px; }
-      .map-toggle-btn { margin-left: 0; }
+      .browser-layout.is-map-only .map-panel { height: 480px; }
+      .view-toggle { margin-left: 0; }
+      .map-detail-drawer { width: 100%; max-width: 100%; }
     }
     @media (max-width: 620px) {
       .browser-layout .listing-grid-real, .browser-layout.is-map-hidden .listing-grid-real { grid-template-columns: 1fr; }
@@ -389,13 +410,31 @@
               <option value="no">No pets</option>
             </select>
             <button type="button" class="reset-filters" id="reset-filters">Reset filters</button>
-            <button type="button" class="map-toggle-btn" id="map-toggle-btn">Hide map</button>
+            <div class="view-toggle" id="view-toggle" role="group" aria-label="Layout view">
+              <button type="button" class="view-toggle-btn is-active" data-view="split" aria-pressed="true">Split</button>
+              <button type="button" class="view-toggle-btn" data-view="list" aria-pressed="false">List</button>
+              <button type="button" class="view-toggle-btn" data-view="map" aria-pressed="false">Map</button>
+            </div>
           </div>
         </div>
 
         <div class="browser-layout">
           <div class="map-panel">
             <div id="homes-map" aria-label="Map of available homes"></div>
+            <div class="map-detail-drawer" id="map-detail-drawer">
+              <button type="button" class="map-detail-close" id="map-detail-close" aria-label="Close listing preview">&times;</button>
+              <div class="map-detail-photo"><img id="map-detail-photo-img" src="" alt=""></div>
+              <div class="map-detail-body">
+                <p class="map-detail-rent" id="map-detail-rent"></p>
+                <p class="map-detail-address" id="map-detail-address"></p>
+                <p class="map-detail-city" id="map-detail-city"></p>
+                <div class="map-detail-specs" id="map-detail-specs"></div>
+                <p class="map-detail-pets" id="map-detail-pets"></p>
+                <div class="map-detail-actions">
+                  <a class="btn btn-primary" id="map-detail-view-link" href="#">View Full Details</a>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="listing-grid-real" id="listing-grid" data-default-count="20">
           <a class="listing-card" href="/homes-for-rent/indianapolis/408-north-oakland-avenue-unit-a" data-listing-id="44214" data-city="indianapolis" data-beds="2" data-rent="850" data-sqft="1100" data-pets="Dogs only">
@@ -741,7 +780,6 @@
         var indyPillBtn = document.querySelector('[data-pill="indianapolis"]');
         var allPillBtn = document.querySelector('[data-pill="all"]');
         var browserLayout = document.querySelector(".browser-layout");
-        var mapToggleBtn = document.getElementById("map-toggle-btn");
 
         var otherAreas = JSON.parse(document.getElementById("other-areas-data").textContent);
         var indyListings = JSON.parse(document.getElementById("indy-listings-data").textContent);
@@ -751,7 +789,6 @@
 
         var otherAreasInjected = false;
         var cityMode = "indianapolis"; // "indianapolis" | "all"
-        var mapVisible = true;
 
         function money(n) {
           return "$" + Math.round(n).toLocaleString("en-US");
@@ -1034,15 +1071,53 @@
         resetBtn.addEventListener("click", resetFilters);
         emptyResetBtn.addEventListener("click", resetFilters);
 
-        // ---------- Hide/show map ----------
-        mapToggleBtn.addEventListener("click", function () {
-          mapVisible = !mapVisible;
-          browserLayout.classList.toggle("is-map-hidden", !mapVisible);
-          mapToggleBtn.textContent = mapVisible ? "Hide map" : "Show map";
-          if (mapVisible && map) {
+        // ---------- View mode: split / list / map ----------
+        var viewMode = "split";
+        var viewToggleBtns = document.querySelectorAll(".view-toggle-btn");
+
+        function setViewMode(mode) {
+          viewMode = mode;
+          viewToggleBtns.forEach(function (btn) {
+            var isActive = btn.getAttribute("data-view") === mode;
+            btn.classList.toggle("is-active", isActive);
+            btn.setAttribute("aria-pressed", isActive ? "true" : "false");
+          });
+          browserLayout.classList.toggle("is-map-hidden", mode === "list");
+          browserLayout.classList.toggle("is-map-only", mode === "map");
+          if (mode !== "map") {
+            closeMapDetail();
+          }
+          if (mode !== "list" && map) {
+            updateMapMarkers(currentFilterOpts());
             setTimeout(function () { map.resize(); }, 50);
           }
+        }
+
+        viewToggleBtns.forEach(function (btn) {
+          btn.addEventListener("click", function () { setViewMode(btn.getAttribute("data-view")); });
         });
+
+        // ---------- Map detail drawer (full-map view) ----------
+        var mapDetailDrawer = document.getElementById("map-detail-drawer");
+        var mapDetailClose = document.getElementById("map-detail-close");
+
+        function openMapDetail(d) {
+          document.getElementById("map-detail-photo-img").src = d.photo;
+          document.getElementById("map-detail-photo-img").alt = d.address;
+          document.getElementById("map-detail-rent").innerHTML = money(d.rent) + "<span>/mo</span>";
+          document.getElementById("map-detail-address").textContent = d.address;
+          document.getElementById("map-detail-city").textContent = d.city + ", IN";
+          document.getElementById("map-detail-specs").textContent = d.beds + " bd · " + d.baths + " ba" + (d.sqft ? " · " + d.sqft.toLocaleString("en-US") + " sq ft" : "");
+          document.getElementById("map-detail-pets").textContent = d.pets;
+          document.getElementById("map-detail-view-link").href = d.detailPath;
+          mapDetailDrawer.classList.add("is-open");
+        }
+
+        function closeMapDetail() {
+          mapDetailDrawer.classList.remove("is-open");
+        }
+
+        mapDetailClose.addEventListener("click", closeMapDetail);
 
         // ---------- Mapbox GL JS ----------
         var map, markers = [], markersById = {};
@@ -1094,17 +1169,21 @@
               if (card) card.classList.remove("is-map-hovered");
             });
 
-            var popupHtml =
-              '<div class="map-popup-card"><img src="' + escapeHtml(d.photo) + '" alt="">' +
-              '<span class="rent">' + money(d.rent) + "/mo</span>" +
-              '<span class="addr">' + escapeHtml(d.address) + "</span>" +
-              '<a href="' + escapeHtml(d.detailPath) + '">View details &rarr;</a></div>';
-            var popup = new mapboxgl.Popup({ offset: 14 }).setHTML(popupHtml);
-
             var marker = new mapboxgl.Marker({ element: el, anchor: "bottom" })
               .setLngLat([d.lng, d.lat])
-              .setPopup(popup)
               .addTo(map);
+
+            if (viewMode === "map") {
+              el.addEventListener("click", function () { openMapDetail(d); });
+            } else {
+              var popupHtml =
+                '<div class="map-popup-card"><img src="' + escapeHtml(d.photo) + '" alt="">' +
+                '<span class="rent">' + money(d.rent) + "/mo</span>" +
+                '<span class="addr">' + escapeHtml(d.address) + "</span>" +
+                '<a href="' + escapeHtml(d.detailPath) + '">View details &rarr;</a></div>';
+              marker.setPopup(new mapboxgl.Popup({ offset: 14 }).setHTML(popupHtml));
+            }
+
             markers.push(marker);
             markersById[d.id] = el;
             bounds.extend([d.lng, d.lat]);
