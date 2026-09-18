@@ -1,0 +1,3678 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Marketing Process | Red Door Property Management</title>
+  <meta name="description" content="Professional photography, virtual walkthroughs, and syndication to every major rental platform — Red Door's marketing process for Indianapolis-area rental owners.">
+  <link rel="canonical" href="https://www.reddoorrents.com/marketing-process">
+  <meta property="og:title" content="Marketing Process | Red Door Property Management">
+  <meta property="og:description" content="Professional photography, virtual walkthroughs, and syndication to every major rental platform — Red Door's marketing process for Indianapolis-area rental owners.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.reddoorrents.com/marketing-process">
+  <meta property="og:image" content="https://www.reddoorrents.com/red-door-og-image.png">
+  <link rel="icon" href="red-door-favicon-tile.svg" type="image/svg+xml">
+  <link rel="alternate icon" href="favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="apple-touch-icon-180.png">
+  <meta name="theme-color" content="#8c0c03">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap">
+  <style>
+    :root {
+      /* Brand ramp — anchored to the logo red #8c0c03 */
+      --brand: #8c0c03;
+      --brand-mid: #bc1719;
+      --brand-light: #e2565a;
+      --brand-tint: #fcecea;
+      --gray: #717075;
+
+      /* Legacy aliases: existing rules reference --red / --red-dark */
+      --red: var(--brand);
+      --red-dark: var(--brand-mid);
+
+      --ink: #171717;
+      --charcoal: #252525;
+      --muted: #717075;
+      --line: #e4e3e6;
+      --soft: #f5f5f6;
+      --white: #ffffff;
+      --shadow: 0 18px 45px rgba(20, 20, 20, .09);
+      --shadow-strong: 0 28px 70px rgba(10, 10, 10, .24);
+      --radius: 8px;
+      --max: 1220px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      --font-head: 'Literata', Georgia, 'Times New Roman', serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--charcoal);
+      background: var(--white);
+      font-family: var(--font);
+      line-height: 1.56;
+      overflow-x: hidden;
+    }
+
+    body.menu-open {
+      overflow: hidden;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    :focus-visible {
+      outline: 3px solid rgba(140, 12, 3, .42);
+      outline-offset: 4px;
+    }
+
+    .skip-link {
+      position: fixed;
+      left: 16px;
+      top: 16px;
+      z-index: 100;
+      padding: 10px 14px;
+      color: var(--white);
+      background: var(--red);
+      border-radius: 6px;
+      font-weight: 900;
+      transform: translateY(-150%);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .container,
+    .nav-inner,
+    .topbar-inner {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      color: var(--white);
+      background: linear-gradient(180deg, rgba(8, 8, 8, .72), rgba(8, 8, 8, .18));
+      border-bottom: 1px solid rgba(255, 255, 255, .16);
+      transition: background .22s ease, color .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+
+    .site-header.is-scrolled,
+    .site-header.is-open {
+      color: var(--ink);
+      background: rgba(255, 255, 255, .98);
+      border-bottom-color: var(--line);
+      box-shadow: 0 12px 28px rgba(23, 23, 23, .08);
+    }
+
+    .topbar {
+      font-size: .84rem;
+      border-bottom: 1px solid rgba(255, 255, 255, .14);
+    }
+
+    .site-header.is-scrolled .topbar,
+    .site-header.is-open .topbar {
+      color: #f4f4f4;
+      background: #191919;
+      border-bottom: 0;
+    }
+
+    .topbar-inner {
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .topbar a {
+      font-weight: 800;
+    }
+
+    .nav-inner {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 232px;
+      flex: 0 0 auto;
+    }
+
+    .brand-mark {
+      position: relative;
+      width: 47px;
+      height: 47px;
+      display: grid;
+      place-items: center;
+      background: var(--red);
+      border-radius: 4px;
+      box-shadow: 0 9px 18px rgba(140, 12, 3, .28);
+    }
+
+    .brand-mark::before {
+      content: "";
+      width: 24px;
+      height: 31px;
+      border: 3px solid var(--white);
+      border-bottom-width: 5px;
+      border-radius: 2px 2px 1px 1px;
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      right: 14px;
+      top: 24px;
+      width: 4px;
+      height: 4px;
+      background: var(--white);
+      border-radius: 50%;
+    }
+
+    .brand-text {
+      display: grid;
+      gap: 2px;
+      color: currentColor;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .brand-text span:first-child {
+      font-size: 1.08rem;
+    }
+
+    .brand-text span:last-child {
+      color: currentColor;
+      opacity: .76;
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 17px;
+      font-size: .88rem;
+      font-weight: 800;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-menu a,
+    .nav-menu button {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: currentColor;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      white-space: nowrap;
+    }
+
+    .nav-menu a:hover,
+    .nav-menu button:hover {
+      color: #ffcdcd;
+    }
+
+    .site-header.is-scrolled .nav-menu a:hover,
+    .site-header.is-scrolled .nav-menu button:hover,
+    .site-header.is-open .nav-menu a:hover,
+    .site-header.is-open .nav-menu button:hover {
+      color: var(--red);
+    }
+
+    .nav-menu .nav-cta {
+      min-height: 40px;
+      padding: 10px 18px;
+      color: var(--white);
+      background: var(--brand-mid);
+      font-size: .8rem;
+      flex: 0 0 auto;
+    }
+
+    .nav-menu .nav-cta:hover {
+      color: var(--white);
+      background: var(--brand);
+    }
+
+    .dropdown-toggle::after {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: rotate(45deg) translateY(-2px);
+    }
+
+    .dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      min-width: 260px;
+      padding: 10px;
+      color: var(--charcoal);
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px);
+      transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
+    }
+
+    .nav-item:hover .dropdown,
+    .nav-item:focus-within .dropdown,
+    .nav-item.is-open .dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown a {
+      display: flex;
+      min-height: 40px;
+      padding: 9px 10px;
+      border-radius: 6px;
+      color: var(--charcoal);
+    }
+
+    .dropdown a:hover {
+      color: var(--red);
+      background: #fff4f4;
+    }
+
+    .menu-button {
+      display: none;
+      width: 46px;
+      height: 46px;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, .32);
+      border-radius: 6px;
+      color: currentColor;
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .menu-button span,
+    .menu-button span::before,
+    .menu-button span::after {
+      width: 22px;
+      height: 2px;
+      display: block;
+      background: currentColor;
+      transition: transform .18s ease, opacity .18s ease;
+    }
+
+    .menu-button span {
+      position: relative;
+    }
+
+    .menu-button span::before,
+    .menu-button span::after {
+      content: "";
+      position: absolute;
+      left: 0;
+    }
+
+    .menu-button span::before {
+      top: -7px;
+    }
+
+    .menu-button span::after {
+      top: 7px;
+    }
+
+    .menu-button[aria-expanded="true"] span {
+      background: transparent;
+    }
+
+    .menu-button[aria-expanded="true"] span::before {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .menu-button[aria-expanded="true"] span::after {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .btn {
+      min-height: 50px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      max-width: 100%;
+      padding: 14px 20px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      font-weight: 900;
+      line-height: 1.1;
+      text-align: center;
+      text-transform: uppercase;
+      white-space: normal;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      color: var(--white);
+      background: var(--brand-mid);
+      box-shadow: 0 14px 26px rgba(188, 23, 25, .26);
+    }
+
+    .btn-primary:hover {
+      background: var(--brand);
+    }
+
+    .btn-secondary {
+      color: var(--red);
+      background: var(--white);
+      border-color: var(--red);
+      border-width: 2px;
+    }
+
+    .btn-secondary:hover {
+      color: var(--red-dark);
+      border-color: var(--red-dark);
+      background: #fff5f5;
+      box-shadow: 0 10px 22px rgba(140, 12, 3, .12);
+    }
+
+    .btn-dark {
+      color: var(--white);
+      background: #1f1f1f;
+    }
+
+    .hero {
+      position: relative;
+      isolation: isolate;
+      min-height: clamp(680px, 88vh, 880px);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: var(--white);
+      text-align: center;
+      background:
+        linear-gradient(180deg, rgba(7, 7, 7, .28) 0%, rgba(7, 7, 7, .42) 48%, rgba(7, 7, 7, .68) 100%),
+        linear-gradient(90deg, rgba(7, 7, 7, .24), rgba(7, 7, 7, .08) 42%, rgba(7, 7, 7, .32)),
+        url("red-door-hero.webp") center right / cover no-repeat;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 120px;
+      background: linear-gradient(180deg, rgba(255,255,255,0), var(--white));
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .hero-content {
+      width: min(1280px, calc(100% - 16px));
+      padding: 190px 0 120px;
+    }
+
+    .eyebrow,
+    .section-kicker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      color: var(--red);
+      font-size: .78rem;
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      flex-wrap: wrap;
+      line-height: 1.35;
+    }
+
+    .hero .eyebrow {
+      color: #ffdcdc;
+    }
+
+    .eyebrow::before,
+    .section-kicker::before {
+      content: "";
+      width: 34px;
+      height: 3px;
+      background: currentColor;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      max-width: 1240px;
+      margin: 0 auto 22px;
+      color: var(--white);
+      font-size: clamp(2.2rem, 5vw, 4.45rem);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: 0;
+      transform: translateY(-58px);
+    }
+
+    h1 span {
+      display: block;
+      white-space: nowrap;
+    }
+
+    h2 {
+      color: var(--ink);
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      line-height: 1.07;
+      letter-spacing: 0;
+      margin-bottom: 14px;
+    }
+
+    h3 {
+      color: var(--ink);
+      line-height: 1.18;
+    }
+
+    .hero-copy {
+      max-width: 790px;
+      margin: 0 auto 30px;
+      color: #f3f3f3;
+      font-size: clamp(1.06rem, 2.1vw, 1.34rem);
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .hero .cta-row {
+      margin-top: 0;
+      column-gap: 36px;
+      row-gap: 16px;
+      transform: translateY(-28px);
+    }
+
+    .scroll-cue {
+      position: absolute;
+      left: 50%;
+      bottom: 36px;
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+      color: rgba(255, 255, 255, .86);
+      font-size: .72rem;
+      font-weight: 900;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      transform: translateX(-50%);
+    }
+
+    .scroll-cue span {
+      width: 24px;
+      height: 40px;
+      border: 2px solid rgba(255, 255, 255, .72);
+      border-radius: 999px;
+      position: relative;
+    }
+
+    .scroll-cue span::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      width: 4px;
+      height: 8px;
+      background: var(--white);
+      border-radius: 999px;
+      transform: translateX(-50%);
+      animation: scrollDot 1.45s ease-in-out infinite;
+    }
+
+    @keyframes scrollDot {
+      0%, 100% { transform: translate(-50%, 0); opacity: .9; }
+      55% { transform: translate(-50%, 12px); opacity: .28; }
+    }
+
+    section {
+      padding: clamp(68px, 8vw, 104px) 0;
+      scroll-margin-top: 126px;
+    }
+
+    .section-soft {
+      background: var(--soft);
+    }
+
+    .section-dark {
+      background: #171717;
+      color: #f4f4f4;
+    }
+
+    .section-dark h2,
+    .section-dark h3 {
+      color: var(--white);
+    }
+
+    .section-dark p {
+      color: #dedede;
+    }
+
+    .section-head {
+      max-width: 820px;
+      margin-bottom: 36px;
+    }
+
+    .section-head.center {
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .section-head p,
+    .lead {
+      color: var(--muted);
+      font-size: clamp(1rem, 1.65vw, 1.15rem);
+    }
+
+    .proof-strip {
+      padding: 0;
+      background: var(--white);
+    }
+
+    .proof-panel {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0;
+      margin-top: -62px;
+      overflow: hidden;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-strong);
+    }
+
+    .proof-panel.reveal {
+      opacity: 1;
+      transform: none;
+    }
+
+    .proof-item {
+      min-height: 146px;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+      padding: 26px;
+      border-right: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .proof-item:last-child {
+      border-right: 0;
+    }
+
+    .proof-item strong {
+      color: var(--red);
+      font-size: clamp(2.35rem, 4vw, 4rem);
+      line-height: .95;
+      letter-spacing: 0;
+    }
+
+    .proof-item span {
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .proof-trust {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .journey-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .journey-track {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 26px;
+    }
+
+    .journey-card {
+      position: relative;
+      min-height: 288px;
+      display: flex;
+      flex-direction: column;
+      padding: 28px 26px 24px;
+      overflow: hidden;
+      color: var(--charcoal);
+      background: linear-gradient(158deg, #ffffff 0%, #f7f9fc 100%);
+      border: 1px solid rgba(18, 22, 30, .08);
+      border-radius: 16px;
+      box-shadow: 0 26px 50px -24px rgba(20, 24, 33, .35), 0 2px 6px rgba(20, 24, 33, .05);
+      transition: transform .28s ease, box-shadow .4s ease, border-color .4s ease;
+    }
+
+    .journey-card::before {
+      content: attr(data-step);
+      position: absolute;
+      top: -11px;
+      right: 8px;
+      color: rgba(18, 22, 30, .045);
+      font-size: 6rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -.04em;
+      pointer-events: none;
+    }
+
+    .journey-card::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--red), transparent);
+      opacity: .55;
+      transition: opacity .4s ease;
+    }
+
+    .journey-card:hover,
+    .journey-card:focus-visible {
+      color: var(--charcoal);
+      transform: translateY(-4px);
+      border-color: rgba(140, 12, 3, .42);
+      box-shadow: 0 34px 60px -22px rgba(20, 24, 33, .42), 0 0 0 1px rgba(140, 12, 3, .23), 0 0 46px -10px rgba(140, 12, 3, .30);
+    }
+
+    .journey-card:hover::after,
+    .journey-card:focus-visible::after {
+      opacity: 1;
+    }
+
+    .journey-icon {
+      position: relative;
+      z-index: 1;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      margin-bottom: 12px;
+      color: var(--white);
+      background: linear-gradient(150deg, var(--red), var(--red-dark));
+      border-radius: 11px;
+      box-shadow: 0 12px 22px -8px rgba(140, 12, 3, .28);
+    }
+
+    .journey-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .journey-stage {
+      display: block;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 6px;
+      color: var(--red);
+      font-size: .68rem;
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .journey-card h3 {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+    }
+
+    .journey-card p {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 24px;
+      color: var(--muted);
+      font-size: .94rem;
+      line-height: 1.55;
+    }
+
+    .text-link {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+      color: var(--red);
+      font-weight: 900;
+    }
+
+    .text-link::after {
+      content: "->";
+      transition: transform .18s ease;
+    }
+
+    .journey-card:hover .text-link::after,
+    .text-link:hover::after {
+      transform: translateX(3px);
+    }
+
+    .journey-card .text-link {
+      font-size: .83rem;
+      font-style: italic;
+    }
+
+    .journey-card .text-link::after {
+      content: "";
+    }
+
+    .journey-cta {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+      gap: clamp(28px, 5vw, 58px);
+      align-items: center;
+    }
+
+    .image-frame {
+      position: relative;
+      min-height: 520px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(7, 7, 7, .06), rgba(7, 7, 7, .44)),
+        url("red-door-hero.webp") center right / cover no-repeat;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .image-frame::after {
+      content: "";
+      position: absolute;
+      inset: auto 24px 24px;
+      height: 4px;
+      background: var(--red);
+      border-radius: 999px;
+    }
+
+    .image-caption {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 44px;
+      color: var(--white);
+      font-size: 1.1rem;
+      font-weight: 900;
+      text-shadow: 0 2px 18px rgba(0, 0, 0, .42);
+    }
+
+    .accordion {
+      display: grid;
+      gap: 12px;
+    }
+
+    .accordion-item {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(23, 23, 23, .05);
+      overflow: hidden;
+    }
+
+    .accordion-trigger {
+      width: 100%;
+      min-height: 66px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 18px 20px;
+      color: var(--ink);
+      background: transparent;
+      border: 0;
+      text-align: left;
+      font-weight: 900;
+    }
+
+    .accordion-trigger span:last-child {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      color: var(--red);
+      border: 1px solid rgba(140, 12, 3, .24);
+      border-radius: 50%;
+      transition: transform .18s ease, background .18s ease;
+    }
+
+    .accordion-trigger[aria-expanded="true"] span:last-child {
+      color: var(--white);
+      background: var(--red);
+      transform: rotate(45deg);
+    }
+
+    .accordion-panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .24s ease;
+    }
+
+    .accordion-item.is-open .accordion-panel {
+      grid-template-rows: 1fr;
+    }
+
+    .accordion-panel > div {
+      overflow: hidden;
+    }
+
+    .accordion-panel p {
+      margin: 0;
+      padding: 0 20px 22px;
+      color: var(--muted);
+    }
+
+    .guarantee-section {
+      position: relative;
+      overflow: hidden;
+      color: var(--charcoal);
+      background:
+        linear-gradient(135deg, #ffffff 0%, #f7f8fa 48%, #eef0f3 100%);
+    }
+
+    .guarantee-section h2,
+    .guarantee-section h3 {
+      color: var(--ink);
+    }
+
+    .guarantee-section .section-kicker {
+      color: var(--red);
+    }
+
+    .guarantee-section .section-head p {
+      color: var(--muted);
+    }
+
+    .guarantee-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 32px;
+    }
+
+    .guarantee-card {
+      min-height: 250px;
+      padding: 28px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--red);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .guarantee-card span {
+      color: var(--red);
+      font-size: .76rem;
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .guarantee-card h3 {
+      margin: 14px 0 10px;
+      font-size: 1.28rem;
+    }
+
+    .guarantee-card p {
+      color: var(--muted);
+      margin-bottom: 0;
+    }
+
+    .google-reviews {
+      overflow: hidden;
+      background: var(--white);
+    }
+
+    .reviews-shell {
+      position: relative;
+    }
+
+    .reviews-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 34px 0 28px;
+      padding: 10px;
+      background: #f6f6f7;
+      border: 1px solid #eceef2;
+      border-radius: var(--radius);
+    }
+
+    .review-source-tab {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 18px;
+      color: var(--ink);
+      background: transparent;
+      border: 0;
+      border-bottom: 3px solid transparent;
+      border-radius: 0;
+      font-weight: 800;
+    }
+
+    .review-source-tab[aria-selected="true"] {
+      border-bottom-color: var(--ink);
+    }
+
+    .source-mark,
+    .google-g {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      color: #4285f4;
+      background: var(--white);
+      border-radius: 50%;
+      font-size: 1.2rem;
+      font-weight: 900;
+      box-shadow: inset 0 0 0 1px #eceef2;
+    }
+
+    .source-mark.is-yellow-pages {
+      color: #202124;
+      background: #ffd84d;
+    }
+
+    .source-mark.is-client {
+      color: var(--red);
+    }
+
+    .reviews-summary {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px 18px;
+      margin-bottom: 24px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .reviews-score {
+      color: var(--ink);
+      font-size: 1.45rem;
+      font-weight: 900;
+    }
+
+    .review-stars {
+      display: inline-flex;
+      gap: 3px;
+      color: #fbbc04;
+    }
+
+    .review-stars span {
+      width: 16px;
+      height: 16px;
+      display: block;
+      background: currentColor;
+      clip-path: polygon(50% 0, 61% 34%, 98% 34%, 68% 55%, 79% 91%, 50% 70%, 21% 91%, 32% 55%, 2% 34%, 39% 34%);
+    }
+
+    .reviews-viewport {
+      position: relative;
+      margin-inline: max(-20px, calc((100vw - var(--max)) / -2));
+      padding: 14px max(20px, calc((100vw - var(--max)) / 2)) 24px;
+      overflow-x: auto;
+      overflow-y: visible;
+      perspective: 1200px;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+    }
+
+    .reviews-viewport::-webkit-scrollbar {
+      display: none;
+    }
+
+    .reviews-grid {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: clamp(230px, 18vw, 288px);
+      grid-template-rows: repeat(3, 202px);
+      gap: 16px;
+      width: max-content;
+      align-items: stretch;
+    }
+
+    .review-card {
+      position: relative;
+      height: 100%;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, .96), rgba(246, 247, 249, .98)),
+        #f7f7f8;
+      border: 1px solid rgba(214, 218, 225, .82);
+      border-radius: var(--radius);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, .88) inset,
+        0 12px 24px rgba(20, 24, 31, .09),
+        0 4px 12px rgba(20, 24, 31, .06);
+      transform: rotateX(1deg) translateZ(0);
+      transform-style: preserve-3d;
+      transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+    }
+
+    .review-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(255, 255, 255, .82), transparent 28%),
+        linear-gradient(135deg, rgba(255, 255, 255, .5), transparent 44%);
+      opacity: .75;
+    }
+
+    .review-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .review-card:hover,
+    .review-card:focus-within {
+      border-color: rgba(140, 12, 3, .22);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, .9) inset,
+        0 18px 36px rgba(20, 24, 31, .14),
+        0 10px 18px rgba(140, 12, 3, .08);
+      transform: translateY(-4px) rotateX(0deg) rotateY(-1.3deg);
+    }
+
+    .review-card.is-expanded {
+      height: auto;
+      min-height: 202px;
+      overflow: visible;
+      z-index: 5;
+    }
+
+    .review-card-header {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .review-avatar {
+      position: relative;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      background: var(--avatar-bg, linear-gradient(135deg, #c8102e, #7b1f26));
+      border-radius: 50%;
+      font-weight: 900;
+      overflow: visible;
+    }
+
+    .review-avatar::after {
+      content: attr(data-source-short);
+      position: absolute;
+      right: -3px;
+      bottom: -3px;
+      min-width: 19px;
+      height: 19px;
+      padding: 0 4px;
+      display: grid;
+      place-items: center;
+      color: var(--source-color, #4285f4);
+      background: var(--white);
+      border: 1px solid #e1e4e8;
+      border-radius: 999px;
+      font-size: .56rem;
+      font-weight: 900;
+    }
+
+    .review-avatar[data-source="Yellow Pages"]::after {
+      color: #202124;
+      background: #ffd84d;
+    }
+
+    .review-avatar[data-source="Client Testimonial"]::after {
+      color: var(--red);
+    }
+
+    .review-avatar.has-image {
+      background: #dfe4ea;
+    }
+
+    .review-avatar.has-image img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .review-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ink);
+      font-size: .94rem;
+      font-weight: 900;
+    }
+
+    .review-verified {
+      width: 16px;
+      height: 16px;
+      display: inline-grid;
+      place-items: center;
+      color: var(--white);
+      background: #1a73e8;
+      border-radius: 50%;
+    }
+
+    .review-verified::before {
+      content: "";
+      width: 7px;
+      height: 4px;
+      border-left: 2px solid var(--white);
+      border-bottom: 2px solid var(--white);
+      transform: rotate(-45deg) translate(1px, -1px);
+    }
+
+    .review-date {
+      color: #85888e;
+      font-size: .78rem;
+      font-weight: 700;
+    }
+
+    .review-card .review-stars {
+      margin-bottom: 8px;
+    }
+
+    .review-card .review-stars span {
+      width: 13px;
+      height: 13px;
+    }
+
+    .review-text {
+      max-height: 4.35em;
+      margin: 0;
+      overflow: hidden;
+      color: var(--charcoal);
+      font-size: .9rem;
+      line-height: 1.45;
+    }
+
+    .review-card.is-expanded .review-text {
+      max-height: none;
+    }
+
+    .review-read-more {
+      align-self: flex-start;
+      margin-top: 7px;
+      padding: 0;
+      color: #777b82;
+      background: transparent;
+      border: 0;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .review-read-more:hover {
+      color: var(--red);
+    }
+
+    .review-context {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: auto;
+      padding-top: 10px;
+      color: #62666d;
+      font-size: .62rem;
+      font-weight: 900;
+      letter-spacing: .07em;
+      line-height: 1.25;
+      text-transform: uppercase;
+    }
+
+    .review-context::before {
+      content: "";
+      width: 18px;
+      height: 2px;
+      flex: 0 0 18px;
+      background: #c8102e;
+      border-radius: 999px;
+    }
+
+    .reviews-nav {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .review-nav-button {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      background: #777b82;
+      border: 0;
+      border-radius: 50%;
+      font-size: 1.35rem;
+      font-weight: 900;
+      box-shadow: 0 14px 28px rgba(30, 30, 30, .18);
+    }
+
+    .review-nav-button:hover {
+      background: var(--red);
+    }
+
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .86fr) minmax(360px, 1.14fr);
+      gap: clamp(28px, 5vw, 54px);
+      align-items: start;
+    }
+
+    .benefit-list {
+      display: grid;
+      gap: 12px;
+      margin: 26px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .benefit-list li {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 13px;
+      align-items: center;
+      color: #3f454d;
+      font-weight: 800;
+    }
+
+    .benefit-list span {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      background: var(--red);
+      border-radius: 6px;
+      font-weight: 900;
+    }
+
+    .form-card {
+      padding: clamp(24px, 4vw, 36px);
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 900;
+    }
+
+    .progress-track {
+      height: 10px;
+      margin-bottom: 24px;
+      overflow: hidden;
+      background: #eceff3;
+      border-radius: 999px;
+    }
+
+    .progress-fill {
+      width: 16.66%;
+      height: 100%;
+      display: block;
+      background: var(--red);
+      transition: width .22s ease;
+    }
+
+    .form-step {
+      display: none;
+    }
+
+    .form-step.is-active {
+      display: grid;
+      gap: 16px;
+    }
+
+    .form-step h3 {
+      margin: 0;
+      font-size: 1.32rem;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 50px;
+      padding: 12px 14px;
+      color: var(--charcoal);
+      background: var(--white);
+      border: 1px solid #cfd3d9;
+      border-radius: 6px;
+    }
+
+    textarea {
+      min-height: 112px;
+      resize: vertical;
+    }
+
+    input[aria-invalid="true"],
+    select[aria-invalid="true"],
+    textarea[aria-invalid="true"] {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(140, 12, 3, .08);
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .error-text {
+      min-height: 22px;
+      margin: 0;
+      color: var(--red-dark);
+      font-size: .9rem;
+      font-weight: 800;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .confirmation {
+      display: none;
+      padding: 26px;
+      background: #f7fbf8;
+      border: 1px solid #cfe8d7;
+      border-radius: var(--radius);
+    }
+
+    .confirmation.is-visible {
+      display: block;
+    }
+
+    .consent {
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 400;
+    }
+
+    .areas-visual {
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+      gap: clamp(28px, 5vw, 54px);
+      align-items: center;
+    }
+
+    .market-coverage-card {
+      min-height: 540px;
+      display: grid;
+      align-content: space-between;
+      gap: 24px;
+      padding: clamp(24px, 4vw, 34px);
+      color: var(--white);
+      background:
+        linear-gradient(145deg, rgba(30, 35, 42, .97), rgba(15, 17, 21, .98)),
+        #171717;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .coverage-eyebrow {
+      color: #ffced0;
+      font-size: .76rem;
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .coverage-city-name {
+      margin: 10px 0 8px;
+      color: var(--white);
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      line-height: .96;
+      letter-spacing: 0;
+    }
+
+    .coverage-region {
+      color: #f4b7b9;
+      font-weight: 900;
+    }
+
+    .coverage-insight {
+      max-width: 35rem;
+      color: rgba(255, 255, 255, .8);
+      font-size: 1.04rem;
+      line-height: 1.55;
+    }
+
+    .coverage-guidance {
+      display: grid;
+      gap: 14px;
+    }
+
+    .coverage-guidance-item {
+      display: grid;
+      gap: 6px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, .14);
+    }
+
+    .coverage-guidance-item span,
+    .coverage-questions h4 {
+      margin: 0;
+      color: #ffced0;
+      font-size: .72rem;
+      font-weight: 900;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .coverage-guidance-item p {
+      margin: 0;
+      color: rgba(255, 255, 255, .84);
+      font-size: .98rem;
+      line-height: 1.45;
+    }
+
+    .coverage-questions {
+      display: grid;
+      gap: 12px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, .14);
+    }
+
+    .coverage-question-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .coverage-question-list li {
+      position: relative;
+      padding-left: 18px;
+      color: rgba(255, 255, 255, .78);
+      font-size: .92rem;
+      line-height: 1.4;
+    }
+
+    .coverage-question-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .62em;
+      width: 7px;
+      height: 7px;
+      background: #c8102e;
+      border-radius: 50%;
+    }
+
+    .areas-visual,
+    .areas-copy {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .areas-copy > .section-kicker {
+      justify-self: center;
+      margin-bottom: 10px;
+    }
+
+    .areas-copy > h2 {
+      max-width: 1080px;
+      margin: 0 auto 12px;
+      text-align: center;
+    }
+
+    .areas-copy > h2 span {
+      display: block;
+    }
+
+    .areas-copy > .lead {
+      max-width: 1080px;
+      margin: 0 auto 24px;
+      text-align: center;
+    }
+
+    .county-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .county-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+      align-content: start;
+      min-height: 0;
+      padding: 20px 22px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(250, 251, 252, .98)),
+        var(--white);
+      border: 1px solid #e7e9ee;
+      border-radius: 8px;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, .92) inset,
+        0 18px 38px rgba(23, 23, 23, .075),
+        0 4px 12px rgba(23, 23, 23, .045);
+    }
+
+    .county-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      box-shadow: inset 0 -18px 28px rgba(23, 23, 23, .025);
+    }
+
+    .county-card > div {
+      grid-column: 1 / -1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .county-card > .city-list {
+      grid-column: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .county-card h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(1.1rem, 2vw, 1.32rem);
+      line-height: 1.1;
+    }
+
+    .county-card p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: .86rem;
+      font-weight: 750;
+      line-height: 1.35;
+    }
+
+    .county-card.is-wide {
+      grid-column: 1 / -1;
+    }
+
+    .county-card.is-wide .city-list {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px 24px;
+    }
+
+    .city-list {
+      display: grid;
+      gap: 7px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .area-link {
+      display: inline;
+      color: var(--red);
+      font-size: .9rem;
+      font-weight: 700;
+      line-height: 1.35;
+      text-decoration: none;
+      transition: color .18s ease, text-decoration-color .18s ease;
+    }
+
+    .area-link:hover,
+    .area-link:focus-visible {
+      color: var(--red-dark);
+      text-decoration: underline;
+      text-decoration-color: currentColor;
+      text-underline-offset: 4px;
+    }
+
+    .city-list .area-text {
+      display: inline;
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .townships {
+      overflow: hidden;
+      margin-top: 18px;
+      padding: 20px;
+      background: #fbfbfc;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .townships summary {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
+      color: var(--charcoal);
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .townships summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .townships summary strong,
+    .townships summary small {
+      display: block;
+    }
+
+    .townships summary strong {
+      color: var(--ink);
+      font-size: 1.04rem;
+      font-weight: 900;
+    }
+
+    .townships summary small {
+      margin-top: 4px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .townships summary::after {
+      content: "+";
+      flex: 0 0 auto;
+      color: var(--red);
+      font-size: 1.6rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .townships[open] summary::after {
+      content: "-";
+    }
+
+    .township-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px 18px;
+      margin-top: 18px;
+    }
+
+    .library-grid,
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .article-card {
+      overflow: hidden;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(23, 23, 23, .06);
+    }
+
+    .article-image {
+      position: relative;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(7, 7, 7, 0), rgba(7, 7, 7, .08)),
+        var(--article-image),
+        url("red-door-hero.webp") center center / cover no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .article-image::before {
+      content: "";
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      width: 48px;
+      height: 48px;
+      background: rgba(140, 12, 3, .94);
+      border-radius: 50%;
+      box-shadow: 0 12px 26px rgba(23, 23, 23, .18);
+    }
+
+    .article-image::after {
+      content: "";
+      position: absolute;
+      left: 38px;
+      bottom: 33px;
+      width: 0;
+      height: 0;
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+      border-left: 14px solid var(--white);
+    }
+
+    .article-body {
+      padding: 22px;
+    }
+
+    .category {
+      color: var(--red);
+      font-size: .74rem;
+      font-weight: 900;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .article-card h3 {
+      margin: 10px 0 9px;
+      font-size: 1.12rem;
+    }
+
+    .article-card p {
+      color: var(--muted);
+      font-size: .94rem;
+    }
+
+    .date {
+      display: block;
+      margin-bottom: 16px;
+      color: #7a8088;
+      font-size: .86rem;
+      font-weight: 800;
+    }
+
+    .local-section .image-frame {
+      min-height: 500px;
+      background-position: center right;
+    }
+
+    .statement {
+      margin: 24px 0;
+      padding: 18px 20px;
+      color: var(--ink);
+      background: #fff4f4;
+      border-left: 5px solid var(--red);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 1.1rem;
+      font-weight: 900;
+    }
+
+    .final-cta {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      text-align: center;
+      background:
+        linear-gradient(180deg, rgba(8, 8, 8, .72), rgba(8, 8, 8, .86)),
+        url("red-door-hero.webp") center right / cover no-repeat;
+    }
+
+    .final-cta .container {
+      max-width: 900px;
+    }
+
+    .final-cta p {
+      margin-bottom: 26px;
+      font-size: 1.12rem;
+    }
+
+    .site-footer {
+      padding: 62px 0 36px;
+      color: #dcdcdc;
+      background: #191919;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1.25fr repeat(4, minmax(0, 1fr));
+      gap: 28px;
+    }
+
+    .footer-brand {
+      color: var(--white);
+      margin-bottom: 18px;
+    }
+
+    .site-footer p {
+      color: #cfcfcf;
+      margin-bottom: 18px;
+    }
+
+    .site-footer h3 {
+      color: var(--white);
+      margin: 0 0 14px;
+      font-size: .92rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .site-footer a {
+      display: block;
+      width: fit-content;
+      margin-bottom: 9px;
+      color: #dcdcdc;
+      font-size: .95rem;
+    }
+
+    .site-footer a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    .affiliations {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .affiliations span {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      color: #f4f4f4;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 6px;
+      font-size: .78rem;
+      font-weight: 900;
+    }
+
+    .footer-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 38px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(255, 255, 255, .12);
+      color: #bdbdbd;
+      font-size: .9rem;
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .footer-bottom a {
+      margin: 0;
+    }
+
+    .mobile-sticky {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 45;
+      display: none;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(255, 255, 255, .98);
+      border-top: 1px solid var(--line);
+      box-shadow: 0 -12px 30px rgba(20, 20, 20, .13);
+      transform: translateY(110%);
+      transition: transform .2s ease;
+    }
+
+    .mobile-sticky.is-visible {
+      transform: translateY(0);
+    }
+
+    .mobile-sticky .btn {
+      min-height: 46px;
+      padding: 12px 10px;
+      font-size: .82rem;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 1180px) {
+      .nav-menu {
+        gap: 12px;
+        font-size: .82rem;
+      }
+
+      .brand {
+        min-width: 210px;
+      }
+
+      .journey-track {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .reviews-grid {
+        grid-auto-columns: clamp(230px, 24vw, 286px);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .topbar {
+        display: none;
+      }
+
+      .nav-inner {
+        min-height: 72px;
+      }
+
+      .menu-button {
+        display: grid;
+      }
+
+      .nav-menu {
+        position: fixed;
+        top: 72px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: none;
+        align-items: stretch;
+        justify-content: start;
+        flex-direction: column;
+        gap: 0;
+        padding: 18px 16px 110px;
+        overflow-y: auto;
+        color: var(--ink);
+        background: var(--white);
+        border-top: 1px solid var(--line);
+        font-size: 1rem;
+      }
+
+      .nav-menu.is-open {
+        display: flex;
+      }
+
+      .nav-menu a,
+      .nav-menu button {
+        width: 100%;
+        min-height: 48px;
+        justify-content: space-between;
+        padding: 0 8px;
+      }
+
+      .nav-item {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .dropdown {
+        position: static;
+        display: none;
+        min-width: 0;
+        padding: 0 0 10px 12px;
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+      }
+
+      .nav-item.is-open .dropdown {
+        display: grid;
+      }
+
+      .dropdown a {
+        min-height: 42px;
+      }
+
+      .hero {
+        min-height: 760px;
+        background-position: 68% center;
+      }
+
+      .hero-content {
+        padding-top: 120px;
+      }
+
+      .proof-panel,
+      .split,
+      .analysis-grid,
+      .areas-visual,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .proof-panel {
+        margin-top: -36px;
+      }
+
+      .proof-item {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .proof-item:last-child {
+        border-bottom: 0;
+      }
+
+      .guarantee-grid,
+      .library-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .county-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .county-card.is-wide .city-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .reviews-grid {
+        grid-auto-columns: minmax(238px, 286px);
+      }
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding-bottom: 72px;
+      }
+
+      .county-grid,
+      .township-grid,
+      .county-card.is-wide .city-list {
+        grid-template-columns: 1fr;
+      }
+
+      .container,
+      .nav-inner {
+        width: min(100% - 24px, var(--max));
+      }
+
+      .brand {
+        min-width: 0;
+      }
+
+      .brand-text span:first-child {
+        font-size: .98rem;
+      }
+
+      .brand-text span:last-child {
+        font-size: .62rem;
+      }
+
+      .brand-mark {
+        width: 42px;
+        height: 42px;
+      }
+
+      .hero {
+        min-height: 700px;
+        background-position: 72% center;
+      }
+
+      .hero-content {
+        padding: 120px 0 106px;
+      }
+
+      .hero .eyebrow {
+        display: block;
+        max-width: 330px;
+        margin-inline: auto;
+        font-size: .68rem;
+        text-align: center;
+      }
+
+      .hero .eyebrow::before {
+        display: block;
+        width: 24px;
+        margin: 0 auto 10px;
+      }
+
+      h1 {
+        max-width: 100%;
+        font-size: clamp(1.28rem, 5.25vw, 1.54rem);
+        line-height: 1.12;
+      }
+
+      .hero-copy {
+        max-width: 350px;
+        font-size: 1rem;
+        overflow-wrap: anywhere;
+      }
+
+      .hero .btn {
+        width: 100%;
+        padding-inline: 14px;
+        font-size: .86rem;
+        overflow-wrap: anywhere;
+      }
+
+      .cta-row {
+        width: 100%;
+      }
+
+      .journey-track {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .reviews-toolbar {
+        justify-content: stretch;
+      }
+
+      .review-source-tab {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .reviews-viewport {
+        margin-inline: -12px;
+        padding-inline: 12px;
+      }
+
+      .reviews-grid {
+        grid-auto-columns: minmax(244px, calc(100vw - 48px));
+        grid-template-rows: repeat(3, 198px);
+        gap: 14px;
+      }
+
+      .journey-card {
+        min-height: auto;
+        padding: 24px;
+      }
+
+      .hero .cta-row {
+        margin-top: 0;
+        gap: 16px;
+        transform: translateY(-28px);
+      }
+
+      .image-frame,
+      .market-coverage-card {
+        min-height: 360px;
+      }
+
+      .coverage-guidance-item p,
+      .coverage-question-list li {
+        font-size: .88rem;
+      }
+
+      .area-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .area-link {
+        min-height: 66px;
+      }
+
+      .field-grid,
+      .area-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-actions {
+        flex-direction: column-reverse;
+      }
+
+      .form-actions .btn {
+        width: 100%;
+      }
+
+      .mobile-sticky {
+        display: grid;
+      }
+    }
+
+    @media (max-width: 360px) {
+      h1 {
+        font-size: 1.12rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* ---------- Typography: Literata headings, Inter body ---------- */
+    h1, h2, h3, h4 { font-family: var(--font-head); }
+    h1 { font-weight: 500; letter-spacing: -.02em; }
+    h2, h3, h4 { font-weight: 600; letter-spacing: -.015em; }
+    .eyebrow, .section-kicker, .btn, .nav-menu, .area-link,
+    input, select, textarea, button, label { font-family: var(--font); }
+
+    /* ---------- Logo ---------- */
+    .brand { display: flex; align-items: center; gap: 0; }
+    .brand-logo { display: block; height: 52px; width: auto; }
+    .brand-logo-onlight { display: none; }
+    .site-header.is-scrolled .brand-logo-ondark,
+    .site-header.is-open .brand-logo-ondark { display: none; }
+    .site-header.is-scrolled .brand-logo-onlight,
+    .site-header.is-open .brand-logo-onlight { display: block; }
+    .footer-brand .brand-logo { height: 60px; }
+
+    /* ---------- Red is unreadable on the dark bands; use the light tint ---------- */
+    .section-dark .section-kicker,
+    .section-dark .eyebrow { color: var(--brand-light); }
+    .section-dark a:not([class*="btn"]) { color: var(--brand-light); }
+    .site-footer a:hover { color: var(--brand-light); }
+
+    @media (max-width: 900px) {
+      .brand-logo { height: 44px; }
+      .footer-brand .brand-logo { height: 52px; }
+    }
+  
+    /* ---------- Pillar page additions ---------- */
+    .hero .eyebrow + h1 { transform: none; margin-top: 6px; }
+    .hero .cta-row { transform: none; margin-top: 10px; }
+    .step-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+      margin-top: 8px;
+    }
+    .step-card {
+      position: relative;
+      padding: 26px 24px;
+      background: linear-gradient(158deg, #ffffff 0%, #f7f9fc 100%);
+      border: 1px solid rgba(18, 22, 30, .08);
+      border-radius: 16px;
+      box-shadow: 0 20px 40px -22px rgba(20, 24, 33, .3);
+    }
+    .step-card::before {
+      content: attr(data-step);
+      position: absolute;
+      top: -8px;
+      right: 10px;
+      color: rgba(18, 22, 30, .045);
+      font-size: 4.6rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .step-card h3 { position: relative; z-index: 1; margin: 0 0 10px; font-size: 1.15rem; }
+    .step-card p, .step-card ul { position: relative; z-index: 1; }
+    .step-card p { color: var(--muted); font-size: .95rem; margin-bottom: 10px; }
+    .step-card ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: .92rem; }
+    .step-card li { margin-bottom: 6px; }
+    .content-block { max-width: 900px; }
+    .content-block.is-centered { margin-inline: auto; text-align: center; }
+    .content-block h2 { margin-bottom: 14px; }
+    .content-block > p { color: var(--muted); font-size: 1.02rem; margin-bottom: 16px; }
+    .two-col-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 28px;
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .two-col-list li {
+      position: relative;
+      padding-left: 22px;
+      color: var(--charcoal);
+      font-size: .98rem;
+      line-height: 1.5;
+    }
+    .two-col-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .6em;
+      width: 8px;
+      height: 8px;
+      background: var(--red);
+      border-radius: 50%;
+    }
+    .plain-list {
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+    .plain-list li {
+      position: relative;
+      padding-left: 22px;
+      color: var(--charcoal);
+      font-size: .98rem;
+      line-height: 1.55;
+    }
+    .plain-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .6em;
+      width: 8px;
+      height: 8px;
+      background: var(--red);
+      border-radius: 50%;
+    }
+    .fee-table {
+      width: 100%;
+      margin-top: 18px;
+      border-collapse: collapse;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .fee-table th, .fee-table td {
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      font-size: .95rem;
+    }
+    .fee-table th { color: var(--muted); font-weight: 800; text-transform: uppercase; font-size: .74rem; letter-spacing: .06em; background: var(--soft); }
+    .fee-table td strong { color: var(--red); }
+    .fee-table tr:last-child td { border-bottom: 0; }
+    .callout-note {
+      margin: 20px 0 0;
+      padding: 16px 20px;
+      color: var(--charcoal);
+      background: var(--brand-tint, #fcecea);
+      border-left: 4px solid var(--red);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: .95rem;
+    }
+    @media (max-width: 720px) {
+      .two-col-list { grid-template-columns: 1fr; }
+    }
+
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip Navigation</a>
+
+  <header class="site-header" data-header>
+    <div class="topbar">
+      <div class="topbar-inner">
+        <span>Call Red Door: <a href="tel:3176601626">317.660.1626</a></span>
+      </div>
+    </div>
+    <div class="nav-inner">
+      <a class="brand" href="/" aria-label="Red Door Property Management home">
+        <img class="brand-logo brand-logo-ondark" src="red-door-logo-reversed.svg" alt="Red Door Property Management" width="107" height="52">
+        <img class="brand-logo brand-logo-onlight" src="red-door-logo-horizontal.svg" alt="" aria-hidden="true" width="107" height="52">
+      </a>
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="primary-navigation" data-menu-toggle>
+        <span aria-hidden="true"></span>
+        <span class="sr-only">Open menu</span>
+      </button>
+      <nav class="nav-menu" id="primary-navigation" aria-label="Primary navigation" data-nav-menu>
+        <a href="/">Home</a>
+        <a href="/indianapolis-homes-for-rent">Homes for Rent</a>
+        <div class="nav-item" data-nav-item>
+          <button class="dropdown-toggle" type="button" aria-expanded="false" data-dropdown-toggle>Owner Services</button>
+          <div class="dropdown">
+            <a href="/indianapolis-property-management">Property Management Overview</a>
+            <a href="/market-readiness-assessment">1. Market Readiness Assessment</a>
+            <a href="/marketing-process">2. Marketing</a>
+            <a href="/tenant-screening">3. Tenant Screening</a>
+            <a href="/leasing-process">4. Leasing</a>
+            <a href="/maintenance">5. Maintenance</a>
+            <a href="/communication">6. Communication</a>
+            <a href="/eviction-protection-program">Eviction Protection Program</a>
+            <a href="https://reddoor.appfolio.com/oportal/users/log_in">Owner Portal</a>
+          </div>
+        </div>
+        <a href="/pricing">Pricing</a>
+        <div class="nav-item" data-nav-item>
+          <button class="dropdown-toggle" type="button" aria-expanded="false" data-dropdown-toggle>For Tenants</button>
+          <div class="dropdown">
+            <a href="/tenants">Tenant Resources</a>
+            <a href="https://app.propertymeld.com/tenant/reddoorpropertymanagement/maintenance">Maintenance Request</a>
+            <a href="/application-criteria">Tenant Qualification Criteria</a>
+            <a href="https://reddoor.appfolio.com/connect/users/sign_in">Tenant Portal</a>
+          </div>
+        </div>
+        <a href="/about">About Us</a>
+        <a href="/contact">Contact</a>
+        <a href="/blog">Watch &amp; Learn</a>
+        <a class="btn btn-primary nav-cta" href="#rental-analysis" data-track="nav-rental-analysis">Free Rental Analysis</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-content">
+        <div class="eyebrow">Stage 02 &middot; Owner Roadmap</div>
+        <h1 id="page-title"><span>Marketing Process</span></h1>
+        <p class="hero-copy">Maximum exposure, minimal vacancy &mdash; professional visuals, smart showing technology, and real-time performance tracking on every listing.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="/contact">Contact Us</a>
+          <a class="btn btn-secondary" href="/#rental-analysis">Get a Free Rental Analysis</a>
+        </div>
+      </div>
+      <a class="scroll-cue" href="#marketing-intro" aria-label="Scroll to content">
+        <span aria-hidden="true"></span>
+        Scroll
+      </a>
+    </section>
+
+    <section id="marketing-intro">
+      <div class="container content-block reveal">
+        <div class="section-kicker">Maximum Exposure, Minimal Vacancy</div>
+        <h2>Designed to Lease Faster, Not Just List Faster</h2>
+        <p>In today&rsquo;s digital rental market, effective marketing goes far beyond a yard sign. To lease faster and attract higher-quality tenants, your property must stand out across dozens of platforms while delivering a seamless experience for renters.</p>
+        <p>Red Door Property Management&rsquo;s Marketing Process is designed to maximize exposure, reduce days on market, and protect your ROI. We combine professional visuals, smart showing technology, and real-time performance tracking to ensure every listing performs at its highest potential.</p>
+      </div>
+    </section>
+
+    <section class="section-soft">
+      <div class="container reveal">
+        <div class="section-head">
+          <div class="section-kicker">What Sets Our Marketing Apart</div>
+          <h2>Four Pillars of Every Listing</h2>
+        </div>
+        <div class="step-grid">
+          <article class="step-card">
+            <h3>Professional Photos That Convert</h3>
+            <p>Tenants shop with their eyes first. Every Red Door listing includes professional photography &mdash; bright, well-lit rooms, wide-angle shots, clear views of upgrades, and clean curb appeal &mdash; helping your home photograph better, show better, and generate more qualified interest.</p>
+          </article>
+          <article class="step-card">
+            <h3>Virtual Walkthroughs</h3>
+            <p>We produce immersive video walkthroughs, hosted on YouTube and embedded directly into listings, that let renters tour the home before scheduling a showing. This increases transparency, pre-qualifies serious renters, and reduces wasted showings.</p>
+          </article>
+          <article class="step-card">
+            <h3>Unmatched Listing Syndication</h3>
+            <p>Your property is automatically syndicated to all major rental platforms &mdash; Zillow, Trulia, HotPads, Apartments.com, Zumper, Redfin, Realtor.com, and dozens more &mdash; with search-friendly language, amenities, and neighborhood highlights optimized for the right audience.</p>
+          </article>
+          <article class="step-card">
+            <h3>Smart Showing Technology</h3>
+            <p>We use Tenant Turner, a modern self-scheduling platform with identity verification and lead tracking, so pre-qualified renters can book showings safely and conveniently, seven days a week &mdash; faster leasing without sacrificing control or security.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container content-block reveal">
+        <h2>Weekly Owner Updates With Marketing Analytics</h2>
+        <p>We don&rsquo;t leave owners in the dark. Every week, you&rsquo;ll receive a video marketing update from our team that includes:</p>
+        <ul class="plain-list">
+          <li>Total listing views across platforms</li>
+          <li>Number of scheduled and completed showings</li>
+          <li>Feedback from prospective renters</li>
+          <li>Suggestions on adjusting rent, if needed</li>
+        </ul>
+        <p style="margin-top:20px">If activity is below expectations, we proactively review the data and make recommendations &mdash; such as adjusting the price, updating photos, or highlighting specific amenities &mdash; to minimize your vacancy time while keeping your rental competitive.</p>
+      </div>
+    </section>
+
+    <section class="section-soft">
+      <div class="container content-block reveal">
+        <h2>Price Adjustment Strategy Based on Market Performance</h2>
+        <p>Our job isn&rsquo;t just to market your home &mdash; it&rsquo;s to rent it quickly and profitably. If a property is seeing low showing volume or consistent feedback on a certain issue, we use that insight to recommend a rental price adjustment, minor upgrades to improve appeal, or re-positioning the listing. Our goal is to protect your bottom line by making data-backed decisions that get results.</p>
+      </div>
+    </section>
+
+    <section class="section-dark guarantee-section">
+      <div class="container reveal" style="text-align:center">
+        <div class="section-kicker">Why Our Marketing Process Matters</div>
+        <h2>Faster Lease-Ups, Higher-Quality Applicants</h2>
+        <div class="guarantee-grid" style="margin-top:28px">
+          <article class="guarantee-card">
+            <span>Exposure</span>
+            <h3>Faster Lease-Ups</h3>
+            <p>Targeted exposure across every major platform gets qualified renters looking at your home sooner.</p>
+          </article>
+          <article class="guarantee-card">
+            <span>Quality</span>
+            <h3>Higher-Quality Applicants</h3>
+            <p>Better screening and visuals mean the renters who show up are more likely to qualify.</p>
+          </article>
+          <article class="guarantee-card">
+            <span>Transparency</span>
+            <h3>Weekly Owner Updates</h3>
+            <p>Less downtime between tenants, and you always know how your listing is performing.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="container reveal">
+        <div class="section-head center">
+          <div class="section-kicker">Questions Owners Ask</div>
+          <h2>Marketing Process FAQs</h2>
+        </div>
+        <div class="accordion" data-accordion>
+          <article class="accordion-item is-open">
+            <button class="accordion-trigger" type="button" aria-expanded="true">
+              <span>How long does it usually take to rent my property?</span><span aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-panel"><div><p>Most of our homes rent within just a few weeks, depending on price point, location, and season. Our marketing strategy is designed to create fast exposure and attract qualified renters right away &mdash; which helps reduce vacancy time and maximize your return.</p></div></div>
+          </article>
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false">
+              <span>Do you really provide professional photos for every property?</span><span aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-panel"><div><p>Yes, every single Red Door listing receives professional photography. Great photos dramatically increase online engagement and showings. We highlight your home&rsquo;s lighting, layout, and best features to make sure it stands out against the competition.</p></div></div>
+          </article>
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false">
+              <span>What is a virtual walkthrough and why does it matter?</span><span aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-panel"><div><p>A virtual walkthrough is a video tour that lets renters explore the property online before scheduling an in-person visit. It helps pre-qualify serious renters and reduces wasted showings &mdash; which means your home rents faster.</p></div></div>
+          </article>
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false">
+              <span>Where will my rental be advertised?</span><span aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-panel"><div><p>Your home is marketed on every major rental platform including Zillow, Trulia, HotPads, Apartments.com, Zumper, Realtor.com, Redfin, and more &mdash; as well as Red Door&rsquo;s own website and YouTube channel. This ensures maximum exposure to both local and out-of-state renters.</p></div></div>
+          </article>
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false">
+              <span>How do I know how my listing is performing?</span><span aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-panel"><div><p>We send weekly marketing updates that include total listing views, showing counts, and renter feedback. You&rsquo;ll also get suggestions if adjustments to rent or photos are needed &mdash; so you&rsquo;re never left wondering how things are going.</p></div></div>
+          </article>
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false">
+              <span>What happens if my home isn&rsquo;t getting much activity?</span><span aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-panel"><div><p>If interest is lower than expected, we quickly analyze the data and make recommendations &mdash; like a price adjustment, improved visuals, or highlighting new features. Our process is data-driven to help you rent faster while protecting your ROI.</p></div></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-soft" id="landlord-library">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="section-kicker">Local Data. Practical Guidance.</div>
+          <h2>The Red Door Landlord Library</h2>
+          <p>Market updates, investment insights, and practical property-management guidance for Central Indiana rental owners.</p>
+        </div>
+        <div class="library-grid reveal">
+          <article class="article-card">
+            <div class="article-image" style="--article-image:url('https://i.ytimg.com/vi/H1syUd2uJfE/hqdefault.jpg')" role="img" aria-label="Westfield market report video thumbnail from Red Door's blog"></div>
+            <div class="article-body">
+              <span class="category">Market Report</span>
+              <h3><a href="https://www.reddoorrents.com/blog/westfield-market-report-leasing-improves-as-rental-supply-drops-52--august-2026">Westfield Market Report: Leasing Improves as Rental Supply Drops 52%</a></h3>
+              <p>Westfield finally delivered some relief in August &mdash; rental days on market dropped sharply while active rental inventory continued falling.</p>
+              <span class="date">August 2026</span>
+              <a class="text-link" href="https://www.reddoorrents.com/blog/westfield-market-report-leasing-improves-as-rental-supply-drops-52--august-2026">Read or Watch</a>
+            </div>
+          </article>
+          <article class="article-card">
+            <div class="article-image" style="--article-image:url('https://i.ytimg.com/vi/t6v_HJ0A1YA/hqdefault.jpg')" role="img" aria-label="Greenwood market report video thumbnail from Red Door's blog"></div>
+            <div class="article-body">
+              <span class="category">Market Report</span>
+              <h3><a href="https://www.reddoorrents.com/blog/greenwood-market-report-rents-hold-as-home-prices-fall-nearly-8--august-2026">Greenwood Market Report: Rents Hold as Home Prices Fall Nearly 8%</a></h3>
+              <p>Greenwood is showing two different market stories at the same time &mdash; steady rental pricing alongside softer year-over-year home sale prices.</p>
+              <span class="date">August 2026</span>
+              <a class="text-link" href="https://www.reddoorrents.com/blog/greenwood-market-report-rents-hold-as-home-prices-fall-nearly-8--august-2026">Read or Watch</a>
+            </div>
+          </article>
+          <article class="article-card">
+            <div class="article-image" style="--article-image:url('https://i.ytimg.com/vi/2CqrHkZik6g/hqdefault.jpg')" role="img" aria-label="Rental property photography article thumbnail from Red Door's blog"></div>
+            <div class="article-body">
+              <span class="category">Owner Guidance</span>
+              <h3><a href="https://www.reddoorrents.com/blog/why-professional-rental-property-photos-matter-before-the-first-showing">Why Professional Rental Property Photos Matter Before the First Showing</a></h3>
+              <p>For most rental properties, the first showing happens online, before a prospective tenant ever walks through the front door.</p>
+              <span class="date">2026</span>
+              <a class="text-link" href="https://www.reddoorrents.com/blog/why-professional-rental-property-photos-matter-before-the-first-showing">Read or Watch</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="section-dark final-cta">
+      <div class="container reveal">
+        <h2>See the Results for Yourself</h2>
+        <p>Want to know what your property would rent for? Need help preparing and marketing your home? Schedule a free rental market analysis and let us show you what Red Door can do.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="/#rental-analysis">Get a Free Rental Analysis</a>
+          <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+          <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <a class="brand footer-brand" href="/" aria-label="Red Door Property Management home">
+          <img class="brand-logo" src="red-door-logo-reversed.svg" alt="Red Door Property Management" width="124" height="60">
+        </a>
+        <p>We manage rental homes in Indianapolis and surrounding Central Indiana communities with a documented, owner-focused property management process.</p>
+        <a href="tel:3176601626">317.660.1626</a>
+        <a href="/contact">Contact Red Door</a>
+        <div class="affiliations" aria-label="Existing affiliations displayed on Red Door website">
+          <span>BBB</span>
+          <span>NARPM</span>
+          <span>Equal Housing</span>
+        </div>
+      </div>
+      <div>
+        <h3>Main Navigation</h3>
+        <a href="/">Home</a>
+        <a href="/indianapolis-homes-for-rent">Homes for Rent</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/about">About Us</a>
+        <a href="/contact">Contact</a>
+      </div>
+      <div>
+        <h3>Owner Resources</h3>
+        <a href="/indianapolis-property-management">Owner Services</a>
+        <a href="/market-readiness-assessment">Market Readiness</a>
+        <a href="/marketing-process">Marketing Process</a>
+        <a href="/tenant-screening">Tenant Screening</a>
+        <a href="https://reddoor.appfolio.com/oportal/users/log_in">Owner Portal</a>
+      </div>
+      <div>
+        <h3>Tenant Resources</h3>
+        <a href="/tenants">For Tenants</a>
+        <a href="/indianapolis-homes-for-rent">Search Rentals</a>
+        <a href="https://app.propertymeld.com/tenant/reddoorpropertymanagement/maintenance">Maintenance Request</a>
+        <a href="/application-criteria">Application</a>
+        <a href="https://reddoor.appfolio.com/connect/users/sign_in">Tenant Portal</a>
+      </div>
+      <div>
+        <h3>Communities Served</h3>
+        <a href="/indianapolis-property-management">Indianapolis</a>
+        <a href="/carmel-property-management">Carmel</a>
+        <a href="/fishers-property-management">Fishers</a>
+        <a href="/noblesville-property-management">Noblesville</a>
+        <a href="/westfield-property-management">Westfield</a>
+        <a href="/greenwood-property-management">Greenwood</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>&copy; 2026 Red Door Property Management. All Rights Reserved.</span>
+      <span class="footer-bottom-links">
+        <a href="/sitemap">Sitemap</a>
+        <a href="/privacy-policy">Privacy Policy</a>
+        <a href="/website-accessibility-policy">Accessibility Policy</a>
+        <a href="https://www.youtube.com/@reddoorpropertymanagement">YouTube</a>
+        <a href="https://www.instagram.com/reddoorpropertymanagement">Instagram</a>
+        <a href="https://www.tiktok.com/@reddoorpropertymanagement">TikTok</a>
+      </span>
+    </div>
+  </footer>
+
+  <div class="mobile-sticky" data-mobile-sticky aria-hidden="true">
+    <a class="btn btn-secondary" href="tel:3176601626">Call Now</a>
+    <a class="btn btn-primary" href="#rental-analysis">Free Rent Analysis</a>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector("[data-header]");
+      var menuToggle = document.querySelector("[data-menu-toggle]");
+      var navMenu = document.querySelector("[data-nav-menu]");
+      var mobileSticky = document.querySelector("[data-mobile-sticky]");
+
+      function syncHeader() {
+        var isScrolled = window.scrollY > 34;
+        header.classList.toggle("is-scrolled", isScrolled);
+        if (mobileSticky) {
+          var showSticky = window.innerWidth <= 720 && window.scrollY > window.innerHeight * .62;
+          mobileSticky.classList.toggle("is-visible", showSticky);
+          mobileSticky.setAttribute("aria-hidden", String(!showSticky));
+        }
+      }
+
+      window.addEventListener("scroll", syncHeader, { passive: true });
+      window.addEventListener("resize", syncHeader);
+      syncHeader();
+
+      if (menuToggle && navMenu) {
+        menuToggle.addEventListener("click", function () {
+          var isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+          menuToggle.setAttribute("aria-expanded", String(!isOpen));
+          navMenu.classList.toggle("is-open", !isOpen);
+          header.classList.toggle("is-open", !isOpen);
+          document.body.classList.toggle("menu-open", !isOpen);
+        });
+      }
+
+      document.querySelectorAll("[data-dropdown-toggle]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          var item = button.closest("[data-nav-item]");
+          var isOpen = item.classList.contains("is-open");
+          document.querySelectorAll("[data-nav-item]").forEach(function (navItem) {
+            navItem.classList.remove("is-open");
+            var toggle = navItem.querySelector("[data-dropdown-toggle]");
+            if (toggle) {
+              toggle.setAttribute("aria-expanded", "false");
+            }
+          });
+          item.classList.toggle("is-open", !isOpen);
+          button.setAttribute("aria-expanded", String(!isOpen));
+        });
+      });
+
+      document.addEventListener("click", function (event) {
+        if (!event.target.closest("[data-nav-item]")) {
+          document.querySelectorAll("[data-nav-item]").forEach(function (item) {
+            item.classList.remove("is-open");
+            var toggle = item.querySelector("[data-dropdown-toggle]");
+            if (toggle) {
+              toggle.setAttribute("aria-expanded", "false");
+            }
+          });
+        }
+      });
+
+      document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+        link.addEventListener("click", function (event) {
+          var target = document.querySelector(link.getAttribute("href"));
+          if (!target) {
+            return;
+          }
+          event.preventDefault();
+          target.scrollIntoView({
+            behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+            block: "start"
+          });
+          if (navMenu && navMenu.classList.contains("is-open")) {
+            menuToggle.click();
+          }
+        });
+      });
+
+      document.querySelectorAll("[data-accordion]").forEach(function (accordion) {
+        accordion.querySelectorAll(".accordion-trigger").forEach(function (trigger) {
+          trigger.addEventListener("click", function () {
+            var item = trigger.closest(".accordion-item");
+            accordion.querySelectorAll(".accordion-item").forEach(function (candidate) {
+              var candidateTrigger = candidate.querySelector(".accordion-trigger");
+              var shouldOpen = candidate === item && !candidate.classList.contains("is-open");
+              candidate.classList.toggle("is-open", shouldOpen);
+              candidateTrigger.setAttribute("aria-expanded", String(shouldOpen));
+            });
+          });
+        });
+      });
+
+      var marketLinks = Array.prototype.slice.call(document.querySelectorAll("[data-market-link]"));
+      if (marketLinks.length) {
+        var marketName = document.querySelector("[data-market-name]:not([data-market-link])");
+        var marketRegion = document.querySelector("[data-market-region]:not([data-market-link])");
+        var marketInsight = document.querySelector("[data-market-insight]:not([data-market-link])");
+        var marketBest = document.querySelector("[data-market-best]:not([data-market-link])");
+        var marketWatch = document.querySelector("[data-market-watch]:not([data-market-link])");
+        var marketHelp = document.querySelector("[data-market-help]:not([data-market-link])");
+        var marketQuestionOne = document.querySelector("[data-market-question-one]:not([data-market-link])");
+        var marketQuestionTwo = document.querySelector("[data-market-question-two]:not([data-market-link])");
+        var marketQuestionThree = document.querySelector("[data-market-question-three]:not([data-market-link])");
+
+        function updateMarketPanel(link) {
+          marketLinks.forEach(function (candidate) {
+            candidate.classList.toggle("is-active", candidate === link);
+          });
+          if (marketName) {
+            marketName.textContent = link.dataset.marketName;
+          }
+          if (marketRegion) {
+            marketRegion.textContent = link.dataset.marketRegion;
+          }
+          if (marketInsight) {
+            marketInsight.textContent = link.dataset.marketInsight;
+          }
+          if (marketBest) {
+            marketBest.textContent = link.dataset.marketBest;
+          }
+          if (marketWatch) {
+            marketWatch.textContent = link.dataset.marketWatch;
+          }
+          if (marketHelp) {
+            marketHelp.textContent = link.dataset.marketHelp;
+          }
+          if (marketQuestionOne) {
+            marketQuestionOne.textContent = link.dataset.marketQuestionOne;
+          }
+          if (marketQuestionTwo) {
+            marketQuestionTwo.textContent = link.dataset.marketQuestionTwo;
+          }
+          if (marketQuestionThree) {
+            marketQuestionThree.textContent = link.dataset.marketQuestionThree;
+          }
+        }
+
+        marketLinks.forEach(function (link) {
+          link.addEventListener("mouseenter", function () {
+            updateMarketPanel(link);
+          });
+          link.addEventListener("focus", function () {
+            updateMarketPanel(link);
+          });
+        });
+      }
+
+      var reviewGrid = document.querySelector("[data-review-grid]") || document.querySelector("[data-google-review-grid]");
+      if (reviewGrid) {
+        var reviewViewport = document.querySelector("[data-review-viewport]");
+        var reviewArea = reviewGrid.closest(".reviews-shell");
+        var reviewStatus = document.querySelector("[data-review-status]");
+        var previousReviews = document.querySelector("[data-review-prev]");
+        var nextReviews = document.querySelector("[data-review-next]");
+        var reviewAutoFrame = null;
+        var reviewLastFrame = null;
+        var reviewLoopWidth = 0;
+        var reviewSpeed = .024;
+        var reviewsPaused = false;
+        var reduceReviewMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+        var avatarGradients = [
+          "linear-gradient(135deg, #c8102e, #7b1f26)",
+          "linear-gradient(135deg, #146c94, #19a7ce)",
+          "linear-gradient(135deg, #4d7c0f, #84cc16)",
+          "linear-gradient(135deg, #6d28d9, #a78bfa)",
+          "linear-gradient(135deg, #b45309, #f59e0b)",
+          "linear-gradient(135deg, #0f766e, #2dd4bf)"
+        ];
+        var redDoorReviews = window.redDoorReviews || window.redDoorGoogleReviews || [
+          {
+            author: "Carlo M.",
+            date: "18 days ago",
+            rating: 5,
+            source: "Google",
+            text: "Mark was incredible, fast and efficient, also very nice!"
+          },
+          {
+            author: "Aaron B.",
+            date: "19 days ago",
+            rating: 5,
+            source: "Google",
+            text: "We moved in a week ago, and Mark M did a fantastic job helping us with some maintenance issues. The response was quick, clear, and professional."
+          },
+          {
+            author: "Lissa G.",
+            date: "19 days ago",
+            rating: 5,
+            source: "Google",
+            text: "Red Door took over the property I am renting and I am so pleased at how fast they took action on everything. Communication has been easy and helpful."
+          },
+          {
+            author: "Francis W.",
+            date: "18 days ago",
+            rating: 5,
+            source: "Google",
+            text: "I have been renting a home since 2/2026 and only started having a couple of issues that required help. The team handled the process and kept me updated."
+          },
+          {
+            author: "Tammy S.",
+            date: "19 days ago",
+            rating: 5,
+            source: "Google",
+            text: "The team has been responsive, friendly, and easy to work with. Every question I had was answered quickly."
+          },
+          {
+            author: "Douglas H.",
+            date: "16 days ago",
+            rating: 5,
+            source: "Google",
+            text: "Great customer service and communication from start to finish."
+          },
+          {
+            author: "Keala B.",
+            date: "8 years ago",
+            rating: 5,
+            source: "Yellow Pages",
+            sourceShort: "YP",
+            text: "Third year with them. Red Door has been awesome to work with.",
+            context: "Third-year renter"
+          },
+          {
+            author: "Cheryl M.",
+            date: "8 years ago",
+            rating: 5,
+            source: "Yellow Pages",
+            sourceShort: "YP",
+            text: "We live in New York and recently bought our first investment home in the Indianapolis area, sight unseen.",
+            context: "New York investment owner"
+          },
+          {
+            author: "Wendell D.",
+            date: "8 years ago",
+            rating: 5,
+            source: "Yellow Pages",
+            sourceShort: "YP",
+            text: "Being out of state, we had never actually seen the home other than pictures. The team coordinated repairs and found a renter quickly.",
+            context: "Out-of-state investor"
+          },
+          {
+            author: "Richard P.",
+            date: "8 years ago",
+            rating: 5,
+            source: "Yellow Pages",
+            sourceShort: "YP",
+            text: "We moved here from Michigan due to a job transfer and had to find a home to rent very quickly.",
+            context: "Relocation renter"
+          },
+          {
+            author: "Juliet J.",
+            date: "9 years ago",
+            rating: 5,
+            source: "Yellow Pages",
+            sourceShort: "YP",
+            text: "Christopher understood rental homes from both the owner and tenant side and anticipated needs quickly.",
+            context: "Owner and tenant perspective"
+          },
+          {
+            author: "Theresa W.",
+            date: "9 years ago",
+            rating: 5,
+            source: "Yellow Pages",
+            sourceShort: "YP",
+            text: "When a basement flood disrupted our home, Red Door worked around our schedules and helped turn it around.",
+            context: "Emergency maintenance support"
+          },
+          {
+            author: "Ben O.",
+            date: "9 years ago",
+            rating: 5,
+            source: "Yellow Pages",
+            sourceShort: "YP",
+            text: "Chris helped my family find the right Indianapolis rental when we were new to the area.",
+            context: "New-to-Indy renter"
+          },
+          {
+            author: "Solomon L.",
+            date: "Verified review",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "Thanks for everything! You guys have been wonderful and brought so much peace of mind while we enjoyed life at the beach. I would recommend Red Door Property Management to anyone who asked."
+          },
+          {
+            author: "Joshua J.",
+            date: "Verified review",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "My experience with Red Door has been very positive and I have enjoyed working with you. It was a needed breath of fresh air in how property management should operate."
+          },
+          {
+            author: "Applicant Review",
+            date: "Verified review",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "The process has been great. They are swift to respond and had a decision made on our application the same day we submitted it."
+          },
+          {
+            author: "Indianapolis Resident",
+            date: "Verified review",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "Helpful staff, clear follow-up, and a smooth experience whenever we needed support."
+          },
+          {
+            author: "Scott B.",
+            date: "Client testimonial",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "Red Door managed our two Fishers townhome rentals for several years and fulfilled its promises.",
+            context: "Two townhome owner"
+          },
+          {
+            author: "Sandra F.",
+            date: "Client testimonial",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "After relocating to the West Coast, video inspections and communication helped us feel secure about our Broad Ripple home.",
+            context: "West Coast owner"
+          },
+          {
+            author: "Andrew H.",
+            date: "Client testimonial",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "Brian spotted safety concerns, coordinated a fast fix, and found a strong tenant quickly.",
+            context: "New rental owner"
+          },
+          {
+            author: "Joseph F.",
+            date: "Client testimonial",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "Moving our portfolio from another manager was worth it; the transition and service were a major upgrade.",
+            context: "Portfolio transition owner"
+          },
+          {
+            author: "Delbert A.",
+            date: "Client testimonial",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "They helped turn around a ten-home portfolio and get nearly every home leased.",
+            context: "Ten-home portfolio owner"
+          },
+          {
+            author: "Fred S.",
+            date: "Client testimonial",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "As Seattle-area landlords, Red Door made renting our Indianapolis home stress free.",
+            context: "Seattle-area owner"
+          },
+          {
+            author: "Karl G.",
+            date: "Client testimonial",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "Red Door handled a major plumbing emergency at my Indianapolis properties without me needing to get involved.",
+            context: "Two-property owner"
+          },
+          {
+            author: "Raymond A.",
+            date: "Client testimonial",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "My West Side Indy property leased in a few weeks with strong communication and move-in videos.",
+            context: "Out-of-state owner"
+          },
+          {
+            author: "Oscar M.",
+            date: "Client testimonial",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "As an investor, photo documentation and maintenance communication made the portfolio transition feel organized.",
+            context: "Investor portfolio owner"
+          },
+          {
+            author: "Marie J.",
+            date: "Client testimonial",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "Their home rented in about two weeks for full asking price with a two-year lease.",
+            context: "Two-year lease owner"
+          },
+          {
+            author: "William K.",
+            date: "Client testimonial",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "As a California owner with Indianapolis investments, Red Door handled tenants, repairs, and leasing.",
+            context: "California investment owner"
+          },
+          {
+            author: "Burt R.",
+            date: "Client testimonial",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "After trying to manage three rentals alone, Red Door handled leasing and maintenance.",
+            context: "Three rental property owner"
+          },
+          {
+            author: "Fred M.",
+            date: "Client testimonial",
+            rating: 5,
+            source: "Client Testimonial",
+            sourceShort: "R",
+            text: "Five investment properties transitioned quickly, with repairs coordinated and new tenants placed.",
+            context: "Five-property investor"
+          }
+        ];
+        var positiveReviews = redDoorReviews.filter(function (review) {
+          return review.rating >= 5;
+        });
+
+        function createReviewStars(rating) {
+          var stars = document.createElement("span");
+          stars.className = "review-stars";
+          stars.setAttribute("aria-label", rating + " out of 5 stars");
+          for (var index = 0; index < rating; index += 1) {
+            stars.appendChild(document.createElement("span"));
+          }
+          return stars;
+        }
+
+        function sourceShortName(source) {
+          if (source === "Yellow Pages") {
+            return "YP";
+          }
+          if (source === "Client Testimonial") {
+            return "R";
+          }
+          return "G";
+        }
+
+        function avatarBackgroundFor(author) {
+          var total = 0;
+          for (var index = 0; index < author.length; index += 1) {
+            total += author.charCodeAt(index);
+          }
+          return avatarGradients[total % avatarGradients.length];
+        }
+
+        function inferReviewContext(review) {
+          var text = review.text.toLowerCase();
+          var propertyCount = text.match(/\b(2|3|4|5|two|three|four|five)\s+(rental\s+)?(properties|homes)\b/);
+          if (propertyCount) {
+            return propertyCount[1].charAt(0).toUpperCase() + propertyCount[1].slice(1) + " rental property owner";
+          }
+          if (text.indexOf("new york") !== -1 || text.indexOf("out of state") !== -1 || text.indexOf("sight unseen") !== -1) {
+            return "Out-of-state property owner";
+          }
+          if (text.indexOf("life at the beach") !== -1) {
+            return "Remote owner peace of mind";
+          }
+          if (text.indexOf("previous pm") !== -1 || text.indexOf("previous property manager") !== -1) {
+            return "Owner switching property managers";
+          }
+          if (text.indexOf("third year") !== -1 || text.indexOf("renewed our lease") !== -1) {
+            return "Long-term renter";
+          }
+          if (text.indexOf("michigan") !== -1 || text.indexOf("job transfer") !== -1) {
+            return "Relocation renter";
+          }
+          if (text.indexOf("application") !== -1 || text.indexOf("lease signing") !== -1) {
+            return "Fast leasing process";
+          }
+          if (text.indexOf("maintenance") !== -1 || text.indexOf("repair") !== -1) {
+            return "Maintenance support";
+          }
+          if (text.indexOf("communication") !== -1 || text.indexOf("question") !== -1) {
+            return "Responsive communication";
+          }
+          return "Red Door customer experience";
+        }
+
+        function createReviewCard(review, isClone) {
+          var card = document.createElement("article");
+          card.className = "review-card";
+          if (isClone) {
+            card.setAttribute("aria-hidden", "true");
+          }
+
+          var header = document.createElement("div");
+          header.className = "review-card-header";
+
+          var avatar = document.createElement("div");
+          avatar.className = "review-avatar";
+          avatar.setAttribute("aria-hidden", "true");
+          avatar.setAttribute("data-source", review.source);
+          avatar.setAttribute("data-source-short", review.sourceShort || sourceShortName(review.source));
+          avatar.style.setProperty("--avatar-bg", avatarBackgroundFor(review.author));
+          if (review.avatarUrl) {
+            var avatarImage = document.createElement("img");
+            avatarImage.src = review.avatarUrl;
+            avatarImage.alt = "";
+            avatarImage.loading = "lazy";
+            avatarImage.addEventListener("error", function () {
+              avatar.classList.remove("has-image");
+              avatar.textContent = review.author.charAt(0);
+            });
+            avatar.classList.add("has-image");
+            avatar.appendChild(avatarImage);
+          } else {
+            avatar.textContent = review.author.charAt(0);
+          }
+
+          var identity = document.createElement("div");
+          var name = document.createElement("div");
+          name.className = "review-name";
+          name.textContent = review.author;
+
+          var verified = document.createElement("span");
+          verified.className = "review-verified";
+          verified.setAttribute("aria-label", "Verified review");
+          name.appendChild(verified);
+
+          var date = document.createElement("div");
+          date.className = "review-date";
+          date.textContent = review.source + " - " + review.date;
+
+          identity.appendChild(name);
+          identity.appendChild(date);
+          header.appendChild(avatar);
+          header.appendChild(identity);
+
+          var text = document.createElement("p");
+          text.className = "review-text";
+          text.textContent = review.text;
+
+          card.appendChild(header);
+          card.appendChild(createReviewStars(review.rating));
+          card.appendChild(text);
+
+          if (review.text.length > 92) {
+            var more = document.createElement("button");
+            more.className = "review-read-more";
+            more.type = "button";
+            more.textContent = "Read more";
+            if (isClone) {
+              more.tabIndex = -1;
+            }
+            more.addEventListener("click", function () {
+              var expanded = card.classList.toggle("is-expanded");
+              more.textContent = expanded ? "Show less" : "Read more";
+              setReviewsPaused(expanded);
+            });
+            card.appendChild(more);
+          }
+
+          var context = document.createElement("div");
+          context.className = "review-context";
+          context.textContent = review.context || inferReviewContext(review);
+          card.appendChild(context);
+
+          return card;
+        }
+
+        function getReviewLoopWidth() {
+          var cards = reviewGrid.querySelectorAll(".review-card");
+          if (cards.length > positiveReviews.length) {
+            return cards[positiveReviews.length].offsetLeft - cards[0].offsetLeft;
+          }
+          return Math.round(reviewGrid.scrollWidth / 3);
+        }
+
+        function normalizeReviewPosition() {
+          if (!reviewLoopWidth) {
+            reviewLoopWidth = getReviewLoopWidth();
+          }
+          if (!reviewLoopWidth) {
+            return;
+          }
+          if (reviewViewport.scrollLeft >= reviewLoopWidth * 2) {
+            reviewViewport.scrollLeft -= reviewLoopWidth;
+          } else if (reviewViewport.scrollLeft <= 0) {
+            reviewViewport.scrollLeft += reviewLoopWidth;
+          }
+        }
+
+        function renderReviews(announce) {
+          reviewGrid.textContent = "";
+
+          if (!positiveReviews.length) {
+            var empty = document.createElement("p");
+            empty.className = "lead";
+            empty.textContent = "No customer reviews are available right now.";
+            reviewGrid.appendChild(empty);
+            if (previousReviews && nextReviews) {
+              previousReviews.disabled = true;
+              nextReviews.disabled = true;
+            }
+            return;
+          }
+
+          positiveReviews.concat(positiveReviews, positiveReviews).forEach(function (review, index) {
+            reviewGrid.appendChild(createReviewCard(review, index >= positiveReviews.length));
+          });
+          function primeReviewAuto() {
+            reviewLoopWidth = getReviewLoopWidth();
+            if (reviewViewport && reviewLoopWidth) {
+              reviewViewport.scrollLeft = reviewLoopWidth;
+            }
+            startReviewAuto();
+          }
+          // A single setTimeout(0) can fire before card layout (and any late
+          // web-font swap) settles, so reviewsCanScroll() reads false and
+          // autoplay never starts until the user manually advances the
+          // carousel. Retry a few times so it self-corrects without input.
+          window.setTimeout(primeReviewAuto, 0);
+          window.setTimeout(primeReviewAuto, 250);
+          window.setTimeout(primeReviewAuto, 800);
+
+          if (announce && reviewStatus) {
+            reviewStatus.textContent = "Showing customer reviews from multiple sources.";
+          }
+        }
+
+        function reviewsCanScroll() {
+          return reviewViewport && reviewViewport.scrollWidth > reviewViewport.clientWidth + 8;
+        }
+
+        function moveReviews(direction) {
+          if (!reviewsCanScroll()) {
+            return;
+          }
+          normalizeReviewPosition();
+          var step = reviewViewport.clientWidth * .85;
+          reviewViewport.scrollBy({
+            left: step * direction,
+            behavior: reduceReviewMotion.matches ? "auto" : "smooth"
+          });
+          window.setTimeout(normalizeReviewPosition, 650);
+        }
+
+        function stopReviewAuto() {
+          if (reviewAutoFrame) {
+            window.cancelAnimationFrame(reviewAutoFrame);
+            reviewAutoFrame = null;
+          }
+          reviewLastFrame = null;
+        }
+
+        function startReviewAuto() {
+          stopReviewAuto();
+          if (reviewsPaused || reduceReviewMotion.matches || !reviewsCanScroll()) {
+            return;
+          }
+          reviewAutoFrame = window.requestAnimationFrame(autoMoveReviews);
+        }
+
+        function setReviewsPaused(paused) {
+          reviewsPaused = paused;
+          if (paused) {
+            stopReviewAuto();
+          } else {
+            startReviewAuto();
+          }
+        }
+
+        function autoMoveReviews(timestamp) {
+          if (!reviewLastFrame) {
+            reviewLastFrame = timestamp;
+          }
+          var elapsed = timestamp - reviewLastFrame;
+          reviewLastFrame = timestamp;
+
+          if (reviewViewport && !reviewsPaused && !reduceReviewMotion.matches && reviewsCanScroll()) {
+            reviewViewport.scrollLeft += elapsed * reviewSpeed;
+            normalizeReviewPosition();
+          }
+
+          reviewAutoFrame = window.requestAnimationFrame(autoMoveReviews);
+        }
+
+        function resumeReviewsIfClear() {
+          window.setTimeout(function () {
+            var expandedCard = reviewGrid.querySelector(".review-card.is-expanded");
+            var focusedCard = reviewGrid.contains(document.activeElement);
+            setReviewsPaused(Boolean(expandedCard || focusedCard));
+          }, 900);
+        }
+
+        if (reviewArea) {
+          reviewGrid.addEventListener("focusin", function () {
+            setReviewsPaused(true);
+          });
+          reviewGrid.addEventListener("focusout", resumeReviewsIfClear);
+          reviewArea.addEventListener("touchstart", function () {
+            setReviewsPaused(true);
+          }, { passive: true });
+          reviewArea.addEventListener("touchend", resumeReviewsIfClear);
+        }
+
+        if (previousReviews && nextReviews && reviewViewport) {
+          previousReviews.addEventListener("click", function () {
+            setReviewsPaused(true);
+            moveReviews(-1);
+            window.setTimeout(function () {
+              setReviewsPaused(false);
+            }, 1100);
+          });
+
+          nextReviews.addEventListener("click", function () {
+            setReviewsPaused(true);
+            moveReviews(1);
+            window.setTimeout(function () {
+              setReviewsPaused(false);
+            }, 1100);
+          });
+        }
+
+        renderReviews(false);
+        window.addEventListener("resize", function () {
+          reviewLoopWidth = getReviewLoopWidth();
+          if (reviewViewport && reviewLoopWidth) {
+            reviewViewport.scrollLeft = reviewLoopWidth;
+          }
+          startReviewAuto();
+        });
+        if (reduceReviewMotion.addEventListener) {
+          reduceReviewMotion.addEventListener("change", startReviewAuto);
+        } else if (reduceReviewMotion.addListener) {
+          reduceReviewMotion.addListener(startReviewAuto);
+        }
+      }
+
+      var form = document.querySelector("[data-analysis-form]");
+      if (form) {
+        var steps = Array.prototype.slice.call(form.querySelectorAll(".form-step"));
+        var previousButton = form.querySelector("[data-form-prev]");
+        var nextButton = form.querySelector("[data-form-next]");
+        var error = form.querySelector("[data-form-error]");
+        var progressText = form.querySelector("[data-progress-text]");
+        var progressPercent = form.querySelector("[data-progress-percent]");
+        var progressFill = form.querySelector("[data-progress-fill]");
+        var confirmation = form.querySelector("[data-confirmation]");
+        var current = 0;
+
+        function fieldsForStep(index) {
+          return Array.prototype.slice.call(steps[index].querySelectorAll("input, select, textarea"));
+        }
+
+        function updateForm() {
+          steps.forEach(function (step, index) {
+            step.classList.toggle("is-active", index === current);
+          });
+          var percent = Math.round((current + 1) / steps.length * 100);
+          progressText.textContent = "Step " + (current + 1) + " of " + steps.length;
+          progressPercent.textContent = percent + "%";
+          progressFill.style.width = percent + "%";
+          previousButton.style.visibility = current === 0 ? "hidden" : "visible";
+          nextButton.textContent = current === steps.length - 1 ? "Request My Rental Analysis" : "Next";
+        }
+
+        function validateStep() {
+          var valid = true;
+          var firstInvalid = null;
+          fieldsForStep(current).forEach(function (field) {
+            var fieldValid = field.checkValidity();
+            field.setAttribute("aria-invalid", String(!fieldValid));
+            if (!fieldValid && !firstInvalid) {
+              firstInvalid = field;
+            }
+            valid = valid && fieldValid;
+          });
+          error.textContent = valid ? "" : "Please complete the highlighted field before continuing.";
+          if (firstInvalid) {
+            firstInvalid.focus();
+          }
+          return valid;
+        }
+
+        previousButton.addEventListener("click", function () {
+          current = Math.max(0, current - 1);
+          error.textContent = "";
+          updateForm();
+        });
+
+        nextButton.addEventListener("click", function () {
+          if (!validateStep()) {
+            return;
+          }
+          if (current === steps.length - 1) {
+            confirmation.classList.add("is-visible");
+            confirmation.focus();
+            nextButton.disabled = true;
+            previousButton.disabled = true;
+            return;
+          }
+          current += 1;
+          updateForm();
+        });
+
+        fieldsForStep(current).forEach(function (field) {
+          field.addEventListener("input", function () {
+            field.setAttribute("aria-invalid", "false");
+            error.textContent = "";
+          });
+        });
+
+        form.querySelectorAll("input, select, textarea").forEach(function (field) {
+          field.addEventListener("input", function () {
+            field.setAttribute("aria-invalid", "false");
+            error.textContent = "";
+          });
+        });
+
+        updateForm();
+      }
+
+      if ("IntersectionObserver" in window) {
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: .12 });
+
+        document.querySelectorAll(".reveal").forEach(function (item) {
+          observer.observe(item);
+        });
+      } else {
+        document.querySelectorAll(".reveal").forEach(function (item) {
+          item.classList.add("is-visible");
+        });
+      }
+    }());
+  </script>
+</body>
+</html>
