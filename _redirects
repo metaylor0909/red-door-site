@@ -1,0 +1,28 @@
+# Red Door Property Management -- locked redirect rules (see CLAUDE.md)
+# This file has no effect until the site is deployed on Cloudflare Pages;
+# it's captured here now so the rules are documented and ready to drop
+# into the real Astro build. Netlify/Cloudflare Pages _redirects syntax:
+#   /from  /to  status
+
+# Airbnb / short-term-rental service retired -- no distinct page on the
+# new site (CLAUDE.md > Locked structural decisions)
+/airbnb-management               /   301
+/airbnb-management-indianapolis  /   301
+
+# /owners and /indianapolis-property-management were byte-identical on
+# the live site; the pillar page is canonical (CLAUDE.md > Confirmed
+# defects to fix). Verified live via `curl -sI` (see to-do "Resolved
+# this pass").
+/owners  /indianapolis-property-management  301
+
+# /index duplicated the homepage (CLAUDE.md > Confirmed defects to fix)
+/index  /  301
+
+# Never migrated -- serve 410 Gone, not 404 (CLAUDE.md > Confirmed
+# defects to fix)
+/google39077c6dc4a063eb.html  /  410
+/landing                      /  410
+/test                         /  410
+/carousel-test                /  410
+/signatures                   /  410
+/signatures/signatures        /  410

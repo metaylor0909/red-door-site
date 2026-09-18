@@ -264,6 +264,16 @@ Judgment calls / open items carried forward from this build:
 
 ## Genuinely open — do these next
 
+- [ ] **Confirm whether the Guaranteed Lease Program still exists.** The
+      About page (`about.html`, migrated as-is Sep 18) mentions "a very
+      unique Guaranteed Lease Program" for owners moving up without
+      selling, but there is no corresponding page on the live site
+      anymore — `/guaranteed-lease-program` and `/guaranteed-lease` both
+      404, and it doesn't appear in the live site's own `/sitemap`.
+      Confirmed stale per Michael (Sep 18); skipped rather than building
+      a page with no real source content. If the program still exists,
+      get real content and build the page; if it's been discontinued,
+      the About page's mention should be removed too.
 - [ ] **Build `tenant-verification.html` and `employment-verification.html`.**
       The live pages just embed a single Adobe/EchoSign eSign widget iframe
       each (`secure.echosign.com/public/widget?f=...`), tied to a specific
