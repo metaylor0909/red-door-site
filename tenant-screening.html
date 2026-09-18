@@ -2393,6 +2393,24 @@
     }
   
     /* ---------- Pillar page additions ---------- */
+    .video-section { padding: clamp(40px, 6vw, 64px) 0 0; }
+    .video-embed {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      max-width: 900px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-strong);
+      background: #000;
+    }
+    .video-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
     .hero .eyebrow + h1 { transform: none; margin-top: 6px; }
     .hero .cta-row { transform: none; margin-top: 10px; }
     .step-grid {
@@ -2424,6 +2442,43 @@
     .step-card p { color: var(--muted); font-size: .95rem; margin-bottom: 10px; }
     .step-card ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: .92rem; }
     .step-card li { margin-bottom: 6px; }
+    .step-icon {
+      position: relative;
+      z-index: 1;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      color: var(--white);
+      background: linear-gradient(150deg, var(--red), var(--red-dark));
+      border-radius: 11px;
+      box-shadow: 0 12px 22px -8px rgba(140, 12, 3, .28);
+    }
+    .step-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    .step-grid.is-five-across {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+    .step-grid.is-three-across {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    @media (max-width: 1180px) {
+      .step-grid.is-five-across { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .step-grid.is-three-across { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .step-grid.is-five-across { grid-template-columns: 1fr; }
+      .step-grid.is-three-across { grid-template-columns: 1fr; }
+    }
     .content-block { max-width: 900px; }
     .content-block.is-centered { margin-inline: auto; text-align: center; }
     .content-block h2 { margin-bottom: 14px; }
@@ -2595,28 +2650,46 @@
           <h2>Built to Stay Ahead of Rental Scams</h2>
           <p>Our comprehensive tenant screening process is built to prevent evictions, reduce turnover, and detect red flags before they become costly problems. As rental scams grow more sophisticated, we&rsquo;ve adapted our standards to stay several steps ahead.</p>
         </div>
-        <div class="step-grid">
+        <div class="step-grid is-three-across">
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.6-3 7.7-7 9-4-1.3-7-4.4-7-9V6z"></path><path d="M9 12l2 2 4-4"></path></svg>
+            </span>
             <h3>National Sex Offender Registry Check</h3>
             <p>All applicants are checked against the National Sex Offender Public Website (NSOPW) database to support community safety.</p>
           </article>
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 20V11"></path><path d="M10 20V6"></path><path d="M16 20v-8"></path><path d="M4 20h16"></path></svg>
+            </span>
             <h3>Full Credit Report &amp; Score</h3>
             <p>Credit score and payment history, delinquencies, bankruptcies, and charge-offs, and debt-to-income ratio &mdash; helping us evaluate patterns of financial responsibility.</p>
           </article>
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.3 15.3L21 21"></path></svg>
+            </span>
             <h3>Nationwide Criminal &amp; Eviction Search</h3>
             <p>We review felony and misdemeanor history, eviction judgments, and outstanding warrants or active cases. Criminal convictions are considered case-by-case &mdash; the nature and severity of the conviction, how much time has passed, and conduct since &mdash; and applicants get the opportunity to explain circumstances before a final decision. We don&rsquo;t use arrest records that didn&rsquo;t lead to a conviction, sealed or expunged records, or apply blanket bans based on record type alone. An eviction <em>filing</em> that didn&rsquo;t result in a judgment does not count against an applicant &mdash; only an actual eviction judgment does.</p>
           </article>
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"></rect><path d="M9 4h6v3H9z"></path><path d="M8.5 13l2 2 4-4.5"></path></svg>
+            </span>
             <h3>Rental History Verification</h3>
             <p>We confirm rent payment history, property condition at move-out, and proper notice and lease compliance &mdash; looking for consistent, respectful tenancy and positive references.</p>
           </article>
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="12" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M3 12h18"></path></svg>
+            </span>
             <h3>Employment &amp; Income Verification</h3>
             <p>We verify income via recent pay stubs, direct deposits, employer letters, or bank statements &mdash; typically requiring 3&times; monthly rent in verifiable income. Applicants can connect their bank account or payroll provider, or upload a recent pay stub (powered by Nova Credit Inc.), with results added to the application record in AppFolio.</p>
           </article>
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="11" r="2"></circle><path d="M6.5 15.5c0-1.5 1.1-2.5 2.5-2.5s2.5 1 2.5 2.5"></path><path d="M14 10h4M14 14h3"></path></svg>
+            </span>
             <h3>ID Verification</h3>
             <p>Embedded in the online application (powered by Plaid), this confirms the applicant is a real person, the ID document is valid, and the applicant is the genuine owner of the ID &mdash; via personal information, a photo ID, and a selfie video, with results available immediately.</p>
           </article>

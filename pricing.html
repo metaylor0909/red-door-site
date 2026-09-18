@@ -2393,6 +2393,24 @@
     }
   
     /* ---------- Pillar page additions ---------- */
+    .video-section { padding: clamp(40px, 6vw, 64px) 0 0; }
+    .video-embed {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      max-width: 900px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-strong);
+      background: #000;
+    }
+    .video-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
     .hero .eyebrow + h1 { transform: none; margin-top: 6px; }
     .hero .cta-row { transform: none; margin-top: 10px; }
     .step-grid {
@@ -2424,6 +2442,43 @@
     .step-card p { color: var(--muted); font-size: .95rem; margin-bottom: 10px; }
     .step-card ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: .92rem; }
     .step-card li { margin-bottom: 6px; }
+    .step-icon {
+      position: relative;
+      z-index: 1;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      color: var(--white);
+      background: linear-gradient(150deg, var(--red), var(--red-dark));
+      border-radius: 11px;
+      box-shadow: 0 12px 22px -8px rgba(140, 12, 3, .28);
+    }
+    .step-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    .step-grid.is-five-across {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+    .step-grid.is-three-across {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    @media (max-width: 1180px) {
+      .step-grid.is-five-across { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .step-grid.is-three-across { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .step-grid.is-five-across { grid-template-columns: 1fr; }
+      .step-grid.is-three-across { grid-template-columns: 1fr; }
+    }
     .content-block { max-width: 900px; }
     .content-block.is-centered { margin-inline: auto; text-align: center; }
     .content-block h2 { margin-bottom: 14px; }
@@ -2697,33 +2752,51 @@
           <div class="section-kicker">What Your Monthly Management Fee Supports</div>
           <h2>A Complete Management System</h2>
         </div>
-        <div class="step-grid">
+        <div class="step-grid is-three-across">
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"></rect><path d="M9 4h6v3H9z"></path><path d="M8.5 13l2 2 4-4.5"></path></svg>
+            </span>
             <h3>Market Readiness</h3>
             <p>Rental pricing guidance, condition review, and readiness recommendations before marketing begins &mdash; helping reduce vacancy risk from day one.</p>
             <p><a class="area-link" href="/market-readiness-assessment">Learn more &rarr;</a></p>
           </article>
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M3 9h3l2.5-2.5h7L17 9h4v9H3z"></path><circle cx="12" cy="13.5" r="3.4"></circle></svg>
+            </span>
             <h3>Marketing Process</h3>
             <p>Professional photos, virtual walkthrough video, listing syndication, and self-guided showing access &mdash; built for stronger exposure and faster leasing.</p>
             <p><a class="area-link" href="/marketing-process">Learn more &rarr;</a></p>
           </article>
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.6-3 7.7-7 9-4-1.3-7-4.4-7-9V6z"></path><path d="M9 12l2 2 4-4"></path></svg>
+            </span>
             <h3>Tenant Screening</h3>
             <p>Application review, income verification, rental history, criminal, eviction, fraud, and pet screening &mdash; reducing placement risk.</p>
             <p><a class="area-link" href="/tenant-screening">Learn more &rarr;</a></p>
           </article>
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"></path><path d="M14 3v4h4"></path><path d="M9.5 16.5c1-1.3 2-1.3 3 0s2 1.3 3 0"></path></svg>
+            </span>
             <h3>Leasing Process</h3>
             <p>Lease preparation, signing coordination, tenant onboarding, and move-in documentation for a cleaner handoff.</p>
             <p><a class="area-link" href="/leasing-process">Learn more &rarr;</a></p>
           </article>
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M14.7 6.3a3.7 3.7 0 0 0-4.9 4.9l-5.1 5.1a1.6 1.6 0 0 0 2.3 2.3l5.1-5.1a3.7 3.7 0 0 0 4.9-4.9l-2.2 2.2-2-2z"></path></svg>
+            </span>
             <h3>Maintenance Coordination</h3>
             <p>Request intake, troubleshooting, Property Meld tracking, vendor coordination, and emergency response.</p>
             <p><a class="area-link" href="/maintenance">Learn more &rarr;</a></p>
           </article>
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 5h16v10H9l-4 4z"></path><path d="M8.5 10h7M8.5 7.5h7"></path></svg>
+            </span>
             <h3>Communication</h3>
             <p>Owner updates, tenant communication, portal access, monthly statements, and documented communication systems.</p>
             <p><a class="area-link" href="/communication">Learn more &rarr;</a></p>

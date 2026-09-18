@@ -2393,6 +2393,24 @@
     }
   
     /* ---------- Pillar page additions ---------- */
+    .video-section { padding: clamp(40px, 6vw, 64px) 0 0; }
+    .video-embed {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      max-width: 900px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-strong);
+      background: #000;
+    }
+    .video-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
     .hero .eyebrow + h1 { transform: none; margin-top: 6px; }
     .hero .cta-row { transform: none; margin-top: 10px; }
     .step-grid {
@@ -2424,6 +2442,43 @@
     .step-card p { color: var(--muted); font-size: .95rem; margin-bottom: 10px; }
     .step-card ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: .92rem; }
     .step-card li { margin-bottom: 6px; }
+    .step-icon {
+      position: relative;
+      z-index: 1;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      color: var(--white);
+      background: linear-gradient(150deg, var(--red), var(--red-dark));
+      border-radius: 11px;
+      box-shadow: 0 12px 22px -8px rgba(140, 12, 3, .28);
+    }
+    .step-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    .step-grid.is-five-across {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+    .step-grid.is-three-across {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    @media (max-width: 1180px) {
+      .step-grid.is-five-across { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .step-grid.is-three-across { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .step-grid.is-five-across { grid-template-columns: 1fr; }
+      .step-grid.is-three-across { grid-template-columns: 1fr; }
+    }
     .content-block { max-width: 900px; }
     .content-block.is-centered { margin-inline: auto; text-align: center; }
     .content-block h2 { margin-bottom: 14px; }
@@ -2596,14 +2651,23 @@
         </div>
         <div class="step-grid">
           <article class="step-card" data-step="1">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"></rect><path d="M9 4h6v3H9z"></path><path d="M8.5 13l2 2 4-4.5"></path></svg>
+            </span>
             <h3>Market Readiness Assessment</h3>
             <p>Maintenance starts the moment we take on your property. Our Market Readiness Assessment examines every room, mechanical system, and exterior feature, then categorizes updates into what&rsquo;s necessary for marketing, necessary for tenant placement, ideal for maximizing ROI, and &ldquo;wow factor&rdquo; upgrades.</p>
           </article>
           <article class="step-card" data-step="2">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M12 3v3M12 18v3M4.2 7.8l2.1 1.2M17.7 15l2.1 1.2M4.2 16.2l2.1-1.2M17.7 9l2.1-1.2M3 12h3M18 12h3"></path></svg>
+            </span>
             <h3>Technology That Streamlines and Clarifies</h3>
             <p>We use Property Meld, a leading maintenance coordination platform, giving you complete visibility: real-time updates and tracking, before/after photos and videos, work order progress, estimate approvals, and full communication logs.</p>
           </article>
           <article class="step-card" data-step="3">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M14.7 6.3a3.7 3.7 0 0 0-4.9 4.9l-5.1 5.1a1.6 1.6 0 0 0 2.3 2.3l5.1-5.1a3.7 3.7 0 0 0 4.9-4.9l-2.2 2.2-2-2z"></path></svg>
+            </span>
             <h3>Skilled People on the Ground</h3>
             <p>In-house technicians handle common and time-sensitive repairs fast and cost-effectively; trusted, fully insured and licensed local vendors handle specialty work at preferred pricing through our high-volume network.</p>
           </article>

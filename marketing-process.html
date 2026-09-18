@@ -2393,6 +2393,24 @@
     }
   
     /* ---------- Pillar page additions ---------- */
+    .video-section { padding: clamp(40px, 6vw, 64px) 0 0; }
+    .video-embed {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      max-width: 900px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-strong);
+      background: #000;
+    }
+    .video-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
     .hero .eyebrow + h1 { transform: none; margin-top: 6px; }
     .hero .cta-row { transform: none; margin-top: 10px; }
     .step-grid {
@@ -2424,6 +2442,43 @@
     .step-card p { color: var(--muted); font-size: .95rem; margin-bottom: 10px; }
     .step-card ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: .92rem; }
     .step-card li { margin-bottom: 6px; }
+    .step-icon {
+      position: relative;
+      z-index: 1;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      color: var(--white);
+      background: linear-gradient(150deg, var(--red), var(--red-dark));
+      border-radius: 11px;
+      box-shadow: 0 12px 22px -8px rgba(140, 12, 3, .28);
+    }
+    .step-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    .step-grid.is-five-across {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+    .step-grid.is-three-across {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    @media (max-width: 1180px) {
+      .step-grid.is-five-across { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .step-grid.is-three-across { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .step-grid.is-five-across { grid-template-columns: 1fr; }
+      .step-grid.is-three-across { grid-template-columns: 1fr; }
+    }
     .content-block { max-width: 900px; }
     .content-block.is-centered { margin-inline: auto; text-align: center; }
     .content-block h2 { margin-bottom: 14px; }
@@ -2597,18 +2652,30 @@
         </div>
         <div class="step-grid">
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M3 9h3l2.5-2.5h7L17 9h4v9H3z"></path><circle cx="12" cy="13.5" r="3.4"></circle></svg>
+            </span>
             <h3>Professional Photos That Convert</h3>
             <p>Tenants shop with their eyes first. Every Red Door listing includes professional photography &mdash; bright, well-lit rooms, wide-angle shots, clear views of upgrades, and clean curb appeal &mdash; helping your home photograph better, show better, and generate more qualified interest.</p>
           </article>
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M10 9.5l5 2.5-5 2.5z"></path></svg>
+            </span>
             <h3>Virtual Walkthroughs</h3>
             <p>We produce immersive video walkthroughs, hosted on YouTube and embedded directly into listings, that let renters tour the home before scheduling a showing. This increases transparency, pre-qualifies serious renters, and reduces wasted showings.</p>
           </article>
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"></circle><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M5.5 5.5a10 10 0 0 0 0 13M18.5 5.5a10 10 0 0 1 0 13"></path></svg>
+            </span>
             <h3>Unmatched Listing Syndication</h3>
             <p>Your property is automatically syndicated to all major rental platforms &mdash; Zillow, Trulia, HotPads, Apartments.com, Zumper, Redfin, Realtor.com, and dozens more &mdash; with search-friendly language, amenities, and neighborhood highlights optimized for the right audience.</p>
           </article>
           <article class="step-card">
+            <span class="step-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"></rect><path d="M8 3v4M16 3v4M4 10h16"></path><path d="M9.5 14.5l2 2 3-3.5"></path></svg>
+            </span>
             <h3>Smart Showing Technology</h3>
             <p>We use Tenant Turner, a modern self-scheduling platform with identity verification and lead tracking, so pre-qualified renters can book showings safely and conveniently, seven days a week &mdash; faster leasing without sacrificing control or security.</p>
           </article>
