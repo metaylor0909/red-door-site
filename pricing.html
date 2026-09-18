@@ -2563,6 +2563,144 @@
       .two-col-list { grid-template-columns: 1fr; }
     }
 
+    /* ---------- Pricing page: glance grid ---------- */
+    .glance-grid { display: grid; grid-template-columns: repeat(4, minmax(240px, 280px)); justify-content: center; gap: 22px; margin-bottom: 8px; }
+    .glance-card { min-height: 168px; display: grid; align-content: start; gap: 8px; padding: 22px; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 10px 28px rgba(23, 23, 23, .06); }
+    .glance-card.featured { border-top: 5px solid var(--red); }
+    .glance-card span { color: var(--red-dark); font-weight: 900; letter-spacing: .06em; text-transform: uppercase; font-size: .8rem; }
+    .glance-card strong { color: var(--ink); font-family: var(--font-head); font-size: clamp(2.2rem, 5vw, 3.3rem); line-height: 1; font-weight: 500; }
+    .glance-card p { color: var(--muted); margin-bottom: 0; font-size: .92rem; }
+    .pricing-cta-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 26px 0 6px; }
+    @media (max-width: 900px) { .glance-grid { grid-template-columns: repeat(2, minmax(220px, 1fr)); } }
+    @media (max-width: 560px) { .glance-grid { grid-template-columns: 1fr; } }
+
+    /* ---------- Pricing page: self-manage vs. management calculator ---------- */
+    .pricing-widget-embed { max-width: 1080px; margin: 10px auto 0; }
+    .rd-calc-widget { overflow: hidden; background: var(--white); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 16px 42px rgba(23, 23, 23, .08); }
+    .rd-calc-accent { height: 4px; background: linear-gradient(90deg, var(--red), var(--red-dark)); }
+    .rd-calc-inner { padding: clamp(22px, 4vw, 34px); }
+    .rd-calc-brand { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; text-align: center; }
+    .rd-calc-door { position: relative; flex: 0 0 auto; width: 13px; height: 20px; background: var(--red); border-radius: 2px 2px 1px 1px; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .25); }
+    .rd-calc-door::after { content: ""; position: absolute; right: 2px; top: 9px; width: 2px; height: 2px; background: var(--white); border-radius: 999px; }
+    .rd-calc-brand span:last-child { color: var(--red-dark); font-size: 14px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+    .rd-calc-widget h3 { color: var(--ink); margin-bottom: 10px; font-size: clamp(1.55rem, 3vw, 2.15rem); line-height: 1.18; letter-spacing: 0; text-align: center; }
+    .rd-calc-widget h3 em { color: var(--red); font-style: normal; }
+    .rd-calc-subhead { color: var(--muted); line-height: 1.55; margin-bottom: 22px; text-align: center; }
+    .rd-calc-layout { display: grid; grid-template-columns: minmax(260px, .86fr) minmax(360px, 1.14fr); gap: 24px; align-items: start; }
+    .rd-calc-controls { padding: 22px; background: var(--soft); border: 1px solid var(--line); border-radius: 8px; }
+    .rd-calc-mode { display: grid; gap: 9px; margin-bottom: 18px; }
+    .rd-calc-mode > span, .rd-calc-selector > span { color: var(--ink); font-weight: 900; font-size: .92rem; }
+    .rd-calc-segments, .rd-calc-option-group { display: grid; gap: 7px; }
+    .rd-calc-segments { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 4px; background: var(--white); border: 1px solid var(--line); border-radius: 8px; }
+    .rd-calc-segments button, .rd-calc-option-group button { min-height: 40px; color: var(--muted); background: transparent; border: 0; border-radius: 6px; font-family: var(--font); font-size: .88rem; font-weight: 900; cursor: pointer; transition: background .16s, color .16s, box-shadow .16s; }
+    .rd-calc-segments button.is-active, .rd-calc-option-group button.is-active { color: var(--white); background: var(--red); box-shadow: 0 8px 18px rgba(140, 12, 3, .18); }
+    .rd-calc-field { margin-bottom: 13px; }
+    .rd-calc-field:last-of-type { margin-bottom: 16px; }
+    .rd-calc-field-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 5px; }
+    .rd-calc-field label { color: var(--ink); font-size: 13px; font-weight: 800; }
+    .rd-calc-field output { color: var(--red-dark); font-size: 13px; font-weight: 900; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .rd-calc-help { color: var(--muted); margin: 7px 0 0; line-height: 1.4; font-size: .84rem; }
+    .rd-calc-selector { display: grid; gap: 8px; margin-bottom: 15px; }
+    .rd-calc-option-group { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .rd-calc-option-group button { min-height: 36px; background: var(--white); border: 1px solid var(--line); }
+    .rd-calc-widget input[type="range"] { width: 100%; height: 5px; appearance: none; background: linear-gradient(to right, var(--red) 0%, var(--red) var(--fill, 50%), #d8dce2 var(--fill, 50%), #d8dce2 100%); border-radius: 3px; cursor: pointer; }
+    .rd-calc-widget input[type="range"]::-webkit-slider-thumb { width: 18px; height: 18px; appearance: none; background: var(--white); border: 3px solid var(--red); border-radius: 999px; box-shadow: 0 1px 4px rgba(23, 23, 23, .25); }
+    .rd-calc-switch { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); cursor: pointer; font-size: 12.5px; font-weight: 800; margin: 2px 0 4px; }
+    .rd-calc-switch input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+    .rd-calc-switch .track { position: relative; flex: 0 0 auto; width: 36px; height: 20px; background: var(--line); border-radius: 999px; transition: background .2s; }
+    .rd-calc-switch .track::after { content: ""; position: absolute; left: 2.5px; top: 2.5px; width: 15px; height: 15px; background: var(--white); border-radius: 999px; box-shadow: 0 1px 3px rgba(0, 0, 0, .3); transition: transform .2s; }
+    .rd-calc-switch input:checked + .track { background: var(--red); }
+    .rd-calc-switch input:checked + .track::after { transform: translateX(16px); }
+    .rd-calc-output { display: grid; align-content: start; }
+    .rd-calc-result { margin: 0 0 14px; padding: 22px; text-align: left; background: var(--ink); border-top: 5px solid var(--red); border-radius: 8px; box-shadow: 0 16px 34px rgba(23, 23, 23, .12); }
+    .rd-calc-kicker { color: #f4caca; font-size: 11px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+    .rd-calc-big { color: var(--white); font-size: clamp(2.5rem, 5vw, 3.4rem); font-weight: 900; line-height: 1.05; font-variant-numeric: tabular-nums; margin: 2px 0; }
+    .rd-calc-big.negative { color: var(--white); }
+    .rd-calc-sentence { color: var(--white); font-size: 14.5px; font-weight: 700; }
+    .rd-calc-why { color: #dadde2; font-size: 14px; line-height: 1.5; }
+    .rd-calc-breakdown { display: grid; gap: 7px; margin: 18px 0 14px; }
+    .rd-calc-breakdown-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; color: #eef0f2; border-bottom: 1px solid rgba(255, 255, 255, .12); }
+    .rd-calc-breakdown-row:last-child { border-bottom: 0; }
+    .rd-calc-breakdown-row strong { color: var(--white); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .rd-calc-breakdown-row.total { margin-top: 3px; padding-top: 11px; color: var(--white); border-top: 1px solid rgba(255, 255, 255, .28); font-weight: 900; }
+    .calculator-cta-row { display: grid; gap: 10px; }
+    .rd-calc-cta { display: block; text-align: center; font-weight: 900; padding: 12px 20px; background: var(--red); border-radius: 999px; box-shadow: 0 5px 14px -5px var(--red); text-decoration: none; transition: transform .15s; color: var(--white) !important; }
+    .rd-calc-cta:hover { transform: translateY(-1px); }
+    .rd-calc-footnote { color: var(--muted); margin: 12px 0 0; text-align: left; font-size: 13px; line-height: 1.5; }
+    .rd-calc-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    @media (max-width: 860px) { .rd-calc-layout { grid-template-columns: 1fr; } }
+
+    /* ---------- Pricing page: full-service management fee ---------- */
+    .management-pricing { display: grid; grid-template-columns: minmax(280px, 430px) 1fr; gap: 24px; align-items: stretch; }
+    .fee-block { padding: 30px; background: var(--white); border: 1px solid var(--line); border-top: 5px solid var(--red); border-radius: var(--radius); box-shadow: 0 12px 34px rgba(23, 23, 23, .07); }
+    .badge { width: fit-content; display: inline-flex; align-items: center; min-height: 28px; padding: 5px 10px; border-radius: 999px; background: var(--brand-tint, #fcecea); color: var(--red-dark); font-weight: 900; text-transform: uppercase; margin-bottom: 16px; font-size: .82rem; letter-spacing: .04em; }
+    .fee-block .price { display: flex; align-items: flex-end; gap: 8px; margin-bottom: 18px; }
+    .fee-block .price strong { font-family: var(--font-head); font-size: clamp(4.2rem, 10vw, 6.4rem); line-height: .92; color: var(--ink); font-weight: 500; }
+    .fee-block .price span { color: var(--muted); font-weight: 800; padding-bottom: 10px; }
+    .fee-block p { color: var(--muted); margin-bottom: 18px; }
+    .investor-rate { display: block; padding: 12px 14px; background: var(--brand-tint, #fcecea); border: 1px solid #f2caca; border-radius: 7px; color: var(--charcoal); font-weight: 800; font-size: .92rem; }
+    .investor-rate strong { color: var(--red); }
+    .fee-details { display: grid; gap: 8px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .fee-details div { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 38px; padding: 8px 0; border-bottom: 1px solid var(--soft); }
+    .fee-details div:last-child { border-bottom: 0; }
+    .fee-details span { color: var(--charcoal); font-weight: 800; }
+    .fee-details strong { color: var(--red); font-size: 1.05rem; white-space: nowrap; }
+    .value-summary { padding: 30px; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 12px 34px rgba(23, 23, 23, .07); }
+    .value-summary > h3 { color: var(--ink); margin-bottom: 10px; font-size: 1.45rem; }
+    .value-summary > p { max-width: 780px; margin-bottom: 20px; color: var(--muted); }
+    .management-pillar-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .pillar-link-card { display: block; height: 100%; padding: 17px; color: inherit; text-decoration: none; background: var(--white); border: 1px solid var(--line); border-radius: 8px; cursor: pointer; transition: background .18s, border-color .18s, box-shadow .18s, transform .18s; }
+    .pillar-link-card:hover, .pillar-link-card:focus-visible { background: var(--brand-tint, #fff5f5); border-color: var(--red); box-shadow: 0 10px 24px rgba(0, 0, 0, .08); transform: translateY(-2px); outline: none; }
+    .pillar-card-content h3 { font-size: 1.02rem; margin-bottom: 8px; }
+    .pillar-card-content ul { margin: 0 0 10px; padding-left: 18px; color: var(--muted); font-size: .88rem; line-height: 1.45; }
+    .pillar-card-content li { margin-bottom: 4px; }
+    .pillar-card-content .learn-more { display: block; color: var(--red-dark); font-weight: 900; font-size: .88rem; }
+    @media (max-width: 900px) { .management-pricing { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { .management-pillar-grid { grid-template-columns: 1fr; } }
+
+    /* ---------- Pricing page: what's included comparison table ---------- */
+    .comparison-table-wrap { overflow-x: auto; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .service-comparison { width: 100%; min-width: 860px; border-collapse: collapse; }
+    .service-comparison th, .service-comparison td { padding: 15px 18px; border-bottom: 1px solid var(--line); text-align: center; vertical-align: middle; }
+    .service-comparison th { background: var(--ink); color: var(--white); letter-spacing: .05em; text-transform: uppercase; font-size: .8rem; }
+    .service-comparison th:first-child, .service-comparison td:first-child { text-align: left; width: 48%; }
+    .service-comparison tr.category-row td { background: var(--soft); color: var(--red-dark); font-weight: 900; letter-spacing: .08em; text-transform: uppercase; font-size: .82rem; }
+    .service-comparison td { color: var(--charcoal); font-size: .92rem; }
+    .service-comparison tr.fee-note-heading td { background: #fbfbfb; color: #6a1a1a; }
+    .service-comparison tr.service-fee-note td { background: #fffdfd; vertical-align: top; }
+    .service-comparison tr.service-fee-note td:first-child { color: var(--muted); font-weight: 900; }
+    .service-comparison tr.service-fee-note td:nth-child(2) { text-align: left; }
+    .fee-disclosure-list { display: grid; gap: 5px; color: var(--charcoal); line-height: 1.35; font-size: .9rem; }
+    .fee-disclosure-list span { display: flex; justify-content: space-between; gap: 14px; }
+    .fee-disclosure-list strong { flex: 0 0 auto; color: var(--red-dark); }
+    .fee-disclosure-muted { color: var(--muted); font-weight: 800; font-size: .88rem; }
+    .included-mark, .not-included { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; min-height: 30px; border-radius: 999px; font-weight: 900; }
+    .included-mark { background: var(--brand-tint, #fff0f0); color: var(--red); font-size: 1.05rem; }
+    .not-included { color: var(--muted); background: var(--soft); padding: 6px 10px; font-size: .8rem; }
+
+    /* ---------- Pricing page: fee structure comparison ---------- */
+    .fee-compare-graphic { max-width: 1060px; margin: 32px auto 0; overflow-x: auto; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 18px 46px rgba(23, 23, 23, .1); }
+    .fee-compare-table { width: 100%; min-width: 720px; border-collapse: collapse; }
+    .fee-compare-table th, .fee-compare-table td { padding: 18px 20px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    .fee-compare-table thead th { background: var(--ink); color: var(--white); font-weight: 900; letter-spacing: .06em; text-transform: uppercase; font-size: .82rem; }
+    .fee-compare-table thead th:nth-child(3) { background: var(--red); }
+    .fee-compare-table tbody tr:last-child td { border-bottom: 0; }
+    .fee-compare-table tbody td:first-child { width: 23%; color: var(--ink); font-weight: 900; }
+    .fee-compare-table tbody td:nth-child(2) { width: 37%; color: var(--muted); background: #fbfbfc; font-size: .92rem; }
+    .fee-compare-table tbody td:nth-child(3) { width: 40%; color: var(--charcoal); background: #fff7f7; border-left: 3px solid #f2c4c4; font-size: .92rem; }
+    .red-door-answer { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; }
+    .red-door-answer::before { content: "\2713"; display: inline-grid; place-items: center; width: 26px; height: 26px; color: var(--white); background: var(--red); border-radius: 999px; font-weight: 900; line-height: 1; }
+    .red-door-answer strong { color: var(--ink); }
+    .comparison-cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 28px; }
+
+    /* ---------- Pricing page: schedule-a-call / Calendly ---------- */
+    .calendly-section { padding: clamp(48px, 7vw, 72px) 0; }
+    .calendly-card { max-width: 900px; margin: 0 auto; padding: clamp(24px, 4vw, 40px); background: var(--white); border-top: 5px solid var(--red); border-radius: var(--radius); box-shadow: var(--shadow); text-align: center; }
+    .calendly-card h2 { margin-bottom: 12px; }
+    .calendly-card p { color: var(--muted); line-height: 1.6; }
+    .calendly-card .microcopy { color: var(--charcoal); margin: 0 0 18px; font-weight: 700; }
+    .calendly-inline-widget { margin-top: 12px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--white); }
+
   </style>
 </head>
 <body>
@@ -2635,549 +2773,176 @@
       </a>
     </section>
 
-<!-- ==========================================================================
-     BLOCK 1 of 4 — STYLES
-     ========================================================================== -->
-<style>
-  .rd-cx {
-    --red: var(--brand);
-    --red-deep: var(--brand-mid);
-    --red-light: var(--brand-light);
-    --glow: rgba(140, 12, 3, .28);
-    /* Must match the background the component sits on, so the edge fades
-       blend invisibly. Change this if the host page is not white. */
-    --page-bg: #ffffff;
-    --card-1: #ffffff;
-    --card-2: #f7f9fc;
-    --hair: rgba(18, 22, 30, .08);
-    box-sizing: border-box;
-    position: relative;
-    overflow: hidden;
-    padding: 22px 0 21px;
-    /* Transparent so it inherits the host page's background and reads as
-       native content rather than a pasted-in panel. */
-    background: transparent;
-    /* Inherit-friendly type: matches the site's Mulish, falls back to Arial.
-       Sized in px, NOT rem — hosts running Bootstrap 3 set html{font-size:10px},
-       which silently shrinks every rem-based size by ~37%. */
-    font-family: var(--font);
-    font-size: 16px;
-    line-height: 1.5;
-    color: var(--ink);
-    -webkit-font-smoothing: antialiased;
-  }
-  .rd-cx *, .rd-cx *::before, .rd-cx *::after { box-sizing: border-box; }
-
-  /* OPTIONAL: add class="rd-cx rd-cx-fullbleed" to break out of a narrow Bootstrap
-     column (e.g. col-md-8) and span the full viewport width. Inert unless applied.
-     Requires the page to not already scroll horizontally. */
-  .rd-cx-fullbleed { width: 100vw; max-width: 100vw; margin-left: calc(50% - 50vw); }
-
-  /* INTRO — sits above the stage and travels with the embed */
-  .rd-cx-head { max-width: 720px; margin: 0 auto 18px; padding: 0 22px; text-align: center; }
-  .rd-cx-eyebrow {
-    margin: 0 0 8px; color: var(--red); font-size: 11.5px; font-weight: 900;
-    letter-spacing: .2em; text-transform: uppercase;
-  }
-  .rd-cx-title {
-    margin: 0; color: var(--ink); font-family: var(--font-head);
-    font-size: clamp(21px, 2.8vw, 30px); line-height: 1.14; font-weight: 600; letter-spacing: -.015em;
-  }
-  .rd-cx-title em { color: var(--red); font-style: normal; }
-  .rd-cx-lead {
-    margin: 10px auto 0; max-width: 640px;
-    color: var(--muted); font-size: 14.5px; line-height: 1.55;
-  }
-
-  /* STAGE */
-  .rd-cx-stage {
-    position: relative; height: 288px; margin-top: 5px;
-    perspective: 1500px; perspective-origin: 50% 45%; cursor: default;
-  }
-  /* pointer-events:none is REQUIRED, not cosmetic. Under transform-style:
-     preserve-3d the off-centre cards are pushed to negative Z, which puts them
-     BEHIND this element's own plane — so the viewport swallowed every click
-     aimed at a side card and only the centre card (at Z=0) was reachable.
-     Making the viewport non-interactive lets clicks land on the cards, which
-     carry their own explicit pointer-events. */
-  .rd-cx-viewport { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none; }
-  .rd-cx-stage::before, .rd-cx-stage::after {
-    content: ""; position: absolute; top: 0; bottom: 0; width: 16%; z-index: 50; pointer-events: none;
-  }
-  .rd-cx-stage::before { left: 0; background: linear-gradient(90deg, var(--page-bg), transparent); }
-  .rd-cx-stage::after { right: 0; background: linear-gradient(270deg, var(--page-bg), transparent); }
-
-  /* CARD */
-  .rd-cx-card {
-    position: absolute; top: 50%; left: 50%;
-    width: 192px; height: 258px; margin: -129px 0 0 -96px;
-    display: flex; flex-direction: column; padding: 21px 19px 18px;
-    border-radius: 16px;
-    background: linear-gradient(158deg, var(--card-1) 0%, var(--card-2) 100%);
-    border: 1px solid var(--hair);
-    box-shadow: 0 26px 50px -24px rgba(20, 24, 33, .35), 0 2px 6px rgba(20, 24, 33, .05);
-    text-decoration: none; color: inherit; overflow: hidden;
-    pointer-events: auto; /* re-enable inside the non-interactive viewport */
-    will-change: transform;
-    transition: box-shadow .4s ease, border-color .4s ease;
-  }
-  .rd-cx-card::after {
-    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px;
-    background: linear-gradient(90deg, transparent, var(--red), transparent);
-    opacity: .55; transition: opacity .4s ease;
-  }
-  .rd-cx-ghost {
-    position: absolute; top: -11px; right: 5px;
-    font-size: 90px; font-weight: 800; line-height: 1;
-    color: rgba(18, 22, 30, .045); letter-spacing: -.04em; pointer-events: none;
-  }
-  .rd-cx-ico {
-    width: 42px; height: 42px; flex: 0 0 auto; display: grid; place-items: center;
-    border-radius: 11px;
-    background: linear-gradient(150deg, var(--red), var(--red-deep));
-    box-shadow: 0 12px 22px -8px var(--glow);
-    color: #fff; margin-bottom: 12px;
-  }
-  .rd-cx-ico svg { width: 22px; height: 22px; }
-  .rd-cx-step { color: var(--red); font-size: 10px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 6px; }
-  /* h3 for document outline / SEO; margin reset keeps it rendering exactly as the old span did */
-  .rd-cx-name { color: var(--ink); font-family: var(--font-head); font-size: 15px; font-weight: 600; line-height: 1.18; margin: 0 0 8px; }
-  .rd-cx-desc { color: var(--muted); font-size: 11.5px; line-height: 1.42; }
-  .rd-cx-go { margin-top: auto; color: var(--red); font-size: 10.5px; font-weight: 900; opacity: 1; }
-  .rd-cx-go span { color: var(--red); }
-
-  .rd-cx-card.is-center {
-    border-color: rgba(216, 26, 34, .4);
-    box-shadow: 0 34px 60px -22px rgba(20, 24, 33, .42), 0 0 0 1px rgba(216, 26, 34, .25), 0 0 46px -10px rgba(216, 26, 34, .35);
-  }
-  .rd-cx-card.is-center::after { opacity: 1; }
-
-  /* hint */
-  .rd-cx-hint {
-    display: flex; align-items: center; justify-content: center; gap: 14px;
-    margin-top: 10px; color: var(--muted); font-size: 13px; font-weight: 700; letter-spacing: .03em;
-  }
-  .rd-cx-hint b { color: var(--ink); font-weight: 900; }
-  .rd-cx-hint svg { color: var(--red); }
-
-  /* STATIC fallback */
-  .rd-cx.is-static .rd-cx-stage {
-    height: auto; perspective: none; cursor: default;
-    display: flex; gap: 13px; overflow-x: auto; scroll-snap-type: x mandatory;
-    padding: 6px 18px 13px; -webkit-overflow-scrolling: touch; scrollbar-width: none;
-  }
-  .rd-cx.is-static .rd-cx-stage::-webkit-scrollbar { display: none; }
-  .rd-cx.is-static .rd-cx-stage::before, .rd-cx.is-static .rd-cx-stage::after { display: none; }
-  .rd-cx.is-static .rd-cx-viewport { position: static; display: contents; }
-  .rd-cx.is-static .rd-cx-card {
-    position: relative; top: auto; left: auto; margin: 0;
-    flex: 0 0 78%; max-width: 224px; transform: none !important;
-    opacity: 1 !important; scroll-snap-align: center;
-  }
-  .rd-cx.is-static .rd-cx-hint { display: none; }
-
-  /* NAV BAR (below the stage) — the only arrow controls */
-  .rd-cx-controls {
-    display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 11px;
-  }
-  .rd-cx-btn {
-    width: 22px; height: 22px; border: 1px solid var(--hair); border-radius: 50%;
-    display: grid; place-items: center; cursor: pointer;
-    background: var(--card-1); color: var(--muted);
-    box-shadow: 0 2px 5px rgba(20, 24, 33, .06);
-    transition: opacity .3s ease, transform .18s ease, box-shadow .3s ease, color .3s ease, border-color .3s ease;
-    -webkit-appearance: none; appearance: none; padding: 0;
-  }
-  .rd-cx-btn svg { width: 11px; height: 11px; }
-  .rd-cx-btn:hover { color: var(--red); border-color: rgba(216, 26, 34, .35); box-shadow: 0 4px 10px rgba(20, 24, 33, .1); }
-  .rd-cx-btn:active { transform: scale(.92); }
-  .rd-cx-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
-  .rd-cx-btn.is-muted { opacity: .3; cursor: not-allowed; pointer-events: none; box-shadow: none; }
-  .rd-cx.is-static .rd-cx-controls { display: none; }
-
-  /* RESPONSIVE MOBILE (desktop layout above is untouched) */
-  @media (max-width: 640px) {
-    .rd-cx { padding: 19px 0 18px; }
-    .rd-cx.is-static .rd-cx-stage { gap: 11px; padding: 6px 13px 14px; }
-    .rd-cx.is-static .rd-cx-card {
-      flex: 0 0 84%; max-width: 288px; height: auto; min-height: 237px;
-      padding: 18px 16px 16px;
-    }
-    .rd-cx-name, .rd-cx-desc { overflow-wrap: break-word; word-break: break-word; }
-    .rd-cx-ghost { font-size: 69px; top: -6px; }
-    .rd-cx-ico { width: 37px; height: 37px; margin-bottom: 11px; }
-    .rd-cx-name { font-size: clamp(13px, 4.4vw, 14.5px); }
-    .rd-cx-desc { font-size: clamp(10.5px, 3.6vw, 11.5px); line-height: 1.5; }
-  }
-  @media (max-width: 380px) {
-    .rd-cx.is-static .rd-cx-card { flex: 0 0 88%; padding: 16px 14px 14px; }
-    .rd-cx-name { font-size: 13px; }
-    .rd-cx-desc { font-size: 10.5px; }
-    .rd-cx-ghost { font-size: 59px; }
-  }
-</style>
-
-
-<!-- ==========================================================================
-     BLOCK 2 of 4 — MARKUP
-     Each card is a full-surface <a> link to the matching service page.
-     ========================================================================== -->
-<section class="rd-cx" aria-label="Red Door Indianapolis property management lifecycle">
-
-  <div class="rd-cx-head">
-    <h2 class="rd-cx-title">Follow the Indianapolis Property Management Journey</h2>
-    <p class="rd-cx-lead">See how Red Door&rsquo;s property management process moves your rental from market readiness and marketing through tenant screening, leasing, maintenance, and communication. Select any step below to explore how each stage works together to protect your investment and create a better rental experience.</p>
-  </div>
-
-  <div class="rd-cx-stage" id="rd-cx-stage" aria-roledescription="carousel">
-    <div class="rd-cx-viewport" id="rd-cx-viewport">
-
-      <a class="rd-cx-card" href="https://www.reddoorrents.com/indianapolis-property-management" title="Indianapolis premium property management services roadmap" aria-label="Indianapolis premium property management services roadmap — Start Here: Your Owner Roadmap">
-        <span class="rd-cx-ico"><svg viewBox="0 0 24 24" role="img" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>Red Door Indianapolis property management owner roadmap</title><path d="M9 4 4 6v14l5-2 6 2 5-2V4l-5 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg></span>
-        <span class="rd-cx-step">Start Here</span>
-        <h3 class="rd-cx-name">Your Owner Roadmap</h3>
-        <span class="rd-cx-desc">A proven framework combining local expertise and smart technology to maximize owner ROI.</span>
-        <span class="rd-cx-go">Start the Journey <span>&rarr;</span></span>
-      </a>
-
-      <a class="rd-cx-card" href="https://www.reddoorrents.com/market-readiness-assessment" title="Indianapolis rental market readiness assessment" aria-label="Indianapolis rental market readiness assessment">
-        <span class="rd-cx-ghost">1</span>
-        <span class="rd-cx-ico"><svg viewBox="0 0 24 24" role="img" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>Indianapolis rental market readiness assessment checklist</title><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M8.5 13l2 2 4-4.5"/></svg></span>
-        <span class="rd-cx-step">Step 1</span>
-        <h3 class="rd-cx-name">Market Readiness Assessment</h3>
-        <span class="rd-cx-desc">Data-driven pricing and property evaluations designed to minimize vacancy and attract quality tenants.</span>
-        <span class="rd-cx-go">Explore <span>&rarr;</span></span>
-      </a>
-
-      <a class="rd-cx-card" href="https://www.reddoorrents.com/marketing-process" title="Indianapolis home rental marketing process" aria-label="Indianapolis home rental marketing process">
-        <span class="rd-cx-ghost">2</span>
-        <span class="rd-cx-ico"><svg viewBox="0 0 24 24" role="img" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>Professional listing photography for Indianapolis rental marketing</title><path d="M3 9h3l2.5-2.5h7L17 9h4v9H3z"/><circle cx="12" cy="13.5" r="3.4"/></svg></span>
-        <span class="rd-cx-step">Step 2</span>
-        <h3 class="rd-cx-name">Marketing Process</h3>
-        <span class="rd-cx-desc">High-impact listing strategies with professional media and broad exposure to capture renter demand.</span>
-        <span class="rd-cx-go">Explore <span>&rarr;</span></span>
-      </a>
-
-      <a class="rd-cx-card" href="https://www.reddoorrents.com/tenant-screening" title="Indianapolis tenant screening and placement" aria-label="Indianapolis tenant screening and placement">
-        <span class="rd-cx-ghost">3</span>
-        <span class="rd-cx-ico"><svg viewBox="0 0 24 24" role="img" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>Indianapolis tenant screening, background and credit verification</title><path d="M12 3l7 3v5c0 4.6-3 7.7-7 9-4-1.3-7-4.4-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
-        <span class="rd-cx-step">Step 3</span>
-        <h3 class="rd-cx-name">Tenant Screening</h3>
-        <span class="rd-cx-desc">Rigorous background, credit, and income verification to secure reliable, high-quality residents.</span>
-        <span class="rd-cx-go">Explore <span>&rarr;</span></span>
-      </a>
-
-      <a class="rd-cx-card" href="https://www.reddoorrents.com/leasing-process" title="Indianapolis leasing process execution" aria-label="Indianapolis leasing process execution">
-        <span class="rd-cx-ghost">4</span>
-        <span class="rd-cx-ico"><svg viewBox="0 0 24 24" role="img" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>Indianapolis lease agreement execution and signing</title><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.5 16.5c1-1.3 2-1.3 3 0s2 1.3 3 0"/></svg></span>
-        <span class="rd-cx-step">Step 4</span>
-        <h3 class="rd-cx-name">Leasing Process</h3>
-        <span class="rd-cx-desc">Ensure seamless lease execution and compliance, protecting cash flow and optimizing ROI.</span>
-        <span class="rd-cx-go">Explore <span>&rarr;</span></span>
-      </a>
-
-      <a class="rd-cx-card" href="https://www.reddoorrents.com/maintenance" title="Indianapolis rental maintenance coordination" aria-label="Indianapolis rental maintenance coordination">
-        <span class="rd-cx-ghost">5</span>
-        <span class="rd-cx-ico"><svg viewBox="0 0 24 24" role="img" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>Indianapolis rental property maintenance and repair coordination</title><path d="M14.7 6.3a3.7 3.7 0 0 0-4.9 4.9l-5.1 5.1a1.6 1.6 0 0 0 2.3 2.3l5.1-5.1a3.7 3.7 0 0 0 4.9-4.9l-2.2 2.2-2-2z"/></svg></span>
-        <span class="rd-cx-step">Step 5</span>
-        <h3 class="rd-cx-name">Maintenance</h3>
-        <span class="rd-cx-desc">Coordinated repairs and around-the-clock response for your Indianapolis property and tenants.</span>
-        <span class="rd-cx-go">Explore <span>&rarr;</span></span>
-      </a>
-
-      <a class="rd-cx-card" href="https://www.reddoorrents.com/communication" title="Indianapolis property management communication" aria-label="Indianapolis property management communication">
-        <span class="rd-cx-ghost">6</span>
-        <span class="rd-cx-ico"><svg viewBox="0 0 24 24" role="img" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>Indianapolis property management owner communication and reporting</title><path d="M4 5h16v10H9l-4 4z"/><path d="M8.5 10h7M8.5 7.5h7"/></svg></span>
-        <span class="rd-cx-step">Step 6</span>
-        <h3 class="rd-cx-name">Communication</h3>
-        <span class="rd-cx-desc">Owner portals, clear statements, and an Indianapolis team that answers the phone.</span>
-        <span class="rd-cx-go">Explore <span>&rarr;</span></span>
-      </a>
-
-    </div>
-
-  </div>
-
-  <div class="rd-cx-controls">
-    <button type="button" class="rd-cx-btn rd-cx-btn--prev is-muted" id="rd-cx-prev-bar" data-rd-dir="-1" title="Previous step" aria-label="Previous step in the Indianapolis property management lifecycle" aria-disabled="true" aria-controls="rd-cx-viewport">
-      <svg viewBox="0 0 24 24" role="img" focusable="false" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><title>Previous step</title><path d="M15 6l-6 6 6 6"/></svg>
-    </button>
-    <button type="button" class="rd-cx-btn rd-cx-btn--next" id="rd-cx-next-bar" data-rd-dir="1" title="Next step" aria-label="Next step in the Indianapolis property management lifecycle" aria-controls="rd-cx-viewport">
-      <svg viewBox="0 0 24 24" role="img" focusable="false" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><title>Next step</title><path d="M9 6l6 6-6 6"/></svg>
-    </button>
-  </div>
-</section>
-
-
-<!-- ==========================================================================
-     BLOCK 3 of 4 — STRUCTURED DATA (SEO)
-     Declares the seven cards as an ordered ItemList of internal links.
-     Do not omit this block — it is currently the only schema on the page.
-     ========================================================================== -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  "name": "Red Door Indianapolis Property Management Lifecycle",
-  "description": "The seven stages of Red Door's Indianapolis property management process, from the owner roadmap through market readiness, marketing, tenant screening, leasing, maintenance, and ongoing communication.",
-  "itemListOrder": "https://schema.org/ItemListOrderAscending",
-  "numberOfItems": 7,
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Your Owner Roadmap — Indianapolis premium property management services",
-      "url": "https://www.reddoorrents.com/indianapolis-property-management"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Market Readiness Assessment — Indianapolis rental market readiness assessment",
-      "url": "https://www.reddoorrents.com/market-readiness-assessment"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "Marketing Process — Indianapolis home rental marketing process",
-      "url": "https://www.reddoorrents.com/marketing-process"
-    },
-    {
-      "@type": "ListItem",
-      "position": 4,
-      "name": "Tenant Screening — Indianapolis tenant screening and placement",
-      "url": "https://www.reddoorrents.com/tenant-screening"
-    },
-    {
-      "@type": "ListItem",
-      "position": 5,
-      "name": "Leasing Process — Indianapolis leasing process execution",
-      "url": "https://www.reddoorrents.com/leasing-process"
-    },
-    {
-      "@type": "ListItem",
-      "position": 6,
-      "name": "Maintenance — Indianapolis rental maintenance coordination",
-      "url": "https://www.reddoorrents.com/maintenance"
-    },
-    {
-      "@type": "ListItem",
-      "position": 7,
-      "name": "Communication — Indianapolis property management communication",
-      "url": "https://www.reddoorrents.com/communication"
-    }
-  ]
-}
-</script>
-
-
-<!-- ==========================================================================
-     BLOCK 4 of 4 — BEHAVIOUR
-     Discrete tile-stepping, hover controls, arrow buttons, mobile fallback.
-     ========================================================================== -->
-<script>
-(function () {
-  var root = document.querySelector('.rd-cx');
-  if (!root) return;
-  var stage = root.querySelector('#rd-cx-stage');
-  var cards = Array.prototype.slice.call(root.querySelectorAll('.rd-cx-card'));
-  var N = cards.length;
-
-  var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var small = window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
-  if (coarse || reduce || small) { root.classList.add('is-static'); return; }
-
-  var GAP = 198, ANGLE = 38, DEPTH = 120;
-  var GLIDE_MS = 480;  // how long a single tile-to-tile move takes
-  var offset = 0;      // animated position; only ever in motion between two whole tiles
-  var index = 0;       // the tile we are on / heading to — ALWAYS a whole number
-  var from = 0, to = 0, t0 = 0;
-  var raf = null;
-
-  function layout() {
-    for (var i = 0; i < N; i++) {
-      var raw = i - offset;
-      var p = ((raw + N / 2) % N + N) % N - N / 2;
-      var ap = Math.abs(p);
-      var tx = p * GAP;
-      var ry = Math.max(-55, Math.min(55, -p * ANGLE));
-      var tz = -ap * DEPTH;
-      var sc = Math.max(0.62, 1 - ap * 0.12);
-      var op = ap <= 1 ? 1 : Math.max(0, 1 - (ap - 1) * 0.62);
-      var c = cards[i];
-      c.style.transform = 'translate3d(' + tx + 'px,0,' + tz + 'px) rotateY(' + ry + 'deg) scale(' + sc + ')';
-      c.style.opacity = op;
-      c.style.zIndex = String(Math.round(100 - ap * 10));
-      c.style.pointerEvents = op < 0.25 ? 'none' : 'auto';
-      c.classList.toggle('is-center', ap < 0.5);
-    }
-  }
-
-  // --- asymmetrical navigation: infinite right, hard stop at the Start Here card on the left ---
-  var prevBtns = Array.prototype.slice.call(root.querySelectorAll('[data-rd-dir="-1"]'));
-  var navBtns = Array.prototype.slice.call(root.querySelectorAll('[data-rd-dir]'));
-
-  function atStart() { return index <= 0; }
-
-  function updateArrows() {
-    var muted = atStart();
-    for (var i = 0; i < prevBtns.length; i++) {
-      prevBtns[i].classList.toggle('is-muted', muted);
-      prevBtns[i].setAttribute('aria-disabled', muted ? 'true' : 'false');
-    }
-  }
-
-  // A fixed-duration tween onto the whole-numbered `index`, which then stops
-  // exactly on it. There is no velocity and no free spin, so the carousel can
-  // never come to rest between two tiles.
-  function animate(now) {
-    var t = (now - t0) / GLIDE_MS;
-    if (t >= 1) {
-      offset = to;
-      if (offset >= N) { offset -= N; index -= N; to -= N; } // right: wrap Card 6 -> Start Here
-      layout(); updateArrows();
-      raf = null;
-      return;
-    }
-    var e = 1 - Math.pow(1 - t, 3); // easeOutCubic — quick off the mark, soft landing
-    offset = from + (to - from) * e;
-    layout(); updateArrows();
-    raf = requestAnimationFrame(animate);
-  }
-
-  function startAnim() {
-    if (raf) return;
-    raf = requestAnimationFrame(animate);
-  }
-
-  function goTo(i) {
-    index = i;
-    // Already parked exactly there: do NOT spin up an animation. Otherwise the
-    // focus handler (which fires on mousedown, before click) would leave `raf`
-    // set and the click below would read the carousel as "still moving".
-    if (raf === null && i === offset) { updateArrows(); return; }
-    from = offset; to = i; t0 = performance.now();
-    startAnim();
-  }
-
-  // advance exactly one tile
-  function step(dir) {
-    if (dir < 0 && atStart()) return; // left blocked at the Start Here card
-    goTo(Math.max(0, index + dir));
-  }
-
-  // Where card i currently sits relative to centre: 0 = centred, -1 = one slot
-  // left, +1 = one slot right. Same wrap maths layout() uses.
-  function slotOf(i) {
-    var raw = i - offset;
-    return ((raw + N / 2) % N + N) % N - N / 2;
-  }
-
-  // Absolute index that brings card i to centre.
-  // offset + slotOf(i) is invariant while a tween is running — it always
-  // resolves to i (mod N) — so this stays correct even if something else has
-  // already started moving us. Deriving it from `index` instead would
-  // double-count: browsers focus an <a> on mousedown, so the focus handler
-  // below fires BEFORE click and has already advanced `index`.
-  function targetFor(i) {
-    return Math.max(0, Math.round(offset + slotOf(i)));
-  }
-
-  // Clicking a tile takes TWO clicks to reach the linked page:
-  //   1st click on an off-centre tile -> rotate it to the centre, never navigate
-  //   2nd click, once it is centred AND stopped -> follow the link
-  // The "and stopped" half matters: a tile sweeping through the middle of an
-  // in-flight animation is momentarily near the centre, and a tolerance-based
-  // test would let that count as centred and fire the link unintentionally.
-  // Requiring raf === null means only a settled, stationary tile can navigate.
-  cards.forEach(function (c, i) {
-    c.addEventListener('click', function (e) {
-      var settled = raf === null && offset === index;
-      if (settled && slotOf(i) === 0) return; // centred and at rest: let the <a> do its job
-      e.preventDefault();
-      goTo(targetFor(i));
-    });
-    c.addEventListener('focus', function () { goTo(targetFor(i)); });
-  });
-
-  // the arrow buttons below the stage advance a single tile per click
-  navBtns.forEach(function (b) {
-    var dir = Number(b.getAttribute('data-rd-dir'));
-    b.addEventListener('click', function () { step(dir); });
-  });
-
-  layout();
-  updateArrows();
-})();
-</script>
-
-
     <section id="pricing-glance">
       <div class="container reveal">
         <div class="section-head center">
           <div class="section-kicker">Pricing at a Glance</div>
           <h2>Red Door Property Management</h2>
         </div>
-        <div class="snapshot-panels" style="grid-template-columns:repeat(4,minmax(0,1fr))">
-          <div class="snapshot-panel" style="text-align:center">
-            <span class="snapshot-panel-label">Monthly Management</span>
-            <h3 style="margin-top:10px">9%</h3>
-            <p class="snapshot-note">of monthly collected rent for full-service management. Investor pricing is 8% for owners with 3 or more doors.</p>
-          </div>
-          <div class="snapshot-panel" style="text-align:center">
-            <span class="snapshot-panel-label">New Lease Fee</span>
-            <h3 style="margin-top:10px">$995</h3>
-            <p class="snapshot-note">flat fee when Red Door places a new tenant.</p>
-          </div>
-          <div class="snapshot-panel" style="text-align:center">
-            <span class="snapshot-panel-label">Lease Renewal Fee</span>
-            <h3 style="margin-top:10px">$350</h3>
-            <p class="snapshot-note">charged when a tenant renewal is completed.</p>
-          </div>
-          <div class="snapshot-panel" style="text-align:center">
-            <span class="snapshot-panel-label">Vacancy Management Fee</span>
-            <h3 style="margin-top:10px">$0</h3>
-            <p class="snapshot-note">No monthly management fee while your property is vacant.</p>
-          </div>
+        <div class="glance-grid">
+          <article class="glance-card featured">
+            <span>Monthly Management</span>
+            <strong>9%</strong>
+            <p>of monthly collected rent for full-service management. Investor pricing is 8% for owners with 3 or more doors.</p>
+          </article>
+          <article class="glance-card">
+            <span>New Lease Fee</span>
+            <strong>$995</strong>
+            <p>flat fee when Red Door places a new tenant.</p>
+          </article>
+          <article class="glance-card">
+            <span>Lease Renewal Fee</span>
+            <strong>$350</strong>
+            <p>charged when a tenant renewal is completed.</p>
+          </article>
+          <article class="glance-card">
+            <span>Vacancy Management Fee</span>
+            <strong>$0</strong>
+            <p>No monthly management fee while your property is vacant.</p>
+          </article>
+        </div>
+        <div class="pricing-cta-row">
+          <a class="btn btn-primary" href="#rental-analysis">Get a Free Rental Analysis</a>
+          <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
         </div>
       </div>
     </section>
 
     <section class="section-soft">
       <div class="container reveal">
-        <div class="section-head center">
-          <div class="section-kicker">Red Door Property Management</div>
-          <h2>What Does Self-Management Really Cost You?</h2>
-          <p>Estimate the hidden cost of doing it yourself. Vacancy, underpricing, turnover, maintenance mistakes, and weak tenant screening can quickly erase any savings from cheaper (or no) management. Adjust the numbers below &mdash; they default to a typical Indianapolis-area example.</p>
-        </div>
-        <div class="form-card" style="max-width:760px;margin-inline:auto" data-pricing-calc>
-          <div class="field-grid">
-            <label>Monthly rent
-              <input type="number" min="0" step="50" value="1800" data-calc-rent>
-            </label>
-            <label>Hours you spend managing / month
-              <input type="number" min="0" step="1" value="8" data-calc-hours>
-            </label>
-            <label>What your time is worth / hour
-              <input type="number" min="0" step="5" value="50" data-calc-rate>
-            </label>
-            <label>Extra vacancy days from self-managing
-              <input type="number" min="0" step="1" value="14" data-calc-vacancy>
-            </label>
+        <div class="pricing-widget-embed" aria-label="Self-manage versus professional management calculator">
+          <div class="rd-calc-widget" data-rd-calc-widget>
+            <div class="rd-calc-accent" aria-hidden="true"></div>
+            <div class="rd-calc-inner">
+              <div class="rd-calc-brand">
+                <span class="rd-calc-door" aria-hidden="true"></span>
+                <span>Red Door Property Management</span>
+              </div>
+
+              <h3>What does self-management or bad management <em>really cost</em> you?</h3>
+              <p class="rd-calc-subhead">Estimate the hidden cost of doing it yourself or choosing the wrong property manager. Vacancy, underpricing, turnover, maintenance mistakes, and weak tenant screening can quickly erase any savings from cheaper management.</p>
+
+              <div class="rd-calc-layout">
+                <div class="rd-calc-controls">
+                  <div class="rd-calc-mode">
+                    <span>I&rsquo;m comparing Red Door against:</span>
+                    <div class="rd-calc-segments" role="group" aria-label="Comparison type">
+                      <button class="is-active" type="button" data-rd-mode="self" aria-pressed="true">Self-Managing</button>
+                      <button type="button" data-rd-mode="poor" aria-pressed="false">Poor Management</button>
+                    </div>
+                  </div>
+
+                  <div class="rd-calc-field">
+                    <div class="rd-calc-field-top">
+                      <label for="rd-calc-rent">Monthly rent</label>
+                      <output for="rd-calc-rent" id="rd-calc-rent-out">$1,800</output>
+                    </div>
+                    <input type="range" id="rd-calc-rent" min="1000" max="3500" step="50" value="1800">
+                  </div>
+
+                  <div data-rd-panel="self">
+                    <div class="rd-calc-field">
+                      <div class="rd-calc-field-top">
+                        <label for="rd-calc-hours">Hours you spend managing / month</label>
+                        <output for="rd-calc-hours" id="rd-calc-hours-out">8 hrs</output>
+                      </div>
+                      <input type="range" id="rd-calc-hours" min="0" max="25" step="1" value="8">
+                    </div>
+
+                    <div class="rd-calc-field">
+                      <div class="rd-calc-field-top">
+                        <label for="rd-calc-hourly">What your time is worth / hour</label>
+                        <output for="rd-calc-hourly" id="rd-calc-hourly-out">$50</output>
+                      </div>
+                      <input type="range" id="rd-calc-hourly" min="0" max="200" step="5" value="50">
+                    </div>
+
+                    <div class="rd-calc-field">
+                      <div class="rd-calc-field-top">
+                        <label for="rd-calc-self-vacancy">Extra vacancy days from self-managing</label>
+                        <output for="rd-calc-self-vacancy" id="rd-calc-self-vacancy-out">14 days</output>
+                      </div>
+                      <input type="range" id="rd-calc-self-vacancy" min="0" max="45" step="1" value="14">
+                    </div>
+
+                    <label class="rd-calc-switch">
+                      <input type="checkbox" id="rd-calc-count-time" checked>
+                      <span class="track" aria-hidden="true"></span>
+                      Count my time as money?
+                    </label>
+                  </div>
+
+                  <div data-rd-panel="poor" hidden>
+                    <div class="rd-calc-field">
+                      <div class="rd-calc-field-top">
+                        <label for="rd-calc-poor-vacancy">Extra vacancy days from slow leasing</label>
+                        <output for="rd-calc-poor-vacancy" id="rd-calc-poor-vacancy-out">21 days</output>
+                      </div>
+                      <input type="range" id="rd-calc-poor-vacancy" min="0" max="60" step="1" value="21">
+                      <p class="rd-calc-help">Poor marketing, weak follow-up, or slow leasing can create extra vacant days.</p>
+                    </div>
+
+                    <div class="rd-calc-field">
+                      <div class="rd-calc-field-top">
+                        <label for="rd-calc-underpricing">Monthly rent underpricing</label>
+                        <output for="rd-calc-underpricing" id="rd-calc-underpricing-out">$100</output>
+                      </div>
+                      <input type="range" id="rd-calc-underpricing" min="0" max="300" step="25" value="100">
+                      <p class="rd-calc-help">Even $100/month under market rent equals $1,200/year in lost income.</p>
+                    </div>
+
+                    <div class="rd-calc-field">
+                      <div class="rd-calc-field-top">
+                        <label for="rd-calc-turnover">Avoidable turnover risk</label>
+                        <output for="rd-calc-turnover" id="rd-calc-turnover-out">35%</output>
+                      </div>
+                      <input type="range" id="rd-calc-turnover" min="0" max="100" step="5" value="35">
+                      <p class="rd-calc-help">Poor communication, weak tenant relations, or poor renewal strategy can increase avoidable turnover.</p>
+                    </div>
+
+                    <div class="rd-calc-selector">
+                      <span>Maintenance oversight risk</span>
+                      <div class="rd-calc-option-group" role="group" aria-label="Maintenance oversight risk">
+                        <button type="button" data-rd-risk="maintenance" data-value="250" aria-pressed="false">Conservative</button>
+                        <button class="is-active" type="button" data-rd-risk="maintenance" data-value="750" aria-pressed="true">Moderate</button>
+                        <button type="button" data-rd-risk="maintenance" data-value="1500" aria-pressed="false">High</button>
+                      </div>
+                      <p class="rd-calc-help">Poor maintenance coordination can lead to unnecessary dispatches, delayed repairs, bigger issues, or frustrated tenants.</p>
+                    </div>
+
+                    <div class="rd-calc-selector">
+                      <span>Tenant placement risk</span>
+                      <div class="rd-calc-option-group" role="group" aria-label="Tenant placement risk">
+                        <button type="button" data-rd-risk="tenant" data-value="0" aria-pressed="false">Low</button>
+                        <button class="is-active" type="button" data-rd-risk="tenant" data-value="1000" aria-pressed="true">Moderate</button>
+                        <button type="button" data-rd-risk="tenant" data-value="3500" aria-pressed="false">High</button>
+                      </div>
+                      <p class="rd-calc-help">Weak tenant screening can increase exposure to late rent, damage, early lease breaks, or eviction-related costs.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="rd-calc-output">
+                  <div class="rd-calc-result">
+                    <p class="rd-calc-kicker" id="rd-calc-kicker">Professional Management May Net You</p>
+                    <p class="rd-calc-big" id="rd-calc-big-number">$3,696</p>
+                    <p class="rd-calc-sentence" id="rd-calc-sentence">more per year than self-managing.</p>
+                    <p class="rd-calc-sr" id="rd-calc-sr-result" aria-live="polite" role="status">Self-management comparison: $3,696 estimated annual impact.</p>
+
+                    <div class="rd-calc-breakdown" id="rd-calc-breakdown" aria-label="Cost breakdown"><div class="rd-calc-breakdown-row"><span>Owner time cost</span><strong>$4,800</strong></div><div class="rd-calc-breakdown-row"><span>Extra vacancy cost</span><strong>$840</strong></div><div class="rd-calc-breakdown-row"><span>Red Door management cost</span><strong>-$1,944</strong></div><div class="rd-calc-breakdown-row total"><span>Estimated annual impact</span><strong>$3,696</strong></div></div>
+                    <p class="rd-calc-why" id="rd-calc-why">Red Door&rsquo;s process-driven management is built to reduce the hidden costs of owner time, vacancy, maintenance coordination, and tenant issues.</p>
+                  </div>
+
+                  <div class="calculator-cta-row">
+                    <a class="rd-calc-cta" href="/contact">Get an exact quote for your property</a>
+                    <a class="btn btn-secondary cta-call" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call to Review Your Numbers</a>
+                  </div>
+
+                  <p class="rd-calc-footnote">Estimates for illustration only and are not financial advice. Defaults use industry averages and Red Door&rsquo;s published pricing.</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <label style="display:flex;flex-direction:row;align-items:center;gap:10px;margin-top:6px">
-            <input type="checkbox" checked data-calc-count-time style="width:auto;min-height:0">
-            <span style="font-weight:700">Count my time as money?</span>
-          </label>
-          <div class="callout-note" style="margin-top:22px;text-align:center">
-            <p style="margin:0;color:var(--muted);font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase">Professional Management May Net You</p>
-            <p style="margin:6px 0 0;color:var(--red);font-family:var(--font-head);font-size:2.4rem;font-weight:500" data-calc-result>$3,696</p>
-            <p style="margin:4px 0 0;color:var(--muted);font-size:.9rem">more per year than self-managing</p>
-          </div>
-          <div class="snapshot-stat-row"><span class="snapshot-stat-label">Owner time cost</span><span class="snapshot-stat-value" data-calc-time-cost>$4,800</span></div>
-          <div class="snapshot-stat-row"><span class="snapshot-stat-label">Extra vacancy cost</span><span class="snapshot-stat-value" data-calc-vacancy-cost>$840</span></div>
-          <div class="snapshot-stat-row"><span class="snapshot-stat-label">Red Door management cost</span><span class="snapshot-stat-value" data-calc-mgmt-cost>&minus;$1,944</span></div>
-          <p class="callout-note" style="margin-top:18px">Estimates for illustration only and are not financial advice. Defaults use industry averages and Red Door&rsquo;s published pricing.</p>
         </div>
       </div>
     </section>
@@ -3209,123 +2974,230 @@
       </div>
     </section>
 
-    <section>
-      <div class="container content-block is-centered reveal">
-        <div class="section-kicker">Pricing Overview</div>
-        <h2>Full-Service Management Fee</h2>
-        <p>The monthly fee gives you access to Red Door&rsquo;s ongoing property management operating system, not just rent collection. Your monthly management fee supports the systems, people, communication, maintenance coordination, documentation, and oversight needed to manage your rental property properly.</p>
-        <div class="two-col-list" style="max-width:640px;margin-inline:auto;text-align:left">
-          <li>9% of monthly collected rent (8% investor pricing for 3+ doors)</li>
-          <li>$0 vacancy management fee</li>
-          <li>$995 New Lease Fee</li>
-          <li>$350 Lease Renewal Fee</li>
-        </div>
-      </div>
-    </section>
-
-    <section class="section-soft">
+    <section id="pricing" class="section-soft">
       <div class="container reveal">
-        <div class="section-head center">
-          <div class="section-kicker">What Your Monthly Management Fee Supports</div>
-          <h2>A Complete Management System</h2>
+        <div class="section-head">
+          <div class="section-kicker">Pricing Overview</div>
+          <h2>Full-Service Management Fee</h2>
+          <p>The monthly fee gives you access to Red Door&rsquo;s ongoing property management operating system, not just rent collection.</p>
         </div>
-        <div class="step-grid is-three-across">
-          <article class="step-card">
-            <span class="step-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"></rect><path d="M9 4h6v3H9z"></path><path d="M8.5 13l2 2 4-4.5"></path></svg>
-            </span>
-            <h3>Market Readiness</h3>
-            <p>Rental pricing guidance, condition review, and readiness recommendations before marketing begins &mdash; helping reduce vacancy risk from day one.</p>
-            <p><a class="area-link" href="/market-readiness-assessment">Learn more &rarr;</a></p>
-          </article>
-          <article class="step-card">
-            <span class="step-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M3 9h3l2.5-2.5h7L17 9h4v9H3z"></path><circle cx="12" cy="13.5" r="3.4"></circle></svg>
-            </span>
-            <h3>Marketing Process</h3>
-            <p>Professional photos, virtual walkthrough video, listing syndication, and self-guided showing access &mdash; built for stronger exposure and faster leasing.</p>
-            <p><a class="area-link" href="/marketing-process">Learn more &rarr;</a></p>
-          </article>
-          <article class="step-card">
-            <span class="step-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.6-3 7.7-7 9-4-1.3-7-4.4-7-9V6z"></path><path d="M9 12l2 2 4-4"></path></svg>
-            </span>
-            <h3>Tenant Screening</h3>
-            <p>Application review, income verification, rental history, criminal, eviction, fraud, and pet screening &mdash; reducing placement risk.</p>
-            <p><a class="area-link" href="/tenant-screening">Learn more &rarr;</a></p>
-          </article>
-          <article class="step-card">
-            <span class="step-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"></path><path d="M14 3v4h4"></path><path d="M9.5 16.5c1-1.3 2-1.3 3 0s2 1.3 3 0"></path></svg>
-            </span>
-            <h3>Leasing Process</h3>
-            <p>Lease preparation, signing coordination, tenant onboarding, and move-in documentation for a cleaner handoff.</p>
-            <p><a class="area-link" href="/leasing-process">Learn more &rarr;</a></p>
-          </article>
-          <article class="step-card">
-            <span class="step-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M14.7 6.3a3.7 3.7 0 0 0-4.9 4.9l-5.1 5.1a1.6 1.6 0 0 0 2.3 2.3l5.1-5.1a3.7 3.7 0 0 0 4.9-4.9l-2.2 2.2-2-2z"></path></svg>
-            </span>
-            <h3>Maintenance Coordination</h3>
-            <p>Request intake, troubleshooting, Property Meld tracking, vendor coordination, and emergency response.</p>
-            <p><a class="area-link" href="/maintenance">Learn more &rarr;</a></p>
-          </article>
-          <article class="step-card">
-            <span class="step-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M4 5h16v10H9l-4 4z"></path><path d="M8.5 10h7M8.5 7.5h7"></path></svg>
-            </span>
-            <h3>Communication</h3>
-            <p>Owner updates, tenant communication, portal access, monthly statements, and documented communication systems.</p>
-            <p><a class="area-link" href="/communication">Learn more &rarr;</a></p>
-          </article>
+
+        <div class="management-pricing">
+          <div class="fee-block">
+            <span class="badge">Full-Service Property Management</span>
+            <div class="price"><strong>9%</strong><span>of monthly collected rent</span></div>
+            <p>Your monthly management fee is not just for collecting rent. It supports the systems, people, communication, maintenance coordination, documentation, and oversight needed to manage your rental property properly.</p>
+            <div class="investor-rate">
+              <strong>Investor Pricing:</strong> 8% monthly management for owners with 3 or more doors.
+            </div>
+            <div class="fee-details" aria-label="Full-service property management fees">
+              <div><span>No vacancy management fee</span><strong>$0</strong></div>
+              <div><span>New Lease Fee</span><strong>$995</strong></div>
+              <div><span>Lease Renewal Fee</span><strong>$350</strong></div>
+            </div>
+          </div>
+          <div class="value-summary">
+            <h3>What Your Monthly Management Fee Supports</h3>
+            <p>Red Door&rsquo;s fee supports a complete management system, from preparing your property for the market to marketing, screening, leasing, maintenance, communication, and long-term protection.</p>
+            <div class="management-pillar-grid">
+              <a href="/market-readiness-assessment" class="pillar-link-card">
+                <div class="pillar-card-content">
+                  <h3>Market Readiness</h3>
+                  <ul>
+                    <li>Rental pricing guidance, condition review, and readiness recommendations before marketing begins.</li>
+                    <li>Helps reduce vacancy risk by making sure the property is positioned correctly from day one.</li>
+                  </ul>
+                  <span class="learn-more">Learn more &rarr;</span>
+                </div>
+              </a>
+              <a href="/marketing-process" class="pillar-link-card">
+                <div class="pillar-card-content">
+                  <h3>Marketing Process</h3>
+                  <ul>
+                    <li>Professional photos, virtual walkthrough/video, listing syndication, and self-guided showing access.</li>
+                    <li>Built to create stronger exposure, better showing activity, and faster leasing decisions.</li>
+                  </ul>
+                  <span class="learn-more">Learn more &rarr;</span>
+                </div>
+              </a>
+              <a href="/tenant-screening" class="pillar-link-card">
+                <div class="pillar-card-content">
+                  <h3>Tenant Screening</h3>
+                  <ul>
+                    <li>Application review, income verification, rental history, criminal, eviction, fraud, and pet screening.</li>
+                    <li>Designed to reduce placement risk and protect the property long after move-in.</li>
+                  </ul>
+                  <span class="learn-more">Learn more &rarr;</span>
+                </div>
+              </a>
+              <a href="/leasing-process" class="pillar-link-card">
+                <div class="pillar-card-content">
+                  <h3>Leasing Process</h3>
+                  <ul>
+                    <li>Lease preparation, signing coordination, tenant onboarding, and move-in documentation.</li>
+                    <li>Helps create a cleaner handoff from approved applicant to resident.</li>
+                  </ul>
+                  <span class="learn-more">Learn more &rarr;</span>
+                </div>
+              </a>
+              <a href="/maintenance" class="pillar-link-card">
+                <div class="pillar-card-content">
+                  <h3>Maintenance Coordination</h3>
+                  <ul>
+                    <li>Maintenance request intake, troubleshooting, Property Meld tracking, vendor coordination, and emergency response.</li>
+                    <li>Protects the property by keeping maintenance organized, documented, and actioned properly.</li>
+                  </ul>
+                  <span class="learn-more">Learn more &rarr;</span>
+                </div>
+              </a>
+              <a href="/communication" class="pillar-link-card">
+                <div class="pillar-card-content">
+                  <h3>Communication</h3>
+                  <ul>
+                    <li>Owner updates, tenant communication, portal access, monthly statements, and documented communication systems.</li>
+                    <li>Gives owners better visibility into what is happening with their property.</li>
+                  </ul>
+                  <span class="learn-more">Learn more &rarr;</span>
+                </div>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section>
+    <section id="included">
       <div class="container reveal">
         <div class="section-head center">
           <div class="section-kicker">What&rsquo;s Included</div>
-          <h2>Full-Service Management vs. Tenant Placement Only</h2>
+          <h2>What&rsquo;s Included With Red Door Property Management</h2>
+          <p>A clear breakdown of the services included with full-service management and tenant placement only.</p>
         </div>
-        <table class="fee-table" style="max-width:820px;margin-inline:auto">
-          <thead>
-            <tr><th>Leasing &amp; Marketing</th><th style="text-align:center">Full-Service</th><th style="text-align:center">Placement Only</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Professional rental market analysis</td><td style="text-align:center">&#10003;</td><td style="text-align:center">&#10003;</td></tr>
-            <tr><td>Market readiness recommendations</td><td style="text-align:center">&#10003;</td><td style="text-align:center">&#10003;</td></tr>
-            <tr><td>Professional marketing photos</td><td style="text-align:center">&#10003;</td><td style="text-align:center">&#10003;</td></tr>
-            <tr><td>Virtual walkthrough video</td><td style="text-align:center">&#10003;</td><td style="text-align:center">&#10003;</td></tr>
-            <tr><td>Online listing syndication</td><td style="text-align:center">&#10003;</td><td style="text-align:center">&#10003;</td></tr>
-            <tr><td>Self-guided showing technology</td><td style="text-align:center">&#10003;</td><td style="text-align:center">&#10003;</td></tr>
-            <tr><td>Tenant screening</td><td style="text-align:center">&#10003;</td><td style="text-align:center">&#10003;</td></tr>
-            <tr><td>Lease preparation</td><td style="text-align:center">&#10003;</td><td style="text-align:center">&#10003;</td></tr>
-            <tr><td>Move-in coordination</td><td style="text-align:center">&#10003;</td><td style="text-align:center">&#10003;</td></tr>
-          </tbody>
-        </table>
-        <table class="fee-table" style="max-width:820px;margin-inline:auto;margin-top:22px">
-          <thead>
-            <tr><th>Ongoing Management &amp; Owner Protection</th><th style="text-align:center">Full-Service</th><th style="text-align:center">Placement Only</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Monthly rent collection, owner portal, statements</td><td style="text-align:center">&#10003;</td><td style="text-align:center">Not included</td></tr>
-            <tr><td>Tenant communication &amp; lease enforcement</td><td style="text-align:center">&#10003;</td><td style="text-align:center">Not included</td></tr>
-            <tr><td>Maintenance coordination &amp; 24-hour emergency response</td><td style="text-align:center">&#10003;</td><td style="text-align:center">Not included</td></tr>
-            <tr><td>Renewal coordination &amp; annual inspection process</td><td style="text-align:center">&#10003;</td><td style="text-align:center">Not included</td></tr>
-            <tr><td>Move-out coordination &amp; deposit processing</td><td style="text-align:center">&#10003;</td><td style="text-align:center">Not included</td></tr>
-            <tr><td>Documented inspection &amp; vendor coordination</td><td style="text-align:center">&#10003;</td><td style="text-align:center">Not included</td></tr>
-          </tbody>
-        </table>
-        <p class="callout-note" style="max-width:820px;margin-inline:auto;margin-top:22px">Separate service fees (not part of monthly management): Annual inspection $195 &middot; Pre-renewal / pre-move-out inspection $145 &middot; Maintenance coordination $25 per request.</p>
+
+        <div class="comparison-table-wrap" aria-label="Services included comparison">
+          <table class="service-comparison">
+            <thead>
+              <tr>
+                <th>Feature / Service</th>
+                <th>Full-Service Management</th>
+                <th>Tenant Placement Only</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="category-row"><td colspan="3">Leasing &amp; Marketing</td></tr>
+              <tr><td>Professional rental market analysis</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+              <tr><td>Market readiness recommendations</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+              <tr><td>Professional marketing photos</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+              <tr><td>Virtual walkthrough video</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+              <tr><td>Online listing syndication</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+              <tr><td>Self-guided showing technology</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+              <tr><td>Lead follow-up and showing coordination</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+              <tr><td>Tenant screening</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+              <tr><td>Lease preparation</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+              <tr><td>Move-in coordination</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+              <tr class="category-row"><td colspan="3">Ongoing Management</td></tr>
+              <tr><td>Monthly rent collection</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+              <tr><td>Owner portal access</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+              <tr><td>Monthly owner statements</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+              <tr><td>Tenant communication</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+              <tr><td>Lease enforcement</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+              <tr><td>Maintenance coordination</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+              <tr><td>24-hour emergency maintenance response</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+              <tr><td>Renewal coordination</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+              <tr><td>Annual inspection process</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+              <tr><td>Move-out coordination</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+              <tr><td>Security deposit processing</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+              <tr class="category-row"><td colspan="3">Owner Protection &amp; Oversight</td></tr>
+              <tr><td>Documented inspection process</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+              <tr><td>Maintenance troubleshooting before dispatch</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+              <tr><td>Vendor coordination</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+              <tr><td>Rental pricing guidance</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+              <tr><td>Vacancy reduction strategy</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+              <tr><td>Communication systems and documented processes</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+              <tr class="category-row fee-note-heading"><td colspan="3">Fees noted separately from monthly management</td></tr>
+              <tr class="service-fee-note">
+                <td>Separate service fees</td>
+                <td>
+                  <div class="fee-disclosure-list">
+                    <span>Annual inspection <strong>$195</strong></span>
+                    <span>Pre lease renewal / pre move out inspection <strong>$145</strong></span>
+                    <span>Maintenance coordination <strong>$25/request</strong></span>
+                  </div>
+                </td>
+                <td><span class="fee-disclosure-muted">Not applicable</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
-    <section class="section-soft">
-      <div class="container content-block is-centered reveal">
-        <div class="section-kicker">Fee Structure Comparison</div>
-        <h2>How Red Door&rsquo;s Fee Structure Compares</h2>
-        <p>Many property management companies advertise a low monthly rate but add multiple extra fees throughout the leasing and management process. Red Door&rsquo;s structure is designed to be clear, competitive, and value-driven &mdash; 9% of monthly collected rent (8% for 3+ doors) with no vacancy fee, professional marketing included rather than billed separately, and a documented inspection process with pricing listed above rather than left unclear until later in the lease cycle.</p>
+    <section id="fee-comparison" class="section-soft">
+      <div class="container reveal">
+        <div class="section-head center">
+          <div class="section-kicker">Fee Structure Comparison</div>
+          <h2>How Red Door&rsquo;s Fee Structure Compares</h2>
+          <p>Many property management companies advertise a low monthly rate but add multiple extra fees throughout the leasing and management process. Red Door&rsquo;s structure is designed to be clear, competitive, and value-driven.</p>
+        </div>
+
+        <div class="fee-compare-graphic" aria-label="Industry standard versus Red Door fee structure comparison">
+          <table class="fee-compare-table">
+            <thead>
+              <tr>
+                <th>Fee or Service</th>
+                <th>Industry Standard</th>
+                <th>Red Door Structure</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Monthly Management</td>
+                <td>A low advertised monthly rate may not include the full operating support owners expect.</td>
+                <td><span class="red-door-answer"><span><strong>9%</strong> of monthly collected rent for full-service management. Investor pricing is <strong>8%</strong> for owners with 3 or more doors.</span></span></td>
+              </tr>
+              <tr>
+                <td>New Lease Fee</td>
+                <td>Leasing fees are often equal to one full month&rsquo;s rent.</td>
+                <td><span class="red-door-answer"><span><strong>$995 flat fee</strong> when Red Door places a new tenant for full-service management.</span></span></td>
+              </tr>
+              <tr>
+                <td>Vacancy Fee</td>
+                <td>Vacancy fees may apply even while rent is not being collected.</td>
+                <td><span class="red-door-answer"><span><strong>$0 monthly management fee</strong> while your property is vacant.</span></span></td>
+              </tr>
+              <tr>
+                <td>Marketing</td>
+                <td>Marketing, setup, photos, or showing tools may be separate charges.</td>
+                <td><span class="red-door-answer"><span>Professional photos, virtual walkthrough video, listing syndication, and self-guided showing technology are included.</span></span></td>
+              </tr>
+              <tr>
+                <td>Renewal</td>
+                <td>Renewal fees can vary or be unclear until later in the lease cycle.</td>
+                <td><span class="red-door-answer"><span><strong>$350 renewal fee</strong> when a tenant renewal is completed.</span></span></td>
+              </tr>
+              <tr>
+                <td>Inspection</td>
+                <td>Inspection processes may be limited, separate, or not clearly documented.</td>
+                <td><span class="red-door-answer"><span>Documented inspection process with annual inspection pricing clearly listed above.</span></span></td>
+              </tr>
+              <tr>
+                <td>Maintenance Coordination</td>
+                <td>Maintenance coordination costs and dispatch process may be difficult to compare upfront.</td>
+                <td><span class="red-door-answer"><span>Troubleshooting before dispatch, vendor coordination, emergency response, and clear per-request pricing listed above.</span></span></td>
+              </tr>
+              <tr>
+                <td>Owner Communication</td>
+                <td>Communication systems and reporting cadence vary widely between management companies.</td>
+                <td><span class="red-door-answer"><span>Owner portal access, monthly owner statements, documented systems, and a clear communication process.</span></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="comparison-cta">
+          <a class="btn btn-primary" href="#rental-analysis">Get a Free Rental Analysis</a>
+          <a class="btn btn-secondary" href="/contact">Talk to Our Team</a>
+        </div>
       </div>
     </section>
 
@@ -3351,6 +3223,18 @@
           <div class="cta-row" style="margin-top:20px">
             <a class="btn btn-primary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Talk to Our Team About Tenant Placement</a>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="calendly-section" id="schedule-call">
+      <div class="container">
+        <div class="calendly-card">
+          <div class="section-kicker">Schedule a Call</div>
+          <h2>Want to Talk Through Pricing?</h2>
+          <p>Schedule a quick phone call with Red Door to review your property, ask questions, and decide whether full-service management or tenant placement is the right fit.</p>
+          <p class="microcopy">Choose a time that works for you below.</p>
+          <div class="calendly-inline-widget" data-url="https://calendly.com/cknight-19/phone-call?hide_event_type_details=1" style="min-width:320px;height:700px"></div>
         </div>
       </div>
     </section>
@@ -3599,50 +3483,209 @@
       </div>
     </section>
 
+    <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
     <script>
       (function () {
-        var calc = document.querySelector("[data-pricing-calc]");
-        if (!calc) { return; }
-        var rentInput = calc.querySelector("[data-calc-rent]");
-        var hoursInput = calc.querySelector("[data-calc-hours]");
-        var rateInput = calc.querySelector("[data-calc-rate]");
-        var vacancyInput = calc.querySelector("[data-calc-vacancy]");
-        var countTimeInput = calc.querySelector("[data-calc-count-time]");
-        var resultEl = calc.querySelector("[data-calc-result]");
-        var timeCostEl = calc.querySelector("[data-calc-time-cost]");
-        var vacancyCostEl = calc.querySelector("[data-calc-vacancy-cost]");
-        var mgmtCostEl = calc.querySelector("[data-calc-mgmt-cost]");
+        var rdCalc = document.querySelector("[data-rd-calc-widget]");
+        if (!rdCalc) { return; }
 
-        function money(value) {
-          var rounded = Math.round(value);
-          var sign = rounded < 0 ? "−" : "";
-          return sign + "$" + Math.abs(rounded).toLocaleString("en-US");
-        }
-
-        function recalc() {
-          var rent = parseFloat(rentInput.value) || 0;
-          var hours = parseFloat(hoursInput.value) || 0;
-          var rate = parseFloat(rateInput.value) || 0;
-          var vacancyDays = parseFloat(vacancyInput.value) || 0;
-          var countTime = countTimeInput.checked;
-
-          var timeCost = countTime ? hours * rate * 12 : 0;
-          var vacancyCost = vacancyDays * (rent / 30);
-          var mgmtCost = rent * 0.09 * 12;
-          var impact = timeCost + vacancyCost - mgmtCost;
-
-          resultEl.textContent = money(impact);
-          timeCostEl.textContent = money(timeCost);
-          vacancyCostEl.textContent = money(vacancyCost);
-          mgmtCostEl.textContent = "−" + money(mgmtCost).replace("$", "$");
-        }
-
-        [rentInput, hoursInput, rateInput, vacancyInput, countTimeInput].forEach(function (field) {
-          field.addEventListener("input", recalc);
-          field.addEventListener("change", recalc);
+        var rdCalcConfig = { managementFeePct: 0.09 };
+        var rdCalcMode = "self";
+        var rdCalcRisk = { maintenance: 750, tenant: 1000 };
+        var rdCalcDisplayed = 0;
+        var rdCalcAnimation = null;
+        var rdCalcAnnounceTimer = null;
+        var rdCalcReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var rdCalcUsd = new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          maximumFractionDigits: 0
         });
 
-        recalc();
+        function rdCalcById(id) {
+          return document.getElementById(id);
+        }
+
+        function rdCalcPaint(range) {
+          var low = parseFloat(range.min);
+          var high = parseFloat(range.max);
+          var value = parseFloat(range.value);
+          var percent = Math.min(100, Math.max(0, (value - low) / (high - low) * 100));
+          range.style.setProperty("--fill", percent + "%");
+        }
+
+        function rdCalcAnimateBig(target) {
+          var el = rdCalcById("rd-calc-big-number");
+
+          if (rdCalcReducedMotion) {
+            rdCalcDisplayed = target;
+            el.textContent = rdCalcUsd.format(Math.abs(target));
+            return;
+          }
+
+          if (rdCalcAnimation) {
+            cancelAnimationFrame(rdCalcAnimation);
+          }
+
+          var start = rdCalcDisplayed;
+          var change = target - start;
+          var duration = 500;
+          var startTime = performance.now();
+
+          function tick(now) {
+            var progress = Math.min(1, (now - startTime) / duration);
+            var eased = 1 - Math.pow(1 - progress, 3);
+            rdCalcDisplayed = start + change * eased;
+            el.textContent = rdCalcUsd.format(Math.abs(Math.round(rdCalcDisplayed)));
+
+            if (progress < 1) {
+              rdCalcAnimation = requestAnimationFrame(tick);
+            }
+          }
+
+          rdCalcAnimation = requestAnimationFrame(tick);
+        }
+
+        function rdCalcAnnounce(text) {
+          clearTimeout(rdCalcAnnounceTimer);
+          rdCalcAnnounceTimer = setTimeout(function () {
+            rdCalcById("rd-calc-sr-result").textContent = text;
+          }, 600);
+        }
+
+        function rdCalcFormatDays(value) {
+          return value + (value === 1 ? " day" : " days");
+        }
+
+        function rdCalcSetBreakdown(rows) {
+          var container = rdCalcById("rd-calc-breakdown");
+          container.innerHTML = rows.map(function (row) {
+            return '<div class="rd-calc-breakdown-row' + (row.total ? ' total' : '') + '"><span>' + row.label + '</span><strong>' + rdCalcUsd.format(row.value) + '</strong></div>';
+          }).join("");
+        }
+
+        function rdCalcSetMode(mode) {
+          rdCalcMode = mode;
+
+          rdCalc.querySelectorAll("[data-rd-mode]").forEach(function (button) {
+            var isActive = button.getAttribute("data-rd-mode") === mode;
+            button.classList.toggle("is-active", isActive);
+            button.setAttribute("aria-pressed", String(isActive));
+          });
+
+          rdCalc.querySelectorAll("[data-rd-panel]").forEach(function (panel) {
+            panel.hidden = panel.getAttribute("data-rd-panel") !== mode;
+          });
+
+          rdCalcUpdate();
+        }
+
+        function rdCalcUpdate() {
+          var monthlyRent = parseFloat(rdCalcById("rd-calc-rent").value) || 0;
+          var dailyRent = monthlyRent / 30;
+          var redDoorAnnualManagementFee = monthlyRent * rdCalcConfig.managementFeePct * 12;
+          var estimatedAnnualImpact = 0;
+          var displayValue = 0;
+          var big = rdCalcById("rd-calc-big-number");
+
+          rdCalcById("rd-calc-rent-out").textContent = rdCalcUsd.format(monthlyRent);
+
+          if (rdCalcMode === "self") {
+            var hours = parseFloat(rdCalcById("rd-calc-hours").value) || 0;
+            var hourly = parseFloat(rdCalcById("rd-calc-hourly").value) || 0;
+            var selfVacancyDays = parseFloat(rdCalcById("rd-calc-self-vacancy").value) || 0;
+            var ownerTimeCost = rdCalcById("rd-calc-count-time").checked ? hours * hourly * 12 : 0;
+            var selfExtraVacancyCost = dailyRent * selfVacancyDays;
+
+            estimatedAnnualImpact = ownerTimeCost + selfExtraVacancyCost - redDoorAnnualManagementFee;
+            displayValue = Math.max(0, estimatedAnnualImpact);
+
+            rdCalcById("rd-calc-hours-out").textContent = hours + (hours === 1 ? " hr" : " hrs");
+            rdCalcById("rd-calc-hourly-out").textContent = rdCalcUsd.format(hourly);
+            rdCalcById("rd-calc-self-vacancy-out").textContent = rdCalcFormatDays(selfVacancyDays);
+            rdCalcById("rd-calc-kicker").textContent = estimatedAnnualImpact > 0 ? "Professional Management May Net You" : "Cost Comparison Is Close";
+            rdCalcById("rd-calc-sentence").textContent = estimatedAnnualImpact > 0
+              ? "more per year than self-managing."
+              : "Self-management may cost less on paper, but risk still matters.";
+            rdCalcById("rd-calc-why").textContent = estimatedAnnualImpact > 0
+              ? "Red Door's process-driven management is built to reduce the hidden costs of owner time, vacancy, maintenance coordination, and tenant issues."
+              : "Self-management may cost less on paper, but the decision still depends on vacancy risk, time, maintenance, tenant quality, and long-term property protection.";
+
+            rdCalcSetBreakdown([
+              { label: "Owner time cost", value: ownerTimeCost },
+              { label: "Extra vacancy cost", value: selfExtraVacancyCost },
+              { label: "Red Door management cost", value: -redDoorAnnualManagementFee },
+              { label: "Estimated annual impact", value: displayValue, total: true }
+            ]);
+          } else {
+            var poorVacancyDays = parseFloat(rdCalcById("rd-calc-poor-vacancy").value) || 0;
+            var monthlyUnderpricing = parseFloat(rdCalcById("rd-calc-underpricing").value) || 0;
+            var turnoverRiskPct = (parseFloat(rdCalcById("rd-calc-turnover").value) || 0) / 100;
+            var poorExtraVacancyCost = dailyRent * poorVacancyDays;
+            var rentUnderpricingCost = monthlyUnderpricing * 12;
+            var turnoverRiskCost = 2500 * turnoverRiskPct;
+            var maintenanceRiskCost = rdCalcRisk.maintenance;
+            var tenantPlacementRiskCost = rdCalcRisk.tenant;
+
+            estimatedAnnualImpact = poorExtraVacancyCost + rentUnderpricingCost + turnoverRiskCost + maintenanceRiskCost + tenantPlacementRiskCost;
+            displayValue = Math.max(0, estimatedAnnualImpact);
+
+            rdCalcById("rd-calc-poor-vacancy-out").textContent = rdCalcFormatDays(poorVacancyDays);
+            rdCalcById("rd-calc-underpricing-out").textContent = rdCalcUsd.format(monthlyUnderpricing);
+            rdCalcById("rd-calc-turnover-out").textContent = Math.round(turnoverRiskPct * 100) + "%";
+            rdCalcById("rd-calc-kicker").textContent = estimatedAnnualImpact > 0 ? "Poor Management May Cost You" : "Cost Comparison Is Close";
+            rdCalcById("rd-calc-sentence").textContent = estimatedAnnualImpact > 0
+              ? "per year in preventable costs."
+              : "The numbers are close on paper, but management quality still matters.";
+            rdCalcById("rd-calc-why").textContent = estimatedAnnualImpact > 0
+              ? "This estimate shows how vacancy, underpricing, turnover, maintenance issues, and weak tenant placement can create preventable costs beyond the management fee itself."
+              : "The numbers are close on paper, but poor management can still create risk through vacancy, underpricing, maintenance mistakes, and tenant placement issues.";
+
+            rdCalcSetBreakdown([
+              { label: "Extra vacancy cost", value: poorExtraVacancyCost },
+              { label: "Rent underpricing cost", value: rentUnderpricingCost },
+              { label: "Avoidable turnover risk", value: turnoverRiskCost },
+              { label: "Maintenance oversight risk", value: maintenanceRiskCost },
+              { label: "Tenant placement risk", value: tenantPlacementRiskCost },
+              { label: "Estimated Cost of Poor Management", value: displayValue, total: true }
+            ]);
+          }
+
+          big.classList.toggle("negative", estimatedAnnualImpact <= 0);
+          rdCalcAnimateBig(displayValue);
+          rdCalcAnnounce((rdCalcMode === "self" ? "Self-management comparison: " : "Poor management comparison: ") + rdCalcUsd.format(displayValue) + " estimated annual impact.");
+        }
+
+        ["rd-calc-rent", "rd-calc-hours", "rd-calc-hourly", "rd-calc-self-vacancy", "rd-calc-poor-vacancy", "rd-calc-underpricing", "rd-calc-turnover"].forEach(function (id) {
+          var range = rdCalcById(id);
+          range.addEventListener("input", function () {
+            rdCalcPaint(range);
+            rdCalcUpdate();
+          });
+          rdCalcPaint(range);
+        });
+
+        rdCalcById("rd-calc-count-time").addEventListener("input", rdCalcUpdate);
+        rdCalc.querySelectorAll("[data-rd-mode]").forEach(function (button) {
+          button.addEventListener("click", function () {
+            rdCalcSetMode(button.getAttribute("data-rd-mode"));
+          });
+        });
+        rdCalc.querySelectorAll("[data-rd-risk]").forEach(function (button) {
+          button.addEventListener("click", function () {
+            var riskType = button.getAttribute("data-rd-risk");
+            rdCalcRisk[riskType] = parseFloat(button.getAttribute("data-value")) || 0;
+            rdCalc.querySelectorAll("[data-rd-risk='" + riskType + "']").forEach(function (option) {
+              var isActive = option === button;
+              option.classList.toggle("is-active", isActive);
+              option.setAttribute("aria-pressed", String(isActive));
+            });
+            rdCalcUpdate();
+          });
+        });
+
+        rdCalcUpdate();
       })();
     </script>
 
