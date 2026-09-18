@@ -25,6 +25,11 @@ page design" below) — `indianapolis-`, `fishers-`, `noblesville-`,
 `greenfield-market-reports.html`. All of this is committed and pushed to
 `main`.
 
+**Same-day update (Sep 17, final pass):** all 20 `-homes-for-rent` pages
+are now built, using real RentCast market data pulled that day — see
+"Homes-for-rent pages — all 20 built" below for the full list and open
+items. Committed locally (not yet pushed).
+
 **Three standing documents govern this project:**
 
 - **This file** — status and open items.
@@ -55,12 +60,62 @@ build phases.
 
 **Real pages built so far (all standalone static HTML, matching one shared
 design system, ready to drop into Astro templates later):** `index.html`
-(homepage), `application-criteria.html`, and all 9 confirmed
-`-market-reports` pages (Indianapolis, Fishers, Noblesville, Westfield,
-Greenwood, Westside, Anderson, Lebanon, Greenfield). None of the
-`-homes-for-rent` or `-property-management` pages exist as files in this
-repo yet (the Avon pilot lives in a separate artifact, not this repo) —
-that's still the actual build phase work.
+(homepage), `application-criteria.html`, all 9 confirmed `-market-reports`
+pages (Indianapolis, Fishers, Noblesville, Westfield, Greenwood, Westside,
+Anderson, Lebanon, Greenfield), and **all 20 `-homes-for-rent` pages**
+(Sep 17 — see "Homes-for-rent pages — all 20 built" below). None of the
+`-property-management` pages exist as files in this repo yet — that's the
+next build phase.
+
+### Homes-for-rent pages — all 20 built (Sep 17)
+
+All 20 locked pages exist as real files, each with real RentCast market
+data (pulled Sep 17 via the approved RentCast Foundation plan) and
+team-confirmed local facts from `claude/red-door-city-facts-research.md` —
+not templated name-swaps. List: `avon-`, `brownsburg-`, `carmel-`,
+`fishers-`, `greenwood-`, `noblesville-`, `westfield-`, `zionsville-`,
+`broad-ripple-`, `downtown-indianapolis-` (the 10 standalone
+suburbs/neighborhoods), the 9 Marion County township pages
+(`lawrence-township-`, `warren-township-`, `wayne-township-`,
+`perry-township-`, `franklin-township-`, `pike-township-`,
+`washington-township-`, `decatur-township-`, `center-township-`), and
+`indianapolis-homes-for-rent.html` (the countywide umbrella, rolling up
+37 of Marion County's 56 ZIPs — the rest are PO-Box-only or otherwise
+non-residential and excluded; one of the 37, 46282, returned no RentCast
+data and is flagged in that page's copy and its underlying data file
+rather than silently dropped). Raw per-city data lives in
+`data/homes-for-rent/*.json` (20 files), pulled via a one-off Node script
+(not committed — lived in the session scratchpad) using
+`process.env.RENTCAST_KEY`; **the RentCast API key was pasted directly in
+chat and should be rotated** since it now persists in conversation
+history — it was never written to any file in this repo (verified via
+repo-wide grep before every commit).
+
+Judgment calls / open items carried forward from this build:
+- **Multi-ZIP averaging is unweighted** (simple arithmetic mean across a
+  township's ZIPs, not weighted by each ZIP's listing count). Flagged
+  twice now as an unresolved house-style question — Michael hasn't ruled
+  on unweighted vs. listing-count-weighted yet.
+- **Avon's page had its "Typical move-in fees" list removed** per
+  Michael's explicit request (Sep 17) — Resident's Benefits Package
+  ($45/mo) and Lease Preparation Fee ($195) no longer appear there; the
+  other 19 pages were built without that section from the start.
+- **Perry Township's page required extra Fair Housing care** — the
+  facts-file source material for Perry included demographic/racial
+  content that was deliberately excluded; the page sticks to borders,
+  history, and landmarks only.
+- **"Currently Available" is an honest empty state on every page** — none
+  are wired to the live RentEngine feed yet (see "Listings" build item
+  below), so each page says so plainly rather than showing fake listings.
+- **Thin bedroom-count samples (roughly n<10) are flagged inline** in the
+  snapshot prose as "a rough signal, not a firm number" rather than
+  presented with false precision — this shows up on several
+  lower-inventory pages (Zionsville, Westfield's 2BR rung, most
+  townships' 5BR+ rungs).
+- **Not yet wired to a monthly refresh mechanism** — the Cloudflare
+  Worker/Cron approach is decided (see `CLAUDE.md`) but not built; these
+  20 pages currently reflect a single Sep 17 snapshot, dated as such in
+  each page's data-as-of line.
 
 ---
 
@@ -768,9 +823,10 @@ one.
 - [ ] Pillar page template, port the 8 existing pillar pages
 - [ ] City pages: three-page model per `CLAUDE.md`/listings notes — not a
       name-swap template. **Partially done:** all 9 `-market-reports` pages
-      are built (Sep 17, see above). `-homes-for-rent` (20 pages) and
-      `-property-management` (20 pages) are not started in this repo — the
-      Avon pilot exists only as a separate artifact, not a file here.
+      are built (Sep 17, see above). **All 20 `-homes-for-rent` pages are
+      now built (Sep 17)** — see "Homes-for-rent pages — all 20 built" below
+      for the full list, data sourcing, and open items. `-property-management`
+      (20 pages) is not started in this repo.
 - [ ] One-off pages: About, Contact, Testimonials, Tenants, verification
       pages, Eviction Protection, Guaranteed Lease, Airbnb
 - [ ] Blog index, post template, categories, migrate all posts (join
