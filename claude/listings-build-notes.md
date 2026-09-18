@@ -46,10 +46,10 @@ grid prototype but can't support a real detail page.
   listings.** Of the first 100 records (unfiltered), 93 were `status:
   "Leased"` — a full unit ledger going back years, not a current-inventory
   feed. **Always query with `statuses=Available`** (22 right now).
-- **`On Hold` (8 right now) is a separate status from `Available`.** Decide
-  explicitly whether to show these — likely yes, with different messaging
-  ("application pending"), since they're real, photographed units. Affects
-  the `/units` query filter. **Open — needs a call.**
+- **`On Hold` (8 right now) is a separate status from `Available`.**
+  **Decided (Sep 18): hide entirely.** Query `/units` with
+  `statuses=Available` only — matches the original query recommendation
+  above, no separate On Hold handling needed.
 - **Current 22 Available units skew heavily to Indianapolis: 17 of 22.** The
   rest are one each in Westfield, Noblesville, Carmel, Fishers, and
   Pendleton. Beds range 1–4, rent $845–$2,545. **This makes the thin/empty
@@ -76,9 +76,8 @@ grid prototype but can't support a real detail page.
   `path` field is a relative RentEngine-internal reference, not a resolvable
   URL on its own. Check `hidden` defensively even though none were `true` in
   the sample. Photos flow from AppFolio into RentEngine, not a separate
-  upload. **Decide: hotlink or mirror/cache at build time** — hotlinking is
-  simpler; caching protects against AppFolio URL changes or rate limits but
-  adds a build step. **Open.**
+  upload. **Decided (Sep 18): hotlink directly**, not mirror/cache — no
+  build step needed for photos.
 - **Fees are clean and structured:** `monthly_fees` / `move_in_fees` /
   `pet_fees` are each arrays of `{name, type, amount}` — easy to render as a
   line-item list (e.g. "Resident's Benefits Package — $45/mo", "Lease Prep
@@ -332,9 +331,10 @@ embed, real hotlinked photos once this is an Astro page.
 - Confirm Apply now points at `custom_application_url` (AppFolio), not
   Findigs — check with Michael whether the live PMW nav's Findigs link is
   stale or a separate flow.
-- Decide `On Hold` handling (show with "application pending" messaging, or
-  hide) — affects the `/units` query filter.
-- Decide hotlink vs. mirror/cache for AppFolio-hosted listing photos.
+- ✅ **Decided (Sep 18): hide `On Hold` units entirely** — query
+  `/units?statuses=Available` only.
+- ✅ **Decided (Sep 18): hotlink AppFolio-hosted listing photos**, don't
+  mirror/cache.
 - Get the city list for which cities get a `-market-reports` page.
 - Per-listing title/meta/H1/schema generation, templated from address, beds,
   baths, city.
