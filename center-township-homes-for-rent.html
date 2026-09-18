@@ -128,6 +128,19 @@
     .nearby-link:hover { color: var(--red); border-color: var(--brand-light); }
     .nearby-link.is-text { color: var(--muted); cursor: default; }
     .nearby-link.is-text:hover { color: var(--muted); border-color: var(--line); }
+    
+    /* ---------- Real listing cards (RentEngine, Sep 18) ---------- */
+    .listing-grid-real { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+    .listing-card { display: block; color: inherit; text-decoration: none; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: 0 10px 28px rgba(23, 23, 23, .06); transition: transform .18s ease, box-shadow .18s ease; }
+    .listing-card:hover, .listing-card:focus-visible { transform: translateY(-3px); box-shadow: 0 16px 34px rgba(23, 23, 23, .12); outline: none; }
+    .listing-card-photo { aspect-ratio: 4/3; background: var(--soft); overflow: hidden; }
+    .listing-card-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .listing-card-body { padding: 16px 18px; }
+    .listing-card-rent { font-family: var(--font-head, inherit); font-size: 1.35rem; font-weight: 700; color: var(--red); margin-bottom: 4px; }
+    .listing-card-rent span { font-size: .82rem; color: var(--muted); font-weight: 600; }
+    .listing-card-address { color: var(--ink); font-weight: 800; font-size: .94rem; margin-bottom: 4px; }
+    .listing-card-specs { color: var(--muted); font-size: .86rem; }
+
     .cta-band { padding: 48px 0; color: var(--white); background: var(--charcoal); }
     .cta-inner { display: flex; align-items: center; justify-content: space-between; gap: 28px; flex-wrap: wrap; }
     .cta-inner h2 { margin: 0 0 6px; color: var(--white); font-size: clamp(1.3rem, 2.6vw, 1.7rem); }
@@ -257,9 +270,127 @@
       <div class="container">
         <h2>Currently Available in Center Township</h2>
         <p class="section-dek">Live listings pull directly from Red Door's RentEngine feed.</p>
-        <div class="listing-empty">
-          <p>This page isn't connected to the live RentEngine feed yet, so current Center Township listings can't display here. Once that integration is built, available homes will appear in this section automatically.</p>
-          <p><a class="btn btn-secondary" href="/indianapolis-homes-for-rent">Browse Everything Currently Available</a></p>
+        <div class="listing-grid-real">
+          <a class="listing-card" href="/homes-for-rent/indianapolis/408-north-oakland-avenue-unit-a">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/06f4dbda-06b0-4563-a995-51c1fe0b60a9/large.png" alt="408 North Oakland Avenue #A" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$850<span>/mo</span></p>
+              <p class="listing-card-address">408 North Oakland Avenue #A</p>
+              <p class="listing-card-specs">2 bd &middot; 2 ba &middot; 1,100 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/970-edgemont-avenue">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/29be9097-3e22-4a24-a537-105a4d840782/large.jpg" alt="970 Edgemont Avenue" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$845<span>/mo</span></p>
+              <p class="listing-card-address">970 Edgemont Avenue</p>
+              <p class="listing-card-specs">2 bd &middot; 1 ba &middot; 740 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/1337-east-market-street-unit-5">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/a188b124-f66d-458d-ae7d-e580c6cb4724/large.jpg" alt="1337 East Market Street #5" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$920<span>/mo</span></p>
+              <p class="listing-card-address">1337 East Market Street #5</p>
+              <p class="listing-card-specs">1 bd &middot; 1 ba &middot; 480 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/129-east-49th-street">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/e8c1de07-a653-4468-86c1-48cb0a93e9c2/large.png" alt="129 East 49th Street" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$1,995<span>/mo</span></p>
+              <p class="listing-card-address">129 East 49th Street</p>
+              <p class="listing-card-specs">3 bd &middot; 2 ba &middot; 1,356 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/1329-east-market-street-unit-2">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/f85bbef2-f471-4de2-8d5a-0c8db790cfe1/large.jpg" alt="1329 East Market Street #2" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$920<span>/mo</span></p>
+              <p class="listing-card-address">1329 East Market Street #2</p>
+              <p class="listing-card-specs">1 bd &middot; 1 ba &middot; 480 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/1337-east-market-street-unit-9">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/f6f99a0f-0c0f-43f8-9492-225967ef9830/large.jpg" alt="1337 East Market Street #9" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$1,010<span>/mo</span></p>
+              <p class="listing-card-address">1337 East Market Street #9</p>
+              <p class="listing-card-specs">1 bd &middot; 1 ba &middot; 480 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/1332a-north-college-avenue-unit-1332a-n">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/de688c53-0b4e-4a2f-ba61-214b36d644fe/large.png" alt="1332a North College Avenue #1332a N" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$1,445<span>/mo</span></p>
+              <p class="listing-card-address">1332a North College Avenue #1332a N</p>
+              <p class="listing-card-specs">2 bd &middot; 1.5 ba &middot; 1,167 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/3340-north-sherman-drive">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/629fcec0-43e2-4d42-8b28-9ba9992c6830/large.jpg" alt="3340 North Sherman Drive" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$1,460<span>/mo</span></p>
+              <p class="listing-card-address">3340 North Sherman Drive</p>
+              <p class="listing-card-specs">3 bd &middot; 2 ba &middot; 1,590 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/1639-sheldon-street">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/1d791427-7066-4517-af55-45a7d87ca082/large.png" alt="1639 Sheldon Street" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$2,200<span>/mo</span></p>
+              <p class="listing-card-address">1639 Sheldon Street</p>
+              <p class="listing-card-specs">3 bd &middot; 2 ba &middot; 1,436 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/6533-newstead-drive">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/1a57455a-af68-4884-8707-1dc06fcf8a19/large.jpeg" alt="6533 Newstead Drive" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$1,900<span>/mo</span></p>
+              <p class="listing-card-address">6533 Newstead Drive</p>
+              <p class="listing-card-specs">3 bd &middot; 2.5 ba &middot; 2,154 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/728-parkway-avenue">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/f88b67cd-6e67-48fe-9cb2-bcdffc1e3d3e/large.jpeg" alt="728 Parkway Avenue" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$1,650<span>/mo</span></p>
+              <p class="listing-card-address">728 Parkway Avenue</p>
+              <p class="listing-card-specs">3 bd &middot; 2 ba &middot; 1,250 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/726-parkway-avenue">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/80cc29db-2471-430c-8a7a-cbdb51b535b6/large.jpeg" alt="726 Parkway Avenue" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$1,550<span>/mo</span></p>
+              <p class="listing-card-address">726 Parkway Avenue</p>
+              <p class="listing-card-specs">3 bd &middot; 2 ba &middot; 1,250 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/1337-east-market-street-unit-3">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/eab38375-545a-4224-b0c0-2840eff2cf4c/large.jpg" alt="1337 East Market Street #3" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$995<span>/mo</span></p>
+              <p class="listing-card-address">1337 East Market Street #3</p>
+              <p class="listing-card-specs">1 bd &middot; 1 ba &middot; 480 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/1337-east-market-street-unit-8">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/0d540c1e-2146-4ebc-a969-c6b44c130018/large.jpg" alt="1337 East Market Street #8" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$995<span>/mo</span></p>
+              <p class="listing-card-address">1337 East Market Street #8</p>
+              <p class="listing-card-specs">1 bd &middot; 1 ba &middot; 480 sq ft</p>
+            </div>
+          </a>
+          <a class="listing-card" href="/homes-for-rent/indianapolis/1329-east-market-street-unit-5">
+            <div class="listing-card-photo"><img src="https://images.cdn.appfolio.com/reddoor/images/8b9361eb-b408-4636-bcb3-c8120a0eb161/large.jpg" alt="1329 East Market Street #5" loading="lazy"></div>
+            <div class="listing-card-body">
+              <p class="listing-card-rent">$900<span>/mo</span></p>
+              <p class="listing-card-address">1329 East Market Street #5</p>
+              <p class="listing-card-specs">1 bd &middot; 1 ba &middot; 550 sq ft</p>
+            </div>
+          </a>
         </div>
       </div>
     </section>

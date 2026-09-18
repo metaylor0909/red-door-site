@@ -247,9 +247,13 @@ Judgment calls / open items carried forward from this build:
   facts-file source material for Perry included demographic/racial
   content that was deliberately excluded; the page sticks to borders,
   history, and landmarks only.
-- **"Currently Available" is an honest empty state on every page** — none
-  are wired to the live RentEngine feed yet (see "Listings" build item
-  below), so each page says so plainly rather than showing fake listings.
+- ✅ **"Currently Available" now shows real RentEngine listings (Sep 18) —
+  see "Listings — real data wired" below for the full build.** Superseded:
+  every page previously showed an honest "not connected yet" placeholder;
+  17 of 20 now show real listing cards, the other 3 (Brownsburg, Fishers,
+  Zionsville — genuinely zero current inventory) show an updated honest
+  "nothing available right now" message instead of the old "not connected"
+  wording.
 - **Thin bedroom-count samples (roughly n<10) are flagged inline** in the
   snapshot prose as "a rough signal, not a firm number" rather than
   presented with false precision — this shows up on several
@@ -312,14 +316,16 @@ Judgment calls / open items carried forward from this build:
   pages, shown in the Areas Served county cards) but isn't on this list —
   expected, since market-reports pages are opt-in based on active
   recurring report coverage, not every served city.
-- [ ] **Six listings-specific open items** — all detailed in
-      `claude/listings-build-notes.md`, "Open items summary": the `?areas=all`
-      query-param convention + canonical tag, the real "Schedule a showing"
-      destination, the `accepts_vouchers` mismatch, confirming Apply now's
-      target, `On Hold` unit handling, and hotlink-vs-cache for listing
-      photos.
-- [ ] **Per-listing title/meta/H1/schema generation**, templated from
-      address, beds, baths, city (currently these pages have none).
+- [ ] **Two listings-specific open items remain** (four of the original six
+      resolved Sep 18 — see "Listings — real data wired" above): the
+      `?areas=all` query-param convention + canonical tag for the
+      Indianapolis "All areas" control, and the `accepts_vouchers`
+      mismatch (still null on every real unit despite marketing copy
+      advertising Section 8 acceptance on at least one listing). Full
+      detail in `claude/listings-build-notes.md`, "Open items summary."
+- ✅ **Per-listing title/meta/H1/schema generation — built (Sep 18).**
+      Templated from address, beds, baths, city in `build_listing_detail.js`;
+      all 28 real listing pages have it.
 - [ ] **Decide delisted-property handling** — recommend 301 to the city
       listings page for both users and link equity.
 
@@ -889,20 +895,79 @@ only covers `https://www.`).
 
 ---
 
-## Listings experience — mostly designed, build still ahead
+## Listings — real data wired (Sep 18)
 
 Full research, API findings, and design iteration history:
-`claude/listings-build-notes.md`. Summary status:
+`claude/listings-build-notes.md` — read it before touching this feature
+again, especially the Sep 18 corrections (a real showings/booking API
+exists; On Hold and photo-hosting decisions are made).
 
-- [x] Listings index/search page — drafted and iterated through v3.
-- [x] Listing detail page template — drafted and iterated through v4.
+- [x] Listings index/search page — drafted and iterated through v3
+      (mockup only, not rebuilt against real data this pass — see open
+      item below).
+- [x] Listing detail page template — drafted through v4, **then actually
+      built against real data (Sep 18):** 28 real listing detail pages,
+      one per currently-Available RentEngine unit, at
+      `/homes-for-rent/{city}/{address-slug}.html` (matches the locked
+      URL structure in `CLAUDE.md`). Real photos (hotlinked from
+      AppFolio's CDN, per the Sep 18 decision), real specs/fees/
+      description, Apply Now wired to each unit's real
+      `custom_application_url`, and a "Schedule a Showing" lead-capture
+      form (name/email/phone — not yet calling the real
+      `POST /showings/create` API, see open item below). Rental
+      Requirements section deliberately does **not** render the raw
+      `min_resident_qualifications` API field — it's identical across
+      every unit and contains the same non-compliant eviction/felony
+      language already fixed on `tenant-screening.html`; links to
+      `/application-criteria` instead.
 - [x] Empty/thin-inventory handling — resolved into the city-page
-      architecture (default-city + "homes nearby" fallback).
-- [ ] Rebuild as 20 genuine per-city server-rendered pages (same work item as
-      the homes-for-rent page rebuild in the three-page model above).
-- [ ] Sorting UI, pagination/infinite-scroll (not urgent at 22 listings).
-- [ ] Live Mapbox GL JS embed (provider decided, integration not built).
-- [ ] The six open sub-decisions listed under "Genuinely open" above.
+      architecture (default-city + "homes nearby" fallback), **and now
+      live:** each of the 20 `-homes-for-rent` pages either shows real
+      matching listing cards or an honest "nothing available right now"
+      message (see "Homes-for-rent pages" above).
+- [x] **City-to-listing matching solved without geocoding:** RentEngine's
+      `/units` only returns a broad city name (e.g. every Indianapolis
+      address just says "Indianapolis," no township), so Indianapolis-area
+      units are cross-matched to the correct township/neighborhood pages
+      by ZIP code against `claude/red-door-rentcast-zip-mapping.md`'s
+      already-locked ZIP lists — a unit can and does legitimately appear
+      on more than one page (e.g. a shared-ZIP township plus Downtown
+      Indianapolis) since each listing is real, not templated content.
+      One unit (Pendleton, ZIP 46064) matched no served city page and is
+      currently **not linked from anywhere** — Pendleton isn't one of the
+      20 served cities; its detail page still exists and is real, just
+      not discoverable via city-page browsing yet.
+- [ ] **Data snapshot, not live-refreshing.** Pulled once, Sep 18, via a
+      read-only RentEngine bearer token pasted in chat (same handling as
+      the RentCast key — never written to a file, should be rotated once
+      testing is done). 28 units were Available at pull time (20
+      Indianapolis, 3 Carmel, 1 each Westfield/Noblesville/Greenwood/Avon,
+      1 Pendleton). **Not wired to a refresh mechanism** — same open item
+      as the RentCast-fed homes-for-rent content above; needs the same
+      Cloudflare Worker/Cron approach, or a webhook per `CLAUDE.md`'s
+      locked "no debounce" decision for `units` table changes.
+- [ ] **Real "Schedule a Showing" booking, using the now-confirmed API**
+      (`GET /showings/availability` + `POST /showings/create`, see
+      `claude/listings-build-notes.md`). Deliberately built as a simple
+      lead-capture form instead this pass (Michael's call, Sep 18) —
+      the full prescreening `questionAnswers` set isn't documented, so
+      building the real submission now risked guessing at required
+      fields. Swap in the real flow once that's confirmed.
+- [ ] Rebuild the listings **index/search page** against real data (only
+      the detail pages and city-page grids were built this pass — no
+      separate `/homes-for-rent` catch-all is planned per the locked SEO
+      architecture, but the "All areas" control on the Indianapolis page
+      mentioned in that architecture still isn't built).
+- [ ] Sorting UI, pagination/infinite-scroll (not urgent at 28 listings).
+- [ ] Live Mapbox GL JS embed (provider decided, integration not built;
+      real `address.coordinates` are already in the pulled unit data).
+- [ ] Per-listing sitemap entries (28 real URLs now exist and should be
+      in `sitemap.xml` once that's built).
+- [ ] The remaining open sub-decisions listed under "Genuinely open"
+      above (`?areas=all` query-param convention, `accepts_vouchers`
+      mismatch — confirmed again in the real Sep 18 pull, still null on
+      every unit despite marketing copy advertising Section 8 on at
+      least one listing).
 
 ---
 
