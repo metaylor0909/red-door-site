@@ -2393,6 +2393,24 @@
     }
   
     /* ---------- Pillar page additions ---------- */
+    .video-section { padding: clamp(40px, 6vw, 64px) 0 0; }
+    .video-embed {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      max-width: 900px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-strong);
+      background: #000;
+    }
+    .video-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
     .hero .eyebrow + h1 { transform: none; margin-top: 6px; }
     .hero .cta-row { transform: none; margin-top: 10px; }
     .step-grid {
@@ -2578,6 +2596,14 @@
         <span aria-hidden="true"></span>
         Scroll
       </a>
+    </section>
+
+    <section class="video-section">
+      <div class="container">
+        <div class="video-embed reveal">
+          <iframe src="https://www.youtube.com/embed/Wx4CCwotbSA" title="Market Readiness Assessment overview video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
     </section>
 
     <section id="mra-intro">
