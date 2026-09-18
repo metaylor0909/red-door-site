@@ -264,6 +264,16 @@ Judgment calls / open items carried forward from this build:
 
 ## Genuinely open — do these next
 
+- [ ] **Build `tenant-verification.html` and `employment-verification.html`.**
+      The live pages just embed a single Adobe/EchoSign eSign widget iframe
+      each (`secure.echosign.com/public/widget?f=...`), tied to a specific
+      document instance rather than a generic reusable form — not something
+      to port as static mockup content. Deferred per Michael's decision
+      (Sep 18) rather than embed a possibly broken/session-specific iframe.
+      Needs a real decision on what these pages should actually do (request
+      a fresh signable document per visit? link out to AppFolio instead?)
+      before building. Not currently linked from `tenants.html` either, to
+      avoid a dead link.
 - [ ] **Build `self-manage-vs-pm-calculator.html`** — a standalone, fuller
       version of the "What does self-management or bad management really
       cost you?" widget now embedded on `pricing.html` (Sep 18 rebuild).
