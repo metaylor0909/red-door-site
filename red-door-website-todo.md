@@ -1000,8 +1000,16 @@ one.
       pages (Sep 17) are now built — see "Homes-for-rent pages — all 20
       built" and "Property-management pages — all 19 built" below for the
       full lists, data sourcing, and open items.
-- [ ] One-off pages: About, Contact, Testimonials, Tenants, verification
-      pages, Eviction Protection, Guaranteed Lease, Airbnb
+- [x] **One-off pages — mostly built (Sep 18).** `about.html`,
+      `contact.html`, `testimonials.html` (55 real testimonials),
+      `tenants.html`, `notice-to-vacate.html` (rebuilt to direct to the
+      Tenant Portal rather than port the live site's stale SSN-collecting
+      form), and `eviction-protection-program.html` are all built and
+      pushed. Airbnb doesn't need a page — it's a 301, now in
+      `_redirects`. Still open: Guaranteed Lease Program (stale, no live
+      source content, see "Genuinely open" above) and the two
+      eSign-widget verification pages (deferred, see "Genuinely open"
+      above).
 - [ ] Blog index, post template, categories, migrate all posts (join
       `content-fixes.csv` AND `pillar-page-seo-fixes.csv` on `url` during
       import — see build dependency note)
