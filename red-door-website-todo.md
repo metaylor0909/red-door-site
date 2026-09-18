@@ -62,10 +62,83 @@ build phases.
 design system, ready to drop into Astro templates later):** `index.html`
 (homepage), `application-criteria.html`, all 9 confirmed `-market-reports`
 pages (Indianapolis, Fishers, Noblesville, Westfield, Greenwood, Westside,
-Anderson, Lebanon, Greenfield), **all 20 `-homes-for-rent` pages**, and
-**all 19 `-property-management` pages** (all Sep 17 — see the two
-sections below for each). The full city three-page model is now built for
-every confirmed market.
+Anderson, Lebanon, Greenfield), **all 20 `-homes-for-rent` pages**,
+**all 19 `-property-management` pages** (Sep 17), and **all 8 pillar
+pages** (Sep 18 — see the three sections below for each). The full city
+three-page model and the pillar-page set are both now fully built.
+
+### Pillar pages — all 8 built (Sep 18)
+
+`market-readiness-assessment.html`, `marketing-process.html`,
+`tenant-screening.html`, `leasing-process.html`, `maintenance.html`,
+`communication.html`, `pricing.html`, and a rebuilt
+`indianapolis-property-management.html` (previously the thin
+generic-template version shared with the other 18 city pages — see
+"Property-management pages" above — now carries the real flagship
+content this section describes).
+
+**Content is migrated from the live site, not rewritten, per Hard Rule
+1** — read directly from `reddoorrents.com` (the 8 URLs Michael sent
+Sep 18, since the archive/crawl in this repo doesn't actually contain
+their content — `archive/pages` is empty placeholder files only, despite
+what "Where things stand" above implies about a full local archive).
+Restyled into the shared design system, reusing the exact header,
+footer, script, and base CSS extracted from `index.html` (same
+extraction approach as the property-management build), plus two new
+reusable components: a numbered `step-card` grid for process
+breakdowns, and `plain-list`/`two-col-list` styles for feature bullets.
+
+Two deliberate departures from pure "move as-is," both already
+reported to Michael and confirmed before building:
+
+- **Tenant Screening's eviction language was fixed, not ported as-is.**
+  The live page said applicants with "eviction filings" are "generally
+  declined" — this conflicts with the FHCCI-researched standard already
+  locked on `application-criteria.html` (eviction *judgments* only). Per
+  Michael's explicit choice, the new page uses the judgments-only
+  standard and the same case-by-case criminal-history language, with a
+  link to the full Tenant Qualification Criteria page.
+- **`indianapolis-property-management.html` was rebuilt, not left as
+  the thin city-template version**, per Michael's confirmation — real
+  ~2,900-word content (the 9-item differentiator list, a 6-section
+  process deep-dive linking to the now-real pillar pages, "What's
+  Included," "Owner Standards," all 10 FAQs) replaces the generic
+  accordion, while keeping the Rental & Sales Snapshot and areas-served
+  sections from the property-management build since those don't
+  conflict with anything on the real live page.
+
+Other things found and resolved while migrating:
+
+- **The live site is internally inconsistent on the lease-renewal
+  window** — `leasing-process`'s own body copy says "90 days" in one
+  place but its FAQ (and the `communication` page) says "110 days."
+  Standardized on 110 everywhere in the new pages, since that's what's
+  already published across every homepage/property-management page
+  built this session.
+- **Phone number discrepancy, not yet resolved:** every page built
+  this session (homepage onward) uses `317.660.1626`, but the live
+  site's header/footer show `317.922.0215`. Flagging for Michael to
+  confirm which is current — didn't change anything without
+  confirmation.
+- **The Landlord Library block is identical across all 8 live pillar
+  pages** (same 3 real posts: Westfield, Greenwood, and a photography
+  guidance piece) — confirmed via DOM inspection before reusing it, so
+  the new pages match that rather than reusing the *different* 3 posts
+  shown on the homepage/property-management pages (which are real too,
+  just a different selection — the live site apparently doesn't keep
+  this block in sync across page types either).
+- **Pricing's "hidden cost" calculator was built as a genuinely working
+  client-side tool**, not a static mockup — verified its default output
+  matches the live page's own example exactly (owner time cost $4,800,
+  extra vacancy cost $840, Red Door management cost &minus;$1,944,
+  estimated annual impact $3,696) and that it recalculates correctly on
+  input change. Only the "Self-Managing" comparison tab was built — the
+  live page also has a "Poor Management" tab whose underlying
+  assumptions weren't visible in the crawled content, so it was left
+  out rather than guessed at.
+- **The criminal-history clause still needs attorney sign-off before
+  launch** (same open item as `application-criteria.html`, not
+  resolved by this pass — see "Decided, not yet executed" above).
 
 ### Property-management pages — all 19 built (Sep 17)
 
@@ -890,7 +963,8 @@ one.
 - [ ] Self-host Literata + Inter as woff2, two weights per family max
 
 ### Templates and migration
-- [ ] Pillar page template, port the 8 existing pillar pages
+- [x] **Pillar page template, port the 8 existing pillar pages — all 8 built
+      (Sep 18).** See "Pillar pages — all 8 built" below.
 - [x] City pages: three-page model per `CLAUDE.md`/listings notes — not a
       name-swap template. All 9 `-market-reports` pages (Sep 17), all 20
       `-homes-for-rent` pages (Sep 17), and all 19 `-property-management`
