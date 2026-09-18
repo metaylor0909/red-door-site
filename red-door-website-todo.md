@@ -62,10 +62,80 @@ build phases.
 design system, ready to drop into Astro templates later):** `index.html`
 (homepage), `application-criteria.html`, all 9 confirmed `-market-reports`
 pages (Indianapolis, Fishers, Noblesville, Westfield, Greenwood, Westside,
-Anderson, Lebanon, Greenfield), and **all 20 `-homes-for-rent` pages**
-(Sep 17 — see "Homes-for-rent pages — all 20 built" below). None of the
-`-property-management` pages exist as files in this repo yet — that's the
-next build phase.
+Anderson, Lebanon, Greenfield), **all 20 `-homes-for-rent` pages**, and
+**all 19 `-property-management` pages** (all Sep 17 — see the two
+sections below for each). The full city three-page model is now built for
+every confirmed market.
+
+### Property-management pages — all 19 built (Sep 17)
+
+Per CLAUDE.md, this was already the highest-priority page type on the
+site (Sep 11 decision) because the old 20-page set was found to be almost
+entirely identical service-description boilerplate copied city to city,
+with only a short area-history blurb as real per-page content.
+
+Built from a locked Avon template (`avon-property-management.html`,
+built and manually verified first — hero, nav, browser console, mobile
+menu, the new snapshot section, and the areas-grid "you are here" badge
+all checked before replicating). The template reuses the homepage's
+brand system, 6-stage process cards, guarantee cards, real reviews
+carousel (unchanged pool — none are tagged to a specific city, matching
+the Sep 11 pilot's finding), and multi-step rental-analysis form
+byte-for-byte, extracted programmatically from `index.html` rather than
+hand-retyped so there's no risk of the shared CSS/header/footer/script
+drifting between pages. See
+`claude/avon-property-management-pilot-notes.md` for the original Sep 11
+pilot reasoning this build followed.
+
+Genuinely new per page: the H1/hero, a "Why [City] Rental Owners Choose
+Red Door" accordion, and a new **Rental & Sales Market Snapshot**
+section — two side-by-side panels (Rental Market: average/median rent,
+active listings, link out to that city's homes-for-rent page; Sales
+Market: average/median sale price, active listings, days-on-market
+framed as owner sell-vs-rent context) built from the same real RentCast
+`rentalData`/`saleData` already pulled for the homes-for-rent build
+(Sep 17 snapshot, not yet on a refresh cycle — see the homes-for-rent
+section above). The current page's own entry in the areas-served grid
+(including inside the collapsible townships panel) shows a "You are
+here" badge instead of linking to itself.
+
+List: `avon-`, `brownsburg-`, `carmel-`, `fishers-`, `greenwood-`,
+`noblesville-`, `westfield-`, `zionsville-`, `broad-ripple-`,
+`indianapolis-` (the 10 non-township pages), plus all 9 Marion County
+township pages (`lawrence-township-`, `warren-township-`,
+`wayne-township-`, `perry-township-`, `franklin-township-`,
+`pike-township-`, `washington-township-`, `decatur-township-`,
+`center-township-`) = **19 total, not 20** — Downtown Indianapolis does
+not get its own property-management page (falls back to
+`/indianapolis-property-management`), matching the homes-for-rent
+convention already established for it. CLAUDE.md's "= 20" arithmetic for
+this page type appears to be a slip (10 + 9 = 19); flagging rather than
+quietly fixing CLAUDE.md, since it's Michael's file to correct.
+
+Judgment calls / generalizations applied to all 19 pages, carried
+forward from the Sep 11 pilot decisions plus a few made during this
+build:
+- **Two section headings were generalized off "Indianapolis"** — the
+  process section is now "The Red Door Property Management Process"
+  (was "Follow the Indianapolis Property Management Journey," which
+  read oddly reused on a city page — the Sep 11 pilot's own
+  recommendation) and the Landlord Library is now "The Red Door
+  Landlord Library" (same reasoning, applied consistently here since
+  its 3 real posts are about Westfield/Noblesville/Fishers, not
+  whichever city the page is for).
+- **Two homepage CTA buttons that pointed to
+  `/indianapolis-property-management`** (redundant on a page that IS
+  already that page for its own city) were changed to point to
+  `/pricing` or removed outright, rather than left as self-links.
+- **The Landlord Library's 3 real posts are identical on every page** —
+  there aren't enough per-city market-report posts to rotate a unique
+  set per page (only 9 cities have active market-reports coverage at
+  all), so all 19 pages show the same 3 real posts, matching what the
+  homepage itself already does.
+- **Same open items as the homes-for-rent pages carry over here too:**
+  unweighted vs. listing-count-weighted ZIP averaging still unresolved,
+  the RentCast API key should still be rotated, and none of these pages
+  are wired to a refresh mechanism yet.
 
 ### Homes-for-rent pages — all 20 built (Sep 17)
 
@@ -821,12 +891,12 @@ one.
 
 ### Templates and migration
 - [ ] Pillar page template, port the 8 existing pillar pages
-- [ ] City pages: three-page model per `CLAUDE.md`/listings notes — not a
-      name-swap template. **Partially done:** all 9 `-market-reports` pages
-      are built (Sep 17, see above). **All 20 `-homes-for-rent` pages are
-      now built (Sep 17)** — see "Homes-for-rent pages — all 20 built" below
-      for the full list, data sourcing, and open items. `-property-management`
-      (20 pages) is not started in this repo.
+- [x] City pages: three-page model per `CLAUDE.md`/listings notes — not a
+      name-swap template. All 9 `-market-reports` pages (Sep 17), all 20
+      `-homes-for-rent` pages (Sep 17), and all 19 `-property-management`
+      pages (Sep 17) are now built — see "Homes-for-rent pages — all 20
+      built" and "Property-management pages — all 19 built" below for the
+      full lists, data sourcing, and open items.
 - [ ] One-off pages: About, Contact, Testimonials, Tenants, verification
       pages, Eviction Protection, Guaranteed Lease, Airbnb
 - [ ] Blog index, post template, categories, migrate all posts (join
