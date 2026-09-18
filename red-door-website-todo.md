@@ -980,13 +980,26 @@ one.
 ## Build phases
 
 ### Design system
-- [ ] Header and footer with final navigation — **partially built (Sep 17)
-      on the homepage:** sticky-on-scroll CTA and button color are done
-      (see "Homepage mockup review" above). Still missing from the actual
-      nav markup: the "Owner Portal"/"Tenant Portal" dropdown entries, and
-      removing the utility bar's "Owner Login | Tenant Login" links —
-      both locked Sep 17 but not yet built into the header component
-      itself. Footer not started.
+- [x] **Header and footer with final navigation — done.** This checklist
+      item was stale: checked the actual `index.html` Sep 18 and both the
+      "Owner Portal"/"Tenant Portal" dropdown entries and the utility-bar
+      login-link removal (both locked Sep 17) were already built, and a
+      full 5-column footer (brand/contact, Main Navigation, Owner
+      Resources, Tenant Resources, Communities Served, bottom bar with
+      Sitemap/Privacy/Accessibility + social links) already existed too —
+      just never checked off here. Both are extracted as `frag_header.html`
+      / `frag_footer.html` and reused across every built page.
+      **Real defect found and fixed while verifying (Sep 18):** the
+      footer's YouTube/Instagram/TikTok links (and the matching JSON-LD
+      `sameAs` entries) used a handle, `@reddoorpropertymanagement`, that
+      isn't Red Door's — YouTube and TikTok 404, and Instagram resolved to
+      an unrelated person's account. Fixed sitewide (65 files) to the
+      verified real handle `@reddoorrents` (confirmed live on all three
+      platforms), and added Facebook + LinkedIn, which the footer was
+      missing entirely despite both being real, live Red Door accounts
+      linked from the live Contact page. Fixed in the two build scripts
+      with hardcoded `sameAs` arrays too (`build_indy_pm.js`,
+      `build_pm_page.js`) so future page builds don't regress.
 - [ ] Component library: hero, CTA band, testimonial carousel, service card,
       video embed, FAQ accordion, form
 - [ ] Self-host Literata + Inter as woff2, two weights per family max
