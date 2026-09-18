@@ -432,6 +432,68 @@ building, rather than guessing from screenshots:
   form, move-in cost card, live map tiles, and nearby-homes cards all
   checked out with real data and no console errors.
 
+**v6 layout refinement (Sep 18), against a reference MLS listing page and a
+Loom walkthrough** — pulled the full transcript directly from the Loom's
+WebVTT text track (`video.textTracks[0].cues`) rather than relying on the
+paywalled written transcript panel, which only exposes the first 3 lines
+without a login:
+
+- **Address/price/beds/baths pulled out of the two-column body into a
+  full-width prominent band** directly under the gallery (dark `--charcoal`
+  background, address + location on the left, price + specs on the right) —
+  matches "very visible and prominent" from the reference mockup instead of
+  being buried in the left column next to a duplicate CTA row.
+- **Redundant Schedule/Apply buttons removed from the main body** (they
+  already live in the sidebar) — the summary band replaces that spot.
+- **A real, separate bug class this round: two elements combining `.container`
+  (which centers itself via `margin:0 auto`) and `.content-block` (a
+  max-width) on the same div**, instead of nesting them, causing that block
+  to center within the full page instead of sitting flush-left like every
+  other section. Hit this for both the Location and Total Move-In Cost
+  sections — same fix both times: nest `.content-block` inside `.container`
+  rather than combining the classes on one element.
+- **Double-padding bug: a plain `<section>` picks up the sitewide default
+  `section { padding: clamp(68px,8vw,104px) 0 }` in addition to whatever
+  padding the inner `.container`/`.listing-grid` already had**, stacking to
+  ~150–250px of dead space at both the top and bottom of `#listing-main`.
+  Fixed by zeroing `#listing-main`'s own padding and controlling spacing
+  entirely through `.listing-grid`'s padding instead.
+- **A breadcrumb bar with a solid black background was added above the
+  gallery** (Michael's request, matching the reference mockup's dark bar).
+  Getting this right took three passes because the fixed `.site-header` is
+  *transparent* everywhere on the site (a dark gradient meant to float over
+  a hero photo) — its apparent color entirely depends on what's behind it:
+  - Pass 1: black background placed behind the header too → header itself
+    rendered solid black (wrong — every other page's header reads as a
+    softer gray/transparent tone).
+  - Pass 2: forced the header into its `.is-scrolled` state (solid white,
+    the same state used sitewide once a visitor scrolls) → technically
+    "the same as the rest of the site," but the header was never meant to
+    rest in that state at the top of the page, and it read as a jarring
+    flat white rather than the expected gray.
+  - **Pass 3 (correct): left the header completely untouched** (no forced
+    class, no color override) and instead split the breadcrumb bar into an
+    outer wrapper with *only* `padding-top` (no background — this is the
+    zone the fixed header physically covers) and an inner bar with the
+    black background, sized so the padding-top exactly equals the header's
+    own real rendered height — **116px above the 980px breakpoint where the
+    site's topbar hides, 74px at/below it** (matching the header's own
+    `nav-inner` breakpoint exactly, confirmed by measuring
+    `header.getBoundingClientRect().height` at both sizes). Zero gap,
+    header keeps its natural unforced appearance, confirmed by measuring
+    that `header.bottom` and the inner bar's `top` differ by under 1.5px at
+    both breakpoints.
+  - **Takeaway for any future dark band placed directly under this site's
+    fixed header:** never rely on scroll-triggered `.is-scrolled` styling or
+    put a solid color directly behind the header — measure the header's
+    real height at each of its responsive breakpoints and match padding to
+    it exactly.
+- **Gallery height and summary-band padding tuned twice** — first shrunk
+  (460px → 360px gallery) chasing an "above the fold" request, then partly
+  restored (→ 420px) after feedback that it had gone too small; the two
+  requests aren't in tension so much as "fill the fold, don't just
+  technically fit inside it."
+
 ---
 
 ## Open items summary (also tracked in the main to-do list)

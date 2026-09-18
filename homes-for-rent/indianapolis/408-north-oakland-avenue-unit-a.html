@@ -2394,6 +2394,7 @@
     }
   
     .content-block { max-width: 900px; }
+    .content-block + .content-block { margin-top: 40px; }
     .content-block h2 { margin-bottom: 14px; }
     .content-block > p { color: var(--muted); font-size: 1.02rem; margin-bottom: 16px; }
     .callout-note { margin: 20px 0 0; padding: 16px 20px; color: var(--charcoal); background: var(--brand-tint, #fcecea); border-left: 4px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; font-size: .95rem; }
@@ -2406,12 +2407,16 @@
     .fee-details strong { color: var(--red); font-size: 1.05rem; white-space: nowrap; }
     .fee-details-subhead { grid-column: 1 / -1; margin-top: 8px; padding-top: 12px; border-top: 1px dashed var(--line); color: var(--muted); font-weight: 900; font-size: .76rem; letter-spacing: .06em; text-transform: uppercase; }
 
-    .listing-hero { padding: clamp(148px, 20vw, 176px) 0 0; }
-    .listing-breadcrumb { margin-bottom: 14px; color: var(--muted); font-size: .88rem; }
-    .listing-breadcrumb a { color: var(--red-dark); font-weight: 800; }
+    .listing-hero { padding: 0; }
+    .listing-breadcrumb-bar { padding-top: 116px; }
+    @media (max-width: 980px) { .listing-breadcrumb-bar { padding-top: 74px; } }
+    .listing-breadcrumb-inner { padding: 10px 0; background: #141414; }
+    .listing-breadcrumb { margin: 0; color: rgba(255, 255, 255, .68); font-size: .86rem; }
+    .listing-breadcrumb a { color: var(--white); font-weight: 800; }
+    .listing-gallery-wrap { padding-top: 0; }
 
     /* ---------- Real gallery grid + lightbox ---------- */
-    .listing-gallery { display: grid; grid-template-columns: 1.5fr 1fr; gap: 8px; height: 460px; }
+    .listing-gallery { display: grid; grid-template-columns: 1.5fr 1fr; gap: 8px; height: 420px; }
     .gallery-main { position: relative; padding: 0; border: 0; border-radius: var(--radius) 0 0 var(--radius); overflow: hidden; cursor: pointer; background: #000; }
     .gallery-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .gallery-thumbs { display: grid; gap: 8px; height: 100%; }
@@ -2442,13 +2447,24 @@
     .gallery-lightbox-next { right: 20px; }
     .gallery-lightbox-count { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: var(--white); font-size: .88rem; font-weight: 700; }
 
-    .listing-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); gap: clamp(28px, 4vw, 48px); align-items: start; padding: 44px 0; }
-    .listing-headline h1 { margin-bottom: 4px; font-size: clamp(1.6rem, 3vw, 2.1rem); }
-    .listing-location { color: var(--muted); font-weight: 700; margin-bottom: 14px; }
+    #listing-main { padding: 0; }
+    .listing-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); gap: clamp(28px, 4vw, 48px); align-items: start; padding: 32px 0 40px; }
     .listing-rent { font-family: var(--font-head); font-size: 2.1rem; font-weight: 500; color: var(--red); margin-bottom: 12px; }
     .listing-rent span { font-size: 1rem; color: var(--muted); font-weight: 700; }
-    .listing-specs-row { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-bottom: 20px; color: var(--charcoal); font-size: .95rem; }
+    .listing-specs-row { display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--charcoal); font-size: .95rem; }
     .listing-sidebar { position: sticky; top: 100px; }
+
+    /* ---------- Prominent summary band, directly under the gallery ---------- */
+    .listing-summary-band { padding: 24px 0; color: var(--white); background: var(--charcoal); }
+    .listing-summary-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 32px; }
+    .listing-summary-main h1 { margin: 0 0 4px; color: var(--white); font-size: clamp(1.5rem, 2.6vw, 2rem); transform: none; }
+    .listing-summary-main .listing-location { margin: 0; color: rgba(255, 255, 255, .72); font-weight: 700; }
+    .listing-summary-stats { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px; }
+    .listing-summary-rent { margin: 0; font-family: var(--font-head); font-size: clamp(1.4rem, 2.4vw, 1.9rem); font-weight: 500; color: var(--white); white-space: nowrap; }
+    .listing-summary-rent span { font-size: .92rem; color: rgba(255, 255, 255, .68); font-weight: 700; }
+    .listing-summary-stats .listing-specs-row { margin: 0; color: var(--white); font-size: 1.06rem; }
+    .listing-summary-stats .listing-specs-row strong { color: var(--white); font-size: 1.15em; }
+    @media (max-width: 640px) { .listing-summary-inner { flex-direction: column; align-items: flex-start; } }
 
     .sidebar-cta-stack { display: grid; gap: 10px; }
     .sidebar-cta-stack .btn { width: 100%; box-sizing: border-box; }
@@ -2457,13 +2473,29 @@
     .sidebar-managed-note strong { display: block; margin-bottom: 6px; color: var(--ink); font-size: .92rem; }
     .sidebar-managed-note p { color: var(--muted); font-size: .86rem; line-height: 1.5; margin: 0; }
 
-    .movein-cost-card { max-width: 560px; padding: 26px; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
-    .movein-cost-total { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 16px; border-bottom: 2px solid var(--ink); }
-    .movein-cost-total span { color: var(--muted); font-weight: 800; }
-    .movein-cost-total strong { color: var(--ink); font-family: var(--font-head); font-size: 1.7rem; font-weight: 500; }
+    .movein-heading { font-size: clamp(1.4rem, 2.2vw, 1.7rem); }
+    .movein-cost-card { max-width: 520px; padding: 20px 22px; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .movein-cost-total { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid var(--ink); }
+    .movein-cost-total span { color: var(--muted); font-weight: 800; font-size: .92rem; }
+    .movein-cost-total strong { color: var(--ink); font-family: var(--font-head); font-size: 1.32rem; font-weight: 500; }
     .movein-cost-note { margin: 18px 0 0; color: var(--muted); font-size: .84rem; }
 
     .listing-map { height: 340px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); }
+
+    /* ---------- Nearby homes: compact 3-across cards, not full-bleed photos ---------- */
+    .listing-grid-real { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin-top: 8px; }
+    .listing-card { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: transform .18s ease, box-shadow .18s ease; }
+    .listing-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-strong); }
+    .listing-card-photo { aspect-ratio: 4 / 3; overflow: hidden; background: var(--soft); }
+    .listing-card-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .listing-card-body { padding: 14px 16px 18px; }
+    .listing-card-rent { margin: 0 0 4px; color: var(--red); font-family: var(--font-head); font-size: 1.2rem; font-weight: 500; }
+    .listing-card-rent span { color: var(--muted); font-size: .82rem; font-weight: 700; }
+    .listing-card-address { margin: 0 0 2px; color: var(--ink); font-weight: 800; font-size: .94rem; }
+    .listing-card-city { margin: 0 0 8px; color: var(--muted); font-size: .84rem; }
+    .listing-card-specs { margin: 0; color: var(--charcoal); font-size: .84rem; font-weight: 700; }
+    @media (max-width: 900px) { .listing-grid-real { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 600px) { .listing-grid-real { grid-template-columns: 1fr; } }
 
     @media (max-width: 900px) { .listing-grid { grid-template-columns: 1fr; } .listing-sidebar { position: static; } }
   
@@ -2525,8 +2557,14 @@
   <main id="main">
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
     <section class="listing-hero">
-      <div class="container">
-        <p class="listing-breadcrumb"><a href="/indianapolis-homes-for-rent">Indianapolis Homes for Rent</a> &rsaquo; 408 North Oakland Avenue #A</p>
+      <div class="listing-breadcrumb-bar">
+        <div class="listing-breadcrumb-inner">
+          <div class="container">
+            <p class="listing-breadcrumb"><a href="/indianapolis-homes-for-rent">Indianapolis Homes for Rent</a> &rsaquo; 408 North Oakland Avenue #A</p>
+          </div>
+        </div>
+      </div>
+      <div class="container listing-gallery-wrap">
         <div class="listing-gallery" data-listing-gallery>
           <button type="button" class="gallery-main" data-photo-index="0">
             <img src="https://images.cdn.appfolio.com/reddoor/images/06f4dbda-06b0-4563-a995-51c1fe0b60a9/large.png" alt="408 North Oakland Avenue #A" loading="eager">
@@ -2549,25 +2587,27 @@
       </div>
     </section>
 
+    <section class="listing-summary-band">
+      <div class="container listing-summary-inner">
+        <div class="listing-summary-main">
+          <h1>408 North Oakland Avenue #A</h1>
+          <p class="listing-location">Indianapolis, IN 46201</p>
+        </div>
+        <div class="listing-summary-stats">
+          <p class="listing-summary-rent">$850<span>/month</span></p>
+          <div class="listing-specs-row">
+            <span><strong>2</strong> beds</span>
+            <span><strong>2</strong> baths</span>
+            <span><strong>1,100</strong> sq ft</span>
+            <span>Duplex</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="listing-main">
       <div class="container listing-grid">
         <div class="listing-body reveal">
-          <div class="listing-headline">
-            <h1>408 North Oakland Avenue #A</h1>
-            <p class="listing-location">Indianapolis, IN 46201</p>
-            <p class="listing-rent">$850<span>/month</span></p>
-            <div class="listing-specs-row">
-              <span><strong>2</strong> beds</span>
-              <span><strong>2</strong> baths</span>
-              <span><strong>1,100</strong> sq ft</span>
-              <span>Duplex</span>
-            </div>
-            <div class="cta-row">
-              <a class="btn btn-primary" href="https://app.rentengine.io/public/schedule-showing/44214?accounts=6ecca3ec-8e5a-42ed-87ea-af21f97d546e" target="_blank" rel="noopener">Schedule a Showing</a>
-              <a class="btn btn-secondary" href="https://reddoor.appfolio.com/listings/rental_applications/new?listable_uid=8041ebba-0a88-4535-a9fa-18eab90bc12c&amp;source=RentEngine" target="_blank" rel="noopener">Apply Now</a>
-            </div>
-          </div>
-
           <div class="content-block">
             <h2>About This Home</h2>
             <p>✨Now Accepting Section 8!! ✨ MOVE-IN SPECIAL: $500 OFF FIRST MONTH! ✨</p>
@@ -2619,31 +2659,35 @@
       </div>
     </section>
 
-    <section class="section-soft">
-      <div class="container content-block reveal">
-        <div class="section-kicker">Cost to Move In</div>
-        <h2>Total Move-In Cost</h2>
-        <div class="movein-cost-card">
-          <div class="movein-cost-total">
-            <span>Due at move-in</span>
-            <strong>$1,940</strong>
-          </div>
-          <div class="fee-details">
-            <div><span>First month&rsquo;s rent</span><strong>$850</strong></div>
-            <div><span>Security deposit</span><strong>$850</strong></div>
-            <div class="fee-details-subhead">Move-in fees &mdash; $195</div><div><span>Lease Prep Fee</span><strong>$195</strong></div>
-            <div class="fee-details-subhead">First month&rsquo;s recurring fees &mdash; $45</div><div><span>Resident's Benefits Package /mo</span><strong>$45</strong></div>
-          </div>
-          <p class="movein-cost-note">Estimates for illustration; actual amount may vary based on approval and lease start date.</p>
+    <section>
+      <div class="container reveal">
+        <div class="content-block">
+          <h2>Location</h2>
+          <p style="color:var(--muted);margin-bottom:16px">408 North Oakland Avenue #A, Indianapolis, IN 46201</p>
+          <div class="listing-map" id="listing-map" aria-label="Map showing this home's location"></div>
         </div>
       </div>
     </section>
 
     <section class="section-soft">
-      <div class="container content-block reveal">
-        <h2>Location</h2>
-        <p style="color:var(--muted);margin-bottom:16px">408 North Oakland Avenue #A, Indianapolis, IN 46201</p>
-        <div class="listing-map" id="listing-map" aria-label="Map showing this home's location"></div>
+      <div class="container reveal">
+        <div class="content-block">
+          <div class="section-kicker">Cost to Move In</div>
+          <h2 class="movein-heading">Total Move-In Cost</h2>
+          <div class="movein-cost-card">
+            <div class="movein-cost-total">
+              <span>Due at move-in</span>
+              <strong>$1,940</strong>
+            </div>
+            <div class="fee-details">
+              <div><span>First month&rsquo;s rent</span><strong>$850</strong></div>
+              <div><span>Security deposit</span><strong>$850</strong></div>
+              <div class="fee-details-subhead">Move-in fees &mdash; $195</div><div><span>Lease Prep Fee</span><strong>$195</strong></div>
+              <div class="fee-details-subhead">First month&rsquo;s recurring fees &mdash; $45</div><div><span>Resident's Benefits Package /mo</span><strong>$45</strong></div>
+            </div>
+            <p class="movein-cost-note">Estimates for illustration; actual amount may vary based on approval and lease start date.</p>
+          </div>
+        </div>
       </div>
     </section>
 
