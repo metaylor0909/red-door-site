@@ -105,10 +105,39 @@ grid prototype but can't support a real detail page.
 - **`accepts_vouchers`** — null for every current unit, despite at least one
   listing's marketing copy advertising Section 8 acceptance. **Open —
   resolve with Michael/RentEngine before building a voucher filter.**
-- **No booking-URL field exists** for "Schedule a showing" anywhere in the
-  public API. **Open — ask RentEngine support directly, or design a
-  lead-capture step that surfaces `access_instructions` after minimal
-  screening.**
+- **CORRECTION (Sep 18): a real showings/booking API exists** —
+  `docs.rentengine.io/openapi/openapi/showings`, not found during the
+  original research pass (`/units` doesn't expose a showing-booking field,
+  which is presumably why this was missed). Two endpoints, both `BearerAuth`:
+  - **`GET /showings/availability?unitId={id}`** — returns
+    `preferredShowingWindows` and `availableShowingWindows` (each an array
+    of `{start, end, invitedUserIds, showingMethodsAvailable}` in ISO 8601),
+    the unit's configured `showingMethod` (enum: Accompanied / Remote Guided
+    / Remote Guided with Gated Access / Self Guided), `timezoneName`/
+    `timezoneAbbreviation`, and `unitStatus`.
+  - **`POST /showings/create`** — books (or reschedules, via
+    `rescheduleEvent`) a showing. Body: `unitId`, `plannedForTime` (ISO
+    8601), `desiredShowingMethod`, and required `prospectData`
+    (`firstName`/`lastName`/`email`/`phone`, plus prescreening fields —
+    `creditScore`, `income`, `questionAnswers[]` with a
+    `fixedQuestionType: "housing_voucher"` yes/no question among others,
+    `prospectType`: `"Self"` or `"Agent"` — Agent requires a 6-character
+    `agentTk`). **For Self prospects the API runs prescreening
+    automatically against the unit's prescreen template; if it fails, the
+    showing isn't created.** Response is just `{statusText: "success"}` (or
+    a 400/500 with prescreening/validation failure detail — exact error
+    shape not yet checked).
+  - **This resolves the open item below and changes the recommended build:**
+    a real in-page "Schedule a Showing" flow (pick a slot from
+    `availableShowingWindows`, submit `prospectData`) is now buildable
+    against real availability, not just a lead-capture-then-manual-followup
+    placeholder. **Still open:** the `questionAnswers` prescreening
+    question set isn't fully documented here (only two examples shown:
+    housing-voucher and felony-conviction) — need to confirm the complete
+    per-unit or per-account question list before building the form, so it
+    isn't a guess. Also unconfirmed: what a failed-prescreening 400
+    response actually contains, so the UI can show a real reason rather
+    than a generic error.
 
 ---
 
@@ -294,8 +323,10 @@ embed, real hotlinked photos once this is an Astro page.
 
 - Finalize the exact `?areas=all`-style query-param convention and confirm
   the canonical tag on the Indianapolis page.
-- Find the real "Schedule a showing" destination — ask RentEngine support,
-  or design a lead-capture step surfacing `access_instructions`.
+- ✅ **Resolved (Sep 18): "Schedule a showing" has a real API** —
+  `GET /showings/availability` + `POST /showings/create`, see the
+  correction above. Still need the full prescreening `questionAnswers` set
+  and the failed-prescreening error shape before building the form.
 - Resolve `accepts_vouchers` vs. marketing-copy mismatch before building a
   voucher/Section-8 filter.
 - Confirm Apply now points at `custom_application_url` (AppFolio), not
