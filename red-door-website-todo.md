@@ -264,6 +264,15 @@ Judgment calls / open items carried forward from this build:
 
 ## Genuinely open — do these next
 
+- [ ] **Build `self-manage-vs-pm-calculator.html`** — a standalone, fuller
+      version of the "What does self-management or bad management really
+      cost you?" widget now embedded on `pricing.html` (Sep 18 rebuild).
+      The live site links "See the full breakdown & adjust every
+      assumption" from the embedded widget to this dedicated page; that
+      link was deliberately left out of the rebuilt `pricing.html` rather
+      than point to a page that doesn't exist yet. Once built, add the
+      link back in (`pricing.html`'s `.rd-calc-output`, after
+      `.calculator-cta-row`) and update `data-track`/`href` to match.
 - [ ] **Read the PMW contract** — notice period, whether content export is
       included.
 - [ ] **Decide what happens to blog posts published during migration.** At
