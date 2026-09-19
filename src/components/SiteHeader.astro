@@ -1,0 +1,54 @@
+---
+// Extracted from index.html's <header class="site-header">.
+// Keep in sync by hand if the header changes there until the static
+// pages are migrated into Astro too.
+---
+<header class="site-header" data-header>
+    <div class="topbar">
+      <div class="topbar-inner">
+        <span>Call Red Door: <a href="tel:3176601626">317.660.1626</a></span>
+      </div>
+    </div>
+    <div class="nav-inner">
+      <a class="brand" href="/" aria-label="Red Door Property Management home">
+        <img class="brand-logo brand-logo-ondark" src="/red-door-logo-reversed.svg" alt="Red Door Property Management" width="107" height="52">
+        <img class="brand-logo brand-logo-onlight" src="/red-door-logo-horizontal.svg" alt="" aria-hidden="true" width="107" height="52">
+      </a>
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="primary-navigation" data-menu-toggle>
+        <span aria-hidden="true"></span>
+        <span class="sr-only">Open menu</span>
+      </button>
+      <nav class="nav-menu" id="primary-navigation" aria-label="Primary navigation" data-nav-menu>
+        <a href="/">Home</a>
+        <a href="/indianapolis-homes-for-rent?areas=all">Homes for Rent</a>
+        <div class="nav-item" data-nav-item>
+          <button class="dropdown-toggle" type="button" aria-expanded="false" data-dropdown-toggle>Owner Services</button>
+          <div class="dropdown">
+            <a href="/indianapolis-property-management">Property Management Overview</a>
+            <a href="/market-readiness-assessment">1. Market Readiness Assessment</a>
+            <a href="/marketing-process">2. Marketing</a>
+            <a href="/tenant-screening">3. Tenant Screening</a>
+            <a href="/leasing-process">4. Leasing</a>
+            <a href="/maintenance">5. Maintenance</a>
+            <a href="/communication">6. Communication</a>
+            <a href="/eviction-protection-program">Eviction Protection Program</a>
+            <a href="https://reddoor.appfolio.com/oportal/users/log_in">Owner Portal</a>
+          </div>
+        </div>
+        <a href="/pricing">Pricing</a>
+        <div class="nav-item" data-nav-item>
+          <button class="dropdown-toggle" type="button" aria-expanded="false" data-dropdown-toggle>For Tenants</button>
+          <div class="dropdown">
+            <a href="/tenants">Tenant Resources</a>
+            <a href="https://app.propertymeld.com/tenant/reddoorpropertymanagement/maintenance">Maintenance Request</a>
+            <a href="/application-criteria">Tenant Qualification Criteria</a>
+            <a href="https://reddoor.appfolio.com/connect/users/sign_in">Tenant Portal</a>
+          </div>
+        </div>
+        <a href="/about">About Us</a>
+        <a href="/contact">Contact</a>
+        <a href="/blog">Watch &amp; Learn</a>
+        <a class="btn btn-primary nav-cta" href="#rental-analysis" data-track="nav-rental-analysis">Free Rental Analysis</a>
+      </nav>
+    </div>
+  </header>

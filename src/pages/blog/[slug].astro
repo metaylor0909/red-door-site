@@ -1,0 +1,103 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { PortableText } from 'astro-portabletext';
+import { sanityClient } from 'sanity:client';
+
+export async function getStaticPaths() {
+  try {
+    const posts = await sanityClient.fetch(`*[_type == "post"]{ "slug": slug.current }`);
+    return posts.map((post: { slug: string }) => ({ params: { slug: post.slug } }));
+  } catch (err) {
+    console.warn('[blog] Could not reach Sanity yet — no post pages will build. Set SANITY_PROJECT_ID once the project exists.', err);
+    return [];
+  }
+}
+
+const { slug } = Astro.params;
+
+const post = await sanityClient.fetch(
+  `*[_type == "post" && slug.current == $slug][0]{
+    title,
+    "slug": slug.current,
+    publishedAt,
+    excerpt,
+    body,
+    "authorName": author->name,
+    "mainImageUrl": mainImage.asset->url,
+    "mainImageAlt": mainImage.alt,
+    seo
+  }`,
+  { slug }
+);
+
+if (!post) {
+  return Astro.redirect('/blog', 404);
+}
+
+const pageTitle = post.seo?.title || `${post.title} | Red Door Property Management`;
+const pageDescription = post.seo?.description || post.excerpt || '';
+const canonicalPath = `/blog/${post.slug}`;
+
+// BlogPosting schema, tied to the same Organization already published on
+// the homepage (see index.html's JSON-LD) rather than a disconnected one.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.title,
+  datePublished: post.publishedAt,
+  dateModified: post.publishedAt,
+  ...(post.authorName ? { author: { '@type': 'Person', name: post.authorName } } : {}),
+  publisher: { '@id': 'https://www.reddoorrents.com/#organization' },
+  mainEntityOfPage: `https://www.reddoorrents.com${canonicalPath}`,
+  ...(post.mainImageUrl ? { image: post.mainImageUrl } : {}),
+};
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path={canonicalPath} ogImage={post.mainImageUrl}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
+
+  <article class="blog-post-page">
+    <div class="container content-block">
+      <p class="listing-breadcrumb"><a href="/blog">Blog</a> &rsaquo; {post.title}</p>
+      <h1>{post.title}</h1>
+      <p class="blog-post-meta">
+        {post.authorName && <span>{post.authorName}</span>}
+        <span>{new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+      </p>
+      {post.mainImageUrl && <img class="blog-post-hero-image" src={post.mainImageUrl} alt={post.mainImageAlt || ''} />}
+      <div class="blog-post-body">
+        <PortableText value={post.body} />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .blog-post-page { padding: 44px 0 80px; }
+  .blog-post-meta {
+    display: flex;
+    gap: 16px;
+    color: var(--muted);
+    font-weight: 800;
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+  }
+  .blog-post-hero-image {
+    width: 100%;
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+  }
+  .blog-post-body :global(h2) { margin-top: 36px; }
+  .blog-post-body :global(h3) { margin-top: 28px; }
+  .blog-post-body :global(p) { color: var(--charcoal); font-size: 1.05rem; margin-bottom: 18px; }
+  .blog-post-body :global(img) { border-radius: var(--radius); margin: 24px 0; }
+  .blog-post-body :global(blockquote) {
+    margin: 24px 0;
+    padding: 16px 20px;
+    border-left: 4px solid var(--red);
+    background: var(--brand-tint, #fcecea);
+    color: var(--charcoal);
+  }
+</style>
