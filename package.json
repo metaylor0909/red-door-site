@@ -27,5 +27,8 @@
   },
   "allowScripts": {
     "esbuild": true
+  },
+  "devDependencies": {
+    "dotenv": "^18.0.1"
   }
 }
