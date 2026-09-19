@@ -15,4 +15,14 @@ export default defineConfig({
       studioBasePath: '/studio',
     }),
   ],
+  vite: {
+    // The embedded Studio (sanity + @sanity/vision) trips up Vite's dev-mode
+    // dependency pre-bundler — it works fine in a real production build,
+    // but `astro dev`'s optimizer throws hundreds of false MISSING_EXPORT
+    // errors on these specific packages. Excluding them from pre-bundling
+    // (they're already valid ESM, so no optimization is needed) fixes it.
+    optimizeDeps: {
+      exclude: ['sanity', '@sanity/vision', '@sanity/astro', 'styled-components'],
+    },
+  },
 });
