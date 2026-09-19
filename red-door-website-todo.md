@@ -42,6 +42,12 @@ items. Committed locally (not yet pushed).
   and decision record (API schema, real data findings, city-page
   architecture, map provider, design iteration history). Self-contained;
   read before touching listings work.
+- **`claude/blog-migration-notes.md`** — the blog migration's full record
+  (where the real source content actually lives, source data-quality
+  findings, the Sanity schema, real bugs found building the migration
+  script, Astro/Vite tooling gotchas). Self-contained; read before touching
+  the blog again — this is the first real Astro + Sanity work in the repo,
+  everything else is still static HTML.
 
 ---
 
@@ -1136,9 +1142,34 @@ one.
       source content, see "Genuinely open" above) and the two
       eSign-widget verification pages (deferred, see "Genuinely open"
       above).
-- [ ] Blog index, post template, categories, migrate all posts (join
-      `content-fixes.csv` AND `pillar-page-seo-fixes.csv` on `url` during
-      import — see build dependency note)
+- ✅ **Blog index, post template, and all 309 posts migrated (Sep 19).**
+      This is the first real Astro + Sanity work in the project — everything
+      else built so far is still standalone static HTML. Full writeup in
+      `claude/blog-migration-notes.md`; short version: a real Astro project
+      now lives in this repo (`src/`, `astro.config.mjs`, `package.json`),
+      with the header/footer/CSS extracted from `index.html` so it matches
+      every other page, an embedded Sanity Studio at `/studio`, and
+      `scripts/migrate-blog.mjs` converting all 309 real posts from the
+      sibling `red-door-pmw-website-scrape` project into Sanity documents —
+      real Portable Text bodies, real uploaded images (156 unique, deduped
+      by Sanity automatically), real YouTube embeds, real tables, joined
+      against `content-fixes.csv` for the 106 posts with an SEO fix.
+      **Categories were deliberately skipped** — the source archive has no
+      tags/categories at all (every post's tag list scraped empty), so the
+      schema supports them but none exist yet; a real decision if Red Door
+      wants a taxonomy, not something to invent from nothing.
+      **`pillar-page-seo-fixes.csv` doesn't apply here** — it covers the 8
+      pillar pages, not blog posts; only `content-fixes.csv` was relevant
+      to this join.
+      **Author data quality issue resolved by decision, not by guessing:**
+      of 5 raw author strings in the source data, "RAIZEL ANN NAME" (an
+      apparent unfilled template field) and "System" (auto-generated
+      content, no real byline) both map to Michael Taylor per his explicit
+      call (Sep 19), not invented as fake authors.
+      **Still open:** wiring the real Astro build into Cloudflare Pages
+      deployment (still building/previewing locally only), and folding the
+      other 93 static HTML pages into this same Astro project eventually
+      instead of running two separate systems side by side.
 - [ ] **Listings: build from the RentEngine API — do not use an iframe
       embed.** Index, detail, and city-hub pages per the locked architecture.
 - [ ] Re-link external services: AppFolio owner/tenant portals, PropertyMeld,
