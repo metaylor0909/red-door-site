@@ -719,11 +719,20 @@ population once the CMS import exists, not more page-building. Full list:
       `srcset` still needed once real photos exist.
 - [ ] **Photography shoot.** Half a day, 8–12 managed properties plus team
       photos.
-- [ ] **203 blog titles still unfixed**, 148 over 60 characters, 4 with no
-      title at all (3 of those substantial posts, 2,949 and 2,438 words;
-      `/advanced-marketing-platform` has neither title nor H1). Lower
-      priority — long titles truncate rather than incur a penalty. Fold into
-      migration rewrites.
+- ✅ **Blog title length/clickbait cleanup — done (Sep 19).** This item was
+      stale (a mix of two different older audit passes with drifting
+      counts, "148"/"143" vs. the "203 unfixed" framing here). The real
+      state, checked directly against the live Sanity data: all 309 blog
+      posts now have a unique effective SEO title under 60 characters — see
+      "Blog categories and all 141 remaining long/clickbait SEO titles
+      fixed" above for the full writeup. The "3 posts with no `<title>` tag"
+      part of this old item was also a non-issue in practice: all 3 still
+      had a real `<h1>`, which is what the migration actually uses as the
+      post title (the missing `<title>` tag only ever affected the old
+      site's raw HTML, not the real display title). **`/advanced-marketing-platform`
+      is a separate, still-open item** — it's not a blog post, it's one of
+      the other static pages, and having neither a title nor an H1 at all
+      is a different, unresolved problem from this blog cleanup.
 
 ---
 
@@ -1154,10 +1163,6 @@ one.
       real Portable Text bodies, real uploaded images (156 unique, deduped
       by Sanity automatically), real YouTube embeds, real tables, joined
       against `content-fixes.csv` for the 106 posts with an SEO fix.
-      **Categories were deliberately skipped** — the source archive has no
-      tags/categories at all (every post's tag list scraped empty), so the
-      schema supports them but none exist yet; a real decision if Red Door
-      wants a taxonomy, not something to invent from nothing.
       **`pillar-page-seo-fixes.csv` doesn't apply here** — it covers the 8
       pillar pages, not blog posts; only `content-fixes.csv` was relevant
       to this join.
@@ -1166,10 +1171,28 @@ one.
       apparent unfilled template field) and "System" (auto-generated
       content, no real byline) both map to Michael Taylor per his explicit
       call (Sep 19), not invented as fake authors.
-      **Still open:** wiring the real Astro build into Cloudflare Pages
-      deployment (still building/previewing locally only), and folding the
-      other 93 static HTML pages into this same Astro project eventually
-      instead of running two separate systems side by side.
+- ✅ **Blog categories and all 141 remaining long/clickbait SEO titles
+      fixed (Sep 19).** Full writeup in `claude/blog-migration-notes.md`.
+      A 6-topic taxonomy (Market Reports, Landlord Tips, Tenant Resources,
+      Investment Strategy, Property Maintenance, Client Stories) was
+      derived from the real 309 titles, not invented — the source archive
+      still has zero native tags/categories, this is new. Every Market
+      Reports post also gets a city tag (Michael's decision), verified 0
+      posts missing one. The 143-long-title item from the earlier audit is
+      now fully closed: 106 already had a real fix from `content-fixes.csv`
+      (applied during the Sep 19 migration), and the remaining 141 (the
+      real current count, not the older "143"/"148" figures floating
+      around in this file and CLAUDE.md — always trust a fresh count over
+      those) are fixed now too — 56 via a systematic "{City} Rental Market
+      Report — {Month Year}" template, 85 hand-rewritten individually.
+      **309/309 posts now have a unique effective SEO title, 0 over 60
+      characters** — verified directly against the live dataset, not
+      assumed from script output.
+      **Still open for the blog specifically:** wiring the real Astro
+      build into Cloudflare Pages deployment (still building/previewing
+      locally only), and folding the other 93 static HTML pages into this
+      same Astro project eventually instead of running two separate
+      systems side by side.
 - [ ] **Listings: build from the RentEngine API — do not use an iframe
       embed.** Index, detail, and city-hub pages per the locked architecture.
 - [ ] Re-link external services: AppFolio owner/tenant portals, PropertyMeld,

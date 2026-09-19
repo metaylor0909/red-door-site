@@ -254,6 +254,116 @@ Studio).
 
 ---
 
+## Phase 2.5 (Sep 19): categories and the remaining 141 SEO titles
+
+Both closed out in the same session, after the core migration above. Full
+scripts: `scripts/categorize-blog.mjs`, `scripts/apply-seo-titles.mjs`
+(reads its title-fix data from `scripts/data/`, committed alongside it so
+the script is re-runnable without any scratchpad dependency).
+
+### Categories
+
+The source archive has zero tags/categories — confirmed again here, not
+assumed. A 6-topic taxonomy was derived from actually surveying all 309
+real titles (not invented up front): **Market Reports, Landlord Tips,
+Tenant Resources, Investment Strategy, Property Maintenance, Client
+Stories**. Michael's decision: every Market Reports post also gets a city
+tag (the 13 real cities that appear + a "Westside" cluster for the
+Avon/Brownsburg/Plainfield reports, matching the existing
+`/westside-market-reports` branding elsewhere in this project) — every
+other post gets a city tag too if one is unambiguous, but that's a bonus,
+not a requirement. Verified directly against the live dataset: 309/309
+posts categorized, 0 Market Reports posts missing their city tag.
+
+**Two real classification bugs found by testing against actual content,
+not by inspecting the regex:**
+
+1. First pass matched Client Stories against title+excerpt combined. A
+   genuine landlord-advice post ("Streamline Move-In for Indianapolis
+   Tenants") got miscategorized because its *excerpt* said "ensure a
+   smooth move-in experience" — testimonial language that also shows up
+   in ordinary advice copy. Fixed by matching title only.
+2. The tightened title-only rule then swung too far the other way and
+   missed real testimonials: "⭐⭐⭐⭐⭐ A Big Thank You to Paula and the Red
+   Door Team!" has words between the emoji and "Thank You" that an
+   anchored `^\W*(thank you)` pattern didn't allow for; "Another 5-Star
+   Review," "Another Happy Tenant Thanks to JC Sison," and "Raving Review
+   Alert from Shakyra Johnson" used phrasing the first pass's keyword list
+   simply didn't include. Found by deliberately searching every post NOT
+   yet tagged Client Stories for review/testimonial-shaped language,
+   rather than trusting the first pass's own output. One post — "Red Door
+   Property Management: Guiding You Through the Indianapolis Rental
+   Market," which is actually a client quote from Brian Kelly — has no
+   testimonial signal in its title at all (only in the excerpt) and
+   needed a manual one-off category override; no keyword rule could have
+   caught it, and none should try to.
+
+### SEO titles (the 141 with no existing content-fixes.csv fix)
+
+The real current count, checked directly against live data, not the older
+"143"/"148" figures in CLAUDE.md and this file's own earlier passes (those
+predate the 106 posts `content-fixes.csv` already covers, and don't
+exactly reconcile with each other — always recount from the live dataset
+rather than trust a written figure here).
+
+**56 follow a real recurring pattern** — variations on "{City} [Indiana]:
+{hook} ({Month Year} Report)" — shortened to a systematic template:
+`{City} Rental Market Report — {Month Year}`. The subject month is pulled
+from each post's own excerpt first, falling back to the title, falling
+back to `publishedAt` only if neither mentions one — checked in that order
+deliberately, since one post was published in May 2024 about March 2024
+data, and `publishedAt` alone would have gotten the report's own subject
+period wrong.
+
+**City detection bugs, both found by checking for duplicate output
+titles, not by eyeballing the list:**
+- Picking the first city name found via array order (not text position)
+  attributed "Is Noblesville, Indiana the Best Rental Market Near
+  Indianapolis?" to Indianapolis, since that name happened to come later
+  in the same title. Fixed to pick whichever city name appears earliest
+  in the actual title text.
+- Even after that fix, a few genuine same-city-same-month collisions
+  remained (two different Greenfield posts, two different Lebanon posts)
+  — resolved by preferring the month embedded in each post's own excerpt
+  over a shared `publishedAt` month, which the two posts in each pair
+  actually differed on once checked.
+- Two posts matched the market-report regex and had a real city name in
+  the title, but weren't actually monthly data reports at all: one is
+  thematic ("Understanding the Impact of Urban Development on Rental
+  Markets"), the other is the Brian Kelly testimonial mentioned above,
+  which the *title-length* pass doesn't know is a testimonial (the
+  category fix above is a separate script). Both pulled out of the
+  mechanical template and given real one-off titles instead of being
+  force-fit into it.
+
+**85 are one-off evergreen articles with no common pattern** — each read
+individually (title + excerpt) and rewritten by hand against this
+project's writing-style rule (plain, direct, concrete specifics, no
+marketing inflation). Common, mechanically-obvious wins folded in here
+rather than treated as a separate pass: stripping a redundant
+" | Indianapolis Property Management" suffix repeated across several
+titles, and removing clickbait phrasing ("EXPOSED," "HIDDEN GEM ALERT,"
+"STEAL vs. SELL OUT") in favor of saying the real thing plainly.
+
+**One more collision found only at the very end, against a title outside
+either batch:** "Indianapolis Rental Market Report — March 2024" already
+existed as a *pre-existing* `content-fixes.csv` fix (from before this
+session) on a different post than the one this pass generated the exact
+same title for by coincidence — both were real Indianapolis, March 2024
+posts. Resolved by adjusting the newly-generated one
+("Indianapolis Rents & Prices Report — March 2024") rather than touching
+the already-approved CSV-sourced fix.
+
+**Final verification, against the live dataset, not script output:**
+309/309 posts have a unique effective SEO title, 0 over 60 characters. A
+full local build of all 311 pages succeeds with no errors, and the
+generated `<title>` tag was spot-checked in a live preview to confirm it
+shows the new short title while the post's own on-page H1/body stays
+exactly as scraped — the fix only touches the SEO override field, never
+the real editorial content.
+
+---
+
 ## Still open
 
 - **Not deployed anywhere yet.** Everything above is `npm run build` +
@@ -263,12 +373,6 @@ Studio).
   project.** Two systems currently run side by side: static HTML files at
   the repo root, and a real Astro app in `src/`. Folding the rest of the
   site into Astro is real, separate, unscoped work.
-- **No categories/taxonomy** — see the data-quality note above. Open if
-  Red Door wants one.
-- **143 of the original 309 blog titles are still long/clickbait-y** per
-  CLAUDE.md's earlier audit — that SEO cleanup pass hasn't happened, only
-  the 106 posts `content-fixes.csv` already had real fixes for got them
-  applied during this migration.
 - The `SANITY_API_WRITE_TOKEN` used for this migration should be treated
   like the RentCast/RentEngine keys elsewhere in this project once the
   migration work is done for a while — consider rotating it.
