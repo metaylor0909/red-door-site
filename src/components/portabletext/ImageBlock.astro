@@ -1,0 +1,17 @@
+---
+const { node } = Astro.props;
+const url = node.asset?.url;
+---
+
+{url && (
+  <figure class="pt-image">
+    <img src={url} alt={node.alt || ''} loading="lazy" />
+    {node.caption && <figcaption>{node.caption}</figcaption>}
+  </figure>
+)}
+
+<style>
+  .pt-image { margin: 24px 0; }
+  .pt-image img { width: 100%; border-radius: var(--radius); display: block; }
+  .pt-image figcaption { margin-top: 8px; color: var(--muted); font-size: 0.88rem; text-align: center; }
+</style>

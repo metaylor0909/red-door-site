@@ -29,6 +29,7 @@
     "esbuild": true
   },
   "devDependencies": {
+    "cheerio": "^1.2.0",
     "dotenv": "^18.0.1"
   }
 }

@@ -1,0 +1,32 @@
+---
+const { node } = Astro.props;
+const rows = node.rows || [];
+---
+
+{rows.length > 0 && (
+  <div class="pt-table-wrap">
+    <table class="pt-table">
+      <tbody>
+        {rows.map((row: { cells: string[] }) => (
+          <tr>
+            {row.cells.map((cell: string) => (
+              <td>{cell.split('\n\n').map((para) => <p>{para}</p>)}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
+<style>
+  .pt-table-wrap { overflow-x: auto; margin: 24px 0; }
+  .pt-table { width: 100%; border-collapse: collapse; }
+  .pt-table td {
+    vertical-align: top;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+  }
+  .pt-table td p { margin: 0 0 10px; }
+  .pt-table td p:last-child { margin-bottom: 0; }
+</style>

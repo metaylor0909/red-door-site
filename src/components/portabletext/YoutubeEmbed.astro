@@ -1,0 +1,34 @@
+---
+const { node } = Astro.props;
+const idMatch = node.url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+const videoId = idMatch ? idMatch[1] : null;
+---
+
+{videoId && (
+  <div class="youtube-embed">
+    <iframe
+      src={`https://www.youtube.com/embed/${videoId}`}
+      title="YouTube video"
+      loading="lazy"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </div>
+)}
+
+<style>
+  .youtube-embed {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    margin: 24px 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .youtube-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>

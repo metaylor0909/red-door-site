@@ -2,6 +2,17 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { PortableText } from 'astro-portabletext';
 import { sanityClient } from 'sanity:client';
+import YoutubeEmbed from '../../components/portabletext/YoutubeEmbed.astro';
+import TableBlock from '../../components/portabletext/TableBlock.astro';
+import ImageBlock from '../../components/portabletext/ImageBlock.astro';
+
+const portableTextComponents = {
+  type: {
+    youtubeEmbed: YoutubeEmbed,
+    table: TableBlock,
+    image: ImageBlock,
+  },
+};
 
 export async function getStaticPaths() {
   try {
@@ -21,7 +32,10 @@ const post = await sanityClient.fetch(
     "slug": slug.current,
     publishedAt,
     excerpt,
-    body,
+    "body": body[]{
+      ...,
+      _type == "image" => { "asset": asset->{ url } }
+    },
     "authorName": author->name,
     "mainImageUrl": mainImage.asset->url,
     "mainImageAlt": mainImage.alt,
@@ -68,7 +82,7 @@ const jsonLd = {
       </p>
       {post.mainImageUrl && <img class="blog-post-hero-image" src={post.mainImageUrl} alt={post.mainImageAlt || ''} />}
       <div class="blog-post-body">
-        <PortableText value={post.body} />
+        <PortableText value={post.body} components={portableTextComponents} />
       </div>
     </div>
   </article>
