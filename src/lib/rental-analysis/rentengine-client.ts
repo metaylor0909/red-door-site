@@ -17,7 +17,18 @@
 
 import type { RentEngineComp } from './types';
 
-const RENTENGINE_BASE_URL = 'https://api.rentengine.io'; // placeholder host — confirm against docs.rentengine.io once the rental-analysis key is issued
+// Corrected 2026-09-20: claude/listings-build-notes.md's OpenAPI research
+// confirms RentEngine's real public API base is
+// https://app.rentengine.io/api/public/v1 (for /units and
+// /marketing/listings) — not api.rentengine.io, this file's original
+// placeholder guess. /market-tool/comps isn't itself in that research
+// (it's the rental-analysis tool's own endpoint, not the listings
+// project's), so the same base+version prefix is inferred, not directly
+// confirmed for this specific path — still unverified end-to-end, since
+// every real submit-flow test so far has been blocked before reaching
+// this call (first by missing Mapbox/RentEngine keys, then by Turnstile
+// not verifying on localhost).
+const RENTENGINE_BASE_URL = 'https://app.rentengine.io/api/public/v1';
 const RADIUS_MILES = 5;
 const DATE_WINDOW_MONTHS = 12;
 

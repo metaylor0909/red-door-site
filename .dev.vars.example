@@ -21,6 +21,14 @@ RENTENGINE_RENTAL_ANALYSIS_KEY=
 # Only needed if the token is scoped to multiple accounts.
 RENTENGINE_ACCOUNT_ID=
 
+# RentEngine's listings-build key — the "Sep 8 key," kept split from the
+# rental-analysis key above per decision #7. Used here only for the
+# hosted report page's small homes-for-rent cross-sell section (a live
+# /units call, city-filtered with a nearby fallback) — NOT the bigger
+# listings-page rebuild project, which is separate and not started.
+RENTENGINE_LISTINGS_KEY=
+RENTENGINE_LISTINGS_ACCOUNT_ID=
+
 # RentCast — decision #10's bedroom-count rent adjustment. Shared with
 # the (separate, not-yet-built) homes-for-rent project's own RentCast
 # usage, per Michael's call — same key/account, not split like the

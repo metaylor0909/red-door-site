@@ -6,11 +6,13 @@
 // Built so far: address line, estimate card + confidence, one CTA,
 // methodology note, market context (supply/demand + time-to-lease —
 // decision #5's third panel, average rent by bedroom, needs RentCast's
-// per-city file and isn't wired), comps table, the "From Red Door" post
-// carousel (real Sanity query), a second CTA, and the view-tracking +
-// BD-alert wiring against the confirmed-live Zapier webhook. NOT built:
-// the 12-month rent trend chart (RentCast) and the homes-for-rent
-// cross-sell (that listings feed doesn't exist in Astro yet at all).
+// per-city file and isn't wired), comps table, the homes-for-rent
+// cross-sell (a small, narrowly-scoped live RentEngine /units call — NOT
+// the bigger listings-page rebuild project, which is separate and not
+// started), the "From Red Door" post carousel (real Sanity query), a
+// second CTA, and the view-tracking + BD-alert wiring against the
+// confirmed-live Zapier webhook. NOT built: the 12-month rent trend chart
+// (needs RentCast, decision #10's own data source).
 //
 // Snapshot, not live, per decision #5 — this renders exactly what
 // submit.ts computed and stored; it never re-runs the cascade.
@@ -20,6 +22,8 @@ import { sanityClient } from 'sanity:client';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { haversineMiles } from '../../lib/rental-analysis/geo';
 import { computeViewTrackingUpdate, fireBdAlertWebhook, type RentalAnalysisRow } from '../../lib/rental-analysis/view-tracking';
+import { fetchAvailableUnits, type AvailableUnit } from '../../lib/rental-analysis/listings-client';
+import { selectCrossSellUnits } from '../../lib/rental-analysis/cross-sell';
 import type { RentEngineComp } from '../../lib/rental-analysis/types';
 import type { ConfidenceResult } from '../../lib/rental-analysis/confidence';
 import type { SupplyDemandStats, TimeToLeaseStats } from '../../lib/rental-analysis/market-context';
@@ -105,6 +109,32 @@ try {
   `);
 } catch (err) {
   console.warn('[rental-analysis/token] Could not reach Sanity for the post carousel.', err);
+}
+
+// Homes-for-rent cross-sell (decision #5) — a small, narrowly-scoped
+// live /units call, city-first with a nearby fallback (decision #8 step
+// 10: queried fresh on every view, not snapshotted, since freshness is
+// desirable and it's a cheap read). Graceful skip if the listings key
+// isn't configured, same pattern as every other optional integration.
+let crossSellUnits: AvailableUnit[] = [];
+const listingsKey = (env as unknown as Record<string, unknown>).RENTENGINE_LISTINGS_KEY;
+if (typeof listingsKey === 'string' && listingsKey.length > 0) {
+  const listingsAccountId = (env as unknown as Record<string, unknown>).RENTENGINE_LISTINGS_ACCOUNT_ID;
+  try {
+    const allUnits = await fetchAvailableUnits({
+      apiKey: listingsKey,
+      accountId: typeof listingsAccountId === 'string' ? listingsAccountId : undefined,
+    });
+    crossSellUnits = selectCrossSellUnits(allUnits, {
+      city: row.property_city,
+      latitude: row.property_lat,
+      longitude: row.property_lon,
+    });
+  } catch (err) {
+    console.error('[rental-analysis/token] Homes-for-rent cross-sell fetch failed:', err);
+  }
+} else {
+  console.warn('[rental-analysis/token] RENTENGINE_LISTINGS_KEY not configured — cross-sell section skipped.');
 }
 
 const compsWithDistance = snapshot.comps.map((c) => ({
@@ -217,6 +247,33 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
       </div>
     </div>
   </section>
+
+  {
+    crossSellUnits.length > 0 && (
+      <section>
+        <div class="container">
+          <div class="section-head">
+            <div class="section-kicker">Homes for Rent</div>
+            <h2>Other Red Door Homes {row.property_city ? `Near ${row.property_city}` : 'Available Now'}</h2>
+          </div>
+          <div class="post-mini-grid">
+            {crossSellUnits.map((unit) => (
+              <article class="post-mini-card">
+                {unit.photoUrl && <img src={unit.photoUrl} alt={unit.formattedAddress} style="width:100%;border-radius:6px;margin-bottom:10px;aspect-ratio:16/10;object-fit:cover;" />}
+                <h3>{unit.formattedAddress}</h3>
+                <p class="consent">{unit.beds}bd / {unit.baths}ba &middot; ${unit.rent.toLocaleString()}/mo &middot; {unit.city}</p>
+                {unit.applyUrl && (
+                  <a class="btn btn-secondary" href={unit.applyUrl} target="_blank" rel="noopener" style="margin-top:8px;display:inline-block;">
+                    View &amp; Apply
+                  </a>
+                )}
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   {
     posts.length > 0 && (

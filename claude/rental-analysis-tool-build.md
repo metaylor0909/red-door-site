@@ -403,6 +403,20 @@ through this final layout, is built and published for review (through v6,
 in hand. What remains below is implementation detail and a small number of
 external inputs, not open design questions.
 
+**Visual refinement needed (2026-09-20) — the real built hosted page
+doesn't match the approved v6 mockup closely enough.** The page was built
+from this doc's own text description of the locked layout (section order,
+content, copy), not from the actual v6 mockup artifact, which wasn't
+available while building. Structurally correct (right sections, right
+order, right data), but Michael's review of a populated mockup found the
+visual execution "not even very close" to v6. Michael's call: hold off on
+refining this further until all the real data sources are actually
+flowing through it (decision #10's RentCast-fed charts, the homes-for-rent
+cross-sell with real listings, etc.) rather than iterating on styling
+against placeholder data now. **Before the next visual pass: get the real
+v6 mockup artifact link from Michael and design against it directly**,
+not this doc's text description of it.
+
 **Still open (implementation/content, not design):**
 
 - Exact final wording of the three confidence-bucket template sentences
