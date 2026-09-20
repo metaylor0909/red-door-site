@@ -1,11 +1,17 @@
 // @ts-check
 import 'dotenv/config';
 import { defineConfig } from 'astro/config';
+import cloudflare from '@astrojs/cloudflare';
 import react from '@astrojs/react';
 import sanity from '@sanity/astro';
 
 // https://astro.build/config
 export default defineConfig({
+  // Stays 'static' (the default) — every existing page keeps prerendering
+  // exactly as before. The Cloudflare adapter only matters for the two new
+  // rental-analysis routes, which opt into SSR individually via
+  // `export const prerender = false` rather than flipping this site-wide.
+  adapter: cloudflare(),
   integrations: [
     react(),
     sanity({

@@ -1,0 +1,39 @@
+name = "red-door-site"
+# Pinned to what the locally-installed workerd runtime actually supports
+# (wrangler was downgraded to 4.124.0 to work around the ASSETS-binding
+# issue above) rather than today's date — a compatibility_date newer than
+# the local runtime build fails outright. Bump this forward once wrangler
+# is upgraded again (and the ASSETS issue is fixed upstream).
+compatibility_date = "2026-08-22"
+
+# @astrojs/cloudflare targets Cloudflare's current "Workers with static
+# assets" model, not the legacy Pages-project config shape
+# (`pages_build_output_dir`) — that older shape triggers a real conflict
+# where wrangler rejects "ASSETS" as a reserved binding name for Pages
+# projects, but the adapter's own internal prerender step hardcodes that
+# exact binding name (it's the *correct* name in this newer model, just
+# incompatible with the Pages-shaped config). CLAUDE.md's hosting decision
+# says "Cloudflare Pages" — functionally this is that decision's current
+# concrete implementation, since Cloudflare has been converging Pages into
+# this same Workers+assets model; deploys use `wrangler deploy`, still on
+# the same Workers Paid plan, same CDN, same D1/KV/etc.
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+
+# See claude/rental-analysis-tool-build.md, decision #8, "Storage" — three
+# tables: rental_analyses (one row per submission + snapshot + view
+# tracking for the BD alert), rentcast_city_cache (shared with the
+# homes-for-rent project's own Cron-Trigger Worker — same store, not a
+# duplicate, see red-door-homes-for-rent-data-schema.md), and
+# rentcast_adhoc_call_log (decision #10 tier 3's 50-calls/month cap).
+#
+# database_id below is a placeholder until a real D1 database exists in a
+# Cloudflare account (`wrangler d1 create red-door-rental-analysis`) —
+# local development and testing works against `--local` emulation without
+# it; production deploys need the real id filled in here.
+[[d1_databases]]
+binding = "DB"
+database_name = "red-door-rental-analysis"
+database_id = "REPLACE_WITH_REAL_D1_DATABASE_ID"
+migrations_dir = "db/migrations"
