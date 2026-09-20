@@ -34,10 +34,12 @@ CREATE TABLE IF NOT EXISTS rental_analyses (
   snapshot_json TEXT NOT NULL,
 
   -- View tracking for the decision #5 BD-alert-on-return-visit rule.
-  -- distinct_visit_count starts at 1 on creation (the initial email-open
-  -- visit, per decision #5 never alerts). last_view_at is used to collapse
-  -- views within ~30 minutes into a single visit; last_bd_alert_fired_at
-  -- enforces the 24-hour cap between alerts.
+  -- distinct_visit_count starts at 0 (no page views yet at submission
+  -- time) and increments on each distinct report-page view; the first
+  -- view (count becomes 1) never alerts per decision #5, since it's
+  -- near-guaranteed the moment the owner opens the email. last_view_at is
+  -- used to collapse views within ~30 minutes into a single visit;
+  -- last_bd_alert_fired_at enforces the 24-hour cap between alerts.
   distinct_visit_count INTEGER NOT NULL DEFAULT 0,
   last_view_at TEXT,
   last_bd_alert_fired_at TEXT

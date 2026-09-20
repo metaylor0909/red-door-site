@@ -20,3 +20,10 @@ MAPBOX_TOKEN=
 RENTENGINE_RENTAL_ANALYSIS_KEY=
 # Only needed if the token is scoped to multiple accounts.
 RENTENGINE_ACCOUNT_ID=
+
+# Decision #6's BD-alert Zap (LeadSimple note + email to Chris Knight) —
+# already confirmed live: https://hooks.zapier.com/hooks/catch/18363408/4dtgfdv/
+# (see claude/rental-analysis-tool-build.md, decision #8). Not a rotating
+# secret, but left blank here anyway rather than pre-filled, so nobody
+# fires a real alert to Chris's inbox by accident during local testing.
+ZAPIER_BD_ALERT_WEBHOOK_URL=

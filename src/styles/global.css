@@ -2383,3 +2383,133 @@
       .brand-logo { height: 44px; }
       .footer-brand .brand-logo { height: 52px; }
     }
+
+    /* ---------- Rental analysis hosted report page ---------- */
+    .report-address {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .estimate-card {
+      padding: clamp(24px, 4vw, 36px);
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .estimate-figure {
+      font-family: var(--font-head);
+      font-size: clamp(2.4rem, 5vw, 3.2rem);
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .estimate-range {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .confidence-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 7px 14px;
+      background: var(--soft);
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: .9rem;
+    }
+
+    .confidence-badge.is-strong { background: #eaf6ee; color: #1f7a3d; }
+    .confidence-badge.is-solid { background: #fdf3e3; color: #a5680b; }
+    .confidence-badge.is-limited { background: var(--brand-tint); color: var(--brand); }
+
+    .methodology-note {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .market-context-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .context-panel {
+      padding: 22px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .context-panel h3 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+    }
+
+    .context-figure {
+      font-family: var(--font-head);
+      font-size: 1.8rem;
+      font-weight: 500;
+    }
+
+    .comps-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .92rem;
+    }
+
+    .comps-table th,
+    .comps-table td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .comps-table th {
+      color: var(--muted);
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .status-pill.is-rented { background: #eaf6ee; color: #1f7a3d; }
+    .status-pill.is-available { background: #fdf3e3; color: #a5680b; }
+
+    .post-mini-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .post-mini-card {
+      padding: 20px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .post-mini-card h3 {
+      margin: 8px 0;
+      font-size: 1rem;
+    }
+
+    .post-mini-card a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .post-mini-card a:hover {
+      color: var(--brand);
+    }

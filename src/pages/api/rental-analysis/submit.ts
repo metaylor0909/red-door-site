@@ -4,15 +4,17 @@
 //
 // Steps wired up so far: 1 (Turnstile), 2 (geocode), 3 (validate fields),
 // 4 (comp-selection cascade), 5-6 (blend fallback + estimate), 7
-// (confidence score), 11 (store snapshot in D1). Deliberately NOT yet
-// wired: step 8 (decision #10's RentCast bedroom adjustment — needs the
-// shared per-city cache table this tool doesn't populate on its own),
-// step 9 (market-context panels), step 10 (cross-sell content), step 12
-// (Resend owner + LeadSimple emails, the Zapier BD-alert wiring). Those
-// all need credentials this environment doesn't have yet (RentCast,
-// Resend) or are hosted-report-page concerns, not submit-endpoint ones.
-// A submission today stores a real snapshot and returns a real token, but
-// nothing gets emailed and no lead is created until step 12 is built.
+// (confidence score), 9 (market-context panels), 11 (store snapshot in
+// D1). Deliberately NOT yet wired: step 8 (decision #10's RentCast
+// bedroom adjustment — needs the shared per-city cache table this tool
+// doesn't populate on its own), step 10 (cross-sell content — the
+// homes-for-rent listings feed it needs hasn't been built in Astro at
+// all yet), step 12 (Resend owner + LeadSimple emails, the Zapier
+// BD-alert wiring). Those need credentials this environment doesn't have
+// yet (RentCast, Resend) or are hosted-report-page/other-feature
+// concerns. A submission today stores a real snapshot and returns a real
+// token, but nothing gets emailed and no lead is created until step 12
+// is built.
 
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
@@ -21,6 +23,7 @@ import { verifyTurnstileToken } from '../../../lib/rental-analysis/turnstile';
 import { geocodeAddress } from '../../../lib/rental-analysis/geocode';
 import { fetchComps } from '../../../lib/rental-analysis/rentengine-client';
 import { analyze } from '../../../lib/rental-analysis/analyze';
+import { computeSupplyDemand, computeTimeToLease } from '../../../lib/rental-analysis/market-context';
 import { requireEnvString } from '../../../lib/rental-analysis/env';
 import type { SubjectProperty } from '../../../lib/rental-analysis/types';
 
@@ -146,6 +149,11 @@ export const POST: APIRoute = async ({ request }) => {
 
   const result = analyze(comps, subject);
 
+  // Step 9: market-context panels, from the same full pool just fetched
+  // (not the narrowed top-12) — no new RentEngine call.
+  const supplyDemand = computeSupplyDemand(comps);
+  const timeToLease = computeTimeToLease(comps);
+
   // Step 11: store the snapshot.
   const token = crypto.randomUUID();
   const now = new Date().toISOString();
@@ -156,6 +164,8 @@ export const POST: APIRoute = async ({ request }) => {
     rangeHigh: result.rangeHigh,
     confidence: result.confidence,
     isMultiUnitPath: result.isMultiUnitPath,
+    supplyDemand,
+    timeToLease,
   };
 
   const db = env.DB;

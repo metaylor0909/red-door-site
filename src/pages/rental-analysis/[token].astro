@@ -1,0 +1,246 @@
+---
+// GET /rental-analysis/[token] — the hosted report page. See
+// claude/rental-analysis-tool-build.md, decision #5's locked layout and
+// decision #8's view-tracking/BD-alert spec.
+//
+// Built so far: address line, estimate card + confidence, one CTA,
+// methodology note, market context (supply/demand + time-to-lease —
+// decision #5's third panel, average rent by bedroom, needs RentCast's
+// per-city file and isn't wired), comps table, the "From Red Door" post
+// carousel (real Sanity query), a second CTA, and the view-tracking +
+// BD-alert wiring against the confirmed-live Zapier webhook. NOT built:
+// the 12-month rent trend chart (RentCast) and the homes-for-rent
+// cross-sell (that listings feed doesn't exist in Astro yet at all).
+//
+// Snapshot, not live, per decision #5 — this renders exactly what
+// submit.ts computed and stored; it never re-runs the cascade.
+
+import { env } from 'cloudflare:workers';
+import { sanityClient } from 'sanity:client';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { haversineMiles } from '../../lib/rental-analysis/geo';
+import { computeViewTrackingUpdate, fireBdAlertWebhook, type RentalAnalysisRow } from '../../lib/rental-analysis/view-tracking';
+import type { RentEngineComp } from '../../lib/rental-analysis/types';
+import type { ConfidenceResult } from '../../lib/rental-analysis/confidence';
+import type { SupplyDemandStats, TimeToLeaseStats } from '../../lib/rental-analysis/market-context';
+
+export const prerender = false;
+
+const CALENDLY_URL = 'https://calendly.com/cknight-19/phone-call';
+
+const { token } = Astro.params;
+
+interface DbRow extends RentalAnalysisRow {
+  property_address: string;
+  property_city: string;
+  property_state: string;
+  property_zip: string;
+  property_lat: number;
+  property_lon: number;
+  snapshot_json: string;
+}
+
+interface Snapshot {
+  comps: RentEngineComp[];
+  estimatedRent: number;
+  rangeLow: number;
+  rangeHigh: number;
+  confidence: ConfidenceResult;
+  isMultiUnitPath: boolean;
+  supplyDemand: SupplyDemandStats;
+  timeToLease: TimeToLeaseStats;
+}
+
+const db = env.DB;
+const row = await db
+  .prepare('SELECT * FROM rental_analyses WHERE token = ?')
+  .bind(token)
+  .first<DbRow>();
+
+if (!row) {
+  return Astro.redirect('/', 404);
+}
+
+const snapshot: Snapshot = JSON.parse(row.snapshot_json);
+const reportUrl = `https://www.reddoorrents.com/rental-analysis/${token}`;
+
+// View tracking + decision #5's return-visit BD alert.
+const update = computeViewTrackingUpdate(row, new Date());
+await db
+  .prepare(
+    'UPDATE rental_analyses SET distinct_visit_count = ?, last_view_at = ?, last_bd_alert_fired_at = ? WHERE token = ?'
+  )
+  .bind(update.distinctVisitCount, update.lastViewAt, update.lastBdAlertFiredAt, token)
+  .run();
+
+if (update.shouldFireAlert) {
+  const webhookUrl = (env as unknown as Record<string, unknown>).ZAPIER_BD_ALERT_WEBHOOK_URL;
+  if (typeof webhookUrl === 'string' && webhookUrl.length > 0) {
+    await fireBdAlertWebhook(webhookUrl, {
+      ownerEmail: row.owner_email,
+      propertyAddress: row.property_address,
+      reportUrl,
+      visitCount: update.distinctVisitCount,
+    });
+  } else {
+    console.warn('[rental-analysis/token] ZAPIER_BD_ALERT_WEBHOOK_URL not configured — BD alert skipped.');
+  }
+}
+
+// "From Red Door" post carousel — real Sanity query, most-recent-4 from
+// the Market Reports / Landlord Tips categories (decision #5). Queried
+// live on each view, not snapshotted, per decision #8 step 10's
+// reasoning (cheap read, freshness is desirable here).
+let posts: Array<{ title: string; slug: string; publishedAt: string; categoryTitle: string }> = [];
+try {
+  posts = await sanityClient.fetch(`
+    *[_type == "post" && count((categories[]->title)[@ in ["Market Reports", "Landlord Tips"]]) > 0]
+      | order(publishedAt desc)[0...4] {
+        title,
+        "slug": slug.current,
+        publishedAt,
+        "categoryTitle": categories[0]->title
+      }
+  `);
+} catch (err) {
+  console.warn('[rental-analysis/token] Could not reach Sanity for the post carousel.', err);
+}
+
+const compsWithDistance = snapshot.comps.map((c) => ({
+  ...c,
+  distance: haversineMiles(row.property_lat, row.property_lon, c.latitude, c.longitude),
+}));
+
+const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' });
+---
+
+<BaseLayout
+  title={`Rental Analysis for ${row.property_address} | Red Door Property Management`}
+  description="Your free rental market analysis from Red Door Property Management."
+  path={`/rental-analysis/${token}`}
+>
+  <section class="section-soft">
+    <div class="container">
+      <p class="report-address">{row.property_address}, {row.property_city}, {row.property_state} {row.property_zip}</p>
+      <h1>Your Rental Analysis</h1>
+
+      <div class="estimate-card reveal">
+        <div class="section-kicker">Estimated Monthly Rent</div>
+        <div class="estimate-figure">${snapshot.estimatedRent.toLocaleString()}/mo</div>
+        <p class="estimate-range">Range: ${snapshot.rangeLow.toLocaleString()} &ndash; ${snapshot.rangeHigh.toLocaleString()}/mo</p>
+        <div class={`confidence-badge is-${snapshot.confidence.bucket}`}>
+          {snapshot.confidence.displayPercent}% &mdash; {snapshot.confidence.bucketLabel}
+        </div>
+        <p class="methodology-note">{snapshot.confidence.templateSentence}</p>
+        <p class="methodology-note">
+          Based on the median rent of {snapshot.comps.length} comparable {snapshot.comps.length === 1 ? 'property' : 'properties'} near
+          this address, leased or currently listed within the past 12 months.
+        </p>
+        <div class="cta-row" style="margin-top:20px">
+          <a class="btn btn-primary" href={CALENDLY_URL} target="_blank" rel="noopener">Talk to Red Door About Managing This Property</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <div class="section-kicker">Market Context</div>
+        <h2>What's Happening Nearby</h2>
+      </div>
+      <div class="market-context-grid">
+        <div class="context-panel">
+          <h3>Supply &amp; Demand</h3>
+          <div class="context-figure">{snapshot.supplyDemand.statusLabel}</div>
+          <p class="consent">
+            {snapshot.supplyDemand.rentedCount} recently leased vs. {snapshot.supplyDemand.availableCount} currently
+            available nearby.
+          </p>
+        </div>
+        <div class="context-panel">
+          <h3>Time to Lease</h3>
+          <div class="context-figure">
+            {snapshot.timeToLease.medianDaysOnMarket != null ? `${snapshot.timeToLease.medianDaysOnMarket} days` : 'N/A'}
+          </div>
+          <p class="consent">Median days on market for comparable rentals nearby.</p>
+          <p class="consent">
+            0&ndash;14 days: {snapshot.timeToLease.buckets.days0to14} &middot;
+            15&ndash;30: {snapshot.timeToLease.buckets.days15to30} &middot;
+            31&ndash;45: {snapshot.timeToLease.buckets.days31to45} &middot;
+            46+: {snapshot.timeToLease.buckets.days46plus}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-kicker">Comparable Properties</div>
+        <h2>{snapshot.comps.length} Properties Used in This Estimate</h2>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="comps-table">
+          <thead>
+            <tr>
+              <th>Address</th>
+              <th>Beds/Baths</th>
+              <th>Sqft</th>
+              <th>Rent</th>
+              <th>Distance</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {compsWithDistance.map((c) => (
+              <tr>
+                <td>{c.address}</td>
+                <td>{c.beds}bd / {c.baths}ba</td>
+                <td>{c.sqft ?? '—'}</td>
+                <td>${c.rent.toLocaleString()}</td>
+                <td>{c.distance.toFixed(1)} mi</td>
+                <td>
+                  <span class={`status-pill ${c.status === 'Rented' ? 'is-rented' : 'is-available'}`}>{c.status}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  {
+    posts.length > 0 && (
+      <section>
+        <div class="container">
+          <div class="section-head">
+            <div class="section-kicker">From Red Door</div>
+            <h2>Recent Market Reports &amp; Landlord Guidance</h2>
+          </div>
+          <div class="post-mini-grid">
+            {posts.map((post) => (
+              <article class="post-mini-card">
+                <span class="category">{post.categoryTitle}</span>
+                <h3><a href={`/blog/${post.slug}`}>{post.title}</a></h3>
+                <span class="date">{dateFormatter.format(new Date(post.publishedAt))}</span>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Curious What Red Door Could Do for This Property?</h2>
+      <p>Talk through your options with Chris Knight, Red Door's business development manager &mdash; no obligation.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href={CALENDLY_URL} target="_blank" rel="noopener">Schedule a Call</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
