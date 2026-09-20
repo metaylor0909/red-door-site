@@ -1,0 +1,969 @@
+---
+// /indianapolis-homes-for-rent — the Indianapolis search/filter/map hub
+// page. The most complex page in the homes-for-rent build: city pills,
+// a universal search bar, real dual-handle range sliders with histograms,
+// a live Mapbox GL JS map, and a Split/List/Map three-way view toggle.
+//
+// Ported faithfully from the approved static reference at the repo root
+// (indianapolis-homes-for-rent.html) — design, CSS, and client-side JS kept
+// as close to identical as possible. What changed: the reference's two
+// hardcoded JSON blobs (one 20-listing Indianapolis array, one 8-listing
+// "other areas" array) are replaced with real data fetched from RentEngine
+// at build time, split the same way the reference already split it:
+//
+//   - Indianapolis-proper units (real RentEngine address.city ===
+//     "Indianapolis" — a simple string match is correct here, unlike the
+//     19 OTHER city hub pages, which need ZIP-based matching specifically
+//     because RentEngine's own city field doesn't distinguish townships;
+//     see [city]-homes-for-rent.astro) render as real server-side HTML
+//     cards, for SEO — this page's own indexed content must stay genuinely
+//     Indianapolis-scoped.
+//   - Every other currently-Available unit, regardless of city, is
+//     serialized into a JSON data blob and only injected into the DOM by
+//     client JS when a search/filter match or the "All areas" toggle needs
+//     it — this is exactly the reference's own ensureOtherAreasInjected()
+//     behavior, just fed by live data instead of a hardcoded array.
+//
+// City pills: Indianapolis (this page) plus a real link to any OTHER city
+// that both (a) has a served hub page — one of the 19 pages built from
+// src/data/homes-for-rent-content.json — AND (b) currently has at least one
+// live Available unit. Matching a unit to a served city page uses the same
+// simple citySlug(address.city) string match as the Indianapolis split
+// above: a unit in a sub-Indianapolis area (a township, Broad Ripple,
+// downtown) never produces a pill here even though those areas each have
+// their own served page, because RentEngine's own city field just says
+// "Indianapolis" for those addresses — those 19 pages are populated by ZIP
+// instead, not this field. Not a bug, just a different, correct signal for
+// a different page type. "All areas" is a client-side-only toggle, never a
+// separate URL, per claude/listings-build-notes.md's locked SEO
+// architecture (a ?areas=all query string pre-activates it on load without
+// being part of the indexed, canonical version of this page).
+//
+// The map always shows every currently-Available unit matching the active
+// search/filters, in every area, regardless of which city pill is active —
+// map pins aren't indexable text content, so there's no SEO dilution risk
+// in always showing everything (locked reasoning, listings-build-notes.md).
+//
+// Real bugs already found and fixed in this exact design, per
+// claude/listings-build-notes.md — do NOT reintroduce any of them:
+//   (a) history.replaceState (used for the ?areas=all deep link) needs a
+//       try/catch — it can throw in some environments, and must never be
+//       allowed to block the actual filtering it sits next to.
+//   (b) The mobile map-detail drawer needs `position: relative`, not
+//       `static`, on `.map-panel` at the mobile breakpoint — `static`
+//       breaks the drawer's containing-block relationship and it renders
+//       relative to <body> instead, bleeding out from behind the hero.
+//   (c) The mobile Map-view panel height is 600px, not 480px — the
+//       drawer's real content (556px) doesn't fit the smaller box.
+//   (d) The drawer's mobile photo aspect ratio is 16/10, not 4/3 — matches
+//       the taller drawer content from (c).
+//   (e) The Mapbox script tag that defines the `mapboxgl` global must load,
+//       unblocked by async/defer, before any inline script that reads that
+//       global — placed immediately before the page's own logic script.
+//
+// Known bug class from the sibling listing-detail page, avoided here too:
+//   - Never combine .container and .content-block on the same element —
+//     nest them, or the block centers instead of sitting flush-left.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { fetchAllAvailableUnits, addressSlug, citySlug } from '../lib/listings/rentengine';
+import { loadCityContentMap } from '../lib/listings/homes-for-rent-content';
+import type { RentEngineUnit } from '../lib/listings/types';
+
+// Confirmed non-secret (CLAUDE.md) — RentEngine's own account id, same
+// fallback already hardcoded in the two sibling listings pages.
+const RENTENGINE_ACCOUNT_ID = '6ecca3ec-8e5a-42ed-87ea-af21f97d546e';
+
+// Mapbox public token (`pk.` prefix, publishable, not a secret) — the same
+// value already embedded in the approved static reference HTML and in the
+// sibling listing-detail page's own frontmatter comment explaining why it's
+// safe to hardcode here (this page is prerendered, no request-time Worker
+// env to read from).
+const MAPBOX_TOKEN =
+  'pk.eyJ1IjoibWV0YXlsb3IwOTA5IiwiYSI6ImNtdTdmZXJ5MzBpM3cyenB1eXMwNWdwaXkifQ.0sGI21TcAeEe9v_Pa91a9A';
+
+const apiKey = import.meta.env.RENTENGINE_LISTINGS_KEY;
+let units: RentEngineUnit[] = [];
+if (!apiKey) {
+  // Same graceful-degradation pattern as both sibling listings routes: log
+  // and build with zero live listings rather than crash the build.
+  console.warn(
+    '[indianapolis-homes-for-rent] RENTENGINE_LISTINGS_KEY not configured — page will build with zero live listings.'
+  );
+} else {
+  try {
+    units = await fetchAllAvailableUnits({
+      apiKey,
+      accountId: import.meta.env.RENTENGINE_LISTINGS_ACCOUNT_ID || RENTENGINE_ACCOUNT_ID,
+    });
+  } catch (err) {
+    console.warn('[indianapolis-homes-for-rent] Could not reach RentEngine — page will build with zero live listings.', err);
+  }
+}
+
+const indyUnits = units.filter((u) => u.address.city === 'Indianapolis');
+const otherUnits = units.filter((u) => u.address.city !== 'Indianapolis');
+
+// City pills — see the module comment above for the full matching rule.
+const servedCitySlugs = new Set(Object.keys(loadCityContentMap()));
+const cityPillLabels = new Map<string, string>();
+for (const u of otherUnits) {
+  const slug = citySlug(u.address.city);
+  if (servedCitySlugs.has(slug) && !cityPillLabels.has(slug)) {
+    cityPillLabels.set(slug, u.address.city);
+  }
+}
+const cityPills = [...cityPillLabels.entries()]
+  .sort((a, b) => a[1].localeCompare(b[1]))
+  .map(([slug, label]) => ({ slug, label, href: `/${slug}-homes-for-rent` }));
+
+// ---------- Flat client-side listing records ----------
+// Mirrors the reference HTML's own hardcoded JSON shape exactly (id, city,
+// citySlug, address, zip, lat, lng, rent, beds, baths, sqft, propertyType,
+// pets, photoCount, photo, detailPath) so the ported client JS below needs
+// no reshaping — plus `state` and a precomputed `rentDisplay`, both real
+// gaps in the reference's own shape (it hardcoded ", IN" and assumed rent
+// was always a number; target_rental_rate can be null per
+// src/lib/listings/types.ts, same "Contact for pricing" fallback the two
+// sibling pages already use).
+interface ListingRecord {
+  id: number;
+  city: string;
+  state: string;
+  citySlug: string;
+  address: string;
+  zip: string;
+  lat: number | null;
+  lng: number | null;
+  rent: number;
+  rentDisplay: string;
+  beds: number;
+  baths: number;
+  sqft: number;
+  propertyType: string;
+  pets: string;
+  photoCount: number;
+  photo: string;
+  detailPath: string;
+}
+
+function toListingRecord(unit: RentEngineUnit): ListingRecord {
+  const visiblePhotos = unit.marketing_photos.filter((p) => !p.hidden);
+  const lat = unit.address.coordinates ? unit.address.coordinates[1] : null;
+  const lng = unit.address.coordinates ? unit.address.coordinates[0] : null;
+  const rent = unit.target_rental_rate ?? 0;
+  return {
+    id: unit.id,
+    city: unit.address.city,
+    state: unit.address.state,
+    citySlug: citySlug(unit.address.city),
+    address: unit.address.formatted_address,
+    zip: unit.address.zip_code,
+    lat,
+    lng,
+    rent,
+    rentDisplay: unit.target_rental_rate != null ? `$${unit.target_rental_rate.toLocaleString('en-US')}` : 'Contact for pricing',
+    beds: unit.bedrooms,
+    baths: unit.bathrooms,
+    sqft: unit.sqft ?? 0,
+    propertyType: (unit.property_type || '').toUpperCase(),
+    pets: unit.pets_allowed ?? 'Ask',
+    photoCount: visiblePhotos.length,
+    photo: visiblePhotos[0]?.original ?? '',
+    detailPath: `/homes-for-rent/${citySlug(unit.address.city)}/${addressSlug(unit)}`,
+  };
+}
+
+const indyListingsData = indyUnits.map(toListingRecord);
+const otherAreasData = otherUnits.map(toListingRecord);
+const allListingsData = indyListingsData.concat(otherAreasData);
+
+// ---------- Range slider bounds + histograms, computed from live data ----------
+// Reference used fixed bounds (price $800–$3,000, sqft 400–3,200 sq ft)
+// derived from its one-time 28-listing snapshot. Real inventory changes
+// month to month, so bounds and histogram bar heights below are computed
+// fresh from whatever's actually live at build time, with the reference's
+// own bounds kept only as a fallback for an empty dataset.
+function computeBounds(values: number[], step: number, fallbackMin: number, fallbackMax: number) {
+  const positive = values.filter((v) => v > 0);
+  if (positive.length === 0) return { min: fallbackMin, max: fallbackMax };
+  const min = Math.floor(Math.min(...positive) / step) * step;
+  let max = Math.ceil(Math.max(...positive) / step) * step;
+  if (max <= min) max = min + step;
+  return { min, max };
+}
+
+function computeBinCounts(values: number[], min: number, max: number, bins: number) {
+  const counts = new Array(bins).fill(0) as number[];
+  const binWidth = (max - min) / bins || 1;
+  for (const v of values) {
+    if (v <= 0) continue;
+    let idx = Math.floor((v - min) / binWidth);
+    if (idx < 0) idx = 0;
+    if (idx >= bins) idx = bins - 1;
+    counts[idx] += 1;
+  }
+  return counts;
+}
+
+const HISTOGRAM_BINS = 12;
+const priceBounds = computeBounds(
+  allListingsData.map((d) => d.rent),
+  25,
+  800,
+  3000
+);
+const sqftBounds = computeBounds(
+  allListingsData.map((d) => d.sqft),
+  50,
+  400,
+  3200
+);
+const priceBins = computeBinCounts(allListingsData.map((d) => d.rent), priceBounds.min, priceBounds.max, HISTOGRAM_BINS);
+const sqftBins = computeBinCounts(allListingsData.map((d) => d.sqft), sqftBounds.min, sqftBounds.max, HISTOGRAM_BINS);
+
+const browserCountText = `${indyUnits.length} ${indyUnits.length === 1 ? 'home' : 'homes'} available`;
+const pagePath = '/indianapolis-homes-for-rent';
+const pageTitle = 'Indianapolis Homes for Rent | Red Door Property Management';
+const pageDescription =
+  "See available rental homes across Indianapolis and Marion County, managed by Red Door. Homes updated as availability changes.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path={pagePath}>
+  <Fragment slot="head">
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" />
+  </Fragment>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-kicker">Homes for Rent</span>
+      <h1>Indianapolis Homes for Rent</h1>
+      <p class="lead">
+        Indianapolis is the seat of Marion County and the core of the metro Red Door serves. This page rolls up
+        rental market data across the county's 37 standard-mail-delivery ZIP codes &mdash; Marion County has 56 ZIP
+        codes in total, but a number of those are PO-Box-only or otherwise don't carry standard residential delivery,
+        so they're excluded here. Red Door manages rental homes across the full metro, from downtown out through
+        Marion County's nine civil townships and into the surrounding suburbs.
+      </p>
+    </div>
+  </section>
+
+  <section class="homes-browser" id="homes-browser">
+    <div class="container">
+      <div class="browser-head">
+        <p class="browser-count" id="browser-count">{browserCountText}</p>
+        <div class="city-pills" id="city-pills" role="group" aria-label="Filter by area">
+          <button type="button" class="city-pill is-active" data-pill="indianapolis" aria-pressed="true">Indianapolis</button>
+          {cityPills.map((pill) => (
+            <a class="city-pill" href={pill.href}>{pill.label}</a>
+          ))}
+          <button type="button" class="city-pill" data-pill="all" aria-pressed="false">All areas</button>
+        </div>
+      </div>
+
+      <div class="browser-controls">
+        <div class="search-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+          <input type="search" id="listing-search" placeholder="Search city, ZIP, or address" aria-label="Search city, ZIP, or address" />
+        </div>
+        <div class="filter-row">
+          <select id="filter-beds" aria-label="Bedrooms">
+            <option value="">Any beds</option>
+            <option value="1">1+ beds</option>
+            <option value="2">2+ beds</option>
+            <option value="3">3+ beds</option>
+            <option value="4">4+ beds</option>
+          </select>
+          <div class="range-dropdown" data-range-dropdown="price">
+            <button type="button" class="range-dropdown-btn" data-range-toggle>Price</button>
+            <div class="range-popover" data-range-popover hidden>
+              <div class="range-histogram" id="price-histogram"></div>
+              <div class="range-track-wrap">
+                <div class="range-track-bg"></div>
+                <div class="range-track-fill" id="price-track-fill"></div>
+                <input type="range" id="price-min" min={priceBounds.min} max={priceBounds.max} step="25" value={priceBounds.min} />
+                <input type="range" id="price-max" min={priceBounds.min} max={priceBounds.max} step="25" value={priceBounds.max} />
+              </div>
+              <div class="range-bounds"><span>${priceBounds.min.toLocaleString('en-US')}</span><span>${priceBounds.max.toLocaleString('en-US')}+</span></div>
+              <div class="range-inputs">
+                <label>Min<input type="number" id="price-min-input" min={priceBounds.min} max={priceBounds.max} step="25" value={priceBounds.min} /></label>
+                <span class="range-inputs-dash">&ndash;</span>
+                <label>Max<input type="number" id="price-max-input" min={priceBounds.min} max={priceBounds.max} step="25" value={priceBounds.max} /></label>
+              </div>
+              <button type="button" class="range-done" data-range-done>Done</button>
+            </div>
+          </div>
+          <div class="range-dropdown" data-range-dropdown="sqft">
+            <button type="button" class="range-dropdown-btn" data-range-toggle>Square feet</button>
+            <div class="range-popover" data-range-popover hidden>
+              <div class="range-histogram" id="sqft-histogram"></div>
+              <div class="range-track-wrap">
+                <div class="range-track-bg"></div>
+                <div class="range-track-fill" id="sqft-track-fill"></div>
+                <input type="range" id="sqft-min" min={sqftBounds.min} max={sqftBounds.max} step="50" value={sqftBounds.min} />
+                <input type="range" id="sqft-max" min={sqftBounds.min} max={sqftBounds.max} step="50" value={sqftBounds.max} />
+              </div>
+              <div class="range-bounds"><span>{sqftBounds.min.toLocaleString('en-US')} sq ft</span><span>{sqftBounds.max.toLocaleString('en-US')}+ sq ft</span></div>
+              <div class="range-inputs">
+                <label>Min<input type="number" id="sqft-min-input" min={sqftBounds.min} max={sqftBounds.max} step="50" value={sqftBounds.min} /></label>
+                <span class="range-inputs-dash">&ndash;</span>
+                <label>Max<input type="number" id="sqft-max-input" min={sqftBounds.min} max={sqftBounds.max} step="50" value={sqftBounds.max} /></label>
+              </div>
+              <button type="button" class="range-done" data-range-done>Done</button>
+            </div>
+          </div>
+          <select id="filter-pets" aria-label="Pets">
+            <option value="">Any pets</option>
+            <option value="dogs">Dogs allowed</option>
+            <option value="cats">Cats allowed</option>
+            <option value="no">No pets</option>
+          </select>
+          <button type="button" class="reset-filters" id="reset-filters">Reset filters</button>
+          <div class="view-toggle" id="view-toggle" role="group" aria-label="Layout view">
+            <button type="button" class="view-toggle-btn is-active" data-view="split" aria-pressed="true">Split</button>
+            <button type="button" class="view-toggle-btn" data-view="list" aria-pressed="false">List</button>
+            <button type="button" class="view-toggle-btn" data-view="map" aria-pressed="false">Map</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="browser-layout">
+        <div class="map-panel">
+          <div id="homes-map" aria-label="Map of available homes"></div>
+          <div class="map-detail-drawer" id="map-detail-drawer">
+            <button type="button" class="map-detail-close" id="map-detail-close" aria-label="Close listing preview">&times;</button>
+            <div class="map-detail-photo"><img id="map-detail-photo-img" src="" alt="" /></div>
+            <div class="map-detail-body">
+              <p class="map-detail-rent" id="map-detail-rent"></p>
+              <p class="map-detail-address" id="map-detail-address"></p>
+              <p class="map-detail-city" id="map-detail-city"></p>
+              <div class="map-detail-specs" id="map-detail-specs"></div>
+              <p class="map-detail-pets" id="map-detail-pets"></p>
+              <div class="map-detail-actions">
+                <a class="btn btn-primary" id="map-detail-view-link" href="#">View Full Details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="listing-grid-real" id="listing-grid" data-default-count={indyUnits.length}>
+          {indyUnits.map((unit) => {
+            const record = toListingRecord(unit);
+            const isNoPets = /no pets|^no$/i.test(record.pets);
+            return (
+              <a
+                class="listing-card"
+                href={record.detailPath}
+                data-listing-id={record.id}
+                data-city={record.citySlug}
+                data-beds={record.beds}
+                data-rent={record.rent}
+                data-sqft={record.sqft}
+                data-pets={record.pets}
+              >
+                <div class="listing-card-photo">
+                  {record.photo && <img src={record.photo} alt={record.address} loading="lazy" />}
+                  {record.photoCount > 0 && <span class="listing-card-photocount">&#128247; {record.photoCount}</span>}
+                </div>
+                <div class="listing-card-body">
+                  <p class="listing-card-rent">{record.rentDisplay}<span>/mo</span></p>
+                  <p class="listing-card-address">{record.address}</p>
+                  <p class="listing-card-city">{record.city}, {record.state}</p>
+                  <p class="listing-card-specs">
+                    {record.beds} bd &middot; {record.baths} ba{record.sqft ? ` · ${record.sqft.toLocaleString('en-US')} sq ft` : ''}
+                  </p>
+                  <div class="listing-card-foot">
+                    <span class={`listing-card-pets ${isNoPets ? 'is-no-pets' : ''}`}>{record.pets}</span>
+                    <span class="listing-card-viewlink">View details &rarr;</span>
+                  </div>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+      <p class="browser-empty" id="browser-empty" hidden>
+        No homes match your search or filters right now.
+        <button type="button" id="browser-empty-reset">Reset filters</button>
+        or <a href="/contact">contact us</a> and we&rsquo;ll help you find something.
+      </p>
+    </div>
+  </section>
+
+  <script type="application/json" id="other-areas-data" set:html={JSON.stringify(otherAreasData)} />
+  <script type="application/json" id="indy-listings-data" set:html={JSON.stringify(indyListingsData)} />
+
+  {/* Must load, unblocked by async/defer, before the inline script below
+      that reads the `mapboxgl` global — see the module-header note on the
+      Mapbox script-load-order bug. */}
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js" is:inline></script>
+
+  <script
+    define:vars={{
+      mapboxToken: MAPBOX_TOKEN,
+      priceMin: priceBounds.min,
+      priceMax: priceBounds.max,
+      priceBins,
+      sqftMin: sqftBounds.min,
+      sqftMax: sqftBounds.max,
+      sqftBins,
+    }}
+  >
+    (function () {
+      var grid = document.getElementById('listing-grid');
+      var countEl = document.getElementById('browser-count');
+      var emptyEl = document.getElementById('browser-empty');
+      var searchInput = document.getElementById('listing-search');
+      var bedsFilter = document.getElementById('filter-beds');
+      var petsFilter = document.getElementById('filter-pets');
+      var resetBtn = document.getElementById('reset-filters');
+      var emptyResetBtn = document.getElementById('browser-empty-reset');
+      var indyPillBtn = document.querySelector('[data-pill="indianapolis"]');
+      var allPillBtn = document.querySelector('[data-pill="all"]');
+      var browserLayout = document.querySelector('.browser-layout');
+
+      var otherAreas = JSON.parse(document.getElementById('other-areas-data').textContent);
+      var indyListings = JSON.parse(document.getElementById('indy-listings-data').textContent);
+      var allListings = indyListings.concat(otherAreas);
+      var byId = {};
+      allListings.forEach(function (d) { byId[d.id] = d; });
+
+      var otherAreasInjected = false;
+      var cityMode = 'indianapolis'; // "indianapolis" | "all"
+
+      function money(n) {
+        if (!n) return 'Contact for pricing';
+        return '$' + Math.round(n).toLocaleString('en-US');
+      }
+
+      function escapeHtml(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      function cardHtml(d) {
+        var petsClass = /no pets|^no$/i.test(d.pets) ? 'is-no-pets' : '';
+        var photoBadge = d.photoCount ? '<span class="listing-card-photocount">📷 ' + d.photoCount + '</span>' : '';
+        return (
+          '<a class="listing-card" href="' + escapeHtml(d.detailPath) + '" data-listing-id="' + d.id + '" data-city="' + escapeHtml(d.citySlug) + '" data-beds="' + d.beds + '" data-rent="' + d.rent + '" data-sqft="' + (d.sqft || 0) + '" data-pets="' + escapeHtml(d.pets) + '">' +
+          '<div class="listing-card-photo"><img src="' + escapeHtml(d.photo) + '" alt="' + escapeHtml(d.address) + '" loading="lazy">' + photoBadge + '</div>' +
+          '<div class="listing-card-body">' +
+          '<p class="listing-card-rent">' + (d.rentDisplay || money(d.rent)) + '<span>/mo</span></p>' +
+          '<p class="listing-card-address">' + escapeHtml(d.address) + '</p>' +
+          '<p class="listing-card-city">' + escapeHtml(d.city) + ', ' + escapeHtml(d.state || 'IN') + '</p>' +
+          '<p class="listing-card-specs">' + d.beds + ' bd &middot; ' + d.baths + ' ba' + (d.sqft ? ' &middot; ' + d.sqft.toLocaleString('en-US') + ' sq ft' : '') + '</p>' +
+          '<div class="listing-card-foot"><span class="listing-card-pets ' + petsClass + '">' + escapeHtml(d.pets) + '</span><span class="listing-card-viewlink">View details &rarr;</span></div>' +
+          '</div></a>'
+        );
+      }
+
+      function ensureOtherAreasInjected() {
+        if (otherAreasInjected) return;
+        otherAreas.forEach(function (d) {
+          grid.insertAdjacentHTML('beforeend', cardHtml(d));
+        });
+        otherAreasInjected = true;
+        attachCardHoverListeners();
+      }
+
+      function attachCardHoverListeners() {
+        grid.querySelectorAll('.listing-card').forEach(function (card) {
+          if (card.dataset.hoverBound) return;
+          card.dataset.hoverBound = '1';
+          card.addEventListener('mouseenter', function () {
+            setMarkerHighlight(parseInt(card.getAttribute('data-listing-id'), 10), true);
+          });
+          card.addEventListener('mouseleave', function () {
+            setMarkerHighlight(parseInt(card.getAttribute('data-listing-id'), 10), false);
+          });
+        });
+      }
+
+      function matchesPetFilter(petsValue, filterValue) {
+        if (!filterValue) return true;
+        var p = (petsValue || '').toLowerCase();
+        if (filterValue === 'dogs') return p.indexOf('dog') !== -1 || p === 'yes';
+        if (filterValue === 'cats') return p.indexOf('cat') !== -1 || p === 'yes';
+        if (filterValue === 'no') return p.indexOf('no pets') !== -1 || p === 'no';
+        return true;
+      }
+
+      // ---------- Range sliders (price, sqft) ----------
+      function makeRangeSlider(config) {
+        var minInput = document.getElementById(config.prefix + '-min');
+        var maxInput = document.getElementById(config.prefix + '-max');
+        var minNum = document.getElementById(config.prefix + '-min-input');
+        var maxNum = document.getElementById(config.prefix + '-max-input');
+        var fill = document.getElementById(config.prefix + '-track-fill');
+        var histogramEl = document.getElementById(config.prefix + '-histogram');
+        var toggleBtn = document.querySelector('[data-range-dropdown="' + config.name + '"] [data-range-toggle]');
+        var bounds = { min: config.min, max: config.max };
+
+        histogramEl.innerHTML = config.bins.map(function () { return '<span></span>'; }).join('');
+        var bars = histogramEl.querySelectorAll('span');
+        var maxCount = Math.max.apply(null, config.bins.concat([1]));
+        bars.forEach(function (bar, i) {
+          bar.style.height = Math.max(6, (config.bins[i] / maxCount) * 100) + '%';
+        });
+
+        function pct(v) {
+          return ((v - bounds.min) / (bounds.max - bounds.min)) * 100;
+        }
+
+        function render() {
+          var minV = parseFloat(minInput.value);
+          var maxV = parseFloat(maxInput.value);
+          if (minV > maxV) minV = maxV;
+          minInput.value = minV;
+
+          fill.style.left = pct(minV) + '%';
+          fill.style.width = Math.max(0, pct(maxV) - pct(minV)) + '%';
+
+          minNum.value = minV;
+          maxNum.value = maxV;
+
+          var binWidth = (bounds.max - bounds.min) / config.bins.length;
+          bars.forEach(function (bar, i) {
+            var binStart = bounds.min + i * binWidth;
+            var binEnd = binStart + binWidth;
+            var inRange = binEnd > minV && binStart < maxV;
+            bar.classList.toggle('is-in-range', inRange);
+          });
+
+          var isDefault = minV <= bounds.min && maxV >= bounds.max;
+          toggleBtn.classList.toggle('has-value', !isDefault);
+          toggleBtn.textContent = isDefault
+            ? config.label
+            : config.format(minV) + ' – ' + config.format(maxV) + (maxV >= bounds.max ? '+' : '');
+        }
+
+        minInput.addEventListener('input', function () {
+          if (parseFloat(minInput.value) > parseFloat(maxInput.value)) minInput.value = maxInput.value;
+          render();
+          applyFilters();
+        });
+        maxInput.addEventListener('input', function () {
+          if (parseFloat(maxInput.value) < parseFloat(minInput.value)) maxInput.value = minInput.value;
+          render();
+          applyFilters();
+        });
+        minNum.addEventListener('change', function () {
+          var v = Math.min(Math.max(parseFloat(minNum.value) || bounds.min, bounds.min), parseFloat(maxInput.value));
+          minInput.value = v;
+          render();
+          applyFilters();
+        });
+        maxNum.addEventListener('change', function () {
+          var v = Math.max(Math.min(parseFloat(maxNum.value) || bounds.max, bounds.max), parseFloat(minInput.value));
+          maxInput.value = v;
+          render();
+          applyFilters();
+        });
+
+        render();
+
+        return {
+          getRange: function () {
+            return { min: parseFloat(minInput.value), max: parseFloat(maxInput.value), fullMin: bounds.min, fullMax: bounds.max };
+          },
+          reset: function () {
+            minInput.value = bounds.min;
+            maxInput.value = bounds.max;
+            render();
+          }
+        };
+      }
+
+      var priceSlider = makeRangeSlider({
+        name: 'price',
+        prefix: 'price',
+        min: priceMin,
+        max: priceMax,
+        bins: priceBins,
+        label: 'Price',
+        format: function (v) { return '$' + Math.round(v).toLocaleString('en-US'); }
+      });
+      var sqftSlider = makeRangeSlider({
+        name: 'sqft',
+        prefix: 'sqft',
+        min: sqftMin,
+        max: sqftMax,
+        bins: sqftBins,
+        label: 'Square feet',
+        format: function (v) { return Math.round(v).toLocaleString('en-US') + ' sqft'; }
+      });
+
+      // Dropdown open/close
+      document.querySelectorAll('[data-range-toggle]').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var popover = btn.parentElement.querySelector('[data-range-popover]');
+          var isOpen = !popover.hidden;
+          document.querySelectorAll('[data-range-popover]').forEach(function (p) { p.hidden = true; });
+          popover.hidden = isOpen;
+        });
+      });
+      document.querySelectorAll('[data-range-done]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          btn.closest('[data-range-popover]').hidden = true;
+        });
+      });
+      document.addEventListener('click', function (e) {
+        if (!e.target.closest('.range-dropdown')) {
+          document.querySelectorAll('[data-range-popover]').forEach(function (p) { p.hidden = true; });
+        }
+      });
+
+      // ---------- Filtering ----------
+      function matchesAllFilters(d, opts) {
+        var query = opts.query;
+        var bedsMin = opts.bedsMin;
+        var priceRange = opts.priceRange;
+        var sqftRange = opts.sqftRange;
+        var petsValue = opts.petsValue;
+
+        if (query) {
+          var haystack = (d.address + ' ' + d.city + ' ' + d.zip).toLowerCase();
+          if (haystack.indexOf(query) === -1) return false;
+        }
+        if (bedsMin && d.beds < bedsMin) return false;
+        if (priceRange && (d.rent < priceRange.min || (priceRange.max < priceRange.fullMax && d.rent > priceRange.max))) return false;
+        if (sqftRange && ((d.sqft || 0) < sqftRange.min || (sqftRange.max < sqftRange.fullMax && (d.sqft || 0) > sqftRange.max))) return false;
+        if (!matchesPetFilter(d.pets, petsValue)) return false;
+        return true;
+      }
+
+      function currentFilterOpts() {
+        return {
+          query: (searchInput.value || '').trim().toLowerCase(),
+          bedsMin: bedsFilter.value ? parseInt(bedsFilter.value, 10) : null,
+          priceRange: priceSlider.getRange(),
+          sqftRange: sqftSlider.getRange(),
+          petsValue: petsFilter.value
+        };
+      }
+
+      function applyFilters() {
+        var opts = currentFilterOpts();
+
+        if (opts.query || cityMode === 'all') {
+          ensureOtherAreasInjected();
+        }
+
+        var cards = grid.querySelectorAll('.listing-card');
+        var visibleCount = 0;
+
+        cards.forEach(function (card) {
+          var id = parseInt(card.getAttribute('data-listing-id'), 10);
+          var d = byId[id];
+          var visible = matchesAllFilters(d, opts);
+
+          if (visible && !opts.query && cityMode === 'indianapolis' && d.citySlug !== 'indianapolis') {
+            visible = false;
+          }
+
+          card.classList.toggle('is-hidden', !visible);
+          if (visible) visibleCount++;
+        });
+
+        countEl.textContent = visibleCount + (visibleCount === 1 ? ' home available' : ' homes available');
+        emptyEl.hidden = visibleCount !== 0;
+        updateMapMarkers(opts);
+      }
+
+      function setCityMode(mode, opts) {
+        cityMode = mode;
+        indyPillBtn.classList.toggle('is-active', mode === 'indianapolis');
+        indyPillBtn.setAttribute('aria-pressed', mode === 'indianapolis' ? 'true' : 'false');
+        allPillBtn.classList.toggle('is-active', mode === 'all');
+        allPillBtn.setAttribute('aria-pressed', mode === 'all' ? 'true' : 'false');
+
+        if (!opts || !opts.skipHistory) {
+          try {
+            var url = new URL(window.location.href);
+            if (mode === 'all') {
+              url.searchParams.set('areas', 'all');
+            } else {
+              url.searchParams.delete('areas');
+            }
+            window.history.replaceState({}, '', url.pathname + url.search);
+          } catch (err) {
+            // Updating the URL is a nice-to-have (deep-linking to ?areas=all);
+            // never let it block the actual filtering below.
+          }
+        }
+        applyFilters();
+      }
+
+      indyPillBtn.addEventListener('click', function () { setCityMode('indianapolis'); });
+      allPillBtn.addEventListener('click', function () { setCityMode('all'); });
+
+      [searchInput, bedsFilter, petsFilter].forEach(function (el) {
+        el.addEventListener('input', applyFilters);
+        el.addEventListener('change', applyFilters);
+      });
+
+      function resetFilters() {
+        searchInput.value = '';
+        bedsFilter.value = '';
+        petsFilter.value = '';
+        priceSlider.reset();
+        sqftSlider.reset();
+        applyFilters();
+      }
+      resetBtn.addEventListener('click', resetFilters);
+      emptyResetBtn.addEventListener('click', resetFilters);
+
+      // ---------- View mode: split / list / map ----------
+      var viewMode = 'split';
+      var viewToggleBtns = document.querySelectorAll('.view-toggle-btn');
+
+      function setViewMode(mode) {
+        viewMode = mode;
+        viewToggleBtns.forEach(function (btn) {
+          var isActive = btn.getAttribute('data-view') === mode;
+          btn.classList.toggle('is-active', isActive);
+          btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        });
+        browserLayout.classList.toggle('is-map-hidden', mode === 'list');
+        browserLayout.classList.toggle('is-map-only', mode === 'map');
+        if (mode !== 'map') {
+          closeMapDetail();
+        }
+        if (mode !== 'list' && map) {
+          updateMapMarkers(currentFilterOpts());
+          setTimeout(function () { map.resize(); }, 50);
+        }
+      }
+
+      viewToggleBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () { setViewMode(btn.getAttribute('data-view')); });
+      });
+
+      // ---------- Map detail drawer (full-map view) ----------
+      var mapDetailDrawer = document.getElementById('map-detail-drawer');
+      var mapDetailClose = document.getElementById('map-detail-close');
+
+      function openMapDetail(d) {
+        document.getElementById('map-detail-photo-img').src = d.photo;
+        document.getElementById('map-detail-photo-img').alt = d.address;
+        document.getElementById('map-detail-rent').innerHTML = (d.rentDisplay || money(d.rent)) + '<span>/mo</span>';
+        document.getElementById('map-detail-address').textContent = d.address;
+        document.getElementById('map-detail-city').textContent = d.city + ', ' + (d.state || 'IN');
+        document.getElementById('map-detail-specs').textContent = d.beds + ' bd · ' + d.baths + ' ba' + (d.sqft ? ' · ' + d.sqft.toLocaleString('en-US') + ' sq ft' : '');
+        document.getElementById('map-detail-pets').textContent = d.pets;
+        document.getElementById('map-detail-view-link').href = d.detailPath;
+        mapDetailDrawer.classList.add('is-open');
+      }
+
+      function closeMapDetail() {
+        mapDetailDrawer.classList.remove('is-open');
+      }
+
+      mapDetailClose.addEventListener('click', closeMapDetail);
+
+      // ---------- Mapbox GL JS ----------
+      var map, markers = [], markersById = {};
+
+      function initMap() {
+        if (typeof mapboxgl === 'undefined') return;
+        mapboxgl.accessToken = mapboxToken;
+        map = new mapboxgl.Map({
+          container: 'homes-map',
+          style: 'mapbox://styles/mapbox/light-v11',
+          center: [-86.1349, 39.7796],
+          zoom: 9.4
+        });
+        map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+        map.on('load', function () { updateMapMarkers(currentFilterOpts()); });
+      }
+
+      function setMarkerHighlight(id, isOn) {
+        var el = markersById[id];
+        if (el) el.classList.toggle('is-highlighted', isOn);
+      }
+
+      function updateMapMarkers(opts) {
+        if (!map) return;
+        markers.forEach(function (m) { m.remove(); });
+        markers = [];
+        markersById = {};
+
+        // The map always reflects every listing matching the current
+        // search/filters, regardless of the Indianapolis/All areas pill --
+        // it defaults to showing every available home in every area.
+        var matching = allListings.filter(function (d) { return matchesAllFilters(d, opts); });
+
+        var bounds = new mapboxgl.LngLatBounds();
+        if (!matching.length) return;
+
+        matching.forEach(function (d) {
+          if (typeof d.lat !== 'number' || typeof d.lng !== 'number') return;
+
+          var el = document.createElement('div');
+          el.className = 'map-pin-price';
+          el.textContent = d.rent ? money(d.rent) : 'Contact';
+          el.addEventListener('mouseenter', function () {
+            var card = grid.querySelector('.listing-card[data-listing-id="' + d.id + '"]');
+            if (card) card.classList.add('is-map-hovered');
+          });
+          el.addEventListener('mouseleave', function () {
+            var card = grid.querySelector('.listing-card[data-listing-id="' + d.id + '"]');
+            if (card) card.classList.remove('is-map-hovered');
+          });
+
+          var marker = new mapboxgl.Marker({ element: el, anchor: 'bottom' })
+            .setLngLat([d.lng, d.lat])
+            .addTo(map);
+
+          if (viewMode === 'map') {
+            el.addEventListener('click', function () { openMapDetail(d); });
+          } else {
+            var popupHtml =
+              '<div class="map-popup-card"><img src="' + escapeHtml(d.photo) + '" alt="">' +
+              '<span class="rent">' + (d.rentDisplay || money(d.rent)) + '/mo</span>' +
+              '<span class="addr">' + escapeHtml(d.address) + '</span>' +
+              '<a href="' + escapeHtml(d.detailPath) + '">View details &rarr;</a></div>';
+            marker.setPopup(new mapboxgl.Popup({ offset: 14 }).setHTML(popupHtml));
+          }
+
+          markers.push(marker);
+          markersById[d.id] = el;
+          bounds.extend([d.lng, d.lat]);
+        });
+
+        if (!bounds.isEmpty()) {
+          map.fitBounds(bounds, { padding: 60, maxZoom: 14, duration: 400 });
+        }
+      }
+
+      // ---------- Init ----------
+      attachCardHoverListeners();
+      var initialParams = new URLSearchParams(window.location.search);
+      if (initialParams.get('areas') === 'all') {
+        setCityMode('all', { skipHistory: true });
+      } else {
+        applyFilters();
+      }
+
+      initMap();
+    })();
+  </script>
+
+  <section class="snapshot">
+    <div class="container">
+      <p class="data-asof">
+        RentCast market data pulled September 17, 2026, averaged across the 37 standard-mail-delivery Marion County
+        ZIP codes used for this page &mdash; one ZIP (46282) returned no market data and is excluded &mdash; monthly
+        automated refresh not yet wired up
+      </p>
+      <div class="snapshot-grid">
+        <div class="stat-tile">
+          <p class="stat-label">Average Rent</p>
+          <p class="stat-value">$1,619</p>
+          <p class="stat-sub">Across 3,432 currently listed Indianapolis-area rentals</p>
+        </div>
+        <div class="stat-tile">
+          <p class="stat-label">Median Rent</p>
+          <p class="stat-value">$1,549</p>
+          <p class="stat-sub">Range: $273 &ndash; $10,000</p>
+        </div>
+        <div class="stat-tile">
+          <p class="stat-label">Single-Family Average</p>
+          <p class="stat-value">$1,843</p>
+          <p class="stat-sub">Red Door's focus &mdash; 1,965 of 3,432 listings</p>
+        </div>
+      </div>
+      <p class="snapshot-detail">
+        Typical size runs around 1,409 sq ft ($1.39/sq ft). By bedroom count: $1,094 for a studio, $1,053 for
+        1-bedroom, $1,408 for 2-bedroom, $1,898 for 3-bedroom (the largest sample, 1,341 listings), $2,234 for
+        4-bedroom, and $2,792 for 5-bedroom. Half of the metro's current rental listings lease within 26 days, while
+        the average of 52 days reflects a number of slower-moving units.
+      </p>
+      <p class="snapshot-detail">
+        Indianapolis is Red Door's largest and deepest market, so this page is the fallback other city and township
+        pages point to when their own inventory is thin. Explore homes for rent by area below to find current
+        listings closer to a specific part of the metro.
+      </p>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <h2>What to Expect Renting in Indianapolis</h2>
+      <ul>
+        <li>
+          <strong>Location:</strong> Indianapolis is Marion County's seat and sits at the center of the metro Red
+          Door serves, encompassing downtown and the county's nine civil townships &mdash; Center, Washington, Pike,
+          Wayne, Decatur, Perry, Franklin, Warren, and Lawrence.
+        </li>
+        <li>
+          <strong>Housing stock:</strong> 1,965 of the 3,432 current rental listings across the metro (just over
+          half) are single-family homes, which lines up with Red Door's own focus here.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <h2>Explore Homes for Rent by Area</h2>
+      <p class="section-dek">
+        Indianapolis is the hub other city and township pages fall back to. Browse current listings across every
+        market Red Door serves.
+      </p>
+      <div class="nearby-grid">
+        <a class="nearby-link" href="/center-township-homes-for-rent">Center Township</a>
+        <a class="nearby-link" href="/washington-township-homes-for-rent">Washington Township</a>
+        <a class="nearby-link" href="/pike-township-homes-for-rent">Pike Township</a>
+        <a class="nearby-link" href="/wayne-township-homes-for-rent">Wayne Township</a>
+        <a class="nearby-link" href="/decatur-township-homes-for-rent">Decatur Township</a>
+        <a class="nearby-link" href="/perry-township-homes-for-rent">Perry Township</a>
+        <a class="nearby-link" href="/franklin-township-homes-for-rent">Franklin Township</a>
+        <a class="nearby-link" href="/warren-township-homes-for-rent">Warren Township</a>
+        <a class="nearby-link" href="/lawrence-township-homes-for-rent">Lawrence Township</a>
+        <a class="nearby-link" href="/downtown-indianapolis-homes-for-rent">Downtown Indianapolis</a>
+        <a class="nearby-link" href="/broad-ripple-homes-for-rent">Broad Ripple</a>
+        <a class="nearby-link" href="/avon-homes-for-rent">Avon</a>
+        <a class="nearby-link" href="/brownsburg-homes-for-rent">Brownsburg</a>
+        <a class="nearby-link" href="/carmel-homes-for-rent">Carmel</a>
+        <a class="nearby-link" href="/fishers-homes-for-rent">Fishers</a>
+        <a class="nearby-link" href="/greenwood-homes-for-rent">Greenwood</a>
+        <a class="nearby-link" href="/noblesville-homes-for-rent">Noblesville</a>
+        <a class="nearby-link" href="/westfield-homes-for-rent">Westfield</a>
+        <a class="nearby-link" href="/zionsville-homes-for-rent">Zionsville</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section is-soft">
+    <div class="container">
+      <h2>How Renting With Red Door Works</h2>
+      <ul>
+        <li>
+          <strong>Browsing and applying:</strong> View details on any listing and apply directly online through Red
+          Door's application flow.
+        </li>
+        <li>
+          <strong>Screening criteria:</strong> Verifiable income of at least 3x rent, minimum 580 credit score,
+          maximum 55% debt-to-income, no disqualifying convictions, no aggressive dog breeds, plus standard
+          rental-history checks. Full detail on the <a class="area-link" href="/application-criteria">Tenant Qualification Criteria</a> page.
+        </li>
+        <li>
+          <strong>Showings:</strong> Self-guided via digital lockbox once an application clears initial screening
+          &mdash; no waiting to coordinate a showing time with an agent.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container cta-inner">
+      <div>
+        <h2>Own a Rental Home in Indianapolis?</h2>
+        <p>See how Red Door manages Indianapolis rental properties, or find out what your home could rent for.</p>
+      </div>
+      <div class="cta-buttons">
+        <a class="btn btn-primary" href="/#rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-ghost" href="/indianapolis-property-management">See How We Manage Here</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

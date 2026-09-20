@@ -2736,3 +2736,137 @@
       .cta-buttons { justify-content: center; }
       .bedroom-ladder-row { flex-direction: column; gap: 2px; }
     }
+
+    /* ---------- Indianapolis homes-for-rent search/filter/map browser ---------- */
+    /* Ported from the approved static reference (indianapolis-homes-for-rent.html
+       at the repo root) for src/pages/indianapolis-homes-for-rent.astro — the
+       one page with its own search bar, beds/price/sqft/pets filters, a live
+       Mapbox GL JS map, and a Split/List/Map view toggle. .page-hero,
+       .snapshot*, .content-section*, .nearby-*, .cta-band*, .btn-ghost, and
+       .listing-card/.listing-card-photo/.listing-card-body/.listing-card-rent/
+       .listing-card-address/.listing-card-city/.listing-card-specs are already
+       shared sitewide (see the sections above) and are reused as-is here —
+       NOT redefined, to avoid the exact bug this comment warns future editors
+       about: a reused class silently picking up an unrelated redefinition, or
+       a class ported into markup with its CSS never carried over. Only this
+       page's genuinely new classes are added below. */
+
+    .homes-browser { padding: 40px 0 56px; }
+    .browser-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+    .browser-count { margin: 0; color: var(--muted); font-weight: 800; font-size: .95rem; }
+    .city-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .city-pill { display: inline-flex; align-items: center; padding: 9px 18px; color: var(--ink); background: var(--white); border: 1px solid var(--line); border-radius: 999px; font-size: .88rem; font-weight: 800; text-decoration: none; cursor: pointer; transition: background .16s ease, color .16s ease, border-color .16s ease; }
+    .city-pill:hover { border-color: var(--brand-light); color: var(--red); }
+    .city-pill.is-active { color: var(--white); background: var(--red); border-color: var(--red); }
+    .city-pill.is-active:hover { color: var(--white); }
+
+    .browser-controls { display: grid; gap: 12px; margin-bottom: 22px; }
+    .search-field { position: relative; }
+    .search-field svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: none; stroke: var(--muted); stroke-width: 2; }
+    .search-field input { width: 100%; min-height: 50px; padding: 12px 16px 12px 44px; color: var(--charcoal); background: var(--white); border: 1px solid #cfd3d9; border-radius: 8px; font-size: .96rem; }
+    .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; position: relative; }
+    .filter-row select { min-height: 44px; padding: 8px 34px 8px 14px; color: var(--ink); background: var(--white); border: 1px solid var(--line); border-radius: 8px; font-weight: 700; font-size: .9rem; }
+    .reset-filters { padding: 8px 4px; color: var(--red-dark); background: none; border: 0; font-weight: 800; font-size: .88rem; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    .view-toggle { margin-left: auto; display: flex; gap: 2px; padding: 3px; background: var(--soft); border: 1px solid var(--line); border-radius: 9px; }
+    .view-toggle-btn { min-height: 34px; padding: 6px 16px; color: var(--muted); background: transparent; border: 0; border-radius: 6px; font-weight: 800; font-size: .84rem; cursor: pointer; }
+    .view-toggle-btn:hover { color: var(--ink); }
+    .view-toggle-btn.is-active { color: var(--white); background: var(--red); }
+
+    /* ---------- Price / sqft range-slider dropdowns ---------- */
+    .range-dropdown { position: relative; }
+    .range-dropdown-btn { min-height: 44px; padding: 8px 16px; color: var(--ink); background: var(--white); border: 1px solid var(--line); border-radius: 8px; font-weight: 700; font-size: .9rem; cursor: pointer; }
+    .range-dropdown-btn.has-value { color: var(--red-dark); border-color: var(--brand-light); }
+    .range-dropdown-btn:hover { border-color: var(--brand-light); }
+    .range-popover { position: absolute; z-index: 20; top: calc(100% + 8px); left: 0; width: 300px; padding: 18px; background: var(--white); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 18px 40px rgba(23, 23, 23, .18); }
+    .range-histogram { display: flex; align-items: flex-end; gap: 2px; height: 40px; margin-bottom: 8px; }
+    .range-histogram span { flex: 1; min-height: 3px; background: var(--line); border-radius: 1px 1px 0 0; }
+    .range-histogram span.is-in-range { background: var(--brand-light); }
+    .range-track-wrap { position: relative; height: 4px; margin: 0 2px 8px; }
+    .range-track-bg { position: absolute; inset: 0; background: var(--line); border-radius: 2px; }
+    .range-track-fill { position: absolute; top: 0; bottom: 0; background: var(--red); border-radius: 2px; }
+    .range-track-wrap input[type="range"] { position: absolute; top: -8px; left: 0; width: 100%; height: 20px; margin: 0; background: transparent; appearance: none; -webkit-appearance: none; pointer-events: none; }
+    .range-track-wrap input[type="range"]::-webkit-slider-thumb { pointer-events: auto; appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--white); border: 2px solid var(--red); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.3); }
+    .range-track-wrap input[type="range"]::-moz-range-thumb { pointer-events: auto; width: 14px; height: 14px; border-radius: 50%; background: var(--white); border: 2px solid var(--red); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.3); }
+    .range-bounds { display: flex; justify-content: space-between; color: var(--muted); font-size: .76rem; font-weight: 700; margin-bottom: 14px; }
+    .range-inputs { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .range-inputs label { flex: 1; display: grid; gap: 4px; color: var(--muted); font-size: .74rem; font-weight: 800; text-transform: uppercase; }
+    .range-inputs input[type="number"] { min-height: 36px; padding: 6px 8px; color: var(--ink); background: var(--white); border: 1px solid var(--line); border-radius: 6px; font-size: .88rem; }
+    .range-inputs-dash { margin-top: 14px; color: var(--muted); }
+    .range-done { width: 100%; min-height: 40px; color: var(--white); background: var(--red); border: 0; border-radius: 8px; font-weight: 800; cursor: pointer; }
+    .range-done:hover { background: var(--red-dark); }
+
+    .browser-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+    .map-panel { position: sticky; top: 100px; height: 640px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--soft); }
+    #homes-map { width: 100%; height: 100%; }
+    .browser-layout .listing-grid-real { grid-template-columns: repeat(2, 1fr); }
+    .browser-layout.is-map-hidden { grid-template-columns: 1fr; }
+    .browser-layout.is-map-hidden .map-panel { display: none; }
+    .browser-layout.is-map-hidden .listing-grid-real { grid-template-columns: repeat(3, 1fr); }
+    .browser-layout.is-map-only { grid-template-columns: 1fr; }
+    .browser-layout.is-map-only .listing-grid-real { display: none; }
+    .browser-layout.is-map-only .map-panel { height: 720px; }
+
+    .map-detail-drawer { position: absolute; top: 0; right: 0; bottom: 0; width: 380px; max-width: 88%; padding: 0; background: var(--white); box-shadow: -14px 0 34px rgba(23, 23, 23, .22); transform: translateX(105%); transition: transform .28s ease; z-index: 15; overflow-y: auto; }
+    .map-detail-drawer.is-open { transform: translateX(0); }
+    .map-detail-close { position: sticky; top: 10px; left: 100%; margin: 10px 10px -34px 0; width: 30px; height: 30px; display: grid; place-items: center; color: var(--ink); background: var(--white); border: 1px solid var(--line); border-radius: 50%; cursor: pointer; font-size: 1rem; line-height: 1; box-shadow: 0 4px 10px rgba(0,0,0,.15); z-index: 2; }
+    .map-detail-photo { aspect-ratio: 4/3; background: var(--soft); overflow: hidden; }
+    .map-detail-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .map-detail-body { padding: 18px 20px 22px; }
+    .map-detail-rent { font-family: var(--font-head, inherit); font-size: 1.6rem; font-weight: 700; color: var(--red); margin-bottom: 4px; }
+    .map-detail-rent span { font-size: .9rem; color: var(--muted); font-weight: 600; }
+    .map-detail-address { color: var(--ink); font-weight: 800; font-size: 1.05rem; margin-bottom: 2px; }
+    .map-detail-city { color: var(--muted); font-size: .88rem; font-weight: 700; margin-bottom: 12px; }
+    .map-detail-specs { display: flex; flex-wrap: wrap; gap: 8px 18px; color: var(--charcoal); font-size: .92rem; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--soft); }
+    .map-detail-pets { color: var(--red-dark); font-weight: 800; font-size: .88rem; margin-bottom: 18px; }
+    .map-detail-actions { display: grid; gap: 10px; }
+
+    /* New sub-parts of the shared .listing-card component, specific to this
+       page's browser grid — scoped to #listing-grid so the added
+       `position: relative` on .listing-card-photo (needed for the photo-count
+       badge below) doesn't leak into the hub-page or nearby-homes grids that
+       already share .listing-card-photo elsewhere in this file. */
+    #listing-grid .listing-card-photo { position: relative; }
+    .listing-card-photocount { position: absolute; left: 8px; bottom: 8px; padding: 3px 9px; color: var(--white); background: rgba(23, 23, 23, .68); border-radius: 999px; font-size: .74rem; font-weight: 800; }
+    .listing-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--soft); }
+    .listing-card-pets { color: var(--red-dark); font-size: .78rem; font-weight: 800; }
+    .listing-card-pets.is-no-pets { color: var(--muted); }
+    .listing-card-viewlink { color: var(--red-dark); font-size: .8rem; font-weight: 800; white-space: nowrap; }
+    .listing-card.is-hidden { display: none; }
+    .listing-card.is-map-hovered { box-shadow: 0 0 0 3px var(--red), 0 16px 34px rgba(23, 23, 23, .18); }
+    .browser-empty { padding: 30px; text-align: center; color: var(--muted); background: var(--white); border: 1px dashed var(--line); border-radius: var(--radius); }
+    .browser-empty button { color: var(--red-dark); background: none; border: 0; font-weight: 800; text-decoration: underline; cursor: pointer; padding: 0; font-size: inherit; }
+
+    .mapboxgl-popup-content { padding: 10px 12px; border-radius: 8px; font-family: var(--font, inherit); }
+    .map-pin-price { color: var(--white); background: var(--red); border: 2px solid var(--white); border-radius: 999px; padding: 5px 10px; font-size: .78rem; font-weight: 900; box-shadow: 0 3px 8px rgba(0,0,0,.25); white-space: nowrap; cursor: pointer; transition: transform .15s ease, background .15s ease, box-shadow .15s ease; transform-origin: center bottom; }
+    .map-pin-price:hover { background: var(--red-dark); }
+    .map-pin-price.is-highlighted { background: var(--red-dark); transform: scale(1.4); box-shadow: 0 6px 18px rgba(0,0,0,.4); z-index: 5; }
+    .map-popup-card { display: flex; flex-direction: column; gap: 4px; min-width: 160px; }
+    .map-popup-card img { width: 100%; height: 90px; object-fit: cover; border-radius: 4px; }
+    .map-popup-card .rent { color: var(--red); font-weight: 800; }
+    .map-popup-card .addr { color: var(--ink); font-size: .84rem; font-weight: 700; }
+    .map-popup-card a { color: var(--red-dark); font-size: .8rem; font-weight: 800; }
+
+    /* Real bugs already found and fixed against this exact design (see
+       claude/listings-build-notes.md) — do not reintroduce:
+       - .map-panel must be `position: relative`, not `static`, on mobile, or
+         the drawer's containing-block relationship breaks and it renders
+         relative to <body> instead (visible as content bleeding out from
+         behind the hero).
+       - Map-view panel height is 600px on mobile, not 480px — the drawer's
+         real content doesn't fit the smaller box.
+       - The drawer's mobile photo aspect ratio is 16/10, not 4/3 — matches
+         the taller drawer content above. */
+    @media (max-width: 980px) {
+      .browser-layout { grid-template-columns: 1fr; }
+      .browser-layout .listing-grid-real { grid-template-columns: repeat(2, 1fr); }
+      .browser-layout.is-map-hidden .listing-grid-real { grid-template-columns: repeat(2, 1fr); }
+      .map-panel { position: relative; height: 340px; }
+      .browser-layout.is-map-only .map-panel { height: 600px; }
+      .map-detail-photo { aspect-ratio: 16/10; }
+      .view-toggle { margin-left: 0; }
+      .map-detail-drawer { width: 100%; max-width: 100%; }
+    }
+    @media (max-width: 620px) {
+      .browser-layout .listing-grid-real, .browser-layout.is-map-hidden .listing-grid-real { grid-template-columns: 1fr; }
+      .range-popover { width: 260px; }
+    }
