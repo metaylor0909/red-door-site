@@ -5,16 +5,15 @@
 // Steps wired up so far: 1 (Turnstile), 2 (geocode), 3 (validate fields),
 // 4 (comp-selection cascade), 5-6 (blend fallback + estimate), 7
 // (confidence score), 9 (market-context panels), 11 (store snapshot in
-// D1). Deliberately NOT yet wired: step 8 (decision #10's RentCast
-// bedroom adjustment — needs the shared per-city cache table this tool
-// doesn't populate on its own), step 10 (cross-sell content — the
-// homes-for-rent listings feed it needs hasn't been built in Astro at
-// all yet), step 12 (Resend owner + LeadSimple emails, the Zapier
-// BD-alert wiring). Those need credentials this environment doesn't have
-// yet (RentCast, Resend) or are hosted-report-page/other-feature
-// concerns. A submission today stores a real snapshot and returns a real
-// token, but nothing gets emailed and no lead is created until step 12
-// is built.
+// D1), 12 (Resend owner email + LeadSimple lead-creation email).
+// Deliberately NOT yet wired: step 8 (decision #10's RentCast bedroom
+// adjustment — needs the shared per-city cache table this tool doesn't
+// populate on its own), step 10 (cross-sell content — the homes-for-rent
+// listings feed it needs hasn't been built in Astro at all yet), and the
+// Zapier BD-alert webhook (that's the [token] report page's concern, on
+// return visits — see view-tracking.ts). A submission without
+// RESEND_API_KEY configured still stores a real snapshot and returns a
+// real token; it just skips sending, with a loud server-side warning.
 
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
@@ -24,6 +23,8 @@ import { geocodeAddress } from '../../../lib/rental-analysis/geocode';
 import { fetchComps } from '../../../lib/rental-analysis/rentengine-client';
 import { analyze } from '../../../lib/rental-analysis/analyze';
 import { computeSupplyDemand, computeTimeToLease } from '../../../lib/rental-analysis/market-context';
+import { sendEmail } from '../../../lib/rental-analysis/resend-client';
+import { buildOwnerEmail, buildLeadSimpleEmail } from '../../../lib/rental-analysis/emails';
 import { requireEnvString } from '../../../lib/rental-analysis/env';
 import type { SubjectProperty } from '../../../lib/rental-analysis/types';
 
@@ -205,10 +206,60 @@ export const POST: APIRoute = async ({ request }) => {
     )
     .run();
 
-  // Step 12 (emails + LeadSimple + BD-alert wiring) isn't built yet — see
-  // the module header. The report is real and stored; nothing is sent.
+  // Step 12: send the owner's headline email and create the LeadSimple
+  // lead. A send failure shouldn't fail the whole submission — the
+  // report is already stored and the owner can still be redirected to
+  // it; per the build brief, the report existing and arriving fast
+  // matters more than any single delivery path being perfect.
+  const relativeReportUrl = `/rental-analysis/${token}`;
+  const absoluteReportUrl = `https://www.reddoorrents.com${relativeReportUrl}`;
+  const resendKey = envRecord.RESEND_API_KEY;
+  if (typeof resendKey === 'string' && resendKey.length > 0) {
+    try {
+      await sendEmail(
+        buildOwnerEmail({
+          ownerName: intake.ownerName,
+          ownerEmail: intake.ownerEmail,
+          propertyAddress: subject.address,
+          estimatedRent: result.estimatedRent,
+          rangeLow: result.rangeLow,
+          rangeHigh: result.rangeHigh,
+          confidencePercent: result.confidence.displayPercent,
+          confidenceBucketLabel: result.confidence.bucketLabel,
+          reportUrl: absoluteReportUrl,
+        }),
+        resendKey
+      );
+    } catch (err) {
+      console.error('[rental-analysis/submit] Owner email failed to send:', err);
+    }
 
-  return new Response(JSON.stringify({ token, reportUrl: `/rental-analysis/${token}` }), {
+    try {
+      await sendEmail(
+        buildLeadSimpleEmail({
+          ownerName: intake.ownerName,
+          ownerEmail: intake.ownerEmail,
+          ownerPhone: intake.ownerPhone,
+          propertyAddress: subject.address,
+          propertyCity: subject.city,
+          propertyState: subject.state,
+          propertyZip: subject.zip,
+          estimatedRent: result.estimatedRent,
+          rangeLow: result.rangeLow,
+          rangeHigh: result.rangeHigh,
+          confidencePercent: result.confidence.displayPercent,
+          reportUrl: absoluteReportUrl,
+        }),
+        resendKey
+      );
+    } catch (err) {
+      console.error('[rental-analysis/submit] LeadSimple lead email failed to send:', err);
+    }
+  } else {
+    console.warn('[rental-analysis/submit] RESEND_API_KEY not configured — owner/LeadSimple emails skipped.');
+  }
+
+  return new Response(JSON.stringify({ token, reportUrl: relativeReportUrl }), {
     status: 201,
     headers: { 'Content-Type': 'application/json' },
   });

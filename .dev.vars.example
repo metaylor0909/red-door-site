@@ -21,6 +21,13 @@ RENTENGINE_RENTAL_ANALYSIS_KEY=
 # Only needed if the token is scoped to multiple accounts.
 RENTENGINE_ACCOUNT_ID=
 
+# Resend — sends the owner's headline email and the LeadSimple
+# lead-creation email (decision #8 step 12). Scope this key to sending
+# access only. Requires mail.reddoorrents.com to show Verified in the
+# Resend dashboard first — the key won't send through an unverified
+# domain even if it's valid.
+RESEND_API_KEY=
+
 # Decision #6's BD-alert Zap (LeadSimple note + email to Chris Knight) —
 # already confirmed live: https://hooks.zapier.com/hooks/catch/18363408/4dtgfdv/
 # (see claude/rental-analysis-tool-build.md, decision #8). Not a rotating
