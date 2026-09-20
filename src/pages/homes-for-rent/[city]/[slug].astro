@@ -1,0 +1,557 @@
+---
+// /homes-for-rent/{city}/{address-slug} — RentEngine listing detail page.
+//
+// Static, built once per Available unit via getStaticPaths — CLAUDE.md's
+// locked decision: "Generate a static page per listing at build time; use
+// a webhook on the units table to trigger rebuilds." NOT an SSR route; the
+// rebuild-on-webhook piece is separate, later work.
+//
+// Design ported faithfully from the approved static HTML reference,
+// homes-for-rent/indianapolis/10291-medallion-drive-unit-262.html — see
+// claude/listings-build-notes.md's "v5 rebuild" / "v6 layout refinement"
+// notes for the real bugs already found and fixed there. Do NOT
+// reintroduce any of them:
+//   - Mapbox script-load-order bug (the script tag defining `mapboxgl`
+//     must appear, unblocked by async/defer, before any script reading
+//     that global — so it's placed first, right inside <main>).
+//   - Lightbox backdrop opacity bug (must be fully opaque, not translucent).
+//   - Breadcrumb-bar padding must match the site header's real rendered
+//     height at each breakpoint (116px above 980px, 74px at/below it) —
+//     never rely on `.is-scrolled` or a solid color behind the header.
+//   - The `.container` + `.content-block` combined-on-one-element bug —
+//     always nest `.content-block` inside its own `.container`, never
+//     combine both classes on one div.
+//   - The sitewide `section` double-padding bug — `#listing-main` zeroes
+//     its own section padding and controls spacing via `.listing-grid`.
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { fetchAllAvailableUnits, addressSlug, citySlug } from '../../../lib/listings/rentengine';
+import { haversineMiles } from '../../../lib/rental-analysis/geo';
+import type { RentEngineUnit } from '../../../lib/listings/types';
+
+// Confirmed non-secret (CLAUDE.md) — RentEngine's own account id, used to
+// build the public "Schedule a Showing" hosted-booking URL.
+const RENTENGINE_ACCOUNT_ID = '6ecca3ec-8e5a-42ed-87ea-af21f97d546e';
+
+// Mapbox public token (`pk.` prefix — a publishable client-side key, not a
+// secret) already embedded directly in the approved static reference HTML
+// and already used client-side elsewhere in this project (the
+// rental-analysis tool's geocoding step reads the same value from
+// `.dev.vars`'s MAPBOX_TOKEN at request time). This page is static
+// (prerender, not SSR — see getStaticPaths below), so it has no request-time
+// Worker env to read from; hardcoding the same already-public token here,
+// exactly as the reference HTML did, doesn't introduce a new exposure.
+const MAPBOX_TOKEN =
+  'pk.eyJ1IjoibWV0YXlsb3IwOTA5IiwiYSI6ImNtdTdmZXJ5MzBpM3cyenB1eXMwNWdwaXkifQ.0sGI21TcAeEe9v_Pa91a9A';
+
+export async function getStaticPaths() {
+  const apiKey = import.meta.env.RENTENGINE_LISTINGS_KEY;
+  if (!apiKey) {
+    // Same graceful-degradation pattern as src/pages/blog/index.astro's
+    // missing-Sanity-credentials handling: log and build zero pages rather
+    // than crash the build. RENTENGINE_LISTINGS_KEY isn't set yet.
+    console.warn('[homes-for-rent] RENTENGINE_LISTINGS_KEY not configured — no listing detail pages will build.');
+    return [];
+  }
+
+  let units: RentEngineUnit[] = [];
+  try {
+    units = await fetchAllAvailableUnits({
+      apiKey,
+      accountId: import.meta.env.RENTENGINE_LISTINGS_ACCOUNT_ID || RENTENGINE_ACCOUNT_ID,
+    });
+  } catch (err) {
+    console.warn('[homes-for-rent] Could not reach RentEngine — no listing detail pages will build.', err);
+    return [];
+  }
+
+  return units.map((unit) => ({
+    params: { city: citySlug(unit.address.city), slug: addressSlug(unit) },
+    props: { unit, allUnits: units },
+  }));
+}
+
+interface Props {
+  unit: RentEngineUnit;
+  allUnits: RentEngineUnit[];
+}
+
+const { unit, allUnits } = Astro.props;
+
+const citySlugForUnit = citySlug(unit.address.city);
+const cityHubHref = `/${citySlugForUnit}-homes-for-rent`;
+const detailPath = `/homes-for-rent/${citySlugForUnit}/${addressSlug(unit)}`;
+const canonicalPhotos = unit.marketing_photos.filter((p) => !p.hidden).map((p) => p.original);
+const mainPhoto = canonicalPhotos[0] as string | undefined;
+const thumbCount = Math.min(canonicalPhotos.length - 1, 4);
+const thumbPhotos = thumbCount > 0 ? canonicalPhotos.slice(1, 1 + thumbCount) : [];
+const remainingPhotoCount = canonicalPhotos.length - (1 + thumbPhotos.length);
+
+const propertyTypeLabel = (unit.property_type || 'Home').toUpperCase();
+const bedsLabel = unit.bedrooms === 0 ? 'Studio' : `${unit.bedrooms}BR`;
+const bathsLabel = `${unit.bathrooms}BA`;
+const rentDisplay = unit.rent != null ? `$${unit.rent.toLocaleString()}` : 'Contact for pricing';
+
+// --- SEO: title/meta/H1/schema must all include the city plainly
+// (CLAUDE.md's RentEngine integration note, Sep 11) — individual listing
+// pages are meant to independently rank for "[city] homes for rent" in
+// addition to that city's own homes-for-rent hub page.
+const pageTitle = `${bedsLabel}/${bathsLabel} ${propertyTypeLabel} for Rent in ${unit.address.city}, ${unit.address.state} | ${unit.address.formatted_address} | Red Door Property Management`;
+const pageDescription = `${unit.bedrooms}-bedroom, ${unit.bathrooms}-bathroom ${propertyTypeLabel.toLowerCase()} for rent at ${unit.address.formatted_address}, ${unit.address.city}, ${unit.address.state}.${
+  unit.rent != null ? ` $${unit.rent.toLocaleString()}/month.` : ''
+} Managed by Red Door Property Management.`;
+
+// The static reference's <h1> was the street address alone, with city/state
+// in a separate line below it. That predates (or wasn't reconciled against)
+// the later, explicit "H1 must include the city plainly" requirement above
+// — resolved here by folding city/state into the H1 text itself (matching
+// the JSON-LD `name` field's own format below), keeping the shorter
+// subtitle line for the ZIP. A deliberate, documented departure from a
+// pixel-for-pixel port of the reference file, not an oversight.
+const h1Text = `${unit.address.formatted_address}, ${unit.address.city}, ${unit.address.state}`;
+
+const scheduleShowingUrl = `https://app.rentengine.io/public/schedule-showing/${unit.id}?accounts=${RENTENGINE_ACCOUNT_ID}`;
+
+const detailRows: Array<[string, string]> = [
+  ['Bedrooms', unit.bedrooms === 0 ? 'Studio' : String(unit.bedrooms)],
+  ['Bathrooms', String(unit.bathrooms)],
+  ...(unit.sqft ? ([['Square Feet', unit.sqft.toLocaleString()]] as Array<[string, string]>) : []),
+  ['Property Type', propertyTypeLabel],
+  [
+    'Parking',
+    unit.parking_type && unit.parking_type.length > 0
+      ? unit.parking_type.join(', ') + (unit.num_parking_spots ? ` (${unit.num_parking_spots})` : '')
+      : 'Not listed',
+  ],
+  ['Laundry', unit.laundry ?? 'Not listed'],
+  ['Pets', unit.pets_allowed === true ? 'Yes' : unit.pets_allowed === false ? 'No' : 'Ask'],
+];
+
+const moveInFeesTotal = unit.move_in_fees.reduce((sum, f) => sum + f.amount, 0);
+const monthlyFeesTotal = unit.monthly_fees.reduce((sum, f) => sum + f.amount, 0);
+const firstMonthRent = unit.rent ?? 0;
+// The reference file's move-in cost card included a hardcoded "Security
+// deposit" line equal to one month's rent. RentEngineUnit has no dedicated
+// deposit field, only `move_in_fees`/`monthly_fees` arrays — rather than
+// fabricate a deposit figure not backed by real data, it's left out here;
+// if a unit's actual security deposit is one of its `move_in_fees` line
+// items, it already appears itemized below under its own real name.
+const totalMoveInCost = firstMonthRent + moveInFeesTotal + monthlyFeesTotal;
+const showMoveInCostCard = unit.rent != null || unit.move_in_fees.length > 0 || unit.monthly_fees.length > 0;
+
+// "Other Red Door Homes Nearby" — same city first, then nearest by real
+// haversine distance, top 4 (CLAUDE.md's RentEngine integration note).
+const unitLat = unit.address.coordinates?.latitude;
+const unitLng = unit.address.coordinates?.longitude;
+const nearbyUnits = allUnits
+  .filter((u) => u.id !== unit.id)
+  .map((u) => {
+    const sameCity = citySlug(u.address.city) === citySlugForUnit;
+    const uLat = u.address.coordinates?.latitude;
+    const uLng = u.address.coordinates?.longitude;
+    const distance =
+      unitLat != null && unitLng != null && uLat != null && uLng != null
+        ? haversineMiles(unitLat, unitLng, uLat, uLng)
+        : Number.POSITIVE_INFINITY;
+    return { unit: u, sameCity, distance };
+  })
+  .sort((a, b) => {
+    if (a.sameCity !== b.sameCity) return a.sameCity ? -1 : 1;
+    return a.distance - b.distance;
+  })
+  .slice(0, 4)
+  .map((entry) => entry.unit);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Apartment',
+      '@id': `https://www.reddoorrents.com${detailPath}#listing`,
+      name: `${unit.address.formatted_address}, ${unit.address.city}, ${unit.address.state}`,
+      description: unit.marketing_description,
+      numberOfRooms: unit.bedrooms,
+      numberOfBathroomsTotal: unit.bathrooms,
+      ...(unit.sqft ? { floorSize: { '@type': 'QuantitativeValue', value: unit.sqft, unitCode: 'FTK' } } : {}),
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: unit.address.formatted_address,
+        addressLocality: unit.address.city,
+        addressRegion: unit.address.state,
+        postalCode: unit.address.zip_code,
+        addressCountry: 'US',
+      },
+      petsAllowed: unit.pets_allowed ?? undefined,
+      url: `https://www.reddoorrents.com${detailPath}`,
+      ...(unit.rent != null
+        ? {
+            offers: {
+              '@type': 'Offer',
+              price: unit.rent,
+              priceCurrency: 'USD',
+              availability: 'https://schema.org/InStock',
+              businessFunction: 'https://schema.org/LeaseOut',
+            },
+          }
+        : {}),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.reddoorrents.com/' },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: `${unit.address.city} Homes for Rent`,
+          item: `https://www.reddoorrents.com${cityHubHref}`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: unit.address.formatted_address,
+          item: `https://www.reddoorrents.com${detailPath}`,
+        },
+      ],
+    },
+  ],
+};
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path={detailPath} ogImage={mainPhoto}>
+  <Fragment slot="head">
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
+
+  {/* Must load, unblocked by async/defer, before the module script below that reads `mapboxgl` — see the module-header note on the Mapbox script-load-order bug. */}
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js" is:inline></script>
+
+  <section class="listing-hero">
+    <div class="listing-breadcrumb-bar">
+      <div class="listing-breadcrumb-inner">
+        <div class="container">
+          <p class="listing-breadcrumb">
+            <a href={cityHubHref}>{unit.address.city} Homes for Rent</a> &rsaquo; {unit.address.formatted_address}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="container listing-gallery-wrap">
+      {
+        mainPhoto ? (
+          <div class="listing-gallery" data-listing-gallery>
+            <button type="button" class="gallery-main" data-photo-index="0">
+              <img src={mainPhoto} alt={unit.address.formatted_address} loading="eager" />
+            </button>
+            {thumbPhotos.length > 0 && (
+              <div class={`gallery-thumbs gallery-thumbs-${thumbPhotos.length}`}>
+                {thumbPhotos.map((photo, i) => (
+                  <button type="button" class="gallery-thumb" data-photo-index={i + 1}>
+                    <img src={photo} alt="" loading="lazy" />
+                    {i === thumbPhotos.length - 1 && remainingPhotoCount > 0 && (
+                      <span class="gallery-more-overlay">+{remainingPhotoCount} photos</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div class="listing-gallery-empty">Photos coming soon</div>
+        )
+      }
+
+      {
+        mainPhoto && (
+          <div class="gallery-lightbox" id="gallery-lightbox" hidden>
+            <button type="button" class="gallery-lightbox-close" id="gallery-lightbox-close" aria-label="Close gallery">
+              &times;
+            </button>
+            <button type="button" class="gallery-lightbox-nav gallery-lightbox-prev" id="gallery-lightbox-prev" aria-label="Previous photo">
+              &lsaquo;
+            </button>
+            <img id="gallery-lightbox-img" src="" alt={unit.address.formatted_address} />
+            <button type="button" class="gallery-lightbox-nav gallery-lightbox-next" id="gallery-lightbox-next" aria-label="Next photo">
+              &rsaquo;
+            </button>
+            <p class="gallery-lightbox-count" id="gallery-lightbox-count" />
+          </div>
+        )
+      }
+      <script type="application/json" id="gallery-photos-data" set:html={JSON.stringify(canonicalPhotos)} />
+    </div>
+  </section>
+
+  <section class="listing-summary-band">
+    <div class="container listing-summary-inner">
+      <div class="listing-summary-main">
+        <h1>{h1Text}</h1>
+        <p class="listing-location">{unit.address.city}, {unit.address.state} {unit.address.zip_code}</p>
+      </div>
+      <div class="listing-summary-stats">
+        <p class="listing-summary-rent">{rentDisplay}<span>/month</span></p>
+        <div class="listing-specs-row">
+          <span><strong>{unit.bedrooms}</strong> beds</span>
+          <span><strong>{unit.bathrooms}</strong> bath</span>
+          {unit.sqft && <span><strong>{unit.sqft.toLocaleString()}</strong> sq ft</span>}
+          <span>{propertyTypeLabel}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="listing-main">
+    <div class="container listing-grid">
+      <div class="listing-body reveal">
+        <div class="content-block">
+          <h2>About This Home</h2>
+          {/* Rendered verbatim, per CLAUDE.md/build-notes: marketing_description is
+              pre-reviewed (Fair Housing included) before it enters RentEngine — no
+              scrubbing here. white-space:pre-line preserves the source's blank-line
+              paragraph breaks without re-deriving the lost generator's paragraph-split
+              logic. */}
+          <p class="listing-description">{unit.marketing_description}</p>
+        </div>
+
+        <div class="content-block">
+          <h2>Details</h2>
+          <div class="fee-details" style="max-width:480px">
+            {detailRows.map(([label, value]) => (
+              <div><span>{label}</span><strong>{value}</strong></div>
+            ))}
+          </div>
+          {unit.pet_restrictions && <p class="callout-note">{unit.pet_restrictions}</p>}
+        </div>
+
+        <div class="content-block">
+          <h2>Rental Requirements</h2>
+          <p>
+            All applicants must meet Red Door&rsquo;s published rental qualification standards &mdash; income,
+            credit, and rental history criteria. See our full rental requirements on the{' '}
+            <a class="area-link" href="/application-criteria">Tenant Qualification Criteria</a> page.
+          </p>
+        </div>
+      </div>
+
+      <aside class="listing-sidebar reveal">
+        <div class="fee-block">
+          {unit.showing_method && <span class="badge">{unit.showing_method}</span>}
+          <p class="listing-rent" style="margin-bottom:6px">{rentDisplay}<span>/month</span></p>
+          <div class="sidebar-cta-stack">
+            <a class="btn btn-primary" href={scheduleShowingUrl} target="_blank" rel="noopener">Schedule a Showing</a>
+            {unit.custom_application_url && (
+              <a class="btn btn-secondary" href={unit.custom_application_url} target="_blank" rel="noopener">Apply Now</a>
+            )}
+            <a class="sidebar-ask-link" href="/contact">Ask a Question</a>
+          </div>
+          <div class="sidebar-managed-note">
+            <strong>Managed by Red Door</strong>
+            <p>Self-guided showings available. Schedule a tour any time before applying.</p>
+          </div>
+        </div>
+        <p style="text-align:center;margin-top:14px">
+          <a class="area-link" href={cityHubHref}>&larr; See all homes for rent in {unit.address.city}</a>
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <section>
+    <div class="container reveal">
+      <div class="content-block">
+        <h2>Location</h2>
+        <p style="color:var(--muted);margin-bottom:16px">{unit.address.formatted_address}</p>
+        {
+          unitLat != null && unitLng != null ? (
+            <div
+              class="listing-map"
+              id="listing-map"
+              data-lat={unitLat}
+              data-lng={unitLng}
+              aria-label="Map showing this home's location"
+            />
+          ) : (
+            <p class="consent">Map unavailable for this listing.</p>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  {
+    showMoveInCostCard && (
+      <section class="section-soft">
+        <div class="container reveal">
+          <div class="content-block">
+            <div class="section-kicker">Cost to Move In</div>
+            <h2 class="movein-heading">Total Move-In Cost</h2>
+            <div class="movein-cost-card">
+              <div class="movein-cost-total">
+                <span>Due at move-in</span>
+                <strong>${totalMoveInCost.toLocaleString()}</strong>
+              </div>
+              <div class="fee-details">
+                {unit.rent != null && (
+                  <div>
+                    <span>First month&rsquo;s rent</span>
+                    <strong>${unit.rent.toLocaleString()}</strong>
+                  </div>
+                )}
+                {unit.move_in_fees.length > 0 && (
+                  <Fragment>
+                    <div class="fee-details-subhead">Move-in fees &mdash; ${moveInFeesTotal.toLocaleString()}</div>
+                    {unit.move_in_fees.map((fee) => (
+                      <div>
+                        <span>{fee.name}</span>
+                        <strong>${fee.amount.toLocaleString()}</strong>
+                      </div>
+                    ))}
+                  </Fragment>
+                )}
+                {unit.monthly_fees.length > 0 && (
+                  <Fragment>
+                    <div class="fee-details-subhead">First month&rsquo;s recurring fees &mdash; ${monthlyFeesTotal.toLocaleString()}</div>
+                    {unit.monthly_fees.map((fee) => (
+                      <div>
+                        <span>{fee.name} /mo</span>
+                        <strong>${fee.amount.toLocaleString()}</strong>
+                      </div>
+                    ))}
+                  </Fragment>
+                )}
+              </div>
+              <p class="movein-cost-note">Estimates for illustration; actual amount may vary based on approval and lease start date.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    nearbyUnits.length > 0 && (
+      <section>
+        <div class="container reveal">
+          <div class="section-head center">
+            <div class="section-kicker">Keep Looking</div>
+            <h2>Other Red Door Homes Nearby</h2>
+          </div>
+          <div class="listing-grid-real">
+            {nearbyUnits.map((nearby) => {
+              const nearbyPhoto = nearby.marketing_photos.find((p) => !p.hidden)?.original;
+              const nearbyHref = `/homes-for-rent/${citySlug(nearby.address.city)}/${addressSlug(nearby)}`;
+              const nearbyRent = nearby.rent != null ? `$${nearby.rent.toLocaleString()}` : 'Contact for pricing';
+              return (
+                <a class="listing-card" href={nearbyHref}>
+                  <div class="listing-card-photo">
+                    {nearbyPhoto && <img src={nearbyPhoto} alt={nearby.address.formatted_address} loading="lazy" />}
+                  </div>
+                  <div class="listing-card-body">
+                    <p class="listing-card-rent">{nearbyRent}<span>/mo</span></p>
+                    <p class="listing-card-address">{nearby.address.formatted_address}</p>
+                    <p class="listing-card-city">{nearby.address.city}, {nearby.address.state}</p>
+                    <p class="listing-card-specs">
+                      {nearby.bedrooms} bd &middot; {nearby.bathrooms} ba
+                      {nearby.sqft ? ` · ${nearby.sqft.toLocaleString()} sq ft` : ''}
+                    </p>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+          <p style="text-align:center;margin-top:24px">
+            <a class="area-link" href={cityHubHref}>See all homes for rent in {unit.address.city} &rarr;</a>
+          </p>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Interested in This Home?</h2>
+      <p>Schedule a showing or apply now to see it in person.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href={scheduleShowingUrl} target="_blank" rel="noopener">Schedule a Showing</a>
+        {unit.custom_application_url && (
+          <a class="btn btn-secondary" href={unit.custom_application_url} target="_blank" rel="noopener">Apply Now</a>
+        )}
+        <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+      </div>
+    </div>
+  </section>
+
+  <script define:vars={{ mapboxToken: MAPBOX_TOKEN }}>
+    (function () {
+      var gallery = document.querySelector('[data-listing-gallery]');
+      if (gallery) {
+        var photosDataEl = document.getElementById('gallery-photos-data');
+        var photos = photosDataEl ? JSON.parse(photosDataEl.textContent || '[]') : [];
+        var lightbox = document.getElementById('gallery-lightbox');
+        var lightboxImg = document.getElementById('gallery-lightbox-img');
+        var lightboxCount = document.getElementById('gallery-lightbox-count');
+        var currentIndex = 0;
+
+        function showPhoto(index) {
+          currentIndex = (index + photos.length) % photos.length;
+          lightboxImg.src = photos[currentIndex];
+          if (lightboxCount) lightboxCount.textContent = currentIndex + 1 + ' / ' + photos.length;
+        }
+
+        function openLightbox(index) {
+          showPhoto(index);
+          lightbox.hidden = false;
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+          lightbox.hidden = true;
+          document.body.style.overflow = '';
+        }
+
+        document.querySelectorAll('[data-photo-index]').forEach(function (el) {
+          el.addEventListener('click', function () {
+            openLightbox(parseInt(el.getAttribute('data-photo-index'), 10));
+          });
+        });
+
+        var closeBtn = document.getElementById('gallery-lightbox-close');
+        if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+        var prevBtn = document.getElementById('gallery-lightbox-prev');
+        if (prevBtn) prevBtn.addEventListener('click', function () { showPhoto(currentIndex - 1); });
+        var nextBtn = document.getElementById('gallery-lightbox-next');
+        if (nextBtn) nextBtn.addEventListener('click', function () { showPhoto(currentIndex + 1); });
+
+        if (lightbox) {
+          lightbox.addEventListener('click', function (e) {
+            if (e.target === lightbox) closeLightbox();
+          });
+        }
+        document.addEventListener('keydown', function (e) {
+          if (!lightbox || lightbox.hidden) return;
+          if (e.key === 'Escape') closeLightbox();
+          if (e.key === 'ArrowLeft') showPhoto(currentIndex - 1);
+          if (e.key === 'ArrowRight') showPhoto(currentIndex + 1);
+        });
+      }
+
+      var mapEl = document.getElementById('listing-map');
+      if (mapEl && typeof mapboxgl !== 'undefined') {
+        var lat = parseFloat(mapEl.getAttribute('data-lat') || '');
+        var lng = parseFloat(mapEl.getAttribute('data-lng') || '');
+        if (!isNaN(lat) && !isNaN(lng)) {
+          mapboxgl.accessToken = mapboxToken;
+          var map = new mapboxgl.Map({
+            container: 'listing-map',
+            style: 'mapbox://styles/mapbox/light-v11',
+            center: [lng, lat],
+            zoom: 14,
+            interactive: true,
+          });
+          map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+          new mapboxgl.Marker({ color: '#8b0e04' }).setLngLat([lng, lat]).addTo(map);
+        }
+      }
+    })();
+  </script>
+</BaseLayout>

@@ -2513,3 +2513,142 @@
     .post-mini-card a:hover {
       color: var(--brand);
     }
+
+    /* ---------- Listing detail page ---------- */
+    /* .content-block didn't exist here yet despite being referenced by
+       src/pages/blog/[slug].astro ("container content-block" on one div,
+       fine for that single-column article page) — added now since the
+       listing detail page needs it for real, and per the v6 layout note
+       below it must be NESTED inside its own .container, never combined
+       with it on the same element. */
+    .content-block { max-width: 900px; }
+    .content-block + .content-block { margin-top: 40px; }
+    .content-block h2 { margin-bottom: 14px; }
+    .content-block > p { color: var(--muted); font-size: 1.02rem; margin-bottom: 16px; }
+
+    .listing-description { white-space: pre-line; }
+
+    .callout-note { margin: 20px 0 0; padding: 16px 20px; color: var(--charcoal); background: var(--brand-tint); border-left: 4px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; font-size: .95rem; }
+    .badge { width: fit-content; display: inline-flex; align-items: center; min-height: 28px; padding: 5px 10px; border-radius: 999px; background: var(--brand-tint); color: var(--red-dark); font-weight: 900; text-transform: uppercase; margin-bottom: 16px; font-size: .82rem; letter-spacing: .04em; }
+
+    /* Breadcrumb bar — scoped to .listing-breadcrumb-bar rather than a bare
+       .listing-breadcrumb rule, so blog/[slug].astro's plain (non-dark-bar)
+       reuse of the same class name for its own breadcrumb line isn't
+       repainted white-on-white. The outer wrapper carries ONLY padding-top
+       (no background — this is the zone the fixed .site-header covers);
+       the inner bar carries the solid black background. Padding-top must
+       exactly match the header's own real rendered height at each
+       breakpoint (measured, not guessed) — see the module-header note on
+       the detail page for why (three iteration passes went into this). */
+    .listing-hero { padding: 0; }
+    .listing-breadcrumb-bar { padding-top: 116px; }
+    .listing-breadcrumb-inner { padding: 10px 0; background: #141414; }
+    .listing-breadcrumb-bar .listing-breadcrumb { margin: 0; color: rgba(255, 255, 255, .68); font-size: .86rem; }
+    .listing-breadcrumb-bar .listing-breadcrumb a { color: var(--white); font-weight: 800; }
+    .listing-gallery-wrap { padding-top: 0; }
+
+    /* Real gallery grid + lightbox */
+    .listing-gallery { display: grid; grid-template-columns: 1.5fr 1fr; gap: 8px; height: 420px; }
+    .gallery-main { position: relative; padding: 0; border: 0; border-radius: var(--radius) 0 0 var(--radius); overflow: hidden; cursor: pointer; background: #000; }
+    .gallery-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery-thumbs { display: grid; gap: 8px; height: 100%; }
+    .gallery-thumbs-4 { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
+    .gallery-thumbs-3 { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
+    .gallery-thumbs-2 { grid-template-columns: 1fr; grid-template-rows: repeat(2, 1fr); }
+    .gallery-thumbs-1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+    .gallery-thumb { position: relative; padding: 0; border: 0; overflow: hidden; cursor: pointer; background: var(--soft); }
+    .gallery-thumbs-4 .gallery-thumb:nth-child(2) { border-radius: 0 var(--radius) 0 0; }
+    .gallery-thumbs-4 .gallery-thumb:nth-child(4) { border-radius: 0 0 var(--radius) 0; }
+    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gallery-more-overlay { position: absolute; inset: 0; display: grid; place-items: center; color: var(--white); background: rgba(23, 23, 23, .55); font-weight: 900; font-size: 1.05rem; }
+    .listing-gallery-empty { display: grid; place-items: center; height: 320px; background: var(--soft); border-radius: var(--radius); color: var(--muted); }
+
+    @media (max-width: 760px) {
+      .listing-gallery { grid-template-columns: 1fr; height: auto; }
+      .gallery-main { border-radius: var(--radius); aspect-ratio: 4/3; }
+      .gallery-thumbs { display: none; }
+    }
+
+    /* Fully opaque backdrop — a translucent one lets page content (e.g. the
+       Schedule a Showing button) bleed through and read like a z-index bug
+       when it isn't one. See the module-header note. */
+    .gallery-lightbox { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; background: #0a0a0a; }
+    .gallery-lightbox[hidden] { display: none; }
+    .gallery-lightbox-img, #gallery-lightbox-img { max-width: 88vw; max-height: 84vh; object-fit: contain; }
+    .gallery-lightbox-close { position: absolute; top: 20px; right: 24px; width: 40px; height: 40px; display: grid; place-items: center; color: var(--white); background: rgba(255,255,255,.12); border: 0; border-radius: 50%; font-size: 1.4rem; cursor: pointer; }
+    .gallery-lightbox-close:hover { background: rgba(255,255,255,.22); }
+    .gallery-lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 52px; height: 52px; display: grid; place-items: center; color: var(--white); background: rgba(255,255,255,.12); border: 0; border-radius: 50%; font-size: 2rem; cursor: pointer; line-height: 1; }
+    .gallery-lightbox-nav:hover { background: rgba(255,255,255,.22); }
+    .gallery-lightbox-prev { left: 20px; }
+    .gallery-lightbox-next { right: 20px; }
+    .gallery-lightbox-count { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: var(--white); font-size: .88rem; font-weight: 700; }
+
+    /* Prominent summary band, directly under the gallery */
+    .listing-summary-band { padding: 24px 0; color: var(--white); background: var(--charcoal); }
+    .listing-summary-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 32px; }
+    .listing-summary-main h1 { margin: 0 0 4px; color: var(--white); font-size: clamp(1.5rem, 2.6vw, 2rem); transform: none; }
+    .listing-summary-main .listing-location { margin: 0; color: rgba(255, 255, 255, .72); font-weight: 700; }
+    .listing-summary-stats { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 28px; }
+    .listing-summary-rent { margin: 0; font-family: var(--font-head); font-size: clamp(1.4rem, 2.4vw, 1.9rem); font-weight: 500; color: var(--white); white-space: nowrap; }
+    .listing-summary-rent span { font-size: .92rem; color: rgba(255, 255, 255, .68); font-weight: 700; }
+    .listing-summary-stats .listing-specs-row { margin: 0; color: var(--white); font-size: 1.06rem; }
+    .listing-summary-stats .listing-specs-row strong { color: var(--white); font-size: 1.15em; }
+    @media (max-width: 640px) { .listing-summary-inner { flex-direction: column; align-items: flex-start; } }
+
+    /* #listing-main zeroes its own section padding — a plain <section>
+       otherwise also picks up the sitewide `section { padding: clamp(...) }`
+       default on top of .listing-grid's own padding, stacking to ~150–250px
+       of dead space. Spacing here is controlled entirely by .listing-grid. */
+    #listing-main { padding: 0; }
+    .listing-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); gap: clamp(28px, 4vw, 48px); align-items: start; padding: 32px 0 40px; }
+    .listing-rent { font-family: var(--font-head); font-size: 2.1rem; font-weight: 500; color: var(--red); margin-bottom: 12px; }
+    .listing-rent span { font-size: 1rem; color: var(--muted); font-weight: 700; }
+    .listing-specs-row { display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--charcoal); font-size: .95rem; }
+    .listing-sidebar { position: sticky; top: 100px; }
+
+    .fee-block { padding: 30px; background: var(--white); border: 1px solid var(--line); border-top: 5px solid var(--red); border-radius: var(--radius); box-shadow: 0 12px 34px rgba(23, 23, 23, .07); }
+    .fee-details { display: grid; gap: 8px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .fee-details div { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 38px; padding: 8px 0; border-bottom: 1px solid var(--soft); }
+    .fee-details div:last-child { border-bottom: 0; }
+    .fee-details span { color: var(--charcoal); font-weight: 800; }
+    .fee-details strong { color: var(--red); font-size: 1.05rem; white-space: nowrap; }
+    .fee-details-subhead { grid-column: 1 / -1; margin-top: 8px; padding-top: 12px; border-top: 1px dashed var(--line); color: var(--muted); font-weight: 900; font-size: .76rem; letter-spacing: .06em; text-transform: uppercase; }
+
+    .sidebar-cta-stack { display: grid; gap: 10px; }
+    .sidebar-cta-stack .btn { width: 100%; box-sizing: border-box; }
+    .sidebar-ask-link { text-align: center; padding: 10px 0 2px; color: var(--red-dark); font-weight: 800; font-size: .9rem; }
+    .sidebar-managed-note { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .sidebar-managed-note strong { display: block; margin-bottom: 6px; color: var(--ink); font-size: .92rem; }
+    .sidebar-managed-note p { color: var(--muted); font-size: .86rem; line-height: 1.5; margin: 0; }
+
+    .listing-map { height: 340px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); }
+
+    .movein-heading { font-size: clamp(1.4rem, 2.2vw, 1.7rem); }
+    .movein-cost-card { max-width: 520px; padding: 20px 22px; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .movein-cost-total { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid var(--ink); }
+    .movein-cost-total span { color: var(--muted); font-weight: 800; font-size: .92rem; }
+    .movein-cost-total strong { color: var(--ink); font-family: var(--font-head); font-size: 1.32rem; font-weight: 500; }
+    .movein-cost-note { margin: 18px 0 0; color: var(--muted); font-size: .84rem; }
+
+    /* Nearby homes: compact 3-across cards, not full-bleed photos */
+    .listing-grid-real { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; margin-top: 8px; }
+    .listing-card { display: block; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); transition: transform .18s ease, box-shadow .18s ease; }
+    .listing-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-strong); }
+    .listing-card-photo { aspect-ratio: 4 / 3; overflow: hidden; background: var(--soft); }
+    .listing-card-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .listing-card-body { padding: 14px 16px 18px; }
+    .listing-card-rent { margin: 0 0 4px; color: var(--red); font-family: var(--font-head); font-size: 1.2rem; font-weight: 500; }
+    .listing-card-rent span { color: var(--muted); font-size: .82rem; font-weight: 700; }
+    .listing-card-address { margin: 0 0 2px; color: var(--ink); font-weight: 800; font-size: .94rem; }
+    .listing-card-city { margin: 0 0 8px; color: var(--muted); font-size: .84rem; }
+    .listing-card-specs { margin: 0; color: var(--charcoal); font-size: .84rem; font-weight: 700; }
+
+    @media (max-width: 980px) { .listing-breadcrumb-bar { padding-top: 74px; } }
+    @media (max-width: 900px) {
+      .listing-grid-real { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .listing-grid { grid-template-columns: 1fr; }
+      .listing-sidebar { position: static; }
+    }
+    @media (max-width: 600px) {
+      .listing-grid-real { grid-template-columns: 1fr; }
+    }

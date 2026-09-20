@@ -73,16 +73,26 @@ const jsonLd = {
   </Fragment>
 
   <article class="blog-post-page">
-    <div class="container content-block">
-      <p class="listing-breadcrumb"><a href="/blog">Blog</a> &rsaquo; {post.title}</p>
-      <h1>{post.title}</h1>
-      <p class="blog-post-meta">
-        {post.authorName && <span>{post.authorName}</span>}
-        <span>{new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
-      </p>
-      {post.mainImageUrl && <img class="blog-post-hero-image" src={post.mainImageUrl} alt={post.mainImageAlt || ''} />}
-      <div class="blog-post-body">
-        <PortableText value={post.body} components={portableTextComponents} />
+    <div class="container">
+      {/* .content-block must nest inside its own .container, never combine
+          both classes on one element — combining them makes the block
+          center within the full page instead of sitting flush-left (see
+          claude/listings-build-notes.md's "v6 layout refinement" notes,
+          where this exact bug was found and fixed on the listing detail
+          page). .content-block had no real CSS definition until that same
+          pass gave it one, which is what would have activated this bug
+          here too if left combined. */}
+      <div class="content-block">
+        <p class="listing-breadcrumb"><a href="/blog">Blog</a> &rsaquo; {post.title}</p>
+        <h1>{post.title}</h1>
+        <p class="blog-post-meta">
+          {post.authorName && <span>{post.authorName}</span>}
+          <span>{new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+        </p>
+        {post.mainImageUrl && <img class="blog-post-hero-image" src={post.mainImageUrl} alt={post.mainImageAlt || ''} />}
+        <div class="blog-post-body">
+          <PortableText value={post.body} components={portableTextComponents} />
+        </div>
       </div>
     </div>
   </article>
