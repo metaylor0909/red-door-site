@@ -4,16 +4,16 @@
 //
 // Steps wired up so far: 1 (Turnstile), 2 (geocode), 3 (validate fields),
 // 4 (comp-selection cascade), 5-6 (blend fallback + estimate), 7
-// (confidence score), 9 (market-context panels), 11 (store snapshot in
-// D1), 12 (Resend owner email + LeadSimple lead-creation email).
-// Deliberately NOT yet wired: step 8 (decision #10's RentCast bedroom
-// adjustment — needs the shared per-city cache table this tool doesn't
-// populate on its own), step 10 (cross-sell content — the homes-for-rent
-// listings feed it needs hasn't been built in Astro at all yet), and the
-// Zapier BD-alert webhook (that's the [token] report page's concern, on
-// return visits — see view-tracking.ts). A submission without
-// RESEND_API_KEY configured still stores a real snapshot and returns a
-// real token; it just skips sending, with a loud server-side warning.
+// (confidence score), 8 (decision #10's RentCast bedroom adjustment), 9
+// (market-context panels), 11 (store snapshot in D1), 12 (Resend owner
+// email + LeadSimple lead-creation email). Deliberately NOT yet wired:
+// step 10 (cross-sell content — the homes-for-rent listings feed it
+// needs hasn't been built in Astro at all yet), and the Zapier BD-alert
+// webhook (that's the [token] report page's concern, on return visits —
+// see view-tracking.ts). Missing RESEND_API_KEY or RENTCAST_API_KEY
+// degrade gracefully (skip sending / skip the bedroom adjustment) rather
+// than failing the submission — only Mapbox and RentEngine are hard
+// requirements, since the core estimate can't be computed without them.
 
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
@@ -148,7 +148,25 @@ export const POST: APIRoute = async ({ request }) => {
     return jsonError(502, 'Could not pull comparable properties right now. Please try again shortly.');
   }
 
-  const result = analyze(comps, subject);
+  const db = env.DB;
+  if (!db) {
+    console.error('[rental-analysis/submit] D1 binding "DB" is not configured.');
+    return jsonError(500, 'Rental analysis is temporarily unavailable. Please try again later.');
+  }
+
+  // Step 8: decision #10's bedroom adjustment — shares RentCast's account/
+  // key with the (separate, not-yet-built) homes-for-rent project per
+  // Michael's call. Graceful skip if not configured: the estimate still
+  // works, ±1-bed comps just enter the median unadjusted, same as before
+  // this tier existed.
+  const rentCastKey = envRecord.RENTCAST_API_KEY;
+  const bedroomAdjustmentContext =
+    typeof rentCastKey === 'string' && rentCastKey.length > 0 ? { db, rentCastApiKey: rentCastKey } : undefined;
+  if (!bedroomAdjustmentContext) {
+    console.warn('[rental-analysis/submit] RENTCAST_API_KEY not configured — bedroom adjustment skipped.');
+  }
+
+  const result = await analyze(comps, subject, bedroomAdjustmentContext);
 
   // Step 9: market-context panels, from the same full pool just fetched
   // (not the narrowed top-12) — no new RentEngine call.
@@ -168,12 +186,6 @@ export const POST: APIRoute = async ({ request }) => {
     supplyDemand,
     timeToLease,
   };
-
-  const db = env.DB;
-  if (!db) {
-    console.error('[rental-analysis/submit] D1 binding "DB" is not configured.');
-    return jsonError(500, 'Rental analysis is temporarily unavailable. Please try again later.');
-  }
 
   await db
     .prepare(

@@ -1,15 +1,10 @@
-// Orchestrates decisions #1, #2, #3, #9 against an already-fetched comp
-// pool. Decision #10's bedroom adjustment is deliberately not wired in
-// yet — it needs a live RentCast-backed per-city file (see
-// claude/rental-analysis-tool-build.md decision #10), which isn't
-// available in this environment yet. Once that store exists, applying
-// bedroom-adjusted rents to the ±1-bed comps in `comps` (before the
-// estimate median in decision #2/#3) is the one remaining piece this
-// orchestrator needs to grow.
+// Orchestrates decisions #1, #2, #3, #9, #10 against an already-fetched
+// comp pool.
 
 import { selectComps } from './comp-selection';
 import { buildEstimate, withEstimateCompromises } from './fallback-and-estimate';
 import { computeConfidence } from './confidence';
+import { applyBedroomAdjustments } from './bedroom-adjustment';
 import type { RentEngineComp, SubjectProperty } from './types';
 
 export interface AnalysisResult {
@@ -21,14 +16,42 @@ export interface AnalysisResult {
   isMultiUnitPath: boolean;
 }
 
-export function analyze(rawComps: RentEngineComp[], subject: SubjectProperty): AnalysisResult {
+/** Decision #10 needs D1 + a RentCast key — optional so this module stays
+ * testable without either (bedroom adjustment simply doesn't run, same
+ * as before it was built). submit.ts is the only real caller and always
+ * provides this. */
+export interface BedroomAdjustmentContext {
+  db: D1Database;
+  rentCastApiKey: string;
+}
+
+export async function analyze(
+  rawComps: RentEngineComp[],
+  subject: SubjectProperty,
+  bedroomAdjustmentContext?: BedroomAdjustmentContext
+): Promise<AnalysisResult> {
   const selection = selectComps(rawComps, subject);
-  const estimate = buildEstimate(selection.comps);
+
+  let comps = selection.comps;
+  let bedroomAdjustment: NonNullable<Parameters<typeof computeConfidence>[0]['bedroomAdjustment']> = 'none';
+  if (bedroomAdjustmentContext) {
+    const adjusted = await applyBedroomAdjustments(
+      comps,
+      subject,
+      bedroomAdjustmentContext.db,
+      bedroomAdjustmentContext.rentCastApiKey
+    );
+    comps = adjusted.comps;
+    bedroomAdjustment = adjusted.tier;
+  }
+
+  const estimate = buildEstimate(comps);
   const compromises = withEstimateCompromises(selection.compromises, estimate);
+  compromises.bedroomAdjustment = bedroomAdjustment;
   const confidence = computeConfidence(compromises);
 
   return {
-    comps: selection.comps,
+    comps,
     estimatedRent: estimate.estimatedRent,
     rangeLow: estimate.rangeLow,
     rangeHigh: estimate.rangeHigh,

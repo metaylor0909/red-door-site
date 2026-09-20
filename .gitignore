@@ -9,7 +9,11 @@ dist/
 .env
 .env.*
 !.env.example
-.dev.vars
+# Broad glob, not just the exact filename — catches accidental copies
+# like ".dev.vars.txt" (e.g. an editor's "Save As" appending an
+# extension to a dotfile), which the exact-match version above missed
+# and which real secrets ended up sitting in, unprotected, once.
+.dev.vars*
 !.dev.vars.example
 
 # Editor

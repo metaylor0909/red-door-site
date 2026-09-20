@@ -37,6 +37,7 @@ interface DbRow extends RentalAnalysisRow {
   property_zip: string;
   property_lat: number;
   property_lon: number;
+  property_beds: number;
   snapshot_json: string;
 }
 
@@ -199,7 +200,12 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
                 <td>{c.address}</td>
                 <td>{c.beds}bd / {c.baths}ba</td>
                 <td>{c.sqft ?? '—'}</td>
-                <td>${c.rent.toLocaleString()}</td>
+                <td>
+                  ${c.rent.toLocaleString()}
+                  {c.bedroomAdjustedRent != null && (
+                    <span class="consent"> (${c.bedroomAdjustedRent.toLocaleString()} adjusted for {row.property_beds}bd)</span>
+                  )}
+                </td>
                 <td>{c.distance.toFixed(1)} mi</td>
                 <td>
                   <span class={`status-pill ${c.status === 'Rented' ? 'is-rented' : 'is-available'}`}>{c.status}</span>

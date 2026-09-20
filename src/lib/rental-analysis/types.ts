@@ -26,6 +26,12 @@ export interface RentEngineComp {
   features?: string[];
   image?: string | null;
   description?: string | null;
+  /** Decision #10 — set only for comps whose beds differ from the
+   * subject's (i.e. the ±1-bed relaxed comps). Not part of RentEngine's
+   * raw response; populated by bedroom-adjustment.ts after comp
+   * selection, before the estimate median is computed. The report shows
+   * both this and the real `rent`, never just one. */
+  bedroomAdjustedRent?: number;
 }
 
 /** The subject property being analyzed. */

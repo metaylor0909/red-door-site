@@ -52,7 +52,11 @@ export function buildEstimate(rankedComps: RentEngineComp[]): EstimateResult {
 
   const blendedPoolStillThin = estimatePool.length < BLEND_THRESHOLD;
 
-  const estimatedRent = Math.round(median(estimatePool.map((c) => c.rent)));
+  // Decision #10: a ±1-bed comp's rent gets normalized to the subject's
+  // bed count before it enters this median — bedroomAdjustedRent is only
+  // ever set on those comps (see bedroom-adjustment.ts), so comps at the
+  // subject's own bed count are unaffected.
+  const estimatedRent = Math.round(median(estimatePool.map((c) => c.bedroomAdjustedRent ?? c.rent)));
   const rangeLow = Math.round(estimatedRent * (1 - RANGE_PCT));
   const rangeHigh = Math.round(estimatedRent * (1 + RANGE_PCT));
 

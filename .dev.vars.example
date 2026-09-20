@@ -21,6 +21,12 @@ RENTENGINE_RENTAL_ANALYSIS_KEY=
 # Only needed if the token is scoped to multiple accounts.
 RENTENGINE_ACCOUNT_ID=
 
+# RentCast — decision #10's bedroom-count rent adjustment. Shared with
+# the (separate, not-yet-built) homes-for-rent project's own RentCast
+# usage, per Michael's call — same key/account, not split like the
+# RentEngine keys are.
+RENTCAST_API_KEY=
+
 # Resend — sends the owner's headline email and the LeadSimple
 # lead-creation email (decision #8 step 12). Scope this key to sending
 # access only. Sends through mail.rdpmindy.com (revised 2026-09-20 from

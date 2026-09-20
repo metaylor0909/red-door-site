@@ -52,8 +52,11 @@ CREATE TABLE IF NOT EXISTS rental_analyses (
 -- than running both.
 CREATE TABLE IF NOT EXISTS rentcast_city_cache (
   city_key TEXT PRIMARY KEY, -- e.g. "avon-in"
-  bedroom_ladder_json TEXT NOT NULL, -- avg rent by bedroom count, 1BR-5BR
-  sample_sizes_json TEXT NOT NULL, -- newListings per rung, for the thin-data check
+  -- JSON array of { beds, avgRent, newListings, totalListings } per rung
+  -- (1BR-5BR, whatever RentCast actually returned) — newListings/
+  -- totalListings travel with each rung already, for the thin-data check,
+  -- so no separate sample-sizes column is needed.
+  bedroom_ladder_json TEXT NOT NULL,
   rent_trend_json TEXT, -- trailing rent-trend history for decision #5's chart
   updated_at TEXT NOT NULL
 );
