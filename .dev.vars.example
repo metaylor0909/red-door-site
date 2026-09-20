@@ -1,0 +1,22 @@
+# Copy to .dev.vars (gitignored) for local `astro dev`/`wrangler` testing.
+# These are read at REQUEST time inside the Cloudflare Worker via
+# `import { env } from 'cloudflare:workers'` — this is a different
+# mechanism from the Vite-inlined PUBLIC_* vars in .env (see .env.example).
+# In production, set these with `wrangler secret put <NAME>`, not in
+# wrangler.toml, and never paste real values into chat.
+# See claude/rental-analysis-tool-build.md for what each key is for.
+
+# Cloudflare Turnstile — required per CLAUDE.md's forms decision. If left
+# blank, the submit endpoint skips spam verification and logs a warning
+# instead of blocking local dev. Do not ship without this set for real.
+TURNSTILE_SECRET_KEY=
+
+# Mapbox Geocoding API — reuses the token already held for the listings
+# map (decision #8, step 2).
+MAPBOX_TOKEN=
+
+# RentEngine's rental-analysis-tool-specific key (kept split from the
+# listings-build key per decision #7 — never share the two).
+RENTENGINE_RENTAL_ANALYSIS_KEY=
+# Only needed if the token is scoped to multiple accounts.
+RENTENGINE_ACCOUNT_ID=

@@ -1,0 +1,251 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+<BaseLayout
+  title="Free Rental Analysis | Red Door Property Management"
+  description="Get a free, data-backed rental estimate for your Indianapolis-area property in minutes."
+  path="/rental-analysis"
+>
+  <section class="section-soft">
+    <div class="container analysis-grid">
+      <div class="reveal">
+        <div class="section-kicker">Free Rental Analysis</div>
+        <h1>What Could Your Indianapolis Rental Earn?</h1>
+        <p class="lead">
+          Tell us about the property and we'll email a rent estimate backed by recently leased
+          and currently listed comparable homes nearby.
+        </p>
+        <ul class="benefit-list">
+          <li><span>1</span>A rent estimate and range within minutes, not days.</li>
+          <li><span>2</span>Backed by real comparable properties near yours.</li>
+          <li><span>3</span>No obligation — see whether Red Door's approach fits your goals.</li>
+        </ul>
+      </div>
+
+      <form class="form-card" data-analysis-form novalidate>
+        <div class="progress-label">
+          <span data-progress-text>Step 1 of 4</span>
+          <span data-progress-percent>25%</span>
+        </div>
+        <div class="progress-track" aria-hidden="true"><span class="progress-fill" data-progress-fill></span></div>
+
+        <div class="form-step is-active" data-step="0">
+          <h3>Property address</h3>
+          <label>Rental property address
+            <input name="property_address" autocomplete="street-address" required />
+          </label>
+          <label>Unit number <span class="consent">(if applicable)</span>
+            <input name="property_unit" autocomplete="address-line2" />
+          </label>
+        </div>
+
+        <div class="form-step" data-step="1">
+          <h3>Property basics</h3>
+          <div class="field-grid">
+            <label>Property type
+              <select name="property_type" required>
+                <option value="">Select type</option>
+                <option value="single-family">Single-family home</option>
+                <option value="townhouse-duplex">Townhouse or duplex</option>
+                <option value="apartment-condo">Apartment or condo</option>
+              </select>
+            </label>
+            <label>Bedrooms
+              <select name="property_beds" required>
+                <option value="">Select bedrooms</option>
+                <option value="0">Studio</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5+</option>
+              </select>
+            </label>
+            <label>Bathrooms
+              <select name="property_baths" required>
+                <option value="">Select bathrooms</option>
+                <option value="1">1</option>
+                <option value="1.5">1.5</option>
+                <option value="2">2</option>
+                <option value="2.5">2.5</option>
+                <option value="3">3</option>
+                <option value="3.5">3.5+</option>
+              </select>
+            </label>
+            <label>Square footage <span class="consent">(optional)</span>
+              <input name="property_sqft" type="number" min="1" inputmode="numeric" />
+            </label>
+          </div>
+          <label class="checkbox-label">
+            <input type="checkbox" name="property_furnished" value="true" />
+            This property is furnished
+          </label>
+        </div>
+
+        <div class="form-step" data-step="2">
+          <h3>Your contact details</h3>
+          <div class="field-grid">
+            <label>Name
+              <input name="owner_name" autocomplete="name" required />
+            </label>
+            <label>Email
+              <input type="email" name="owner_email" autocomplete="email" required />
+            </label>
+          </div>
+          <label>Phone
+            <input type="tel" name="owner_phone" autocomplete="tel" required />
+          </label>
+          <p class="consent">
+            By requesting a rental analysis, you agree that Red Door may use the information
+            provided to follow up about your property management needs.
+          </p>
+          {
+            turnstileSiteKey && (
+              <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-callback="rentalAnalysisTurnstileDone" />
+            )
+          }
+          <input type="hidden" name="turnstile_token" data-turnstile-token />
+        </div>
+
+        <p class="error-text" aria-live="polite" data-form-error></p>
+        <div class="form-actions">
+          <button class="btn btn-secondary" type="button" data-form-prev>Previous</button>
+          <button class="btn btn-primary" type="button" data-form-next>Next</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  {turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer slot="head" />}
+
+  <script>
+    (function () {
+      const form = document.querySelector<HTMLFormElement>('[data-analysis-form]');
+      if (!form) return;
+
+      const steps = Array.from(form.querySelectorAll<HTMLElement>('.form-step'));
+      const previousButton = form.querySelector<HTMLButtonElement>('[data-form-prev]')!;
+      const nextButton = form.querySelector<HTMLButtonElement>('[data-form-next]')!;
+      const error = form.querySelector<HTMLElement>('[data-form-error]')!;
+      const progressText = form.querySelector('[data-progress-text]')!;
+      const progressPercent = form.querySelector('[data-progress-percent]')!;
+      const progressFill = form.querySelector<HTMLElement>('[data-progress-fill]')!;
+      let current = 0;
+      let submitting = false;
+
+      function fieldsForStep(index: number): HTMLElement[] {
+        return Array.from(steps[index].querySelectorAll('input, select, textarea'));
+      }
+
+      function updateForm() {
+        steps.forEach((step, index) => step.classList.toggle('is-active', index === current));
+        const percent = Math.round(((current + 1) / steps.length) * 100);
+        progressText.textContent = `Step ${current + 1} of ${steps.length}`;
+        progressPercent.textContent = `${percent}%`;
+        progressFill.style.width = `${percent}%`;
+        previousButton.style.visibility = current === 0 ? 'hidden' : 'visible';
+        nextButton.textContent = current === steps.length - 1 ? 'Request My Rental Analysis' : 'Next';
+      }
+
+      function validateStep(): boolean {
+        let valid = true;
+        let firstInvalid: HTMLElement | null = null;
+        fieldsForStep(current).forEach((field) => {
+          const input = field as HTMLInputElement;
+          const fieldValid = input.checkValidity ? input.checkValidity() : true;
+          field.setAttribute('aria-invalid', String(!fieldValid));
+          if (!fieldValid && !firstInvalid) firstInvalid = field;
+          valid = valid && fieldValid;
+        });
+        error.textContent = valid ? '' : 'Please complete the highlighted field before continuing.';
+        if (firstInvalid) (firstInvalid as HTMLElement).focus();
+        return valid;
+      }
+
+      function applyServerFieldErrors(fieldErrors: Record<string, string>) {
+        const firstFieldName = Object.keys(fieldErrors)[0];
+        const field = firstFieldName ? form!.querySelector(`[name="${firstFieldName}"]`) : null;
+        if (field) {
+          field.setAttribute('aria-invalid', 'true');
+          const stepEl = field.closest<HTMLElement>('.form-step');
+          if (stepEl) {
+            const stepIndex = steps.indexOf(stepEl);
+            if (stepIndex >= 0) {
+              current = stepIndex;
+              updateForm();
+            }
+          }
+        }
+        error.textContent = fieldErrors[firstFieldName] || 'Please fix the highlighted field.';
+      }
+
+      async function submitForm() {
+        submitting = true;
+        nextButton.disabled = true;
+        previousButton.disabled = true;
+        const previousLabel = nextButton.textContent;
+        nextButton.textContent = 'Submitting…';
+        error.textContent = '';
+
+        try {
+          const formData = new FormData(form!);
+          const tokenField = form!.querySelector<HTMLInputElement>('[data-turnstile-token]');
+          if (tokenField?.value) formData.set('turnstile_token', tokenField.value);
+
+          const response = await fetch('/api/rental-analysis/submit', {
+            method: 'POST',
+            body: formData,
+          });
+          const data = await response.json().catch(() => ({}));
+
+          if (response.ok && data.reportUrl) {
+            window.location.href = data.reportUrl;
+            return;
+          }
+
+          if (response.status === 422 && data.fieldErrors) {
+            applyServerFieldErrors(data.fieldErrors);
+          } else {
+            error.textContent = data.error || 'Something went wrong. Please try again.';
+          }
+        } catch {
+          error.textContent = 'Something went wrong. Please check your connection and try again.';
+        } finally {
+          submitting = false;
+          nextButton.disabled = false;
+          previousButton.disabled = false;
+          nextButton.textContent = previousLabel;
+        }
+      }
+
+      previousButton.addEventListener('click', () => {
+        current = Math.max(0, current - 1);
+        error.textContent = '';
+        updateForm();
+      });
+
+      nextButton.addEventListener('click', () => {
+        if (submitting) return;
+        if (!validateStep()) return;
+        if (current === steps.length - 1) {
+          void submitForm();
+          return;
+        }
+        current += 1;
+        updateForm();
+      });
+
+      form.querySelectorAll('input, select, textarea').forEach((field) => {
+        field.addEventListener('input', () => {
+          field.setAttribute('aria-invalid', 'false');
+          error.textContent = '';
+        });
+      });
+
+      updateForm();
+    })();
+  </script>
+</BaseLayout>
