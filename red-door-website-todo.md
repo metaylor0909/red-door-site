@@ -660,6 +660,24 @@ population once the CMS import exists, not more page-building. Full list:
       question against the existing submit-flow design, in
       `claude/rental-analysis-tool-build.md` under "Still open."
 
+### Rental analysis — Turnstile widget not verifying on localhost
+
+- [ ] **Cloudflare Turnstile widget fails with error 400020 ("hostname not
+      allowed") even after adding `localhost` to the widget's allowed
+      hostnames in the Cloudflare dashboard (2026-09-20).** Real site
+      key/secret key are both wired into `.env`/`.dev.vars` and the
+      server-side `siteverify` check is genuinely enforcing (confirmed:
+      submissions without a valid token get a real 400 "Spam check
+      failed," not a skipped/dev-mode pass). Only the widget's own
+      hostname allowlist is unresolved — didn't take effect after one
+      save + reload, cause not yet diagnosed (bad save vs. exact-string
+      mismatch vs. propagation delay). Blocks fully testing the intake
+      form's submit flow (Mapbox geocoding + the real RentEngine comps
+      call) locally. Re-check once the site is live on its real domain —
+      Turnstile should work there regardless of whether `localhost` ever
+      gets sorted out, since `reddoorrents.com` was the original working
+      hostname.
+
 ---
 
 ## Decided, not yet executed
