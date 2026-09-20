@@ -1,10 +1,9 @@
 // RentCast `GET /v1/markets` — decision #10's data source for the
 // bedroom-count adjustment. Field names below follow the corrections
-// documented in red-door-homes-for-rent-data-schema.md (verified against
-// a real Avon/46123 pull for THAT project) — this tool's own on-demand
-// tier-3 pulls haven't been reconciled against a live response yet, same
-// caution already noted for RentEngine's comp fields elsewhere in this
-// codebase.
+// documented in red-door-homes-for-rent-data-schema.md (originally
+// verified against a real Avon/46123 pull for THAT project) — confirmed
+// again with a live pull for this tool (ZIP 46060, 2026-09-20): all 6
+// bedroom rungs (0BR-5BR) parsed cleanly with sensible real numbers.
 //
 // Pulls `dataType=Rental` only, not `All` — this tool has no use for
 // `saleData`, unlike the homes-for-rent project's own pull. Whether that
