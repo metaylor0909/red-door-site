@@ -89,7 +89,7 @@ const remainingPhotoCount = canonicalPhotos.length - (1 + thumbPhotos.length);
 const propertyTypeLabel = (unit.property_type || 'Home').toUpperCase();
 const bedsLabel = unit.bedrooms === 0 ? 'Studio' : `${unit.bedrooms}BR`;
 const bathsLabel = `${unit.bathrooms}BA`;
-const rentDisplay = unit.rent != null ? `$${unit.rent.toLocaleString()}` : 'Contact for pricing';
+const rentDisplay = unit.target_rental_rate != null ? `$${unit.target_rental_rate.toLocaleString()}` : 'Contact for pricing';
 
 // --- SEO: title/meta/H1/schema must all include the city plainly
 // (CLAUDE.md's RentEngine integration note, Sep 11) — individual listing
@@ -97,7 +97,7 @@ const rentDisplay = unit.rent != null ? `$${unit.rent.toLocaleString()}` : 'Cont
 // addition to that city's own homes-for-rent hub page.
 const pageTitle = `${bedsLabel}/${bathsLabel} ${propertyTypeLabel} for Rent in ${unit.address.city}, ${unit.address.state} | ${unit.address.formatted_address} | Red Door Property Management`;
 const pageDescription = `${unit.bedrooms}-bedroom, ${unit.bathrooms}-bathroom ${propertyTypeLabel.toLowerCase()} for rent at ${unit.address.formatted_address}, ${unit.address.city}, ${unit.address.state}.${
-  unit.rent != null ? ` $${unit.rent.toLocaleString()}/month.` : ''
+  unit.target_rental_rate != null ? ` $${unit.target_rental_rate.toLocaleString()}/month.` : ''
 } Managed by Red Door Property Management.`;
 
 // The static reference's <h1> was the street address alone, with city/state
@@ -123,31 +123,33 @@ const detailRows: Array<[string, string]> = [
       : 'Not listed',
   ],
   ['Laundry', unit.laundry ?? 'Not listed'],
-  ['Pets', unit.pets_allowed === true ? 'Yes' : unit.pets_allowed === false ? 'No' : 'Ask'],
+  ['Pets', unit.pets_allowed ?? 'Ask'],
 ];
 
 const moveInFeesTotal = unit.move_in_fees.reduce((sum, f) => sum + f.amount, 0);
 const monthlyFeesTotal = unit.monthly_fees.reduce((sum, f) => sum + f.amount, 0);
-const firstMonthRent = unit.rent ?? 0;
-// The reference file's move-in cost card included a hardcoded "Security
-// deposit" line equal to one month's rent. RentEngineUnit has no dedicated
-// deposit field, only `move_in_fees`/`monthly_fees` arrays — rather than
-// fabricate a deposit figure not backed by real data, it's left out here;
-// if a unit's actual security deposit is one of its `move_in_fees` line
-// items, it already appears itemized below under its own real name.
-const totalMoveInCost = firstMonthRent + moveInFeesTotal + monthlyFeesTotal;
-const showMoveInCostCard = unit.rent != null || unit.move_in_fees.length > 0 || unit.monthly_fees.length > 0;
+const firstMonthRent = unit.target_rental_rate ?? 0;
+// Confirmed real 2026-09-20: security_deposit_amount is a genuine field
+// (an earlier pass assumed it didn't exist and omitted this line — it
+// does, now included). security_deposit_amount_max exists too but every
+// unit seen so far has it null; only shown when actually present.
+const securityDeposit = unit.security_deposit_amount ?? 0;
+const totalMoveInCost = firstMonthRent + securityDeposit + moveInFeesTotal + monthlyFeesTotal;
+const showMoveInCostCard =
+  unit.target_rental_rate != null || securityDeposit > 0 || unit.move_in_fees.length > 0 || unit.monthly_fees.length > 0;
 
 // "Other Red Door Homes Nearby" — same city first, then nearest by real
 // haversine distance, top 4 (CLAUDE.md's RentEngine integration note).
-const unitLat = unit.address.coordinates?.latitude;
-const unitLng = unit.address.coordinates?.longitude;
+// address.coordinates is [longitude, latitude] (GeoJSON order, confirmed
+// live 2026-09-20) — index access below, not .latitude/.longitude.
+const unitLat = unit.address.coordinates?.[1];
+const unitLng = unit.address.coordinates?.[0];
 const nearbyUnits = allUnits
   .filter((u) => u.id !== unit.id)
   .map((u) => {
     const sameCity = citySlug(u.address.city) === citySlugForUnit;
-    const uLat = u.address.coordinates?.latitude;
-    const uLng = u.address.coordinates?.longitude;
+    const uLat = u.address.coordinates?.[1];
+    const uLng = u.address.coordinates?.[0];
     const distance =
       unitLat != null && unitLng != null && uLat != null && uLng != null
         ? haversineMiles(unitLat, unitLng, uLat, uLng)
@@ -182,11 +184,11 @@ const jsonLd = {
       },
       petsAllowed: unit.pets_allowed ?? undefined,
       url: `https://www.reddoorrents.com${detailPath}`,
-      ...(unit.rent != null
+      ...(unit.target_rental_rate != null
         ? {
             offers: {
               '@type': 'Offer',
-              price: unit.rent,
+              price: unit.target_rental_rate,
               priceCurrency: 'USD',
               availability: 'https://schema.org/InStock',
               businessFunction: 'https://schema.org/LeaseOut',
@@ -391,10 +393,16 @@ const jsonLd = {
                 <strong>${totalMoveInCost.toLocaleString()}</strong>
               </div>
               <div class="fee-details">
-                {unit.rent != null && (
+                {unit.target_rental_rate != null && (
                   <div>
                     <span>First month&rsquo;s rent</span>
-                    <strong>${unit.rent.toLocaleString()}</strong>
+                    <strong>${unit.target_rental_rate.toLocaleString()}</strong>
+                  </div>
+                )}
+                {securityDeposit > 0 && (
+                  <div>
+                    <span>Security deposit</span>
+                    <strong>${securityDeposit.toLocaleString()}</strong>
                   </div>
                 )}
                 {unit.move_in_fees.length > 0 && (
@@ -440,7 +448,7 @@ const jsonLd = {
             {nearbyUnits.map((nearby) => {
               const nearbyPhoto = nearby.marketing_photos.find((p) => !p.hidden)?.original;
               const nearbyHref = `/homes-for-rent/${citySlug(nearby.address.city)}/${addressSlug(nearby)}`;
-              const nearbyRent = nearby.rent != null ? `$${nearby.rent.toLocaleString()}` : 'Contact for pricing';
+              const nearbyRent = nearby.target_rental_rate != null ? `$${nearby.target_rental_rate.toLocaleString()}` : 'Contact for pricing';
               return (
                 <a class="listing-card" href={nearbyHref}>
                   <div class="listing-card-photo">

@@ -165,7 +165,7 @@ const SMALL_SAMPLE_THRESHOLD = 5;
             {cityUnits.map((unit) => {
               const photo = unit.marketing_photos.find((p) => !p.hidden)?.original;
               const href = `/homes-for-rent/${citySlug(unit.address.city)}/${addressSlug(unit)}`;
-              const rent = unit.rent != null ? `$${unit.rent.toLocaleString()}` : 'Contact for pricing';
+              const rent = unit.target_rental_rate != null ? `$${unit.target_rental_rate.toLocaleString()}` : 'Contact for pricing';
               return (
                 <a class="listing-card" href={href}>
                   <div class="listing-card-photo">

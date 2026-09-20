@@ -7,12 +7,11 @@
 // account's entire multi-year unit history), and use the confirmed-real
 // `custom_application_url`/`marketing_photos[].original` fields.
 //
-// Field names below are RentEngine's raw response shape as described in
-// that research doc, EXCEPT the rent amount and coordinates sub-shape,
-// which weren't explicitly given there (that research focused on detail-
-// page fields, not a card-summary shape) — `rent` and
-// `address.coordinates.{latitude,longitude}` are reasonable guesses, not
-// confirmed.
+// Field names reconciled against a real live pull, 2026-09-20 (this
+// file's earlier version guessed several of these from prose alone and
+// got some wrong): the rent field is `target_rental_rate`, not `rent`;
+// `id` is a number, not a string; `address.coordinates` is a 2-element
+// `[longitude, latitude]` array (GeoJSON order), not an object.
 //
 // Confirmed 2026-09-20 against a real call: /units rejects an
 // `account_id` query param outright (400, "must NOT have additional
@@ -21,7 +20,7 @@
 // parity with the comps client but never sent as a query param here.
 
 export interface AvailableUnit {
-  id: string;
+  id: number;
   formattedAddress: string;
   city: string;
   beds: number;
@@ -34,16 +33,16 @@ export interface AvailableUnit {
 }
 
 interface RentEngineUnit {
-  id: string;
+  id: number;
   status: string;
   bedrooms: number;
   bathrooms: number;
-  rent?: number; // unconfirmed field name — see module header
+  target_rental_rate: number | null;
   custom_application_url?: string | null;
   address: {
     formatted_address: string;
     city: string;
-    coordinates?: { latitude: number; longitude: number } | null; // unconfirmed shape
+    coordinates?: [number, number] | null; // [longitude, latitude]
   };
   marketing_photos?: Array<{ path: string; hidden: boolean; original: string }>;
 }
@@ -78,11 +77,11 @@ export async function fetchAvailableUnits(config: ListingsClientConfig): Promise
         city: u.address.city,
         beds: u.bedrooms,
         baths: u.bathrooms,
-        rent: u.rent ?? 0,
+        rent: u.target_rental_rate ?? 0,
         photoUrl: firstVisiblePhoto?.original ?? null,
         applyUrl: u.custom_application_url ?? null,
-        latitude: u.address.coordinates?.latitude ?? null,
-        longitude: u.address.coordinates?.longitude ?? null,
+        latitude: u.address.coordinates?.[1] ?? null,
+        longitude: u.address.coordinates?.[0] ?? null,
       };
     });
 }

@@ -53,13 +53,28 @@ export async function fetchAllAvailableUnits(config: ListingsFetchConfig): Promi
     }
 
     const page = (await response.json()) as RentEngineUnit[];
-    units.push(...page.filter((u) => u.status === 'Available'));
+    units.push(...page.filter((u) => u.status === 'Available').map(normalizeUnit));
 
     if (page.length < 100) break;
     pageNumber += 1;
   }
 
   return units;
+}
+
+/** RentEngine's own `amount` fields on fee arrays come back as a mix of
+ * numbers and numeric strings within the SAME array on the SAME unit
+ * (confirmed live, 2026-09-20) — coerced to real numbers here, once,
+ * so every downstream consumer can trust UnitFee.amount without its own
+ * defensive Number() call. */
+function normalizeUnit(unit: RentEngineUnit): RentEngineUnit {
+  const normalizeFees = (fees: RentEngineUnit['move_in_fees']) => fees.map((f) => ({ ...f, amount: Number(f.amount) }));
+  return {
+    ...unit,
+    move_in_fees: normalizeFees(unit.move_in_fees ?? []),
+    monthly_fees: normalizeFees(unit.monthly_fees ?? []),
+    pet_fees: normalizeFees(unit.pet_fees ?? []),
+  };
 }
 
 /** Lowercase, hyphenated address slug per CLAUDE.md's locked URL
