@@ -877,9 +877,29 @@ structure `/homes-for-rent/{city}/{address}` for individual unit pages
 (distinct from the `/[city]-homes-for-rent` hub pages above). Airbnb URLs
 301 to `/`.
 
-**Registrar/DNS:** nameserver access confirmed, GoDaddy is the current
-registrar/DNS host. Cloudflare Registrar (at-cost domains) worth considering
-after launch, not now.
+**Registrar/DNS — correction (2026-09-20):** GoDaddy is the registrar, but
+**not the actual DNS host** — `reddoorrents.com`'s authoritative
+nameservers are `ns1-4.nesthubdns.com` (the PMW-era host), confirmed via
+an external DNS checker (dns.email) while debugging why Resend DNS
+records added in GoDaddy's own DNS panel never verified: they were being
+saved to a zone the domain doesn't actually query. GoDaddy's DNS editor
+UI is live and editable, but inert, unless the domain's nameservers are
+actually pointed at GoDaddy — right now they aren't. Registrar and DNS
+host are two different things and this project conflated them; the
+original "GoDaddy is the current registrar/DNS host" note below was
+wrong on the second half, right on the first. **Practical effect:** any
+DNS record meant to actually resolve for `reddoorrents.com` today needs
+to go into whatever panel manages `nesthubdns.com`, not GoDaddy, until/
+unless nameservers are deliberately cut over (a real risk to audit
+everything currently live at NestHub first, not a quick fix). This is
+exactly why the rental-analysis tool's Resend sending domain moved to
+`mail.rdpmindy.com` instead — see `claude/rental-analysis-tool-build.md`,
+decision #8's sending-domain note — rather than fighting reddoorrents.com's
+DNS setup for an email feature that didn't need to live there anyway.
+
+Original note, still correct on the registrar half: nameserver access
+confirmed, GoDaddy is the current domain registrar. Cloudflare Registrar
+(at-cost domains) worth considering after launch, not now.
 
 ### Color tokens
 

@@ -23,9 +23,8 @@ RENTENGINE_ACCOUNT_ID=
 
 # Resend — sends the owner's headline email and the LeadSimple
 # lead-creation email (decision #8 step 12). Scope this key to sending
-# access only. Requires mail.reddoorrents.com to show Verified in the
-# Resend dashboard first — the key won't send through an unverified
-# domain even if it's valid.
+# access only. Sends through mail.rdpmindy.com (revised 2026-09-20 from
+# mail.reddoorrents.com — see the build brief), already verified.
 RESEND_API_KEY=
 
 # Decision #6's BD-alert Zap (LeadSimple note + email to Chris Knight) —

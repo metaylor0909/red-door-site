@@ -855,8 +855,10 @@ specifies it:**
       sending/envelope domain stays on Resend-verified infrastructure
       (see below), not his personal mailbox — keeps his day-to-day
       deliverability separate from an automated system, while replies
-      still land with him directly. Final header shape:
-      `From: "Chris Knight, Red Door Property Management" <reports@mail.reddoorrents.com>`,
+      still land with him directly. Final header shape (updated
+      2026-09-20 for the `mail.rdpmindy.com` sending-domain change below —
+      see "Resend sending domain/address"):
+      `From: "Chris Knight, Red Door Property Management" <reports@mail.rdpmindy.com>`,
       `Reply-To: cknight@rdpmindy.com`.
 
 **`GET /rental-analysis/[token]` (the hosted report page) — view tracking
@@ -913,7 +915,37 @@ tables:
   resend.com/pricing: 3,000 emails/month, 100/day) comfortably covers Red
   Door's real volume (~20 analyses/month × 2 emails each, plus occasional
   resends — nowhere near the cap).
-- **Resend sending domain/address — FINAL (2026-09-13): `mail.reddoorrents.com`
+- **Resend sending domain/address — REVISED, FINAL (2026-09-20): `mail.rdpmindy.com`
+  subdomain, `reports@mail.rdpmindy.com`.** Supersedes the original
+  2026-09-13 choice of `mail.reddoorrents.com` below — kept for the
+  record, not current. **Why it changed:** two things surfaced only once
+  DNS setup was actually attempted. First, `reddoorrents.com` permanently
+  forwards all of its email elsewhere rather than receiving it directly —
+  the "runs Google Workspace for regular company email" premise below was
+  wrong; the real company inboxes (`cknight@rdpmindy.com`, etc.) live on
+  `rdpmindy.com`, not `reddoorrents.com`. Second, `reddoorrents.com`'s
+  authoritative nameservers turned out to be `nesthubdns.com` (the
+  PMW-era host), not GoDaddy — DNS records added in GoDaddy's panel were
+  being saved to a zone the domain doesn't actually use, so nothing
+  verified no matter how correctly the records were entered. Rather than
+  either fix GoDaddy's records for a domain whose DNS isn't really there,
+  or risk a nameserver cutover blind (everything currently live at NestHub
+  would need auditing first), Michael moved the sending domain to a
+  subdomain of `rdpmindy.com` instead — the domain that's actually
+  correctly and currently under his control. **The same root-domain-SPF-
+  conflict reasoning that originally justified a subdomain still applies
+  here** (`rdpmindy.com` is the domain real staff email actually lives on
+  now), so `mail.rdpmindy.com` keeps the same isolation the original
+  choice was built around — this is a substitution, not an abandonment,
+  of that reasoning. **DNS added and verified (2026-09-20):** Michael
+  added `mail.rdpmindy.com`'s SPF (2 CNAMEs), DKIM (TXT), and DMARC (TXT)
+  records, and Resend confirms the domain as verified. **Resend API key —
+  still to generate**, same as originally noted below; nothing else is
+  outstanding on this piece.
+
+  <details><summary>Original 2026-09-13 decision (superseded above)</summary>
+
+  **Resend sending domain/address — FINAL (2026-09-13): `mail.reddoorrents.com`
   subdomain, `reports@mail.reddoorrents.com`.** reddoorrents.com already
   runs Google Workspace for regular company email, and a domain can only
   carry one SPF TXT record — verifying Resend directly on the root domain
@@ -943,6 +975,8 @@ tables:
      Astro/Worker code will actually use to call Resend's send API.
      Generate it once the domain is verified, and store it the same way as
      the other API keys (kept separate per feature, not shared).
+
+  </details>
 
 **Revised effort estimate (2026-09-13), replacing the original 1–2 day/1–2
 week figure, which assumed email-only delivery with none of the above:**
@@ -998,18 +1032,18 @@ decision #4 already established (that ceiling doesn't change here).
    Email vendor (Resend), sender identity (Chris Knight), the Calendly
    link, the Zapier webhook (URL live, both actions — note + email — built
    and confirmed working), and the Resend sending domain/address
-   (`mail.reddoorrents.com`, self-service DNS, 2026-09-13) are all done.
+   (`mail.rdpmindy.com`, revised 2026-09-20, verified) are all done.
    Geocoding (Mapbox) is a low-stakes default, not a blocker. **Nothing
-   external is still outstanding — the only remaining step is Michael
-   actually verifying `mail.reddoorrents.com` in Resend (self-service, see
-   decision #8), which doesn't block the build starting.**
+   external is outstanding — `mail.rdpmindy.com` is verified in Resend;
+   only the API key itself still needs generating (self-service, see
+   decision #8), which doesn't block the build.**
 9. ~~Confidence score~~ — **done, see above.**
 10. ~~Bedroom-count rent adjustment~~ — **done, see above.**
 
 **Next up: the build itself.** Every input this tool needs is now decided
-and in hand — including the Resend sending domain (`mail.reddoorrents.com`)
-and Michael's confirmation he can add the DNS records himself. Nothing
-left is blocking decision #8; the Worker/Astro build (~7.5–11.5 focused
+and in hand — including the Resend sending domain (`mail.rdpmindy.com`,
+verified) and Michael's confirmation he can add the DNS records himself.
+Nothing left is blocking decision #8; the Worker/Astro build (~7.5–11.5 focused
 days, see above) can run start to finish without waiting on anything
 external, in parallel with Michael verifying the Resend domain.
 

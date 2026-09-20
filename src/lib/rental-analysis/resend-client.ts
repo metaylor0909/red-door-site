@@ -1,7 +1,7 @@
 // Thin wrapper around Resend's send API. See claude/rental-analysis-tool-
 // build.md, decision #8's "Transactional email vendor" note — Resend,
-// sending through the mail.reddoorrents.com subdomain (isolated from the
-// root domain's Google Workspace SPF/DKIM).
+// sending through the mail.rdpmindy.com subdomain (isolated from
+// rdpmindy.com's own root-domain SPF/DKIM for real staff email).
 
 export interface SendEmailParams {
   from: string;

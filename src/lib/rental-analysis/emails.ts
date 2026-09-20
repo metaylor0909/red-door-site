@@ -5,7 +5,10 @@
 // as fixed constants here, not secrets, same as the Zapier webhook is
 // documented in the build brief itself.
 
-const SENDER = '"Chris Knight, Red Door Property Management" <reports@mail.reddoorrents.com>';
+// Sending domain revised 2026-09-20 from mail.reddoorrents.com to
+// mail.rdpmindy.com — see claude/rental-analysis-tool-build.md, decision
+// #8's "Resend sending domain/address" note for why.
+const SENDER = '"Chris Knight, Red Door Property Management" <reports@mail.rdpmindy.com>';
 const REPLY_TO = 'cknight@rdpmindy.com';
 const LEADSIMPLE_INBOUND_ADDRESS = 'new-deal937b93ae52@newlead.leadsimple.com';
 const CALENDLY_URL = 'https://calendly.com/cknight-19/phone-call';
