@@ -1,0 +1,1004 @@
+{
+  "avon": {
+    "citySlug": "avon",
+    "cityName": "Avon, IN",
+    "metaTitle": "Avon, IN Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Avon, IN, managed by Red Door. Single-family homes near Indianapolis, updated as availability changes.",
+    "h1": "Avon, IN Homes for Rent",
+    "heroDek": "Avon sits about 13 miles west of downtown Indianapolis on US-36, in Hendricks County — one of the fastest-growing suburbs on the west side of the metro. The town's population has roughly doubled twice over in the last two decades: 6,248 in 2000, 12,446 in 2010, 21,474 in 2020, and an estimated 23,437 as of 2024. Avon wasn't incorporated as a town until 1995, even though the area was settled in the 1830s.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026 — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$2,154",
+        "sub": "Across 84 currently listed Avon rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$2,095",
+        "sub": "Range: $1,097 – $3,080"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$2,221",
+        "sub": "Red Door's focus — 74 of 84 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,991 sq ft ($1.17/sq ft), with listings ranging from 676 to 4,360 sq ft. By bedroom count, rent rises in a fairly clean ladder — $1,279 for a 1-bedroom up to $2,818 for a 5-bedroom, though the 1- and 2-bedroom rungs rest on only 4 listings each, so treat those two as a rough read rather than as solid as the 3- and 4-bedroom figures (45 and 26 listings). Half of Avon's current rental listings lease within 11 days; some sit far longer, which is why the average (34 days) reads higher than the median.",
+      "Avon won't always have listings live — most of Red Door's current availability sits in Indianapolis proper, so Avon listings turn over less often than the metro's core. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Avon",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Avon borders Brownsburg to the north, Danville — the Hendricks County seat — to the west, Plainfield to the south, and Indianapolis to the east. US-36 is the main corridor through town; Danville is about 7 miles west.",
+      "<strong>Housing stock:</strong> 74 of Avon's 84 current rental listings (about 9 in 10) are single-family homes, which lines up with Red Door's own focus here."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Avon",
+    "nearbyDek": "Avon's inventory is thinner than the metro's core, so when nothing's available here, these are the closest places to look.",
+    "nearby": [
+      {
+        "label": "Brownsburg",
+        "href": "/brownsburg-homes-for-rent"
+      },
+      {
+        "label": "Plainfield",
+        "href": null
+      },
+      {
+        "label": "Indianapolis",
+        "href": "/indianapolis-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Avon?",
+    "ctaText": "See how Red Door manages Avon rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/avon-property-management"
+  },
+  "broad-ripple": {
+    "citySlug": "broad-ripple",
+    "cityName": "Broad Ripple, Indianapolis",
+    "metaTitle": "Broad Ripple, Indianapolis Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Broad Ripple, Indianapolis, managed by Red Door. Homes updated as availability changes.",
+    "h1": "Broad Ripple, Indianapolis Homes for Rent",
+    "heroDek": "Broad Ripple is a neighborhood and designated cultural district on the north side of Indianapolis, about six miles north of downtown along the White River, where the Monon Trail runs through and Butler University sits nearby. The area was first platted in 1837, incorporated as its own town in 1894, and annexed into Indianapolis in 1922. Its commercial core along Broad Ripple Avenue — restaurants, galleries, the Indianapolis Art Center — plus Broad Ripple Park and the historic Central Canal give it a distinct identity within the city.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026 — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$1,742",
+        "sub": "Across 81 currently listed Broad Ripple rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$1,595",
+        "sub": "Range: $649 – $5,000"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$2,031",
+        "sub": "Red Door's focus — 38 of 81 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,439 sq ft ($1.54/sq ft) — smaller and pricier per square foot than most Red Door suburbs, reflecting the mix of walkable apartments and older homes near the commercial strip. By bedroom count: $1,073 for a studio, $1,146 for 1-bedroom, $1,933 for 2-bedroom, $2,092 for 3-bedroom (the largest sample, 23 listings) — the 4-bedroom figure ($2,378) is based on only 5 listings and reads as a rough signal, not a firm number. Half of Broad Ripple's current rental listings lease within 32 days.",
+      "Broad Ripple won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Broad Ripple",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Broad Ripple sits within Indianapolis's Washington Township, roughly bounded by the White River, Evanston Avenue, Kessler Boulevard, and Meridian Street.",
+      "<strong>Housing stock:</strong> A mix of walkable apartments and condos near the commercial strip alongside older single-family homes on the surrounding blocks — single-family makes up 38 of the 81 current listings, just under half."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Broad Ripple",
+    "nearbyDek": "When nothing's available in Broad Ripple right now, this is the closest place to look.",
+    "nearby": [
+      {
+        "label": "Indianapolis",
+        "href": "/indianapolis-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Broad Ripple?",
+    "ctaText": "See how Red Door manages Indianapolis rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/indianapolis-property-management"
+  },
+  "brownsburg": {
+    "citySlug": "brownsburg",
+    "cityName": "Brownsburg, IN",
+    "metaTitle": "Brownsburg, IN Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Brownsburg, IN, managed by Red Door. Single-family homes near Indianapolis, updated as availability changes.",
+    "h1": "Brownsburg, IN Homes for Rent",
+    "heroDek": "Brownsburg sits about 13 miles west-northwest of downtown Indianapolis in Hendricks County, along US-136 and SR-267, with access to I-74. The town's population has more than doubled since 2000: 14,520 in 2000, 21,285 in 2010, 28,973 in 2020, and an estimated 34,089 as of mid-2025. Brownsburg was first incorporated in 1848 and re-incorporated permanently in 1870, though the area was settled decades earlier, in 1824.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026 — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$2,044",
+        "sub": "Across 71 currently listed Brownsburg rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$2,005",
+        "sub": "Range: $800 – $3,650"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$2,267",
+        "sub": "Red Door's focus — 52 of 71 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,840 sq ft ($1.26/sq ft), with listings ranging from 470 to 4,648 sq ft. By bedroom count: $1,137 for a 1-bedroom, $1,450 for 2-bedroom, $2,087 for 3-bedroom, and $2,553 for 4-bedroom — the 5-bedroom rung ($2,506) rests on only 4 listings, so treat it as a rough read. Half of Brownsburg's current rental listings lease within 16 days; some sit far longer, which is why the average (56 days) reads well above the median.",
+      "Brownsburg won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Brownsburg",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Brownsburg borders Avon directly to the south, with Pittsboro a few miles to the west and unincorporated Marion County/Clermont to the southeast. US-136 runs east–west through town, with SR-267 north–south and two I-74 interchanges.",
+      "<strong>Housing stock:</strong> 52 of Brownsburg's 71 current rental listings (about 3 in 4) are single-family homes, which lines up with Red Door's own focus here."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Brownsburg",
+    "nearbyDek": "When nothing's available in Brownsburg right now, these are the closest places to look.",
+    "nearby": [
+      {
+        "label": "Avon",
+        "href": "/avon-homes-for-rent"
+      },
+      {
+        "label": "Indianapolis",
+        "href": "/indianapolis-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Brownsburg?",
+    "ctaText": "See how Red Door manages Brownsburg rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/brownsburg-property-management"
+  },
+  "carmel": {
+    "citySlug": "carmel",
+    "cityName": "Carmel, IN",
+    "metaTitle": "Carmel, IN Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Carmel, IN, managed by Red Door. Homes near Indianapolis, updated as availability changes.",
+    "h1": "Carmel, IN Homes for Rent",
+    "heroDek": "Carmel sits about 15 miles north of downtown Indianapolis on US-31 (Meridian Street), in Hamilton County. The city's population has grown from 37,733 in 2000 to 79,191 in 2010, 99,757 in 2020, and an estimated 105,634 as of mid-2025. The area was platted in 1837 — originally as \"Bethlehem\" — but wasn't incorporated as a town until 1874 and didn't reach city status until 1976.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026 — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$2,607",
+        "sub": "Across 112 currently listed Carmel rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$2,425",
+        "sub": "Range: $1,150 – $8,975"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$3,223",
+        "sub": "Red Door's focus — 46 of 112 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,918 sq ft ($1.55/sq ft), with listings ranging from 526 to 7,452 sq ft. By bedroom count: $1,385 for a 1-bedroom, $2,064 for 2-bedroom, $2,667 for 3-bedroom, $3,020 for 4-bedroom, and $5,603 for 5-bedroom (that last rung rests on 8 listings, still a smaller sample than the others). Half of Carmel's current rental listings lease within about 20 days; some sit far longer, which is why the average (48 days) reads well above the median.",
+      "Carmel won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Carmel",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Carmel borders Westfield to the north, Noblesville to the northeast, Fishers to the east, Indianapolis/Marion County to the south, and Zionsville/Boone County to the west. US-31 (Meridian Street) and Keystone Parkway are the main corridors.",
+      "<strong>Housing stock:</strong> 46 of Carmel's 112 current rental listings (about 2 in 5) are single-family homes — Carmel's rental market leans more toward apartments and condos than most of the other suburbs Red Door manages in, alongside its single-family neighborhoods."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Carmel",
+    "nearbyDek": "When nothing's available in Carmel right now, these are the closest places to look.",
+    "nearby": [
+      {
+        "label": "Fishers",
+        "href": "/fishers-homes-for-rent"
+      },
+      {
+        "label": "Westfield",
+        "href": "/westfield-homes-for-rent"
+      },
+      {
+        "label": "Indianapolis",
+        "href": "/indianapolis-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Carmel?",
+    "ctaText": "See how Red Door manages Carmel rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/carmel-property-management"
+  },
+  "center-township": {
+    "citySlug": "center-township",
+    "cityName": "Center Township",
+    "metaTitle": "Center Township Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Center Township, Indianapolis, managed by Red Door. Homes updated as availability changes.",
+    "h1": "Center Township Homes for Rent",
+    "heroDek": "Center Township sits at the center of Marion County and contains downtown Indianapolis, bordered by Washington Township to the north, Warren Township to the east, Perry Township to the south, and Wayne Township to the west. Population was 142,787 in 2010 and 153,549 in the 2020 census, down from a peak of 337,211 in 1950. It was organized in the spring of 1822 — initially combined with Warren Township as “Centre-Warren” until the two split in 1826 — and today includes White River State Park and the Indianapolis Downtown Heliport.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026, averaged across Center Township's 14 ZIP codes — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$1,471",
+        "sub": "Across 2,252 currently listed Center Township rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$1,378",
+        "sub": "Range: $273 – $10,000"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$1,629",
+        "sub": "Red Door's focus — 1,153 of 2,252 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,278 sq ft ($1.42/sq ft). By bedroom count: $1,081 for a studio, $1,013 for 1-bedroom, $1,359 for 2-bedroom, $1,904 for 3-bedroom (the largest sample, 762 listings), $2,205 for 4-bedroom, and $2,584 for 5-bedroom. Half of Center Township's current rental listings lease within 21 days, while the average of 47 days reflects a handful of longer-sitting units.",
+      "Center Township is geographically much larger than any single neighborhood within it. Downtown Indianapolis itself, the most concentrated part of the township, has its own dedicated homes-for-rent page — this page covers Center Township as a whole. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Center Township",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Center Township borders Washington Township to the north, Warren Township to the east, Perry Township to the south, and Wayne Township to the west. Downtown Indianapolis sits within Center Township and has its own dedicated homes-for-rent page.",
+      "<strong>Housing stock:</strong> 1,153 of Center Township's 2,252 current rental listings (just over half) are single-family homes, which lines up with Red Door's own focus here."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Center Township",
+    "nearbyDek": "When nothing's available in Center Township right now, these are the closest places to look — including downtown Indianapolis itself, which sits within the township and has its own dedicated page.",
+    "nearby": [
+      {
+        "label": "Washington Township",
+        "href": "/washington-township-homes-for-rent"
+      },
+      {
+        "label": "Warren Township",
+        "href": "/warren-township-homes-for-rent"
+      },
+      {
+        "label": "Perry Township",
+        "href": "/perry-township-homes-for-rent"
+      },
+      {
+        "label": "Wayne Township",
+        "href": "/wayne-township-homes-for-rent"
+      },
+      {
+        "label": "Downtown Indianapolis",
+        "href": "/downtown-indianapolis-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Center Township?",
+    "ctaText": "See how Red Door manages Center Township rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/center-township-property-management"
+  },
+  "decatur-township": {
+    "citySlug": "decatur-township",
+    "cityName": "Decatur Township",
+    "metaTitle": "Decatur Township Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Decatur Township, Indianapolis, managed by Red Door. Homes updated as availability changes.",
+    "h1": "Decatur Township Homes for Rent",
+    "heroDek": "Decatur Township sits in the southwest corner of Marion County, bordered by Wayne and Center townships to the north, Perry Township to the east across the White River, Morgan County to the south, and Hendricks County to the west. Population grew from 32,388 in 2010 to 36,951 in the 2020 census — the second-fastest growth of Marion County's nine townships between 2000 and 2020. It was organized on April 16, 1822, and its landmarks include the Indianapolis International Airport terminal and the AmeriPlex industrial park.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026, averaged across Decatur Township's 5 ZIP codes — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$1,734",
+        "sub": "Across 342 currently listed Decatur Township rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$1,773",
+        "sub": "Range: $695 – $4,287"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$1,797",
+        "sub": "Red Door's focus — 298 of 342 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,588 sq ft ($1.23/sq ft). By bedroom count: $1,067 for 1-bedroom, $1,130 for 2-bedroom, $1,806 for 3-bedroom (the largest sample, 224 listings), and $2,078 for 4-bedroom — the 5-bedroom figure ($2,378) is based on only 8 listings and reads as a rough signal, not a firm number. Half of Decatur Township's current rental listings lease within 18 days, while the average of 40 days reflects a handful of longer-sitting units.",
+      "Decatur Township won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Decatur Township",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Decatur Township borders Wayne and Center townships to the north, Perry Township to the east across the White River, Morgan County to the south, and Hendricks County to the west.",
+      "<strong>Housing stock:</strong> 298 of Decatur Township's 342 current rental listings (about 6 in 7) are single-family homes, which lines up with Red Door's own focus here."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Decatur Township",
+    "nearbyDek": "When nothing's available in Decatur Township right now, these are the closest places to look.",
+    "nearby": [
+      {
+        "label": "Wayne Township",
+        "href": "/wayne-township-homes-for-rent"
+      },
+      {
+        "label": "Center Township",
+        "href": "/center-township-homes-for-rent"
+      },
+      {
+        "label": "Perry Township",
+        "href": "/perry-township-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Decatur Township?",
+    "ctaText": "See how Red Door manages Decatur Township rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/decatur-township-property-management"
+  },
+  "downtown-indianapolis": {
+    "citySlug": "downtown-indianapolis",
+    "cityName": "Downtown Indianapolis",
+    "metaTitle": "Downtown Indianapolis Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Downtown Indianapolis, managed by Red Door. Homes updated as availability changes.",
+    "h1": "Downtown Indianapolis Homes for Rent",
+    "heroDek": "This page covers rentals in downtown Indianapolis's core — the Mile Square and the neighborhoods immediately around it (ZIP codes 46202, 46204, and 46225) — separate from the wider Indianapolis metro covered on Red Door's main Indianapolis page. It's the densest, most walkable rental market Red Door manages: government and corporate offices, hospitals, and universities draw a renter base looking to be close to work without a car, and the housing stock reflects that.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026 — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$1,650",
+        "sub": "Across 510 currently listed downtown rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$1,360",
+        "sub": "Range: $273 – $10,000"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$1,876",
+        "sub": "Red Door's focus — 98 of 510 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,296 sq ft ($1.98/sq ft) — the median unit is only 779 sq ft, well below every suburb Red Door serves, reflecting how much of downtown's inventory is studios and one-bedroom apartments and condos rather than full houses. By bedroom count: $1,119 for a studio (74 listings), $1,258 for 1-bedroom (188 listings, the largest sample by far), $1,852 for 2-bedroom, and $2,933 for 3-bedroom. Half of downtown's current listings lease within about 24 days.",
+      "Downtown won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting Downtown",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Covers ZIP codes 46202, 46204, and 46225 — the Mile Square and the immediately surrounding blocks, distinct from the outlying Indianapolis neighborhoods covered on the main Indianapolis page.",
+      "<strong>Housing stock:</strong> Dominated by apartments and condos — single-family homes are a small share (98 of 510 listings) of what's available, and units run smaller than anywhere else Red Door manages."
+    ],
+    "currentlyAvailableHeading": "Currently Available Downtown",
+    "nearbyDek": "When nothing's available downtown right now, this is the closest place to look.",
+    "nearby": [
+      {
+        "label": "Indianapolis",
+        "href": "/indianapolis-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home Downtown?",
+    "ctaText": "See how Red Door manages Indianapolis rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/indianapolis-property-management"
+  },
+  "fishers": {
+    "citySlug": "fishers",
+    "cityName": "Fishers, IN",
+    "metaTitle": "Fishers, IN Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Fishers, IN, managed by Red Door. Homes near Indianapolis, updated as availability changes.",
+    "h1": "Fishers, IN Homes for Rent",
+    "heroDek": "Fishers sits about 16 miles northeast of downtown Indianapolis along I-69, in Hamilton County. Population rose from 37,835 in 2000 to 76,794 in 2010, 98,977 in 2020, and an estimated 104,812 as of mid-2025 — nearly tripling since 2000. The area saw its first settlement as early as 1802 and was platted as \"Fisher's Switch\" in 1872, but wasn't incorporated as a town until 1891 and didn't become a city until January 2015 — one of the most recent city incorporations in the metro.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026 — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$2,251",
+        "sub": "Across 175 currently listed Fishers rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$2,208",
+        "sub": "Range: $1,141 – $8,834"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$2,332",
+        "sub": "Red Door's focus — 115 of 175 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,881 sq ft ($1.30/sq ft), with listings ranging from 513 to 3,732 sq ft. By bedroom count: $1,441 for a 1-bedroom, $2,322 for 2-bedroom, $2,268 for 3-bedroom (the largest sample by far, 104 listings), and $2,633 for 4-bedroom. Half of Fishers' current rental listings lease within 22 days; some sit far longer, which is why the average (42 days) reads higher than the median.",
+      "Fishers won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Fishers",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Fishers borders Carmel to the west, Noblesville to the north, unincorporated Madison County/Ingalls to the east, Fortville/McCordsville and Hancock County to the southeast, and Indianapolis/Marion County to the south.",
+      "<strong>Housing stock:</strong> 115 of Fishers' 175 current rental listings (about 2 in 3) are single-family homes, which lines up with Red Door's own focus here."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Fishers",
+    "nearbyDek": "When nothing's available in Fishers right now, these are the closest places to look.",
+    "nearby": [
+      {
+        "label": "Carmel",
+        "href": "/carmel-homes-for-rent"
+      },
+      {
+        "label": "Noblesville",
+        "href": "/noblesville-homes-for-rent"
+      },
+      {
+        "label": "Indianapolis",
+        "href": "/indianapolis-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Fishers?",
+    "ctaText": "See how Red Door manages Fishers rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/fishers-property-management"
+  },
+  "franklin-township": {
+    "citySlug": "franklin-township",
+    "cityName": "Franklin Township",
+    "metaTitle": "Franklin Township Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Franklin Township, Indianapolis, managed by Red Door. Homes updated as availability changes.",
+    "h1": "Franklin Township Homes for Rent",
+    "heroDek": "Franklin Township sits in the southeast corner of Marion County, bordered by Warren and Perry townships to the north and west, Shelby and Hancock counties to the east, and Johnson County to the south. Population roughly doubled between 2000 and 2020 — from 32,080 to 65,788, passing through 54,594 in 2010 — the fastest growth of Marion County's nine townships over that span. It was organized on April 16, 1822.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026, averaged across Franklin Township's 5 ZIP codes — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$1,686",
+        "sub": "Across 496 currently listed Franklin Township rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$1,671",
+        "sub": "Range: $575 – $5,500"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$1,779",
+        "sub": "Red Door's focus — 381 of 496 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,554 sq ft ($1.22/sq ft). By bedroom count: $1,065 for 1-bedroom, $1,381 for 2-bedroom, $1,741 for 3-bedroom (the largest sample, 240 listings), and $2,124 for 4-bedroom — the studio figure ($908) and the 5-bedroom figure ($2,226) are each based on only 7 listings and read as rough signals, not firm numbers. Half of Franklin Township's current rental listings lease within 20 days, while the average of 44 days reflects a handful of longer-sitting units.",
+      "Franklin Township won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Franklin Township",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Franklin Township borders Warren and Perry townships to the north and west, Shelby and Hancock counties to the east, and Johnson County to the south.",
+      "<strong>Housing stock:</strong> 381 of Franklin Township's 496 current rental listings (about 3 in 4) are single-family homes, which lines up with Red Door's own focus here."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Franklin Township",
+    "nearbyDek": "When nothing's available in Franklin Township right now, these are the closest places to look.",
+    "nearby": [
+      {
+        "label": "Warren Township",
+        "href": "/warren-township-homes-for-rent"
+      },
+      {
+        "label": "Perry Township",
+        "href": "/perry-township-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Franklin Township?",
+    "ctaText": "See how Red Door manages Franklin Township rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/franklin-township-property-management"
+  },
+  "greenwood": {
+    "citySlug": "greenwood",
+    "cityName": "Greenwood, IN",
+    "metaTitle": "Greenwood, IN Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Greenwood, IN, managed by Red Door. Homes near Indianapolis, updated as availability changes.",
+    "h1": "Greenwood, IN Homes for Rent",
+    "heroDek": "Greenwood sits about 11 miles south of downtown Indianapolis, between I-65 and I-69, in Johnson County. Population grew from 36,037 in 2000 to 49,791 in 2010, 63,830 in 2020, and an estimated 69,349 as of mid-2025. The area was first settled in 1823 — roughly contemporaneous with Indianapolis's own founding in 1821 — but formal town government wasn't organized until 1864.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026 — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$1,676",
+        "sub": "Across 227 currently listed Greenwood rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$1,678",
+        "sub": "Range: $522 – $2,995"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$1,860",
+        "sub": "Red Door's focus — 175 of 227 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,480 sq ft ($1.25/sq ft), with listings ranging from 300 to 4,213 sq ft. By bedroom count: $1,107 for a 1-bedroom, $1,397 for 2-bedroom, $1,763 for 3-bedroom (the largest sample, 108 listings), $2,088 for 4-bedroom, and $2,405 for 5-bedroom. Half of Greenwood's current rental listings lease within 22 days, though a handful of long-sitting units pull the average up to 47 days.",
+      "Greenwood won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Greenwood",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Greenwood borders Indianapolis and Marion County to the north, Bargersville to the southwest, and Whiteland/New Whiteland to the south, with both I-65 and I-69 running nearby.",
+      "<strong>Housing stock:</strong> 175 of Greenwood's 227 current rental listings (about 3 in 4) are single-family homes, which lines up with Red Door's own focus here."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Greenwood",
+    "nearbyDek": "When nothing's available in Greenwood right now, this is the closest place to look.",
+    "nearby": [
+      {
+        "label": "Indianapolis",
+        "href": "/indianapolis-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Greenwood?",
+    "ctaText": "See how Red Door manages Greenwood rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/greenwood-property-management"
+  },
+  "lawrence-township": {
+    "citySlug": "lawrence-township",
+    "cityName": "Lawrence Township",
+    "metaTitle": "Lawrence Township Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Lawrence Township, Indianapolis, managed by Red Door. Homes updated as availability changes.",
+    "h1": "Lawrence Township Homes for Rent",
+    "heroDek": "Lawrence Township sits in the northeast corner of Marion County, bordered by Hamilton County to the north, Hancock County to the east, Warren Township to the south, and Washington Township to the west. Its population grew from 118,447 in 2010 to 122,321 in the 2020 census. The township was organized on April 16, 1822, and today includes the Oaklandon Historic District and the former Fort Benjamin Harrison, now a state park.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026, averaged across Lawrence Township's 8 ZIP codes — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$1,636",
+        "sub": "Across 607 currently listed Lawrence Township rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$1,549",
+        "sub": "Range: $520 – $7,668"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$1,889",
+        "sub": "Red Door's focus — 422 of 607 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,417 sq ft ($1.33/sq ft). By bedroom count: $1,022 for a 1-bedroom, $1,508 for 2-bedroom, $1,848 for 3-bedroom (the largest sample, 276 listings), and $2,198 for 4-bedroom — figures above 4 bedrooms are based on very small samples (3 and 1 listings) and aren't reported as reliable numbers. Half of Lawrence Township's current rental listings lease within 20 days.",
+      "Lawrence Township won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Lawrence Township",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Lawrence Township borders Hamilton County to the north, Hancock County to the east, Warren Township to the south, and Washington Township to the west.",
+      "<strong>Housing stock:</strong> 422 of Lawrence Township's 607 current rental listings (about 7 in 10) are single-family homes, which lines up with Red Door's own focus here."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Lawrence Township",
+    "nearbyDek": "When nothing's available in Lawrence Township right now, these are the closest places to look.",
+    "nearby": [
+      {
+        "label": "Warren Township",
+        "href": "/warren-township-homes-for-rent"
+      },
+      {
+        "label": "Washington Township",
+        "href": "/washington-township-homes-for-rent"
+      },
+      {
+        "label": "Indianapolis",
+        "href": "/indianapolis-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Lawrence Township?",
+    "ctaText": "See how Red Door manages Lawrence Township rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/lawrence-township-property-management"
+  },
+  "noblesville": {
+    "citySlug": "noblesville",
+    "cityName": "Noblesville, IN",
+    "metaTitle": "Noblesville, IN Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Noblesville, IN, managed by Red Door. Homes near Indianapolis, updated as availability changes.",
+    "h1": "Noblesville, IN Homes for Rent",
+    "heroDek": "Noblesville sits about 23 miles north-northeast of downtown Indianapolis, reached primarily via State Road 37, in Hamilton County. Population grew from 28,590 in 2000 to 51,969 in 2010, 69,604 in 2020, and an estimated 76,111 as of mid-2025. The town was founded in 1823 — close to Indianapolis's own founding in 1821 — incorporated as a town in 1851, and became a city in 1887; its courthouse-square downtown and several National Register historic districts reflect that longer history.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026 — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$1,998",
+        "sub": "Across 190 currently listed Noblesville rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$2,010",
+        "sub": "Range: $492 – $4,295"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$2,144",
+        "sub": "Red Door's focus — 138 of 190 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,668 sq ft ($1.31/sq ft), with listings ranging from 498 to 4,515 sq ft. By bedroom count: $1,298 for a 1-bedroom, $1,601 for 2-bedroom, $2,042 for 3-bedroom (the largest sample, 97 listings), and $2,414 for 4-bedroom — the 5-bedroom figure ($3,098) is based on only 5 listings and should be read as a rough signal, not a firm number. Half of Noblesville's current rental listings lease within 15 days.",
+      "Noblesville won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Noblesville",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Noblesville borders Cicero to the north, Fishers and Carmel to the south, Westfield to the west, and unincorporated Madison County/Ingalls to the east.",
+      "<strong>Housing stock:</strong> 138 of Noblesville's 190 current rental listings (about 3 in 4) are single-family homes, which lines up with Red Door's own focus here."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Noblesville",
+    "nearbyDek": "When nothing's available in Noblesville right now, these are the closest places to look.",
+    "nearby": [
+      {
+        "label": "Fishers",
+        "href": "/fishers-homes-for-rent"
+      },
+      {
+        "label": "Carmel",
+        "href": "/carmel-homes-for-rent"
+      },
+      {
+        "label": "Westfield",
+        "href": "/westfield-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Noblesville?",
+    "ctaText": "See how Red Door manages Noblesville rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/noblesville-property-management"
+  },
+  "perry-township": {
+    "citySlug": "perry-township",
+    "cityName": "Perry Township",
+    "metaTitle": "Perry Township Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Perry Township, Indianapolis, managed by Red Door. Homes updated as availability changes.",
+    "h1": "Perry Township Homes for Rent",
+    "heroDek": "Perry Township sits on the south side of Marion County, bordered by Center Township to the north, Franklin Township to the east, Decatur Township to the west across the White River, and Johnson County to the south. Population grew from 108,972 in 2010 to 121,768 in the 2020 census. It was organized on April 16, 1822 and is home to Southport, platted in 1849, and the University of Indianapolis, founded in 1902.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026, averaged across Perry Township's 6 ZIP codes — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$1,561",
+        "sub": "Across 716 currently listed Perry Township rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$1,495",
+        "sub": "Range: $575 – $5,500"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$1,754",
+        "sub": "Red Door's focus — 407 of 716 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,242 sq ft ($1.46/sq ft). By bedroom count: $1,417 for a studio, $1,055 for 1-bedroom, $1,370 for 2-bedroom, $1,800 for 3-bedroom (the largest sample, 251 listings), and $2,138 for 4-bedroom — the 5-bedroom figure ($1,984) is based on only 7 listings and reads as a rough signal, not a firm number. Half of Perry Township's current rental listings lease within 22 days, while the average of 46 days reflects a handful of longer-sitting units.",
+      "Perry Township won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Perry Township",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Perry Township borders Center Township to the north, Franklin Township to the east, Decatur Township to the west across the White River, and Johnson County to the south.",
+      "<strong>Housing stock:</strong> 407 of Perry Township's 716 current rental listings — just over half — are single-family homes, which lines up with Red Door's own focus here."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Perry Township",
+    "nearbyDek": "When nothing's available in Perry Township right now, these are the closest places to look.",
+    "nearby": [
+      {
+        "label": "Center Township",
+        "href": "/center-township-homes-for-rent"
+      },
+      {
+        "label": "Franklin Township",
+        "href": "/franklin-township-homes-for-rent"
+      },
+      {
+        "label": "Decatur Township",
+        "href": "/decatur-township-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Perry Township?",
+    "ctaText": "See how Red Door manages Perry Township rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/perry-township-property-management"
+  },
+  "pike-township": {
+    "citySlug": "pike-township",
+    "cityName": "Pike Township",
+    "metaTitle": "Pike Township Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Pike Township, Indianapolis, managed by Red Door. Homes updated as availability changes.",
+    "h1": "Pike Township Homes for Rent",
+    "heroDek": "Pike Township sits in the northwest corner of Marion County, bordered by Hamilton and Boone counties to the north, Washington Township to the east, Wayne Township to the south, and Hendricks County to the west. Population grew from 77,895 in 2010 to 83,030 in the 2020 census. It was organized on April 16, 1822 and today contains Eagle Creek Park, Lafayette Square Mall, and the north junction of I-65 and I-465.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026, averaged across Pike Township's 7 ZIP codes — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$1,888",
+        "sub": "Across 310 currently listed Pike Township rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$1,843",
+        "sub": "Range: $597 – $7,900"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$2,202",
+        "sub": "Red Door's focus — 207 of 310 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,570 sq ft ($1.49/sq ft). By bedroom count: $1,165 for a studio, $1,181 for 1-bedroom, $1,614 for 2-bedroom, $2,013 for 3-bedroom (the largest sample, 152 listings), and $2,401 for 4-bedroom — the 5-bedroom figure ($3,964) is based on only 6 listings and reads as a rough signal, not a firm number. Half of Pike Township's current rental listings lease within 28 days, while the average of 49 days reflects a handful of longer-sitting units.",
+      "Pike Township won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Pike Township",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Pike Township borders Hamilton and Boone counties to the north, Washington Township to the east, Wayne Township to the south, and Hendricks County to the west.",
+      "<strong>Housing stock:</strong> 207 of Pike Township's 310 current rental listings (about 2 in 3) are single-family homes, which lines up with Red Door's own focus here."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Pike Township",
+    "nearbyDek": "When nothing's available in Pike Township right now, these are the closest places to look.",
+    "nearby": [
+      {
+        "label": "Washington Township",
+        "href": "/washington-township-homes-for-rent"
+      },
+      {
+        "label": "Wayne Township",
+        "href": "/wayne-township-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Pike Township?",
+    "ctaText": "See how Red Door manages Pike Township rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/pike-township-property-management"
+  },
+  "warren-township": {
+    "citySlug": "warren-township",
+    "cityName": "Warren Township",
+    "metaTitle": "Warren Township Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Warren Township, Indianapolis, managed by Red Door. Homes updated as availability changes.",
+    "h1": "Warren Township Homes for Rent",
+    "heroDek": "Warren Township sits on the east side of Marion County, bordered by Lawrence Township to the north, Franklin Township to the south, Center Township to the west, and Hancock County to the east. Population grew from 99,433 in 2010 to 106,191 in the 2020 census. It was organized on April 16, 1822 — initially combined with Center Township as “Centre-Warren” until the two split in 1826.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026, averaged across Warren Township's 7 ZIP codes — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$1,504",
+        "sub": "Across 1,036 currently listed Warren Township rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$1,448",
+        "sub": "Range: $520 – $7,668"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$1,609",
+        "sub": "Red Door's focus — 736 of 1,036 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,431 sq ft ($1.23/sq ft). By bedroom count: $802 for a studio, $968 for 1-bedroom, $1,248 for 2-bedroom, $1,630 for 3-bedroom (the largest sample, 468 listings), $1,862 for 4-bedroom, and $2,273 for 5-bedroom. Half of Warren Township's current rental listings lease within 21 days, while the average of 43 days reflects a handful of longer-sitting units.",
+      "Warren Township won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Warren Township",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Warren Township borders Lawrence Township to the north, Franklin Township to the south, Center Township to the west, and Hancock County to the east.",
+      "<strong>Housing stock:</strong> 736 of Warren Township's 1,036 current rental listings (about 7 in 10) are single-family homes, which lines up with Red Door's own focus here."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Warren Township",
+    "nearbyDek": "When nothing's available in Warren Township right now, these are the closest places to look.",
+    "nearby": [
+      {
+        "label": "Lawrence Township",
+        "href": "/lawrence-township-homes-for-rent"
+      },
+      {
+        "label": "Franklin Township",
+        "href": "/franklin-township-homes-for-rent"
+      },
+      {
+        "label": "Center Township",
+        "href": "/center-township-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Warren Township?",
+    "ctaText": "See how Red Door manages Warren Township rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/warren-township-property-management"
+  },
+  "washington-township": {
+    "citySlug": "washington-township",
+    "cityName": "Washington Township",
+    "metaTitle": "Washington Township Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Washington Township, Indianapolis, managed by Red Door. Homes updated as availability changes.",
+    "h1": "Washington Township Homes for Rent",
+    "heroDek": "Washington Township sits in north-central Marion County, bordered by Hamilton County to the north, Lawrence Township to the east, Center Township to the south, and Pike Township to the west. Population grew from 132,049 in 2010 to 138,678 in the 2020 census. It was organized on April 16, 1822 — initially combined with Lawrence Township until the two split in 1826 — and today includes Broad Ripple Village and Castleton Square, Indiana's largest mall.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026, averaged across Washington Township's 10 ZIP codes — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$1,533",
+        "sub": "Across 955 currently listed Washington Township rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$1,442",
+        "sub": "Range: $520 – $7,900"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$1,859",
+        "sub": "Red Door's focus — 542 of 955 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,282 sq ft ($1.40/sq ft). By bedroom count: $967 for a studio, $1,058 for 1-bedroom, $1,408 for 2-bedroom, $1,820 for 3-bedroom (the largest sample, 351 listings), and $2,277 for 4-bedroom — the 5-bedroom figure ($3,406) is based on only 8 listings and reads as a rough signal, not a firm number. Half of Washington Township's current rental listings lease within 40 days, while the average of 68 days reflects a number of slower-moving units.",
+      "Washington Township won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Washington Township",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Washington Township borders Hamilton County to the north, Lawrence Township to the east, Center Township to the south, and Pike Township to the west. It also contains Broad Ripple Village — which has its own dedicated homes-for-rent page — and Castleton Square, Indiana's largest mall.",
+      "<strong>Housing stock:</strong> 542 of Washington Township's 955 current rental listings (just over half) are single-family homes, which lines up with Red Door's own focus here."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Washington Township",
+    "nearbyDek": "When nothing's available in Washington Township right now, these are the closest places to look.",
+    "nearby": [
+      {
+        "label": "Lawrence Township",
+        "href": "/lawrence-township-homes-for-rent"
+      },
+      {
+        "label": "Center Township",
+        "href": "/center-township-homes-for-rent"
+      },
+      {
+        "label": "Pike Township",
+        "href": "/pike-township-homes-for-rent"
+      },
+      {
+        "label": "Broad Ripple",
+        "href": "/broad-ripple-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Washington Township?",
+    "ctaText": "See how Red Door manages Washington Township rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/washington-township-property-management"
+  },
+  "wayne-township": {
+    "citySlug": "wayne-township",
+    "cityName": "Wayne Township",
+    "metaTitle": "Wayne Township Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Wayne Township, Indianapolis, managed by Red Door. Homes updated as availability changes.",
+    "h1": "Wayne Township Homes for Rent",
+    "heroDek": "Wayne Township sits on the west side of Marion County, bordered by Pike Township to the north, Center Township to the east, Decatur Township to the south, and Hendricks County to the west. Population grew from 136,828 in 2010 to 148,444 in the 2020 census. It was organized on April 16, 1822 and includes the north half of Indianapolis International Airport and the town of Speedway.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026, averaged across Wayne Township's 8 ZIP codes — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$1,606",
+        "sub": "Across 498 currently listed Wayne Township rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$1,622",
+        "sub": "Range: $495 – $3,049"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$1,796",
+        "sub": "Red Door's focus — 364 of 498 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,378 sq ft ($1.32/sq ft). By bedroom count: $905 for a studio, $1,060 for 1-bedroom, $1,248 for 2-bedroom, $1,811 for 3-bedroom (the largest sample, 266 listings), $2,072 for 4-bedroom, and $2,369 for 5-bedroom. Half of Wayne Township's current rental listings lease within 26 days, while the average of 50 days reflects a handful of longer-sitting units.",
+      "Wayne Township won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Wayne Township",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Wayne Township borders Pike Township to the north, Center Township to the east, Decatur Township to the south, and Hendricks County to the west.",
+      "<strong>Housing stock:</strong> 364 of Wayne Township's 498 current rental listings (about 3 in 4) are single-family homes, which lines up with Red Door's own focus here."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Wayne Township",
+    "nearbyDek": "When nothing's available in Wayne Township right now, these are the closest places to look.",
+    "nearby": [
+      {
+        "label": "Pike Township",
+        "href": "/pike-township-homes-for-rent"
+      },
+      {
+        "label": "Center Township",
+        "href": "/center-township-homes-for-rent"
+      },
+      {
+        "label": "Decatur Township",
+        "href": "/decatur-township-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Wayne Township?",
+    "ctaText": "See how Red Door manages Wayne Township rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/wayne-township-property-management"
+  },
+  "westfield": {
+    "citySlug": "westfield",
+    "cityName": "Westfield, IN",
+    "metaTitle": "Westfield, IN Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Westfield, IN, managed by Red Door. Homes near Indianapolis, updated as availability changes.",
+    "h1": "Westfield, IN Homes for Rent",
+    "heroDek": "Westfield sits about 20 miles north of downtown Indianapolis on US-31, in Hamilton County — one of the fastest-growing suburbs in the metro. Population went from 9,293 in 2000 to 30,068 in 2010, 46,410 in 2020, and an estimated 66,258 as of mid-2025, more than a sevenfold increase since 2000. The town traces to 1834, but wasn't incorporated as a city until January 2008 — one of the most recent city incorporations in the area.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026 — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$2,544",
+        "sub": "Across 102 currently listed Westfield rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$2,405",
+        "sub": "Range: $1,000 – $5,459"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$2,859",
+        "sub": "Red Door's focus — 57 of 102 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Typical size runs around 1,959 sq ft ($1.43/sq ft), with listings ranging from 522 to 6,103 sq ft. By bedroom count: $1,369 for a 1-bedroom, $2,486 for 3-bedroom (42 listings, the largest sample), $2,995 for 4-bedroom, and $3,617 for 5-bedroom — the 2-bedroom figure ($1,759) is based on only 4 listings and reads as a rough signal, not a firm number. Half of Westfield's current rental listings lease within 26 days.",
+      "Westfield won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Westfield",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Westfield borders Noblesville to the east, Carmel to the south, and Zionsville and Boone County to the west.",
+      "<strong>Housing stock:</strong> 57 of Westfield's 102 current rental listings (a little over half) are single-family homes, which lines up with Red Door's own focus here — alongside a real share of apartments and townhomes."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Westfield",
+    "nearbyDek": "When nothing's available in Westfield right now, these are the closest places to look.",
+    "nearby": [
+      {
+        "label": "Carmel",
+        "href": "/carmel-homes-for-rent"
+      },
+      {
+        "label": "Noblesville",
+        "href": "/noblesville-homes-for-rent"
+      },
+      {
+        "label": "Zionsville",
+        "href": "/zionsville-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Westfield?",
+    "ctaText": "See how Red Door manages Westfield rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/westfield-property-management"
+  },
+  "zionsville": {
+    "citySlug": "zionsville",
+    "cityName": "Zionsville, IN",
+    "metaTitle": "Zionsville, IN Homes for Rent | Red Door Property Management",
+    "metaDescription": "See available rental homes in Zionsville, IN, managed by Red Door. Homes near Indianapolis, updated as availability changes.",
+    "h1": "Zionsville, IN Homes for Rent",
+    "heroDek": "Zionsville sits about 15 miles northwest of downtown Indianapolis, with Carmel bordering it to the east along US-421 and I-65 running through town, in Boone County. Population rose from 8,775 in 2000 to 14,160 in 2010, 30,603 in 2020, and an estimated 33,624 as of mid-2025 — though a meaningful share of that increase reflects annexations that expanded the town's land area past 67 square miles, not organic growth alone. Zionsville was founded in 1852 and incorporated as a town in 1866.",
+    "dataAsOf": "RentCast market data pulled September 17, 2026 — monthly automated refresh not yet wired up",
+    "statTiles": [
+      {
+        "label": "Average Rent",
+        "value": "$2,100",
+        "sub": "Across 33 currently listed Zionsville rentals"
+      },
+      {
+        "label": "Median Rent",
+        "value": "$1,995",
+        "sub": "Range: $925 – $4,100"
+      },
+      {
+        "label": "Single-Family Average",
+        "value": "$2,566",
+        "sub": "Red Door's focus — 14 of 33 listings"
+      }
+    ],
+    "snapshotDetail": [
+      "Zionsville's total rental inventory is the smallest of any market on this page — only 33 active listings and 3 new ones this month — so every figure here should be read as directional rather than precise. Typical size runs around 1,765 sq ft ($1.55/sq ft), and days-on-market runs long: half of current listings have been up for 31 days, with the average pulled up to 79 days by a few slow-moving units.",
+      "Zionsville won't always have listings live. When nothing's available here right now, homes available nearby are shown below instead of a dead end."
+    ],
+    "whatToExpectHeading": "What to Expect Renting in Zionsville",
+    "whatToExpectItemsHtml": [
+      "<strong>Location:</strong> Zionsville borders Carmel to the east along US-421, with Whitestown to the south/southeast; I-65 runs through town.",
+      "<strong>Housing stock:</strong> Single-family homes make up 14 of Zionsville's 33 current rental listings — a large share of Red Door's focus here, alongside condos and townhomes closer to the historic Main Street village."
+    ],
+    "currentlyAvailableHeading": "Currently Available in Zionsville",
+    "nearbyDek": "When nothing's available in Zionsville right now, these are the closest places to look.",
+    "nearby": [
+      {
+        "label": "Carmel",
+        "href": "/carmel-homes-for-rent"
+      },
+      {
+        "label": "Westfield",
+        "href": "/westfield-homes-for-rent"
+      },
+      {
+        "label": "Indianapolis",
+        "href": "/indianapolis-homes-for-rent"
+      }
+    ],
+    "ctaHeading": "Own a Rental Home in Zionsville?",
+    "ctaText": "See how Red Door manages Zionsville rental properties, or find out what your home could rent for.",
+    "propertyManagementHref": "/zionsville-property-management"
+  }
+}

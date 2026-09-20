@@ -1,0 +1,262 @@
+---
+// /[city]-homes-for-rent — the 19 SIMPLE city "homes for rent" hub pages
+// (Indianapolis excluded — it has its own real search/filter/map UI, built
+// separately, and keeps its existing static indianapolis-homes-for-rent.html
+// for now; out of scope here per CLAUDE.md's locked "three-page model").
+//
+// Ported faithfully from the already-approved static HTML reference pages
+// at the repo root (avon-homes-for-rent.html is the canonical design
+// source; the other 18 root-level *-homes-for-rent.html files are the same
+// approved template already filled in per city with real Sep 17/18 content
+// — extracted once into src/data/homes-for-rent-content.json by
+// scripts/extract-homes-for-rent-content.mjs rather than re-typed by hand, so
+// every city's hero copy, RentCast stat tiles, "What to Expect" facts, and
+// curated "Homes Available Nearby" links are the real, already-reviewed
+// text, not a re-derivation or a doorway-page template fill-in).
+//
+// What's genuinely live/dynamic per build, not baked from the static
+// reference:
+//   - The listing grid itself: fetched from RentEngine at build time and
+//     filtered by this city's real ZIP list (data/homes-for-rent/*.json's
+//     zipsUsed field), NOT the fixed cards the Sep 18 reference pages
+//     hardcoded from a one-time pull. Empty/thin inventory is the normal
+//     case (CLAUDE.md / listings-build-notes.md) — the honest empty-state
+//     message below is ported from the reference's own Zionsville/Fishers/
+//     Brownsburg empty-state pattern, not invented here.
+//   - The bedroom-rent breakdown: derived fresh from each city's own
+//     data/homes-for-rent/*.json (dataByBedrooms), per the data-schema doc's
+//     bedroomLadder shape. Not present as its own component in the static
+//     reference (which only mentions the ladder in prose) — added here as a
+//     small real-numbers table, per this task's explicit ask to build and
+//     surface it.
+//
+// Known real bugs from the sibling listing-detail page, avoided here too:
+//   - Never combine .container and .content-block on the same element —
+//     nest them, or the block centers instead of sitting flush-left.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { fetchAllAvailableUnits, addressSlug, citySlug } from '../lib/listings/rentengine';
+import type { RentEngineUnit } from '../lib/listings/types';
+import { loadCityContentMap, loadCityMarketData } from '../lib/listings/homes-for-rent-content';
+import type { CityContent, BedroomLadderEntry } from '../lib/listings/homes-for-rent-content';
+
+// Confirmed non-secret (CLAUDE.md) — RentEngine's own account id, already
+// hardcoded as the same fallback in src/pages/homes-for-rent/[city]/[slug].astro.
+const RENTENGINE_ACCOUNT_ID = '6ecca3ec-8e5a-42ed-87ea-af21f97d546e';
+
+export async function getStaticPaths() {
+  const apiKey = import.meta.env.RENTENGINE_LISTINGS_KEY;
+  let units: RentEngineUnit[] = [];
+  if (!apiKey) {
+    // Same graceful-degradation pattern as the sibling listing-detail route
+    // and src/pages/blog/index.astro's missing-Sanity-credentials handling:
+    // log and build with zero live listings rather than crash the build.
+    console.warn(
+      '[city homes-for-rent] RENTENGINE_LISTINGS_KEY not configured — all 19 city hub pages will build with zero live listings.'
+    );
+  } else {
+    try {
+      units = await fetchAllAvailableUnits({
+        apiKey,
+        accountId: import.meta.env.RENTENGINE_LISTINGS_ACCOUNT_ID || RENTENGINE_ACCOUNT_ID,
+      });
+    } catch (err) {
+      console.warn('[city homes-for-rent] Could not reach RentEngine — all 19 city hub pages will build with zero live listings.', err);
+    }
+  }
+
+  const cityContentMap = loadCityContentMap();
+  const citySlugs = Object.keys(cityContentMap);
+
+  return citySlugs.map((slug) => {
+    const content = cityContentMap[slug];
+    const { zipsUsed, bedroomLadder } = loadCityMarketData(slug);
+    // City-to-listing matching is by ZIP, not RentEngine's own address.city
+    // field (which only returns a broad name, e.g. every Indianapolis-area
+    // address just says "Indianapolis") — see claude/red-door-rentcast-zip-
+    // mapping.md and this task's own instructions. A unit can legitimately
+    // match more than one city page when ZIPs overlap (shared township
+    // ZIPs) — that's correct, not a bug.
+    const zipSet = new Set(zipsUsed);
+    const cityUnits = units.filter((u) => zipSet.has(u.address.zip_code));
+
+    return {
+      params: { city: slug },
+      props: { content, bedroomLadder, cityUnits },
+    };
+  });
+}
+
+interface Props {
+  content: CityContent;
+  bedroomLadder: BedroomLadderEntry[];
+  cityUnits: RentEngineUnit[];
+}
+
+const { content, bedroomLadder, cityUnits } = Astro.props;
+const pagePath = `/${content.citySlug}-homes-for-rent`;
+// The reference pages' empty-state copy and CTA headings use the bare city
+// name ("Zionsville"), not the ", IN"-suffixed display form used in the H1
+// ("Zionsville, IN Homes for Rent") — matching the approved reference text.
+const shortCityName = content.cityName.replace(/,\s*IN$/, '');
+const SMALL_SAMPLE_THRESHOLD = 5;
+---
+
+<BaseLayout title={content.metaTitle} description={content.metaDescription} path={pagePath}>
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-kicker">Homes for Rent</span>
+      <h1>{content.h1}</h1>
+      <p class="lead">{content.heroDek}</p>
+    </div>
+  </section>
+
+  <section class="snapshot">
+    <div class="container">
+      <p class="data-asof">{content.dataAsOf}</p>
+      <div class="snapshot-grid">
+        {
+          content.statTiles.map((tile) => (
+            <div class="stat-tile">
+              <p class="stat-label">{tile.label}</p>
+              <p class="stat-value">{tile.value}</p>
+              <p class="stat-sub">{tile.sub}</p>
+            </div>
+          ))
+        }
+      </div>
+      {content.snapshotDetail.map((paragraph) => <p class="snapshot-detail">{paragraph}</p>)}
+      {
+        bedroomLadder.length > 0 && (
+          <>
+            <p class="snapshot-note">Rent by bedroom count, this month&rsquo;s RentCast pull:</p>
+            <div class="bedroom-ladder">
+              {bedroomLadder.map((b) => (
+                <div class="bedroom-ladder-row">
+                  <span class="bedroom-ladder-beds">{b.beds === 0 ? 'Studio' : `${b.beds}-Bedroom`}</span>
+                  <span class="bedroom-ladder-rent">${Math.round(b.avgRent).toLocaleString()}/mo</span>
+                  {b.newListings < SMALL_SAMPLE_THRESHOLD && (
+                    <span class="bedroom-ladder-note">
+                      {b.newListings} new {b.newListings === 1 ? 'listing' : 'listings'} this pull &mdash; small sample
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <h2>{content.whatToExpectHeading}</h2>
+      <ul>{content.whatToExpectItemsHtml.map((item) => <li set:html={item} />)}</ul>
+    </div>
+  </section>
+
+  <section class="content-section is-soft">
+    <div class="container">
+      <h2>{content.currentlyAvailableHeading}</h2>
+      <p class="section-dek">Live listings pull directly from Red Door's RentEngine feed.</p>
+      {
+        cityUnits.length > 0 ? (
+          <div class="hub-listing-grid">
+            {cityUnits.map((unit) => {
+              const photo = unit.marketing_photos.find((p) => !p.hidden)?.original;
+              const href = `/homes-for-rent/${citySlug(unit.address.city)}/${addressSlug(unit)}`;
+              const rent = unit.rent != null ? `$${unit.rent.toLocaleString()}` : 'Contact for pricing';
+              return (
+                <a class="listing-card" href={href}>
+                  <div class="listing-card-photo">
+                    {photo && <img src={photo} alt={unit.address.formatted_address} loading="lazy" />}
+                  </div>
+                  <div class="listing-card-body">
+                    <p class="listing-card-rent">
+                      {rent}
+                      <span>/mo</span>
+                    </p>
+                    <p class="listing-card-address">{unit.address.formatted_address}</p>
+                    <p class="listing-card-specs">
+                      {unit.bedrooms} bd &middot; {unit.bathrooms} ba
+                      {unit.sqft ? ` · ${unit.sqft.toLocaleString()} sq ft` : ''}
+                    </p>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        ) : (
+          <div class="listing-empty">
+            <p>
+              No homes are currently available in {shortCityName} right now. New availability appears here
+              automatically as Red Door lists homes for rent.
+            </p>
+            <p>
+              <a class="btn btn-secondary" href="/indianapolis-homes-for-rent">
+                Browse Everything Currently Available
+              </a>
+            </p>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <h2>Homes Available Nearby</h2>
+      <p class="section-dek">{content.nearbyDek}</p>
+      <div class="nearby-grid">
+        {
+          content.nearby.map((item) =>
+            item.href ? (
+              <a class="nearby-link" href={item.href}>
+                {item.label}
+              </a>
+            ) : (
+              <span class="nearby-link is-text">{item.label}</span>
+            )
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  {/* Shared across all 19 pages, unchanged from the approved reference —
+      not per-city content (see claude/red-door-homes-for-rent-data-schema.md,
+      "What's shared, not per-city"). */}
+  <section class="content-section is-soft">
+    <div class="container">
+      <h2>How Renting With Red Door Works</h2>
+      <ul>
+        <li>
+          <strong>Browsing and applying:</strong> View details on any listing and apply directly online through Red
+          Door's application flow.
+        </li>
+        <li>
+          <strong>Screening criteria:</strong> Verifiable income of at least 3x rent, minimum 580 credit score,
+          maximum 55% debt-to-income, no disqualifying convictions, no aggressive dog breeds, plus standard
+          rental-history checks. Full detail on the <a class="area-link" href="/application-criteria">Tenant Qualification Criteria</a> page.
+        </li>
+        <li>
+          <strong>Showings:</strong> Self-guided via digital lockbox once an application clears initial screening
+          &mdash; no waiting to coordinate a showing time with an agent.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container cta-inner">
+      <div>
+        <h2>{content.ctaHeading}</h2>
+        <p>{content.ctaText}</p>
+      </div>
+      <div class="cta-buttons">
+        <a class="btn btn-primary" href="/#rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-ghost" href={content.propertyManagementHref}>See How We Manage Here</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
