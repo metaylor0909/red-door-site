@@ -89,22 +89,26 @@ the estimate, not a new API call.)
 
 **Account ID:** `6ecca3ec-8e5a-42ed-87ea-af21f97d546e`
 
-**API keys — FINAL (2026-09-13): keep them split, one per feature.** The
-original read-only key ("API Key for Claude to build listing pages," created
-Sep 8, 2026) stays scoped to the listings-page build (`/units`,
-`/marketing/listings`). The second read-only key (cut Sep 12, 2026 for the
-accuracy-validation run) is the rental-analysis tool's key, used for
-`market-tool/comps` calls going forward. Michael's call: no compelling
-reason to merge them, since RentEngine's key-creation UI has no per-endpoint
-scoping — splitting by feature is the only way to see each feature's own
-usage/cost and to revoke or rotate one without touching the other. **Caveat
-worth knowing, not a reason to reverse this:** it's not confirmed whether
-RentEngine's rate limits (40 calls/24hrs on `market-tool/comps`, 30
-requests/5 seconds standard) are enforced per-key or per-account — if the
-latter, splitting keys doesn't buy extra quota headroom between features, it
-only buys the tracking/revocation separation above. Worth a quick check with
-RentEngine support if the two features ever start bumping into each other's
-usage, but not blocking anything now.
+**API keys — REVISED (2026-09-20): one shared key for everything.**
+Originally split one-per-feature (2026-09-13): the "API Key for Claude to
+build listing pages" (created Sep 8) scoped to the listings-page build
+(`/units`, `/marketing/listings`), and a second key (cut Sep 12 for the
+accuracy-validation run) scoped to the rental-analysis tool's
+`market-tool/comps` calls — reasoning at the time was that RentEngine's
+key-creation UI has no per-endpoint scoping, so splitting was the only way
+to see each feature's own usage/cost and revoke one without touching the
+other. **Superseded by Michael's call once the homes-for-rent listings
+build actually started using RentEngine too: reuse the rental-analysis
+key for the listings project's own `/units` calls as well, rather than
+manage a second key.** The original tracking/revocation reasoning still
+holds if this becomes a real problem later (e.g. one feature's usage
+becomes hard to distinguish from the other's, or one needs rotating
+without affecting the other) — this is a simplification Michael chose,
+not a discovery that the original reasoning was wrong. The "Caveat worth
+knowing" below is now moot either way, since there's only one key.
+~~Caveat worth knowing, not a reason to reverse this: it's not confirmed
+whether RentEngine's rate limits (40 calls/24hrs on `market-tool/comps`,
+30 requests/5 seconds standard) are enforced per-key or per-account.~~
 
 **Lead webhook (RentEngine's own) — ruled out, FINAL (2026-09-13).** The
 Developer Portal's Webhooks tab supports registering a URL against a
@@ -1038,9 +1042,10 @@ decision #4 already established (that ceiling doesn't change here).
    (LeadSimple only), source tag, split creation-vs-note mechanism, the
    email format, the dedicated inbound address, and the RentEngine-webhook
    ruling (not used) are all settled as of 2026-09-13.
-7. ~~API credentials~~ — **done, see above.** Keys stay split by feature:
-   the Sep 8 key for the listings-page build, the Sep 12 key for the
-   rental-analysis tool.
+7. ~~API credentials~~ — **done, see above.** Revised 2026-09-20: one
+   shared RentEngine key for both the rental-analysis tool and the
+   homes-for-rent listings build, not split per feature as originally
+   decided.
 8. ~~Hosting/implementation~~ — **done, see decision #8 above.**
    Revised estimate: ~7.5–11.5 focused days (1.5–2.5 weeks full-time).
    Email vendor (Resend), sender identity (Chris Knight), the Calendly

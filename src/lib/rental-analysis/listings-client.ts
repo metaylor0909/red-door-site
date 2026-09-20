@@ -12,8 +12,13 @@
 // which weren't explicitly given there (that research focused on detail-
 // page fields, not a card-summary shape) — `rent` and
 // `address.coordinates.{latitude,longitude}` are reasonable guesses, not
-// confirmed. Reconcile against a real response once RENTENGINE_LISTINGS_KEY
-// is available to test with.
+// confirmed.
+//
+// Confirmed 2026-09-20 against a real call: /units rejects an
+// `account_id` query param outright (400, "must NOT have additional
+// properties") — the Bearer token alone scopes the request to its
+// account. `accountId` on ListingsClientConfig is kept for interface
+// parity with the comps client but never sent as a query param here.
 
 export interface AvailableUnit {
   id: string;
@@ -52,7 +57,6 @@ export async function fetchAvailableUnits(config: ListingsClientConfig): Promise
   const url = new URL('https://app.rentengine.io/api/public/v1/units');
   url.searchParams.set('statuses', 'Available');
   url.searchParams.set('limit', '100');
-  if (config.accountId) url.searchParams.set('account_id', config.accountId);
 
   const response = await fetch(url.toString(), {
     headers: { Authorization: `Bearer ${config.apiKey}` },

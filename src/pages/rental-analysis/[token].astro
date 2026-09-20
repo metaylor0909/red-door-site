@@ -114,12 +114,23 @@ try {
 // Homes-for-rent cross-sell (decision #5) — a small, narrowly-scoped
 // live /units call, city-first with a nearby fallback (decision #8 step
 // 10: queried fresh on every view, not snapshotted, since freshness is
-// desirable and it's a cheap read). Graceful skip if the listings key
-// isn't configured, same pattern as every other optional integration.
+// desirable and it's a cheap read). Graceful skip if the key isn't
+// configured, same pattern as every other optional integration.
+//
+// Reuses RENTENGINE_RENTAL_ANALYSIS_KEY (Michael's call, 2026-09-20 — one
+// RentEngine key for everything rather than a split-per-feature key like
+// decision #7 originally set up for comps vs. listings). The homes-for-
+// rent build's own static pages (src/pages/homes-for-rent/, src/pages/
+// [city]-homes-for-rent.astro) read the same underlying value too, just
+// via .env's RENTENGINE_LISTINGS_KEY instead of .dev.vars — they're
+// static (built via getStaticPaths, Vite/import.meta.env at build time),
+// this page is SSR (cloudflare:workers/.dev.vars at request time), so the
+// same credential has to live in both files under their own file's
+// naming, not because they're actually different keys.
 let crossSellUnits: AvailableUnit[] = [];
-const listingsKey = (env as unknown as Record<string, unknown>).RENTENGINE_LISTINGS_KEY;
+const listingsKey = (env as unknown as Record<string, unknown>).RENTENGINE_RENTAL_ANALYSIS_KEY;
 if (typeof listingsKey === 'string' && listingsKey.length > 0) {
-  const listingsAccountId = (env as unknown as Record<string, unknown>).RENTENGINE_LISTINGS_ACCOUNT_ID;
+  const listingsAccountId = (env as unknown as Record<string, unknown>).RENTENGINE_ACCOUNT_ID;
   try {
     const allUnits = await fetchAvailableUnits({
       apiKey: listingsKey,
@@ -134,7 +145,7 @@ if (typeof listingsKey === 'string' && listingsKey.length > 0) {
     console.error('[rental-analysis/token] Homes-for-rent cross-sell fetch failed:', err);
   }
 } else {
-  console.warn('[rental-analysis/token] RENTENGINE_LISTINGS_KEY not configured — cross-sell section skipped.');
+  console.warn('[rental-analysis/token] RENTENGINE_RENTAL_ANALYSIS_KEY not configured — cross-sell section skipped.');
 }
 
 const compsWithDistance = snapshot.comps.map((c) => ({
