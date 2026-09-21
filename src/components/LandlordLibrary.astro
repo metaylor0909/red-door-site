@@ -16,6 +16,7 @@ interface Post {
   title: string;
   dek: string;
   date: string;
+  category?: string;
 }
 interface Props {
   heading: string;
@@ -62,7 +63,7 @@ const { heading, subheading, posts = DEFAULT_POSTS } = Astro.props;
         <article class="article-card">
           <div class="article-image" style={`--article-image:url('${post.thumbnail}')`} role="img" aria-label={post.thumbnailAlt}></div>
           <div class="article-body">
-            <span class="category">Market Report</span>
+            <span class="category">{post.category ?? 'Market Report'}</span>
             <h3><a href={`/blog/${post.slug}`}>{post.title}</a></h3>
             <p>{post.dek}</p>
             <span class="date">{post.date}</span>

@@ -2552,8 +2552,30 @@
     .content-block + .content-block { margin-top: 40px; }
     .content-block h2 { margin-bottom: 14px; }
     .content-block > p { color: var(--muted); font-size: 1.02rem; margin-bottom: 16px; }
+    /* Ported from indianapolis-property-management.html's own embedded
+       <style> — its "Chain, Not a Checklist" intro section centers this
+       way instead of the default left alignment. */
+    .content-block.is-centered { margin-inline: auto; text-align: center; }
 
     .listing-description { white-space: pre-line; }
+
+    /* Ported from indianapolis-property-management.html's own embedded
+       <style> — the 6 numbered process-detail sections and their two
+       supporting list styles (two-col-list for paired items, plain-list
+       for a single column). .step-grid/.step-card were also defined
+       there but never actually used anywhere in that page's markup —
+       dead CSS from an earlier design iteration, not ported. */
+    .two-col-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 28px; margin: 18px 0 0; padding: 0; list-style: none; }
+    .two-col-list li { position: relative; padding-left: 22px; color: var(--charcoal); font-size: .98rem; line-height: 1.5; }
+    .two-col-list li::before { content: ""; position: absolute; left: 0; top: .6em; width: 8px; height: 8px; background: var(--red); border-radius: 50%; }
+    .plain-list { margin: 18px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+    .plain-list li { position: relative; padding-left: 22px; color: var(--charcoal); font-size: .98rem; line-height: 1.55; }
+    .plain-list li::before { content: ""; position: absolute; left: 0; top: .6em; width: 8px; height: 8px; background: var(--red); border-radius: 50%; }
+    @media (max-width: 720px) { .two-col-list { grid-template-columns: 1fr; } }
+
+    .process-detail { padding: 44px 0; border-bottom: 1px solid var(--line); }
+    .process-detail:last-of-type { border-bottom: 0; }
+    .process-detail .step-num { color: var(--red); font-size: .78rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
 
     .callout-note { margin: 20px 0 0; padding: 16px 20px; color: var(--charcoal); background: var(--brand-tint); border-left: 4px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; font-size: .95rem; }
     .badge { width: fit-content; display: inline-flex; align-items: center; min-height: 28px; padding: 5px 10px; border-radius: 999px; background: var(--brand-tint); color: var(--red-dark); font-weight: 900; text-transform: uppercase; margin-bottom: 16px; font-size: .82rem; letter-spacing: .04em; }

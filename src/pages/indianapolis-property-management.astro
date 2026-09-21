@@ -1,0 +1,476 @@
+---
+// /indianapolis-property-management — the flagship page, built separately
+// from the 18-city shared template (src/pages/[city]-property-management.astro)
+// because its approved mockup uses a meaningfully different, richer
+// design: no plain journey-wrap (replaced by its own 3D interactive
+// carousel, see src/components/IndianapolisJourneyCarousel.astro), plus
+// a "What Makes Red Door Different" list, six detailed process-detail
+// sections (one per pillar-page stage), a "What's Included" list, an
+// "Owner Standards" list, and a 10-question FAQ accordion — none of
+// which exist on the 18 simple pages. Confirmed via a class-name diff
+// against avon-property-management.html before starting (see that
+// page's own commit message). Same "build the flagship page separately"
+// precedent already used for indianapolis-homes-for-rent.astro.
+//
+// A single static page, not a dynamic route — no getStaticPaths needed,
+// so the D1 read just happens directly in this frontmatter (confirmed
+// D1 bindings are available during static prerendering generally, not
+// just specifically inside getStaticPaths — see src/lib/property-
+// management/market-snapshot.ts and the homes-for-rent pages' own
+// earlier build-time D1 verification).
+//
+// Same rental-analysis section fix as the homepage and the 18 simple
+// pages: the mockup's old placeholder 6-step form (same stale pre-real-
+// tool pattern) is replaced with a condensed pitch + CTA to
+// /rental-analysis. Every other same-page #rental-analysis anchor on
+// this page (hero CTA, final-cta) points there too.
+import { env } from 'cloudflare:workers';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProofStrip from '../components/ProofStrip.astro';
+import IndianapolisJourneyCarousel from '../components/IndianapolisJourneyCarousel.astro';
+import ReviewsCarousel from '../components/ReviewsCarousel.astro';
+import AreasServedGrid from '../components/AreasServedGrid.astro';
+import LandlordLibrary from '../components/LandlordLibrary.astro';
+import { loadMarketSnapshot } from '../lib/property-management/market-snapshot';
+
+const snapshot = await loadMarketSnapshot(env.DB, 'indianapolis');
+
+const pageTitle = 'Indianapolis Property Management | Red Door Property Management';
+const pageDescription =
+  'Full-service Indianapolis property management — market readiness, marketing, tenant screening, leasing, maintenance, and proactive communication for rental owners.';
+const pagePath = '/indianapolis-property-management';
+const canonicalUrl = `https://www.reddoorrents.com${pagePath}`;
+
+function formatCurrency(value: number | null): string {
+  return value == null ? '—' : `$${Math.round(value).toLocaleString()}`;
+}
+function formatDays(value: number | null): string {
+  return value == null ? 'n/a' : `${Math.round(value)}`;
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://www.reddoorrents.com/#organization',
+      name: 'Red Door Property Management',
+      url: 'https://www.reddoorrents.com/',
+      telephone: '+1-317-660-1626',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: '3815 River Crossing Pkwy, Suite 100',
+        addressLocality: 'Indianapolis',
+        addressRegion: 'IN',
+        postalCode: '46240',
+        addressCountry: 'US',
+      },
+      sameAs: [
+        'https://www.youtube.com/@reddoorrents',
+        'https://www.facebook.com/RedDoorPropertyManagement/',
+        'https://www.linkedin.com/company/red-door-property-management/',
+        'https://www.instagram.com/reddoorrents/',
+        'https://www.tiktok.com/@reddoorrents',
+      ],
+    },
+    {
+      '@type': 'Service',
+      '@id': `${canonicalUrl}#service`,
+      serviceType: 'Residential Property Management',
+      provider: { '@id': 'https://www.reddoorrents.com/#organization' },
+      areaServed: 'Indianapolis, IN',
+      url: canonicalUrl,
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumbs`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.reddoorrents.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Indianapolis Property Management', item: canonicalUrl },
+      ],
+    },
+  ],
+};
+
+const faqs = [
+  {
+    q: 'What does a property management company in Indianapolis actually do?',
+    a: 'A professional property management company handles the full lifecycle of your rental property — preparing the home for market, marketing it, screening tenants, executing leases, collecting rent, coordinating maintenance, and communicating with tenants and owners. Red Door operates a structured system beginning with Market Readiness and continuing through marketing, tenant placement, maintenance coordination, and ongoing communication.',
+  },
+  {
+    q: 'How much does property management cost in Indianapolis?',
+    a: 'Property management fees in Indianapolis typically range between 8% and 12% of the monthly rent. Red Door offers a competitive, transparent fee structure and does not require long-term cancellation contracts. Full pricing detail is on our <a href="/pricing">Pricing</a> page.',
+  },
+  {
+    q: 'How long does it usually take to find a tenant?',
+    a: 'Most professionally marketed rental homes in Indianapolis lease within 2–4 weeks, depending on price, condition, location, and market conditions. Our 2-Week Leasing Guarantee reflects the strength of our marketing system.',
+  },
+  {
+    q: 'How do you screen tenants?',
+    a: 'Our process includes credit history evaluation, nationwide criminal and eviction background checks, employment and income verification (typically 3× monthly rent), rental history verification, identity and fraud detection, and pet screening through a third-party platform. See our full <a href="/tenant-screening">Tenant Screening</a> process.',
+  },
+  {
+    q: 'Who handles maintenance requests?',
+    a: 'Red Door coordinates all maintenance through a structured system: in-house technicians for common repairs, vetted local vendors for specialty work, preventative maintenance recommendations, 24/7 emergency response, and photo/video documentation for accountability.',
+  },
+  {
+    q: 'How do owners stay informed about their property?',
+    a: 'Owners get a modern owner portal with monthly financial statements, maintenance updates, photos and video documentation, lease agreements, and rent payment tracking — plus proactive communication via phone, email, text, and video.',
+  },
+  {
+    q: 'Do you manage single homes or large portfolios?',
+    a: 'Both. We work with first-time rental owners, accidental landlords, out-of-state investors, and experienced investors with multiple properties — our systems are designed to scale while maintaining consistent service.',
+  },
+  {
+    q: 'What happens if a tenant breaks their lease early?',
+    a: 'If a tenant placed by Red Door voids their lease within the first six months, our 6-Month Tenant Guarantee applies — your next New Lease Fee is waived.',
+  },
+  {
+    q: 'Can I cancel property management if I&rsquo;m not satisfied?',
+    a: 'Yes. We don&rsquo;t require long-term cancellation contracts, and our 90-Day Money-Back Guarantee refunds management fees if you change your mind within the first 90 days.',
+  },
+  {
+    q: 'How do I get started with Red Door Property Management?',
+    a: 'The first step is a free Rental Market Analysis, which lets us evaluate your property, review market rent data, and determine how our Market Readiness process can position your home for the strongest performance. From there, we guide you through onboarding, market readiness preparation, and the full leasing process.',
+  },
+];
+
+const indianapolisLibraryPosts = [
+  {
+    slug: 'westfield-market-report-leasing-improves-as-rental-supply-drops-52--august-2026',
+    thumbnail: 'https://i.ytimg.com/vi/H1syUd2uJfE/hqdefault.jpg',
+    thumbnailAlt: "Westfield market report video thumbnail from Red Door's blog",
+    title: 'Westfield Market Report: Leasing Improves as Rental Supply Drops 52%',
+    dek: 'Westfield finally delivered some relief in August — rental days on market dropped sharply while active rental inventory continued falling.',
+    date: 'August 2026',
+  },
+  {
+    slug: 'greenwood-market-report-rents-hold-as-home-prices-fall-nearly-8--august-2026',
+    thumbnail: 'https://i.ytimg.com/vi/t6v_HJ0A1YA/hqdefault.jpg',
+    thumbnailAlt: "Greenwood market report video thumbnail from Red Door's blog",
+    title: 'Greenwood Market Report: Rents Hold as Home Prices Fall Nearly 8%',
+    dek: 'Greenwood is showing two different market stories at the same time — steady rental pricing alongside softer year-over-year home sale prices.',
+    date: 'August 2026',
+  },
+  {
+    slug: 'why-professional-rental-property-photos-matter-before-the-first-showing',
+    thumbnail: 'https://i.ytimg.com/vi/2CqrHkZik6g/hqdefault.jpg',
+    thumbnailAlt: 'Rental property photography article thumbnail from Red Door\'s blog',
+    title: 'Why Professional Rental Property Photos Matter Before the First Showing',
+    dek: 'For most rental properties, the first showing happens online, before a prospective tenant ever walks through the front door.',
+    date: '2026',
+    category: 'Owner Guidance',
+  },
+];
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path={pagePath}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
+
+  <section class="hero" aria-labelledby="page-title">
+    <div class="hero-content">
+      <div class="eyebrow">Full-Service Property Management</div>
+      <h1 id="page-title"><span>Indianapolis Property Management Services That Protect Your Investment</span></h1>
+      <p class="hero-copy">Red Door Property Management provides full-service residential property management in Indianapolis built around one goal: protecting your asset while maximizing long-term ROI. From market readiness and marketing to tenant screening, leasing, maintenance, and proactive communication, we don't just manage rentals — we operate a documented system owners can trust.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis" data-track="hero-rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="/contact" data-track="hero-contact">Talk to Our Team</a>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#trust-proof" aria-label="Scroll to proof points">
+      <span aria-hidden="true"></span>
+      Scroll
+    </a>
+  </section>
+
+  <ProofStrip cityLabel="Indianapolis" />
+
+  <IndianapolisJourneyCarousel />
+
+  <section class="section-soft">
+    <div class="container">
+      <div class="section-head center reveal">
+        <div class="section-kicker">Where the Indianapolis Market Stands Right Now</div>
+        <h2>Indianapolis Rental &amp; Sales Snapshot</h2>
+        <p>A condensed look at what's happening in Indianapolis right now &mdash; for the full rental trend data and bedroom-by-bedroom breakdown, see the <a class="area-link" href="/indianapolis-homes-for-rent">Indianapolis homes for rent page</a>.</p>
+      </div>
+      <p class="snapshot-asof reveal">
+        {snapshot.dataAsOf} Covers the 37 standard-mail-delivery ZIP codes in Marion County; one ZIP (46282) returned no market data and is excluded.
+      </p>
+      <div class="snapshot-panels reveal">
+        <div class="snapshot-panel">
+          <span class="snapshot-panel-label">Rental Market</span>
+          <h3>Indianapolis Rentals</h3>
+          <div class="snapshot-stat-row"><span class="snapshot-stat-label">Average Rent</span><span class="snapshot-stat-value">{formatCurrency(snapshot.rental.averageRent)}</span></div>
+          <div class="snapshot-stat-row"><span class="snapshot-stat-label">Median Rent</span><span class="snapshot-stat-value">{formatCurrency(snapshot.rental.medianRent)}</span></div>
+          <div class="snapshot-stat-row"><span class="snapshot-stat-label">Active Listings</span><span class="snapshot-stat-value">{snapshot.rental.activeListings.toLocaleString()}</span></div>
+          <p class="snapshot-note"><a class="area-link" href="/indianapolis-homes-for-rent">See the full Indianapolis rental market &rarr;</a></p>
+        </div>
+        <div class="snapshot-panel is-sales">
+          <span class="snapshot-panel-label">Sales Market</span>
+          <h3>Indianapolis For-Sale Homes</h3>
+          <div class="snapshot-stat-row"><span class="snapshot-stat-label">Average Sale Price</span><span class="snapshot-stat-value">{formatCurrency(snapshot.sale.averagePrice)}</span></div>
+          <div class="snapshot-stat-row"><span class="snapshot-stat-label">Median Sale Price</span><span class="snapshot-stat-value">{formatCurrency(snapshot.sale.medianPrice)}</span></div>
+          <div class="snapshot-stat-row"><span class="snapshot-stat-label">Active Listings</span><span class="snapshot-stat-value">{snapshot.sale.activeListings.toLocaleString()}</span></div>
+          <p class="snapshot-note">
+            Weighing selling versus continuing to rent? {snapshot.sale.activeListings.toLocaleString()} active Indianapolis listings are averaging {formatCurrency(snapshot.sale.averagePrice)} and moving in about {formatDays(snapshot.sale.averageDaysOnMarket)} days, compared to {formatDays(snapshot.rental.averageDaysOnMarket)} days for rentals.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container reveal">
+      <div class="section-head center">
+        <div class="section-kicker">What Makes Red Door Different</div>
+        <h2>What Makes Red Door Property Management Different</h2>
+        <p>We pride ourselves on being one of the most customer-oriented property management companies in Indianapolis. We treat every property as if it were our own and use every available resource to protect your investment while continuing to invest in the main pillars of a quality property management company.</p>
+      </div>
+      <ul class="two-col-list" style="max-width:900px;margin-inline:auto">
+        <li>Significant continued investment in proper communication and maintenance platforms</li>
+        <li>Transparent, high-touch customer service</li>
+        <li>24-hour availability &mdash; we answer our phones</li>
+        <li>Professional marketing photos with anti-scam watermarking</li>
+        <li>Strong online presence that minimizes vacancy</li>
+        <li>Modern owner portal with access to statements, photos, videos, and documents</li>
+        <li>Extremely competitive fee structure</li>
+        <li>Yearly rental analysis</li>
+        <li>No long-term lock-in &mdash; no 12-month cancellation requirement</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-dark guarantee-section">
+    <div class="container">
+      <div class="section-head center reveal">
+        <div class="section-kicker">A Process We Are Willing to Stand Behind</div>
+        <h2>Red Door Guarantees</h2>
+        <p>We stand behind our system with real guarantees:</p>
+      </div>
+      <div class="guarantee-grid reveal">
+        <article class="guarantee-card">
+          <span>Leasing</span>
+          <h3>2-Week Leasing Guarantee</h3>
+          <p>Secure a viable tenant within two weeks of marketing or your first month's management fee is waived.</p>
+        </article>
+        <article class="guarantee-card">
+          <span>Tenant Placement</span>
+          <h3>6-Month Tenant Guarantee</h3>
+          <p>If a tenant placed by Red Door voids the lease within the first six months, your next New Lease Fee is waived.</p>
+        </article>
+        <article class="guarantee-card">
+          <span>Owner Confidence</span>
+          <h3>90-Day Money-Back Guarantee</h3>
+          <p>If you change your mind during the first 90 days, Red Door will refund the management fees paid.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container content-block is-centered reveal">
+      <div class="section-kicker">Our Proven Property Management System</div>
+      <h2>A Chain, Not a Checklist</h2>
+      <p>Great property management is a chain. If any link breaks, owners pay for it. Red Door's system covers the entire rental lifecycle &mdash; each phase reinforcing the next.</p>
+    </div>
+  </section>
+
+  <section class="process-detail">
+    <div class="container content-block reveal">
+      <p class="step-num">1 &middot; Market Readiness</p>
+      <h2>The Foundation of Better Rental Performance</h2>
+      <p>Before a listing goes live, before photos are taken, and before tenants tour the home, your property must be positioned correctly. First impressions directly impact rent price, tenant quality, and long-term maintenance costs. Market Readiness is the first step in our entire management system &mdash; we don't just list homes, we prepare them to perform.</p>
+      <p>Every property we manage goes through a structured, repeatable readiness system before marketing begins, including a free data-driven Rental Market Analysis, an HD video walkthrough and photo inspection, a Market Readiness Assessment (MRA) outlining clear priorities, ROI-minded recommendations with transparent cost estimates, and preventative maintenance guidance. Once recommendations are reviewed and approved, Red Door coordinates everything &mdash; scheduling, access, vendors, and quality control &mdash; while keeping you informed every step of the way.</p>
+      <p><a class="area-link" href="/market-readiness-assessment">Explore the full Market Readiness Assessment process &rarr;</a></p>
+    </div>
+  </section>
+
+  <section class="process-detail section-soft">
+    <div class="container content-block reveal">
+      <p class="step-num">2 &middot; Marketing</p>
+      <h2>Maximum Exposure, Minimal Vacancy</h2>
+      <p>Effective marketing goes far beyond a yard sign. Every Red Door listing includes professional photography, an immersive virtual walkthrough video, and syndication across all major rental platforms &mdash; optimized with search-friendly language, amenities, and neighborhood highlights. Our modern self-showing and scheduling tools let pre-qualified renters book showings safely and conveniently, seven days a week.</p>
+      <p><a class="area-link" href="/marketing-process">Explore our full Marketing Process &rarr;</a></p>
+    </div>
+  </section>
+
+  <section class="process-detail">
+    <div class="container content-block reveal">
+      <p class="step-num">3 &middot; Tenant Screening</p>
+      <h2>Placing the Right Tenant, Not Just Any Tenant</h2>
+      <p>A qualified tenant is more than someone who can pay rent &mdash; they're financially stable, respectful of the property, and likely to renew. Every applicant is evaluated using a consistent, documented system: full credit report review, nationwide criminal background and eviction search, rental history verification, employment and income verification (typically 3&times; monthly rent), identity verification and fraud detection, and pet screening through a dedicated third-party platform. Each application is evaluated holistically, and results are presented with a professional recommendation.</p>
+      <p><a class="area-link" href="/tenant-screening">Explore our full Tenant Screening process &rarr;</a></p>
+    </div>
+  </section>
+
+  <section class="process-detail section-soft">
+    <div class="container content-block reveal">
+      <p class="step-num">4 &middot; Leasing</p>
+      <h2>Protecting Your Property, Simplifying the Experience</h2>
+      <p>Leasing at Red Door isn't just paperwork &mdash; it's a system built around documentation, accountability, and long-term performance. Every lease includes detailed move-in inspections with photo and video documentation, a legally robust Indiana-compliant lease agreement, secure digital signing and online payments, tenant portal access, a proactive 110-day lease renewal strategy, and transparent move-out inspections with photo and video comparison for deposit reconciliation.</p>
+      <p><a class="area-link" href="/leasing-process">Explore our full Leasing Process &rarr;</a></p>
+    </div>
+  </section>
+
+  <section class="process-detail">
+    <div class="container content-block reveal">
+      <p class="step-num">5 &middot; Property Maintenance</p>
+      <h2>Protecting Your Investment and Strengthening Long-Term ROI</h2>
+      <p>We approach maintenance with both a technician's precision and an investor's mindset. Every property is supported by Market Readiness&ndash;driven evaluations, real-time maintenance tracking and documentation, in-house technicians for common and time-sensitive repairs, vetted and insured local vendors for specialty work, preventative maintenance planning, and 24/7 emergency response coverage for true habitability issues.</p>
+      <p><a class="area-link" href="/maintenance">Explore our full Property Maintenance process &rarr;</a></p>
+    </div>
+  </section>
+
+  <section class="process-detail section-soft">
+    <div class="container content-block reveal">
+      <p class="step-num">6 &middot; Communication</p>
+      <h2>Clear, Proactive Updates &mdash; Without Guesswork</h2>
+      <p>Communication isn't an add-on at Red Door &mdash; it's the foundation of everything we do. Owners receive proactive, transparent updates through email, phone, text, and video, backed by photo and video documentation for inspections, maintenance, and turnovers, and regular updates during market readiness, marketing, leasing, maintenance, renewals, and move-outs. You'll always know what's happening, what decisions are needed, and why recommendations are being made.</p>
+      <p><a class="area-link" href="/communication">Explore our full Communication standards &rarr;</a></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container content-block reveal">
+      <h2>What's Included (No Nickel-and-Diming)</h2>
+      <p>We provide a large array of services at no additional cost:</p>
+      <ul class="two-col-list">
+        <li>Property advertising across major platforms</li>
+        <li>Showing coordination and lockbox access</li>
+        <li>Tenant screening and placement</li>
+        <li>Lease execution and renewals</li>
+        <li>Video-documented move-in and move-out</li>
+        <li>Rent collection via ACH</li>
+        <li>Maintenance coordination and vendor management</li>
+        <li>Tenant mediation</li>
+        <li>Monthly accounting statements</li>
+        <li>Year-end tax reporting</li>
+        <li>Trust accounting (no added accounting fees)</li>
+      </ul>
+      <p class="callout-note">Full pricing detail &mdash; management fees, the New Lease Fee, and every separately billed service &mdash; is published on our <a href="/pricing">Pricing</a> page.</p>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container content-block reveal">
+      <h2>Owner Standards That Protect Performance</h2>
+      <p>To hold tenants to high standards, it's important for homes to be delivered in great condition:</p>
+      <ul class="plain-list">
+        <li>Cleanliness is essential and one of the first things noted during tenant showings</li>
+        <li>Neutral paint tones recommended but not required, to appeal to the highest number of potential applicants</li>
+        <li>Keys to all doors (adequate copies)</li>
+        <li>Two garage door openers when applicable</li>
+        <li>Locks re-keyed between occupants for safety and liability protection</li>
+      </ul>
+    </div>
+  </section>
+
+  <ReviewsCarousel />
+
+  {/* Replaces the mockup's old placeholder 6-step form (same stale
+      pre-real-tool pattern as the homepage's — see that page's own
+      module comment) with a condensed pitch pointing at /rental-analysis. */}
+  <section class="section-soft" id="rental-analysis">
+    <div class="container analysis-grid">
+      <div class="reveal">
+        <div class="section-kicker">Free Rental Analysis</div>
+        <h2>What Could Your Indianapolis Rental Earn?</h2>
+        <p class="lead">Get a professional rental analysis backed by local market activity, comparable homes, current competition, and Red Door's experience managing rentals in Indianapolis and across Central Indiana.</p>
+        <ul class="benefit-list">
+          <li><span>1</span>Understand your property's current rental value.</li>
+          <li><span>2</span>Identify improvements that may strengthen rent and tenant appeal.</li>
+          <li><span>3</span>See whether Red Door's management approach fits your goals.</li>
+        </ul>
+        <div class="journey-cta reveal">
+          <a class="btn btn-primary" href="/rental-analysis">Get Your Free Rental Analysis</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <AreasServedGrid
+    headingLine1="Indianapolis Property Management,"
+    headingLine2="Plus Every Community Nearby"
+    leadText="Red Door manages rental homes in Indianapolis and across the surrounding Central Indiana communities where owners need steady leasing, responsive maintenance, and clear local guidance."
+    currentSlug="indianapolis"
+  />
+
+  <LandlordLibrary
+    heading="The Red Door Landlord Library"
+    subheading="Market updates, investment insights, and practical property-management guidance for Central Indiana rental owners."
+    posts={indianapolisLibraryPosts}
+  />
+
+  <section id="faq">
+    <div class="container reveal">
+      <div class="section-head center">
+        <div class="section-kicker">Questions Owners Ask</div>
+        <h2>Frequently Asked Questions</h2>
+      </div>
+      <div class="accordion" data-accordion>
+        {faqs.map((item, i) => (
+          <article class={`accordion-item${i === 0 ? ' is-open' : ''}`}>
+            <button class="accordion-trigger" type="button" aria-expanded={i === 0 ? 'true' : 'false'}>
+              <span>{item.q}</span><span aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-panel"><div><p set:html={item.a} /></div></div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="local-section">
+    <div class="container split">
+      <div class="reveal">
+        <h2>Indianapolis Property Management Built on Local Experience</h2>
+        <p class="lead">Red Door Property Management helps accidental landlords, out-of-state owners, and growth-minded investors navigate the complete rental lifecycle. Our local team combines documented processes, modern technology, and hands-on Indianapolis-area market knowledge to help owners avoid costly mistakes and make better decisions for their properties.</p>
+        <p class="statement">Smarter Property Management Powered by Process, Data-Driven Decisions, and Local Market Expertise.</p>
+        <div class="cta-row" style="justify-content:flex-start">
+          <a class="btn btn-primary" href="/about">Meet Our Team</a>
+          <a class="btn btn-secondary" href="/pricing">See Management Pricing</a>
+        </div>
+      </div>
+      <div class="image-frame reveal" role="img" aria-label="Red Door placeholder home photo representing local Indianapolis property management">
+        <div class="image-caption">Indianapolis-area knowledge, practical recommendations, and clear owner visibility.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Ready for Better Property Management in Indianapolis?</h2>
+      <p>Whether you own one rental or a growing portfolio, Red Door Property Management is built to protect your asset and maximize results.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+        <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+      </div>
+    </div>
+  </section>
+
+  {/* FAQ accordion toggle — same self-contained behavior as
+      WhyChooseAccordion.astro's own script, duplicated rather than
+      imported since this page doesn't use that component (its "why
+      choose" section is the "What Makes Red Door Different" list
+      instead) and Astro components don't export plain functions to
+      import into a page's own script block. */}
+  <script>
+    document.querySelectorAll('[data-accordion]').forEach(function (accordion) {
+      accordion.querySelectorAll('.accordion-trigger').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          var item = trigger.closest('.accordion-item');
+          accordion.querySelectorAll('.accordion-item').forEach(function (candidate) {
+            var candidateTrigger = candidate.querySelector('.accordion-trigger');
+            var shouldOpen = candidate === item && !candidate.classList.contains('is-open');
+            candidate.classList.toggle('is-open', shouldOpen);
+            candidateTrigger.setAttribute('aria-expanded', String(shouldOpen));
+          });
+        });
+      });
+    });
+  </script>
+</BaseLayout>
