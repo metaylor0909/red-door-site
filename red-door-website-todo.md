@@ -1049,27 +1049,43 @@ exists; On Hold and photo-hosting decisions are made).
       only when a city has no D1 row yet. The next `npm run build` of the
       main site will pick up this real September 21 data instead of the
       frozen September 17 snapshot.
-- [ ] **Still open — "live" currently means "live at build time," not
-      "live without a rebuild."** The RentCast side is now genuinely
-      live end to end (Worker deploys monthly, pages read D1 at build
-      time); what's left is the *listings* side's push-triggered rebuild:
-  1. **RentEngine `units`-table webhook → Cloudflare Pages rebuild**, per
-     `CLAUDE.md`'s locked "no debounce, no queue" decision. Needs, once
-     the main site itself has a real Cloudflare Pages/Workers deployment
-     (it still doesn't — only `workers/rentcast-refresh` is deployed so
-     far, a separate standalone Worker; the main `red-door-site`
-     `wrangler.toml` hasn't been `wrangler deploy`'d yet): (a) a Pages
-     **Deploy Hook** URL (Cloudflare dashboard → the Pages project →
-     Settings → Deploy Hooks — a unique URL that triggers a rebuild on
-     POST, no auth needed beyond knowing the URL), (b) registering that
-     URL in RentEngine's own Developer Portal Webhooks tab against the
-     `units` entity with `INSERT`/`UPDATE`/`DELETE` events — the Webhooks
-     tab is confirmed to exist and support this general pattern (already
-     used for `pm_business_development_leads`, see
-     `claude/listings-build-notes.md`), but a `units`-entity webhook
-     specifically hasn't been independently confirmed against RentEngine's
-     own docs in this session — check docs.rentengine.io's Webhooks
-     reference before assuming the entity name/event types match exactly.
+- ✅ **RentEngine `units`-table webhook → real rebuild, done end-to-end
+      (2026-09-21).** The main site is now deployed for real too — not
+      just `workers/rentcast-refresh`:
+      `https://red-door-site.mtaylor-0d7.workers.dev` (no DNS change;
+      `reddoorrents.com` still points at the old platform, so nothing
+      public-facing changed). **Real finding: Cloudflare's classic
+      "Deploy Hook"** (a POST-able rebuild URL, what this item originally
+      assumed) **is a Pages-only feature** — confirmed against current
+      Cloudflare docs. This site deploys as a "Worker with static
+      assets" via `wrangler deploy`, which uses a different system
+      ("Workers Builds") that's Git-push-triggered only, no manual
+      webhook/rebuild-URL of its own. Bridged the gap instead with:
+      `src/pages/api/rebuild-webhook.ts` (checks a shared secret, then
+      calls GitHub's `repository_dispatch` API) +
+      `.github/workflows/deploy.yml` (listens for that dispatch, or an
+      ordinary push to `main`, and runs the real `npm run build &&
+      wrangler deploy`). RentEngine's own Create Webhook dialog sends
+      its "API Key" as an `X-API-Key` header (now confirmed, was an open
+      question) — registered against the `units` entity, `INSERT` /
+      `UPDATE` / `DELETE`, pointing at
+      `https://red-door-site.mtaylor-0d7.workers.dev/api/rebuild-webhook`.
+      Verified with a real POST all the way through: webhook → GitHub
+      dispatch → Actions run → successful deploy. Setup needed 5 real
+      credentials Michael created and set himself (never passed through
+      chat): `GITHUB_PAT` + `REBUILD_WEBHOOK_SECRET` as Worker secrets,
+      and `CLOUDFLARE_API_TOKEN` / `SANITY_PROJECT_ID` /
+      `PUBLIC_TURNSTILE_SITE_KEY` / `RENTENGINE_LISTINGS_KEY` as GitHub
+      Actions repo secrets. **Also found and fixed a separate, more
+      serious bug while deploying**: `astro build`'s `getStaticPaths`
+      prerendering resolves the D1 binding through the same local
+      Miniflare simulation `wrangler dev` uses by default, not the real
+      database — every build was silently falling back to each city's
+      frozen Sep 17 static snapshot even though `rentcast_city_cache` had
+      fresh rows, which would have made the entire D1-wiring effort
+      pointless in production. Fixed via `remote = true` on the D1
+      binding in `wrangler.toml` (Cloudflare's "remote bindings"
+      feature) — see that file's own comment.
 - ✅ **"Schedule a Showing" resolved (Sep 18, v5 rebuild) — links out to
       RentEngine's own real hosted booking page** instead of a custom
       in-page form. Simpler than building against `POST /showings/create`
