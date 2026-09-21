@@ -1022,13 +1022,43 @@ exists; On Hold and photo-hosting decisions are made).
       data — a real gap, not a bug), all 20 city rows wrote correctly via
       the real D1 binding API, and decision #10 correctly read one back
       (tier 2, thin-sample, on a real Avon row).
+- ✅ **`workers/rentcast-refresh` deployed for real (2026-09-21).** A real
+      D1 database now exists (`red-door-rental-analysis`,
+      `92f2e5cd-3589-4861-86d1-8a96d7d9afb9` — filled into both this
+      site's own `wrangler.toml` and the Worker's) with the schema
+      migration applied to the **remote** database, not just `--local`
+      emulation. The Worker is live at
+      `https://red-door-rentcast-refresh.mtaylor-0d7.workers.dev`, its
+      Cron Trigger (`0 6 1 * *`, monthly) is registered, and
+      `RENTCAST_API_KEY` is set as a real Worker secret (set directly by
+      Michael via `wrangler secret put` in his own terminal — never
+      passed through chat or a tool call). Verified against two real
+      manual-trigger runs (`POST` to the Worker's own `fetch` handler,
+      its documented on-demand test path): both wrote all 20 city rows to
+      the real remote `rentcast_city_cache` table with sane data (e.g.
+      Avon: averageRent $2,140 across 83 listings). Same 46282 gap as the
+      earlier local verification (genuinely no RentCast data for that
+      ZIP) — the aggregator's graceful-degradation logic absorbed it
+      correctly into `indianapolis-in`'s `zipsMissing` rather than
+      failing the whole city, exactly as designed.
+      **Also wired (prior session, commit `fb4bd89`):** the 19 simple
+      homes-for-rent Astro pages now read `rentcast_city_cache` via
+      `cloudflare:workers`'s `env.DB` at build time
+      (`src/lib/listings/homes-for-rent-content.ts`'s `loadCityMarketData`),
+      falling back to the static `data/homes-for-rent/*.json` snapshot
+      only when a city has no D1 row yet. The next `npm run build` of the
+      main site will pick up this real September 21 data instead of the
+      frozen September 17 snapshot.
 - [ ] **Still open — "live" currently means "live at build time," not
-      "live without a rebuild."** Two separate pieces, both real
-      infrastructure/config work, not more application code:
+      "live without a rebuild."** The RentCast side is now genuinely
+      live end to end (Worker deploys monthly, pages read D1 at build
+      time); what's left is the *listings* side's push-triggered rebuild:
   1. **RentEngine `units`-table webhook → Cloudflare Pages rebuild**, per
      `CLAUDE.md`'s locked "no debounce, no queue" decision. Needs, once
-     the site has a real Cloudflare Pages deployment (it doesn't yet —
-     `wrangler.toml`'s `database_id` is still a placeholder): (a) a Pages
+     the main site itself has a real Cloudflare Pages/Workers deployment
+     (it still doesn't — only `workers/rentcast-refresh` is deployed so
+     far, a separate standalone Worker; the main `red-door-site`
+     `wrangler.toml` hasn't been `wrangler deploy`'d yet): (a) a Pages
      **Deploy Hook** URL (Cloudflare dashboard → the Pages project →
      Settings → Deploy Hooks — a unique URL that triggers a rebuild on
      POST, no auth needed beyond knowing the URL), (b) registering that
@@ -1040,20 +1070,6 @@ exists; On Hold and photo-hosting decisions are made).
      specifically hasn't been independently confirmed against RentEngine's
      own docs in this session — check docs.rentengine.io's Webhooks
      reference before assuming the entity name/event types match exactly.
-  2. **`workers/rentcast-refresh` needs an actual Cloudflare account and
-     `wrangler deploy`** to run for real — right now it's built and
-     verified locally (`--local` D1 emulation) but not deployed anywhere,
-     same "no real Cloudflare account yet" gap as the main site's own
-     `wrangler.toml`. Once deployed, its Cron Trigger (monthly, 1st of
-     the month) runs on its own; no further action needed after that.
-  3. Once both of the above exist, wire the homes-for-rent Astro pages
-     (`src/lib/listings/homes-for-rent-content.ts`'s `loadCityMarketData`)
-     to read `rentcast_city_cache` via `cloudflare:workers`'s `env.DB`
-     directly, instead of the static `data/homes-for-rent/*.json` files
-     it reads today (confirmed this session that D1 bindings — unlike
-     raw filesystem access — ARE available during `getStaticPaths()`
-     prerendering, so this is a real, viable next step, just not done
-     yet).
 - ✅ **"Schedule a Showing" resolved (Sep 18, v5 rebuild) — links out to
       RentEngine's own real hosted booking page** instead of a custom
       in-page form. Simpler than building against `POST /showings/create`

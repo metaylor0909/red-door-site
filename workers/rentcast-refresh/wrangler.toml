@@ -23,5 +23,5 @@ crons = ["0 6 1 * *"]
 [[d1_databases]]
 binding = "DB"
 database_name = "red-door-rental-analysis"
-database_id = "REPLACE_WITH_REAL_D1_DATABASE_ID"
+database_id = "92f2e5cd-3589-4861-86d1-8a96d7d9afb9"
 migrations_dir = "../../db/migrations"
