@@ -274,6 +274,24 @@ Judgment calls / open items carried forward from this build:
 
 ## Genuinely open — do these next
 
+- [ ] **🚨 PRE-LAUNCH BLOCKER: remove the temporary sitewide noindex
+      before (or immediately at) DNS cutover to the real domain.**
+      Added 2026-09-21 alongside `public/robots.txt` (`Disallow: /`) and
+      `public/_headers` (`X-Robots-Tag: noindex, nofollow` on `/*`) —
+      both exist solely because the site is now deployed for real at
+      `https://red-door-site.mtaylor-0d7.workers.dev` while
+      `reddoorrents.com`'s DNS still points at the old PMW platform, to
+      stop that stray public preview URL (mostly 404s today, content
+      that will duplicate the real site once more pages are built) from
+      getting crawled and indexed before launch. **If this ships to the
+      real domain without being removed, the live site becomes
+      invisible to every search engine** — both files have their own
+      header comment flagging this, but it's easy to miss in a real
+      launch's checklist, hence the loud flag here too. At launch:
+      delete or replace `public/robots.txt` with a real, permissive one,
+      and delete `public/_headers`' `X-Robots-Tag` block (keep the
+      Cloudflare-adapter-managed `/_astro/*` Cache-Control block above
+      it).
 - [ ] **Confirm whether the Guaranteed Lease Program still exists.** The
       About page (`about.html`, migrated as-is Sep 18) mentions "a very
       unique Guaranteed Lease Program" for owners moving up without

@@ -1,0 +1,13 @@
+# TEMPORARY — this site is not live yet. reddoorrents.com's DNS still
+# points at the old PMW platform; this deployment only exists at
+# *.workers.dev as a preview/staging environment while the migration is
+# in progress (see red-door-website-todo.md's "Pre-launch: remove the
+# temporary noindex" item). Blocking all crawling here avoids a stray
+# public URL — mostly 404s today, and content that will duplicate the
+# real site once more pages are built — getting indexed before launch.
+#
+# MUST BE REMOVED (or replaced with a real, permissive robots.txt) before
+# this deploys to the real reddoorrents.com domain, or the live site
+# will be invisible to search engines.
+User-agent: *
+Disallow: /
