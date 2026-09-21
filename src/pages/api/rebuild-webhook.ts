@@ -13,12 +13,14 @@
 // against GitHub's API, which the .github/workflows/deploy.yml workflow
 // listens for and turns into a real `npm run build && wrangler deploy`.
 //
-// Auth: a shared secret, checked against either the `secret` query param
-// or an `X-Webhook-Secret` header — supporting both because RentEngine's
-// own webhook config UI capabilities (custom headers vs. URL-only)
-// weren't independently confirmed as of this writing (see
-// red-door-website-todo.md). Without this check, anyone who finds the
-// URL could burn GitHub Actions minutes and Cloudflare deploys for free.
+// Auth: a shared secret (REBUILD_WEBHOOK_SECRET). RentEngine's own
+// Create Webhook dialog sends its configured "API Key" as an `X-API-Key`
+// header (confirmed 2026-09-21, end-to-end against a real deployed
+// Worker) — `X-Webhook-Secret` and a `?secret=` query param are also
+// accepted, kept from before that was confirmed in case some other
+// caller uses one of those instead. Without this check, anyone who
+// finds the URL could burn GitHub Actions minutes and Cloudflare
+// deploys for free.
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
 
@@ -34,7 +36,13 @@ function jsonResponse(status: number, body: Record<string, unknown>): Response {
 
 export const POST: APIRoute = async ({ request }) => {
   const envRecord = env as unknown as Record<string, unknown>;
-  const expectedSecret = envRecord.REBUILD_WEBHOOK_SECRET;
+  // .trim() guards against a trailing \r or \n silently captured when the
+  // value was pasted into an interactive `wrangler secret put` prompt
+  // (a common gotcha on Windows terminals) — without it, a correctly
+  // pasted value can still fail the comparison below for a reason
+  // that's invisible in any log, since the secret's value is never
+  // printed anywhere, by design.
+  const expectedSecret = typeof envRecord.REBUILD_WEBHOOK_SECRET === 'string' ? envRecord.REBUILD_WEBHOOK_SECRET.trim() : undefined;
   const githubToken = envRecord.GITHUB_PAT;
 
   if (typeof expectedSecret !== 'string' || expectedSecret.length === 0) {
