@@ -565,6 +565,32 @@ section further down — see the note added there.
 
 ### Market-reports page design (Sep 17) — decided, template built
 
+✅ **All 9 ported into real Astro (2026-09-21) —
+`src/pages/[market]-market-reports.astro`, one dynamic route, live at
+the real deployment.** Same relationship as every other section above:
+this describes the approved static-mockup design work; the pages
+themselves now actually exist as real, live-data-wired Astro pages.
+
+**The two sections the mockups explicitly self-labeled placeholder ("will
+pull from X once Y is wired up") are now genuinely live**, since both
+prerequisites are done: the RentCast D1 pipeline (snapshot stats — real
+for Indianapolis/Fishers/Noblesville/Westfield/Greenwood/West&nbsp;Side,
+correctly absent for Anderson/Lebanon/Greenfield, which have no
+RentCast coverage at all) and the full 309-post blog migration (the
+"Recent Reports & Videos" grid — matched by title text against each
+market's city name(s), no real taxonomy exists yet for this).
+
+**Found and fixed two real issues surfaced only by pulling live data for
+the first time:** a title-matching cross-contamination bug (a
+Noblesville post was showing on the Indianapolis page because its title
+happened to say "...Near Indianapolis"), and — more seriously — two live
+Sanity blog posts contain Fair Housing violations matching a pattern
+already documented above ("school-driven fundamentals", "strong
+schools") that hadn't been caught by any prior review pass. Added a
+display-layer filter so neither can render on these new pages; the
+underlying Sanity posts themselves still need a real content fix
+(flagged separately, not resolved by this build).
+
 ✅ **Template built (Sep 17, same day as the design pass):**
 `westside-market-reports.html` — standalone static page, first of the 9
 confirmed market-reports pages, matching the design system established by
