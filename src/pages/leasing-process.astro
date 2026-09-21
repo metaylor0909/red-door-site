@@ -1,0 +1,205 @@
+---
+// /leasing-process — pillar page 5 of 8 built this way. Ported from
+// leasing-process.html. Shares the same PropertyManagementJourneyCarousel
+// used on the other pillar pages and the Indianapolis property-management
+// page, and the same Landlord Library post set
+// (src/lib/property-management/pillar-landlord-library-posts.ts).
+//
+// No page-level JSON-LD added beyond what the carousel component already
+// provides (its own ItemList schema) — the source mockup didn't have
+// page-level Organization/BreadcrumbList schema either, so none is invented
+// here per CLAUDE.md's "never rewrite content during structural migration"
+// rule.
+//
+// The hero uses the `.hero-pillar` class (see global.css) for the
+// CTA-row/H1 spacing override these single-line-H1 pillar heroes need.
+//
+// Same #rental-analysis -> /rental-analysis fix as every other pillar page
+// built this session.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PropertyManagementJourneyCarousel from '../components/PropertyManagementJourneyCarousel.astro';
+import LandlordLibrary from '../components/LandlordLibrary.astro';
+import { PILLAR_LANDLORD_LIBRARY_POSTS } from '../lib/property-management/pillar-landlord-library-posts';
+
+const pageTitle = 'Leasing Process | Red Door Property Management';
+const pageDescription =
+  'Legally robust leases, digital signing, and a proactive 110-day renewal strategy — Red Door\'s leasing process for Indianapolis-area rental owners.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/leasing-process">
+  <section class="hero hero-pillar" aria-labelledby="page-title">
+    <div class="hero-content">
+      <div class="eyebrow">Stage 04 &middot; Owner Roadmap</div>
+      <h1 id="page-title"><span>Leasing Process</span></h1>
+      <p class="hero-copy">Protecting your property, simplifying the experience &mdash; legally sound documents, digital signing, and a proactive renewal strategy.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/contact">Contact Us</a>
+        <a class="btn btn-secondary" href="/rental-analysis">Get a Free Rental Analysis</a>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#leasing-intro" aria-label="Scroll to content">
+      <span aria-hidden="true"></span>
+      Scroll
+    </a>
+  </section>
+
+  <section class="video-section">
+    <div class="container">
+      <div class="video-embed reveal">
+        <iframe src="https://www.youtube.com/embed/LUPBd-8_b8Q" title="Leasing Process overview video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <PropertyManagementJourneyCarousel />
+
+  <section id="leasing-intro">
+    <div class="container content-block reveal">
+      <div class="section-kicker">Protecting Your Property, Simplifying the Experience</div>
+      <h2>Leasing Is a System, Not Just Paperwork</h2>
+      <p>Securing a tenant is just the beginning. Red Door Property Management&rsquo;s leasing process is designed to protect your investment, ensure legal compliance, and create a smooth, professional experience for both owners and tenants &mdash; built around documentation, accountability, and long-term performance.</p>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container reveal">
+      <div class="section-head">
+        <div class="section-kicker">What Our Leasing Process Includes</div>
+        <h2>From Move-In to Move-Out</h2>
+      </div>
+      <div class="step-grid is-five-across">
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"></rect><path d="M9 4h6v3H9z"></path><path d="M8.5 13l2 2 4-4.5"></path></svg>
+          </span>
+          <h3>Detailed Move-In Inspection</h3>
+          <p>A full checklist documenting every room, high-resolution photos and video, and a walkthrough form signed by the incoming tenant &mdash; establishing a clear baseline for the home&rsquo;s condition. We also include a follow-up video inspection around three months into each lease at no extra cost, to promote tenant accountability and catch small issues early.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"></path><path d="M14 3v4h4"></path><path d="M9.5 16.5c1-1.3 2-1.3 3 0s2 1.3 3 0"></path></svg>
+          </span>
+          <h3>Legally Robust Lease Agreement</h3>
+          <p>Custom-built legal documents, not generic templates &mdash; prohibiting unauthorized occupants and subletting, enforcing HOA rules, and outlining maintenance, pest control, utility responsibilities, smoking/pet restrictions, and payment and eviction procedures. Leases are regularly updated to reflect Indiana housing law. All leases are digitally signed with payments processed securely online.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"></rect><path d="M8 21h8M12 17v4"></path></svg>
+          </span>
+          <h3>Tenant Portal for Payments &amp; Communication</h3>
+          <p>Tenants set up automatic rent payments via ACH, view payment history, submit maintenance requests, and access lease documents online. All tenant communication flows through the Red Door team &mdash; we handle lease inquiries, policy reminders, notices, and violations, and hold tenants accountable for HOA violations or negligence.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"></rect><path d="M8 3v4M16 3v4M4 10h16"></path><path d="M12 13v3.5l2.5 1.5"></path></svg>
+          </span>
+          <h3>110-Day Lease Renewal Process</h3>
+          <p>We begin renewal discussions 110 days before the lease ends: a pre-renewal inspection, a market rent analysis, rent recommendations presented to the owner, renewal negotiations with tenants, and a digitally signed updated lease &mdash; giving both parties time to plan ahead.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.3 15.3L21 21"></path></svg>
+          </span>
+          <h3>Move-Out Inspection &amp; Deposit Reconciliation</h3>
+          <p>A complete move-out inspection within 24&ndash;48 hours &mdash; full video and photo documentation, a room-by-room condition review, and comparison to the move-in report &mdash; used to determine any security deposit deductions transparently and legally.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container content-block reveal">
+      <h2>Standard Security Deposit Policy</h2>
+      <p>Unless special circumstances apply, Red Door collects one full month&rsquo;s rent as a security deposit. Higher deposits may be required for low credit scores, limited rental history, negative landlord references, or multiple pets or high-risk pet profiles &mdash; protecting against unpaid rent, damage, and lease violations.</p>
+    </div>
+  </section>
+
+  <section class="section-dark guarantee-section">
+    <div class="container reveal" style="text-align:center">
+      <div class="section-kicker">Peace of Mind, Built Into Every Lease</div>
+      <h2>Protection, Clarity, and Consistency</h2>
+      <p style="max-width:56rem;margin-inline:auto">With Red Door Property Management, leasing is more than a signed document &mdash; it&rsquo;s a system for protection, clarity, and peace of mind. Whether you&rsquo;re leasing your first property or managing an entire portfolio, our team handles the details from start to finish so you don&rsquo;t have to.</p>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="container reveal">
+      <div class="section-head center">
+        <div class="section-kicker">Questions Owners Ask</div>
+        <h2>Leasing Process FAQs</h2>
+      </div>
+      <div class="accordion" data-accordion>
+        <article class="accordion-item is-open">
+          <button class="accordion-trigger" type="button" aria-expanded="true">
+            <span>How do tenants pay rent?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Through our secure online portal. Most set up ACH autopay, and they can always see balances and history.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What happens if a tenant breaks a rule, like an HOA policy?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>All communication routes through Red Door. We issue reminders or notices, and we hold tenants accountable for violations or negligence that leads to avoidable costs.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>When do you start renewals?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>We start 110 days before the lease ends to maximize occupancy and ROI while keeping great tenants in place.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>How do you document move-in and move-out?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Move-in includes a signed walkthrough, photos, and video; we repeat at move-out within 24&ndash;48 hours and compare against move-in to settle the deposit fairly.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What&rsquo;s the standard security deposit?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Typically one month&rsquo;s rent; higher deposits may apply for risk factors such as low credit, limited history, negative references, or multiple/high-risk pets.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Do you inspect after tenants move in?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Yes &mdash; besides move-in documentation, we conduct a proactive 3-month video inspection at no extra cost to the owner.</p></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <LandlordLibrary
+    heading="The Red Door Landlord Library"
+    subheading="Market updates, investment insights, and practical property-management guidance for Central Indiana rental owners."
+    posts={PILLAR_LANDLORD_LIBRARY_POSTS}
+  />
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Ready for Stress-Free Leasing?</h2>
+      <p>Contact us today to learn how we handle leasing the right way.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+        <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.querySelectorAll('[data-accordion]').forEach(function (accordion) {
+      accordion.querySelectorAll('.accordion-trigger').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          var item = trigger.closest('.accordion-item');
+          accordion.querySelectorAll('.accordion-item').forEach(function (candidate) {
+            var candidateTrigger = candidate.querySelector('.accordion-trigger');
+            var shouldOpen = candidate === item && !candidate.classList.contains('is-open');
+            candidate.classList.toggle('is-open', shouldOpen);
+            candidateTrigger.setAttribute('aria-expanded', String(shouldOpen));
+          });
+        });
+      });
+    });
+  </script>
+</BaseLayout>

@@ -1,0 +1,227 @@
+---
+// /tenant-screening — pillar page 4 of 8 built this way. Ported from
+// tenant-screening.html. Shares the same PropertyManagementJourneyCarousel
+// used on the other pillar pages and the Indianapolis property-management
+// page, and the same Landlord Library post set
+// (src/lib/property-management/pillar-landlord-library-posts.ts).
+//
+// No page-level JSON-LD added beyond what the carousel component already
+// provides (its own ItemList schema) — the source mockup didn't have
+// page-level Organization/BreadcrumbList schema either, so none is invented
+// here per CLAUDE.md's "never rewrite content during structural migration"
+// rule.
+//
+// The hero uses the `.hero-pillar` class (see global.css) for the
+// CTA-row/H1 spacing override these single-line-H1 pillar heroes need.
+//
+// Same #rental-analysis -> /rental-analysis fix as every other pillar page
+// built this session.
+//
+// Eviction-language check (per this project's prior Fair Housing fix):
+// the criminal/eviction screening copy below uses a judgments-only
+// standard ("An eviction filing that didn't result in a judgment does not
+// count against an applicant — only an actual eviction judgment does") and
+// links to /application-criteria, matching the already-approved correction
+// baked into this mockup. Ported verbatim, unchanged.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PropertyManagementJourneyCarousel from '../components/PropertyManagementJourneyCarousel.astro';
+import LandlordLibrary from '../components/LandlordLibrary.astro';
+import { PILLAR_LANDLORD_LIBRARY_POSTS } from '../lib/property-management/pillar-landlord-library-posts';
+
+const pageTitle = 'Tenant Screening | Red Door Property Management';
+const pageDescription =
+  'Credit, criminal, eviction, income, and fraud screening on every applicant — Red Door\'s tenant screening process for Indianapolis-area rental owners.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/tenant-screening">
+  <section class="hero hero-pillar" aria-labelledby="page-title">
+    <div class="hero-content">
+      <div class="eyebrow">Stage 03 &middot; Owner Roadmap</div>
+      <h1 id="page-title"><span>Tenant Screening</span></h1>
+      <p class="hero-copy">Placing the right tenant, not just any tenant &mdash; a deliberate, multi-layered process designed to reduce risk and protect your investment.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/contact">Contact Us</a>
+        <a class="btn btn-secondary" href="/rental-analysis">Get a Free Rental Analysis</a>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#screening-intro" aria-label="Scroll to content">
+      <span aria-hidden="true"></span>
+      Scroll
+    </a>
+  </section>
+
+  <section class="video-section">
+    <div class="container">
+      <div class="video-embed reveal">
+        <iframe src="https://www.youtube.com/embed/_iL9iyE8nfU" title="Tenant Screening overview video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <PropertyManagementJourneyCarousel />
+
+  <section id="screening-intro">
+    <div class="container content-block reveal">
+      <div class="section-kicker">Why Screening Matters</div>
+      <h2>We Don&rsquo;t Just Accept Applications &mdash; We Investigate Them</h2>
+      <p>Choosing the right tenant is the single most important factor in protecting your rental and ensuring long-term profitability. At Red Door Property Management, we don&rsquo;t leave that to chance. The success of your rental property depends on more than just finding someone who can pay the rent &mdash; a truly qualified tenant is financially stable, respectful of your property, and likely to renew. Our process is designed to minimize the risk of missed payments or evictions, reduce property damage, identify fraudulent applications, and improve tenant retention.</p>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container reveal">
+      <div class="section-head">
+        <div class="section-kicker">The Red Door Screening Checklist</div>
+        <h2>Built to Stay Ahead of Rental Scams</h2>
+        <p>Our comprehensive tenant screening process is built to prevent evictions, reduce turnover, and detect red flags before they become costly problems. As rental scams grow more sophisticated, we&rsquo;ve adapted our standards to stay several steps ahead.</p>
+      </div>
+      <div class="step-grid is-three-across">
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.6-3 7.7-7 9-4-1.3-7-4.4-7-9V6z"></path><path d="M9 12l2 2 4-4"></path></svg>
+          </span>
+          <h3>National Sex Offender Registry Check</h3>
+          <p>All applicants are checked against the National Sex Offender Public Website (NSOPW) database to support community safety.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 20V11"></path><path d="M10 20V6"></path><path d="M16 20v-8"></path><path d="M4 20h16"></path></svg>
+          </span>
+          <h3>Full Credit Report &amp; Score</h3>
+          <p>Credit score and payment history, delinquencies, bankruptcies, and charge-offs, and debt-to-income ratio &mdash; helping us evaluate patterns of financial responsibility.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.3 15.3L21 21"></path></svg>
+          </span>
+          <h3>Nationwide Criminal &amp; Eviction Search</h3>
+          <p>We review felony and misdemeanor history, eviction judgments, and outstanding warrants or active cases. Criminal convictions are considered case-by-case &mdash; the nature and severity of the conviction, how much time has passed, and conduct since &mdash; and applicants get the opportunity to explain circumstances before a final decision. We don&rsquo;t use arrest records that didn&rsquo;t lead to a conviction, sealed or expunged records, or apply blanket bans based on record type alone. An eviction <em>filing</em> that didn&rsquo;t result in a judgment does not count against an applicant &mdash; only an actual eviction judgment does.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"></rect><path d="M9 4h6v3H9z"></path><path d="M8.5 13l2 2 4-4.5"></path></svg>
+          </span>
+          <h3>Rental History Verification</h3>
+          <p>We confirm rent payment history, property condition at move-out, and proper notice and lease compliance &mdash; looking for consistent, respectful tenancy and positive references.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="12" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M3 12h18"></path></svg>
+          </span>
+          <h3>Employment &amp; Income Verification</h3>
+          <p>We verify income via recent pay stubs, direct deposits, employer letters, or bank statements &mdash; typically requiring 3&times; monthly rent in verifiable income. Applicants can connect their bank account or payroll provider, or upload a recent pay stub (powered by Nova Credit Inc.), with results added to the application record in AppFolio.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="11" r="2"></circle><path d="M6.5 15.5c0-1.5 1.1-2.5 2.5-2.5s2.5 1 2.5 2.5"></path><path d="M14 10h4M14 14h3"></path></svg>
+          </span>
+          <h3>ID Verification</h3>
+          <p>Embedded in the online application (powered by Plaid), this confirms the applicant is a real person, the ID document is valid, and the applicant is the genuine owner of the ID &mdash; via personal information, a photo ID, and a selfie video, with results available immediately.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container content-block reveal">
+      <h2>Fraud Detection: Going Beyond the Basics</h2>
+      <p>Our team is trained to identify sophisticated fraud, including altered pay stubs and W-2 forms, fake landlord references, AI-generated identity documents, and inconsistent digital footprints. We continuously update internal fraud playbooks and staff training.</p>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container content-block reveal">
+      <h2>Pet Screening With PetScreening.com</h2>
+      <p>When pets are allowed, each applicant must complete an online pet profile, upload clear photos, provide current vaccinations, and share veterinarian information. PetScreening assigns a pet score that may inform deposits or fees. Assistance and service animals are handled per Fair Housing standards, independent of breed or pet policy restrictions.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container content-block reveal">
+      <h2>Application Scoring &amp; Final Decision</h2>
+      <p>Each applicant receives a cumulative evaluation based on credit and criminal history, rental references, employment and income verification, and pet screening where applicable. We present the results with our recommendation. If multiple qualified applications are received, we help select the best overall match based on longevity potential and financial strength.</p>
+      <p class="callout-note">Full pass/fail criteria &mdash; including the exact income, credit score, and rental-history standards applicants are measured against &mdash; are published in full on our <a href="/application-criteria">Tenant Qualification Criteria</a> page.</p>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="container reveal">
+      <div class="section-head center">
+        <div class="section-kicker">Questions Owners Ask</div>
+        <h2>Tenant Screening FAQs</h2>
+      </div>
+      <div class="accordion" data-accordion>
+        <article class="accordion-item is-open">
+          <button class="accordion-trigger" type="button" aria-expanded="true">
+            <span>Why does tenant screening matter for my rental property?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Proper screening reduces the risk of missed rent, evictions, property damage, and fraud while improving retention and long-term profitability.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What checks are included in Red Door&rsquo;s screening?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Our process covers credit report and score, nationwide criminal and eviction search, rental history verification, employment and income verification, ID verification and fraud checks, plus pet screening when applicable.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What income is required to qualify?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Applicants must have verifiable income of at least 3&times; the monthly rent. Verification can be completed via bank connection, payroll provider, or recent pay stubs.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>How are pets evaluated?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>We use PetScreening.com to review pet profiles, vaccination records, and behavior. Each pet receives a score that helps determine approval and deposits. Assistance animals are handled in line with Fair Housing laws.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>How do you detect application fraud?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>We flag altered documents, fake landlord references, synthetic identities, and mismatched digital footprints using embedded ID verification, data checks, and experienced staff review.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Does an eviction on my record automatically disqualify me?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>No. Only an actual eviction judgment counts against an applicant &mdash; a filing that was dismissed, decided in the applicant&rsquo;s favor, or never resulted in a judgment does not.</p></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <LandlordLibrary
+    heading="The Red Door Landlord Library"
+    subheading="Market updates, investment insights, and practical property-management guidance for Central Indiana rental owners."
+    posts={PILLAR_LANDLORD_LIBRARY_POSTS}
+  />
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Ready for a More Hands-Off Rental Experience?</h2>
+      <p>See how Red Door&rsquo;s screening process protects your property and places tenants likely to pay on time, care for the home, and stay longer.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+        <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.querySelectorAll('[data-accordion]').forEach(function (accordion) {
+      accordion.querySelectorAll('.accordion-trigger').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          var item = trigger.closest('.accordion-item');
+          accordion.querySelectorAll('.accordion-item').forEach(function (candidate) {
+            var candidateTrigger = candidate.querySelector('.accordion-trigger');
+            var shouldOpen = candidate === item && !candidate.classList.contains('is-open');
+            candidate.classList.toggle('is-open', shouldOpen);
+            candidateTrigger.setAttribute('aria-expanded', String(shouldOpen));
+          });
+        });
+      });
+    });
+  </script>
+</BaseLayout>

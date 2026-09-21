@@ -1,0 +1,235 @@
+---
+// /maintenance — pillar page 6 of 8 built this way. Ported from
+// maintenance.html. Shares the same PropertyManagementJourneyCarousel used
+// on the other pillar pages and the Indianapolis property-management page,
+// and the same Landlord Library post set
+// (src/lib/property-management/pillar-landlord-library-posts.ts).
+//
+// No page-level JSON-LD added beyond what the carousel component already
+// provides (its own ItemList schema) — the source mockup didn't have
+// page-level Organization/BreadcrumbList schema either, so none is invented
+// here per CLAUDE.md's "never rewrite content during structural migration"
+// rule.
+//
+// The hero uses the `.hero-pillar` class (see global.css) for the
+// CTA-row/H1 spacing override these single-line-H1 pillar heroes need.
+//
+// Same #rental-analysis -> /rental-analysis fix as every other pillar page
+// built this session. Note the two content-section video embeds (Loom
+// owner-dashboard walkthrough, YouTube turnover example) are untouched —
+// they're unrelated to the rental-analysis anchor fix.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PropertyManagementJourneyCarousel from '../components/PropertyManagementJourneyCarousel.astro';
+import LandlordLibrary from '../components/LandlordLibrary.astro';
+import { PILLAR_LANDLORD_LIBRARY_POSTS } from '../lib/property-management/pillar-landlord-library-posts';
+
+const pageTitle = 'Property Maintenance | Red Door Property Management';
+const pageDescription =
+  'In-house technicians, vetted vendors, and 24/7 emergency response — Red Door\'s maintenance process for Indianapolis-area rental owners.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/maintenance">
+  <section class="hero hero-pillar" aria-labelledby="page-title">
+    <div class="hero-content">
+      <div class="eyebrow">Stage 05 &middot; Owner Roadmap</div>
+      <h1 id="page-title"><span>Property Maintenance</span></h1>
+      <p class="hero-copy">Maintenance that protects your investment and grows your ROI &mdash; a technician&rsquo;s precision paired with an investor&rsquo;s mindset.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/contact">Contact Us</a>
+        <a class="btn btn-secondary" href="/rental-analysis">Get a Free Rental Analysis</a>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#maintenance-intro" aria-label="Scroll to content">
+      <span aria-hidden="true"></span>
+      Scroll
+    </a>
+  </section>
+
+  <section class="video-section">
+    <div class="container">
+      <div class="video-embed reveal">
+        <iframe src="https://www.youtube.com/embed/5Zl8szAXxeQ" title="Maintenance Process overview video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <PropertyManagementJourneyCarousel />
+
+  <section id="maintenance-intro">
+    <div class="container content-block reveal">
+      <div class="section-kicker">Protecting Your Investment, Strengthening Long-Term ROI</div>
+      <h2>Maintenance Isn&rsquo;t Just Reactive</h2>
+      <p>When it comes to real estate investing, maintenance isn&rsquo;t just a necessary evil &mdash; it&rsquo;s one of the most important components of long-term success. Poor maintenance leads to costly vacancies, negative reviews, and devalued properties. Great maintenance delivers higher tenant retention, fewer vacancies, lower repair costs over time, a stronger online reputation, and higher rents and property values.</p>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container reveal">
+      <div class="section-head">
+        <div class="section-kicker">Our Maintenance Process, Start to Finish</div>
+        <h2>Technology, People, and Prevention</h2>
+      </div>
+      <div class="step-grid">
+        <article class="step-card" data-step="1">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"></rect><path d="M9 4h6v3H9z"></path><path d="M8.5 13l2 2 4-4.5"></path></svg>
+          </span>
+          <h3>Market Readiness Assessment</h3>
+          <p>Maintenance starts the moment we take on your property. Our Market Readiness Assessment examines every room, mechanical system, and exterior feature, then categorizes updates into what&rsquo;s necessary for marketing, necessary for tenant placement, ideal for maximizing ROI, and &ldquo;wow factor&rdquo; upgrades.</p>
+        </article>
+        <article class="step-card" data-step="2">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M12 3v3M12 18v3M4.2 7.8l2.1 1.2M17.7 15l2.1 1.2M4.2 16.2l2.1-1.2M17.7 9l2.1-1.2M3 12h3M18 12h3"></path></svg>
+          </span>
+          <h3>Technology That Streamlines and Clarifies</h3>
+          <p>We use Property Meld, a leading maintenance coordination platform, giving you complete visibility: real-time updates and tracking, before/after photos and videos, work order progress, estimate approvals, and full communication logs.</p>
+        </article>
+        <article class="step-card" data-step="3">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M14.7 6.3a3.7 3.7 0 0 0-4.9 4.9l-5.1 5.1a1.6 1.6 0 0 0 2.3 2.3l5.1-5.1a3.7 3.7 0 0 0 4.9-4.9l-2.2 2.2-2-2z"></path></svg>
+          </span>
+          <h3>Skilled People on the Ground</h3>
+          <p>In-house technicians handle common and time-sensitive repairs fast and cost-effectively; trusted, fully insured and licensed local vendors handle specialty work at preferred pricing through our high-volume network.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container content-block reveal">
+      <h2>Owner Transparency: Always in the Loop</h2>
+      <p>Through Property Meld, owners can view all active and completed maintenance requests, approve or deny quotes instantly, see photos and videos of issues and completed work, and communicate directly with our team. We&rsquo;ll never leave you guessing about what&rsquo;s happening with your rental property.</p>
+      <div class="video-embed reveal" style="margin-top:24px">
+        <iframe src="https://www.loom.com/embed/f468db4b32ba49caac7d847bfba8e336" title="Owner transparency dashboard walkthrough" allow="autoplay; fullscreen" webkitallowfullscreen mozallowfullscreen allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container content-block reveal">
+      <h2>Preventative Maintenance: Saving You Thousands</h2>
+      <p>Proactive care reduces emergencies, minimizes costs, and extends the lifespan of your home&rsquo;s systems. Our preventative services include:</p>
+      <ul class="two-col-list">
+        <li>HVAC tune-ups (semi-annual)</li>
+        <li>Dryer vent cleaning</li>
+        <li>Gutter cleaning</li>
+        <li>Pest control</li>
+        <li>Sump pump checks</li>
+        <li>Water heater flushing</li>
+      </ul>
+      <p style="margin-top:20px">These services are offered at discounted rates through our preferred Indianapolis vendors.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container content-block reveal">
+      <h2>Turnovers Done Right</h2>
+      <p>When a tenant moves out, we act fast to minimize vacancy time. Within 24&ndash;48 hours we perform a detailed move-out inspection and send an estimate to the owner. Once approved, our team gets to work immediately on cleaning, painting, repairs, lock changes, and a final inspection &mdash; so your property is re-rented quickly and always in top condition.</p>
+      <div class="video-embed reveal" style="margin-top:24px">
+        <iframe src="https://www.youtube.com/embed/15Y4nMTgFJ0" title="Turnover walkthrough example video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container content-block reveal">
+      <h2>Emergency Maintenance: We&rsquo;re On It</h2>
+      <p>True emergencies &mdash; loss of heat, active leaks, drain blockages &mdash; require rapid action. Our 24/7 emergency line is active after hours and weekends. Tenants are trained on proper use, and our on-call technicians respond quickly to prevent damage and restore habitability, across Indianapolis and surrounding suburbs.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container content-block reveal">
+      <h2>Our Stance on Home Warranties: Avoid Them</h2>
+      <p>We strongly discourage using home warranty companies because they often cause long delays in service, poor-quality unvetted vendors, minimal communication, and &ldquo;band-aid&rdquo; repairs that lead to future costs. Our vetted vendor network ensures quality work, faster resolutions, and happier tenants.</p>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container content-block reveal">
+      <h2>Budgeting &amp; Approval Thresholds</h2>
+      <p>To keep maintenance moving quickly, we ask owners to provide a <strong>$500 authorization limit</strong> for non-emergency repairs. This lets us respond quickly to tenant needs, avoid extra trip charges, and prevent small issues from escalating. You&rsquo;ll always receive documentation, but this pre-approval ensures efficiency and satisfaction for everyone involved.</p>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="container reveal">
+      <div class="section-head center">
+        <div class="section-kicker">Questions Owners Ask</div>
+        <h2>Maintenance FAQs</h2>
+      </div>
+      <div class="accordion" data-accordion>
+        <article class="accordion-item is-open">
+          <button class="accordion-trigger" type="button" aria-expanded="true">
+            <span>How do owners stay informed about maintenance?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Through our Property Meld portal, you&rsquo;ll see every request, approval, and photo in real time.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Do you have in-house maintenance staff or contractors?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Both. Our in-house team handles common repairs quickly, while vetted local vendors take care of specialty work.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>How fast are maintenance issues addressed?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Emergencies are handled immediately. Non-emergency requests are typically reviewed and scheduled within 24 hours.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What types of preventative maintenance do you offer?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>HVAC tune-ups, gutter cleaning, dryer vent cleaning, pest control, sump pump checks, and water heater flushing.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Can I approve repairs before they&rsquo;re done?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Yes &mdash; owners can approve or deny estimates instantly through the online portal.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Should I use a home warranty for my rental property?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>We recommend against it. Warranty vendors are often slow and unvetted, and tend to reduce tenant satisfaction.</p></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <LandlordLibrary
+    heading="The Red Door Landlord Library"
+    subheading="Market updates, investment insights, and practical property-management guidance for Central Indiana rental owners."
+    posts={PILLAR_LANDLORD_LIBRARY_POSTS}
+  />
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Ready to Protect and Grow Your Investment?</h2>
+      <p>Schedule a call today to learn how Red Door&rsquo;s proactive maintenance systems can strengthen your rental portfolio.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+        <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.querySelectorAll('[data-accordion]').forEach(function (accordion) {
+      accordion.querySelectorAll('.accordion-trigger').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          var item = trigger.closest('.accordion-item');
+          accordion.querySelectorAll('.accordion-item').forEach(function (candidate) {
+            var candidateTrigger = candidate.querySelector('.accordion-trigger');
+            var shouldOpen = candidate === item && !candidate.classList.contains('is-open');
+            candidate.classList.toggle('is-open', shouldOpen);
+            candidateTrigger.setAttribute('aria-expanded', String(shouldOpen));
+          });
+        });
+      });
+    });
+  </script>
+</BaseLayout>

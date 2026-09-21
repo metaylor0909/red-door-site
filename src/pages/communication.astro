@@ -1,0 +1,214 @@
+---
+// /communication — pillar page 7 of 8 built this way. Ported from
+// communication.html. Shares the same PropertyManagementJourneyCarousel
+// used on the other pillar pages and the Indianapolis property-management
+// page, and the same Landlord Library post set
+// (src/lib/property-management/pillar-landlord-library-posts.ts).
+//
+// No page-level JSON-LD added beyond what the carousel component already
+// provides (its own ItemList schema) — the source mockup didn't have
+// page-level Organization/BreadcrumbList schema either, so none is invented
+// here per CLAUDE.md's "never rewrite content during structural migration"
+// rule.
+//
+// The hero uses the `.hero-pillar` class (see global.css) for the
+// CTA-row/H1 spacing override these single-line-H1 pillar heroes need.
+//
+// Same #rental-analysis -> /rental-analysis fix as every other pillar page
+// built this session.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PropertyManagementJourneyCarousel from '../components/PropertyManagementJourneyCarousel.astro';
+import LandlordLibrary from '../components/LandlordLibrary.astro';
+import { PILLAR_LANDLORD_LIBRARY_POSTS } from '../lib/property-management/pillar-landlord-library-posts';
+
+const pageTitle = 'Communication | Red Door Property Management';
+const pageDescription =
+  'Proactive, multi-channel updates at every stage of the rental lifecycle — how Red Door keeps Indianapolis-area owners informed.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/communication">
+  <section class="hero hero-pillar" aria-labelledby="page-title">
+    <div class="hero-content">
+      <div class="eyebrow">Stage 06 &middot; Owner Roadmap</div>
+      <h1 id="page-title"><span>Communication</span></h1>
+      <p class="hero-copy">Clear, proactive updates without guesswork &mdash; the foundation of everything we do, not an afterthought.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/contact">Contact Us</a>
+        <a class="btn btn-secondary" href="/rental-analysis">Get a Free Rental Analysis</a>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#comm-intro" aria-label="Scroll to content">
+      <span aria-hidden="true"></span>
+      Scroll
+    </a>
+  </section>
+
+  <section class="video-section">
+    <div class="container">
+      <div class="video-embed reveal">
+        <iframe src="https://www.youtube.com/embed/ZfgjGGPw5xw" title="Communication Process overview video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <PropertyManagementJourneyCarousel />
+
+  <section id="comm-intro">
+    <div class="container content-block reveal">
+      <div class="section-kicker">Why Communication Matters Most to Real Estate Investors</div>
+      <h2>Poor Communication Is the #1 Frustration &mdash; So We Built Around It</h2>
+      <p>If you ask most real estate investors about their biggest frustration with property managers, the answer is nearly universal: poor communication. Being left in the dark about maintenance, tenant moves, or rent adjustments leads to mistrust, delays, and unnecessary losses. At Red Door Property Management, clear, timely, and proactive communication is the most valuable service we provide &mdash; it&rsquo;s not just a feature, it&rsquo;s a promise.</p>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container reveal">
+      <div class="section-head">
+        <div class="section-kicker">What Makes Our Communication Different</div>
+        <h2>Five Standards We Hold Ourselves To</h2>
+      </div>
+      <div class="step-grid is-five-across">
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </span>
+          <h3>Transparent and Proactive</h3>
+          <p>We never wait for you to ask what&rsquo;s going on &mdash; we tell you before you need to ask.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 5h16v10H9l-4 4z"></path><path d="M8.5 10h7M8.5 7.5h7"></path></svg>
+          </span>
+          <h3>Multi-Channel Communication</h3>
+          <p>Email, text, phone, or video &mdash; whatever works best for you.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 9h3l2.5-2.5h7L17 9h4v9H3z"></path><circle cx="12" cy="13.5" r="3.4"></circle></svg>
+          </span>
+          <h3>Regular Updates With Visuals</h3>
+          <p>Move-in/move-out videos, inspection footage, and photo documentation come standard.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M13 3L4 14h6l-1 7 9-11h-6z"></path></svg>
+          </span>
+          <h3>Fast Response Times</h3>
+          <p>Our internal systems and automation ensure no message slips through the cracks.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 20V11"></path><path d="M10 20V6"></path><path d="M16 20v-8"></path><path d="M4 20h16"></path></svg>
+          </span>
+          <h3>Data-Driven Decisions</h3>
+          <p>Every update is backed by metrics, market data, and property performance insights.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container content-block reveal">
+      <h2>Communication at Every Stage</h2>
+      <p>Communication begins before we even list your property &mdash; a realistic rent analysis, a full walkthrough and condition report, and clear explanations of what&rsquo;s urgent versus optional, delivered through email summaries, video walkthroughs, and consultation calls. From there, it continues through every phase of the rental lifecycle:</p>
+      <ul class="plain-list">
+        <li><strong>Onboarding &amp; Market Readiness:</strong> video walkthroughs, repair estimates, rent-ready recommendations, and progress photos, all centralized in your owner dashboard.</li>
+        <li><strong>Marketing:</strong> a link to your live listing, reach reports, and weekly video updates on inquiries, showings, market feedback, and comparable listings.</li>
+        <li><strong>Move-In:</strong> a move-in inspection report with time-stamped photos, a full video, and confirmation of rent and deposit collection.</li>
+        <li><strong>Ongoing Tenancy &amp; Maintenance:</strong> real-time tickets, photos and videos of reported issues, and approval on anything over your pre-set limit through Property Meld.</li>
+        <li><strong>Lease Renewal:</strong> we begin discussions 110 days before lease expiration &mdash; an updated market analysis, renewal price recommendations, a renewal inspection video, and documentation of your decision.</li>
+        <li><strong>Move-Out &amp; Turn:</strong> a move-out inspection video, an itemized damage-vs-wear report, photos, and a pre-approved repair estimate and timeline.</li>
+        <li><strong>Ongoing Owner Education:</strong> monthly Indianapolis rental market podcasts, video reports on trends and pricing, and neighborhood-level forecasts.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-dark guarantee-section">
+    <div class="container reveal" style="text-align:center">
+      <div class="section-kicker">Ready to Work With a Management Company That Keeps You in the Loop?</div>
+      <h2>Clear, Proactive Communication &mdash; Every Step of the Way</h2>
+      <p style="max-width:56rem;margin-inline:auto">Let&rsquo;s schedule a call to talk about how Red Door Property Management can protect your investment through clear, proactive communication.</p>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="container reveal">
+      <div class="section-head center">
+        <div class="section-kicker">Questions Owners Ask</div>
+        <h2>Communication FAQs</h2>
+      </div>
+      <div class="accordion" data-accordion>
+        <article class="accordion-item is-open">
+          <button class="accordion-trigger" type="button" aria-expanded="true">
+            <span>How often will I receive updates about my property?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Weekly during marketing and monthly thereafter, plus immediate updates for any major maintenance, move-in, or move-out events.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>How do I receive communication from Red Door?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>We communicate through your owner portal, email, text, or phone &mdash; whichever you prefer.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Can I see videos or photos of my property anytime?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Yes. We share all inspection, move-in, and move-out videos directly through your portal or private YouTube links.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What happens if there&rsquo;s an emergency?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Our 24/7 emergency system notifies both our internal maintenance team and the owner immediately for fast, documented resolution.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>How early do you begin renewal discussions?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>We start renewal communications 110 days before lease expiration to give you time to review and approve.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>How does Red Door keep communication organized?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>All records &mdash; messages, photos, invoices, and approvals &mdash; are logged automatically in your owner portal for full transparency.</p></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <LandlordLibrary
+    heading="The Red Door Landlord Library"
+    subheading="Market updates, investment insights, and practical property-management guidance for Central Indiana rental owners."
+    posts={PILLAR_LANDLORD_LIBRARY_POSTS}
+  />
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Ready for a More Hands-Off Rental Experience?</h2>
+      <p>Let&rsquo;s talk about how Red Door keeps owners informed at every stage of the rental lifecycle.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+        <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.querySelectorAll('[data-accordion]').forEach(function (accordion) {
+      accordion.querySelectorAll('.accordion-trigger').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          var item = trigger.closest('.accordion-item');
+          accordion.querySelectorAll('.accordion-item').forEach(function (candidate) {
+            var candidateTrigger = candidate.querySelector('.accordion-trigger');
+            var shouldOpen = candidate === item && !candidate.classList.contains('is-open');
+            candidate.classList.toggle('is-open', shouldOpen);
+            candidateTrigger.setAttribute('aria-expanded', String(shouldOpen));
+          });
+        });
+      });
+    });
+  </script>
+</BaseLayout>
