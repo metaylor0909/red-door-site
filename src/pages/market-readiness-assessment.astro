@@ -1,0 +1,255 @@
+---
+// /market-readiness-assessment — pillar page 1 of 7 built this way.
+// Ported from market-readiness-assessment.html. Shares the same
+// PropertyManagementJourneyCarousel used on the other pillar pages and
+// the Indianapolis property-management page, and the same Landlord
+// Library post set (src/lib/property-management/pillar-landlord-library-posts.ts).
+//
+// This was the primary reference file used to extract the shared
+// step-grid/step-card/step-icon and video-section CSS now in
+// global.css — read in full early in this build, but the actual Astro
+// page for it was missed when scoping out the rest of the pillar-page
+// work (caught via a full-site build check afterward: every other
+// pillar page built successfully, this one's dist/ output was
+// conspicuously absent).
+//
+// No page-level JSON-LD added beyond what the carousel component
+// already provides (its own ItemList schema) — the source mockup didn't
+// have page-level Organization/BreadcrumbList schema either, so none is
+// invented here per CLAUDE.md's "never rewrite content during
+// structural migration" rule.
+//
+// Same #rental-analysis -> /rental-analysis fix as every other pillar
+// page built this session.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PropertyManagementJourneyCarousel from '../components/PropertyManagementJourneyCarousel.astro';
+import LandlordLibrary from '../components/LandlordLibrary.astro';
+import { PILLAR_LANDLORD_LIBRARY_POSTS } from '../lib/property-management/pillar-landlord-library-posts';
+
+const pageTitle = 'Market Readiness Assessment | Red Door Property Management';
+const pageDescription =
+  "Red Door's Market Readiness Process prepares every Indianapolis rental home before marketing begins — a free rental market analysis, video inspection, and a prioritized readiness report.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/market-readiness-assessment">
+  <section class="hero hero-pillar" aria-labelledby="page-title">
+    <div class="hero-content">
+      <div class="eyebrow">Stage 01 &middot; Owner Roadmap</div>
+      <h1 id="page-title"><span>Market Readiness Assessment</span></h1>
+      <p class="hero-copy">Your first step to higher rental ROI &mdash; a data-informed process that prepares every home we manage before marketing begins.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/contact">Contact Us</a>
+        <a class="btn btn-secondary" href="/rental-analysis">Get a Free Rental Analysis</a>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#mra-intro" aria-label="Scroll to content">
+      <span aria-hidden="true"></span>
+      Scroll
+    </a>
+  </section>
+
+  <section class="video-section">
+    <div class="container">
+      <div class="video-embed reveal">
+        <iframe src="https://www.youtube.com/embed/Wx4CCwotbSA" title="Market Readiness Assessment overview video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <PropertyManagementJourneyCarousel />
+
+  <section id="mra-intro">
+    <div class="container content-block reveal">
+      <div class="section-kicker">Your First Step to Higher Rental ROI</div>
+      <h2>Red Door Property Management's Market Readiness Process</h2>
+      <p>When it comes to preparing a rental property for the market, first impressions are everything. At Red Door Property Management, we don't just list your property &mdash; we position it to achieve maximum rent, attract high-quality tenants quickly, and prevent costly maintenance issues down the road.</p>
+      <p>Our Market Readiness Process (MRP) is a core part of our service offerings and the first crucial step in a successful property management partnership. With over 50 years of collective experience, our team uses a proven, data-informed approach to ensure every home we manage meets the highest standards before marketing begins.</p>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container content-block reveal">
+      <h2>At a Glance: What You Get</h2>
+      <ul class="plain-list">
+        <li>Free, data-driven Rental Market Analysis</li>
+        <li>HD video walkthrough and detailed photo inspection</li>
+        <li>A Market Readiness Assessment (MRA) report with clear priorities</li>
+        <li>Transparent cost estimates and ROI-minded recommendations</li>
+        <li>Preventative maintenance plan to protect your investment</li>
+        <li>Fast execution by our in-house maintenance team and trusted vendors</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="container content-block reveal">
+      <h2>What Is a Market Readiness Assessment (MRA)?</h2>
+      <p>The Market Readiness Assessment is a detailed, step-by-step evaluation of your rental property designed to set you up for success from day one. We understand that every dollar counts &mdash; our process is designed not only to meet tenant expectations, but also to boost your returns by reducing days on market and minimizing ongoing maintenance issues.</p>
+      <ul class="plain-list">
+        <li>A free Rental Market Analysis to determine accurate rent pricing based on real-time market trends</li>
+        <li>An in-depth inspection using HD video walkthroughs and detailed photo documentation</li>
+        <li>A professional consultation with our experienced team to identify strategic improvements that maximize ROI</li>
+        <li>A categorized report of all recommended actions with estimated costs</li>
+        <li>A clear execution plan where our in-house and vendor maintenance teams complete approved updates quickly</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container reveal">
+      <div class="section-head">
+        <div class="section-kicker">How It Works</div>
+        <h2>Five Steps to a Rent-Ready Home</h2>
+      </div>
+      <div class="step-grid is-five-across">
+        <article class="step-card" data-step="1">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 20V11"></path><path d="M10 20V6"></path><path d="M16 20v-8"></path><path d="M4 20h16"></path></svg>
+          </span>
+          <h3>Free Rental Market Analysis</h3>
+          <p>Overpricing leads to longer vacancies; underpricing leaves money on the table. We build a comparative market analysis using current listings, recently rented comparable homes, and seasonal and economic rental trends so your home enters the market competitively.</p>
+        </article>
+        <article class="step-card" data-step="2">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 9h3l2.5-2.5h7L17 9h4v9H3z"></path><circle cx="12" cy="13.5" r="3.4"></circle></svg>
+          </span>
+          <h3>Video Walkthrough &amp; Photo Inspection</h3>
+          <p>A professional video walkthrough and room-by-room photo inspection documents every visible aspect of the property's condition &mdash; identifying needed repairs, highlighting strong features for marketing, and protecting you from future disputes.</p>
+        </article>
+        <article class="step-card" data-step="3">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"></rect><path d="M9 4h6v3H9z"></path><path d="M8.5 13l2 2 4-4.5"></path></svg>
+          </span>
+          <h3>Detailed Market Readiness Report</h3>
+          <p>Findings are compiled into an MRA report grouped into four priority categories, each with a description, estimated cost, and clear justification:</p>
+          <ul>
+            <li><strong>Must-complete before marketing</strong> &mdash; e.g. rekeying locks, landscaping cleanup</li>
+            <li><strong>Must-complete before move-in</strong> &mdash; e.g. smoke detectors, HVAC clean &amp; check</li>
+            <li><strong>Strongly recommended</strong> &mdash; e.g. cosmetic painting, appliance upgrades</li>
+            <li><strong>Long-term preventative maintenance</strong> &mdash; e.g. gutter cleaning plan, exterior caulking</li>
+          </ul>
+        </article>
+        <article class="step-card" data-step="4">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M14.7 6.3a3.7 3.7 0 0 0-4.9 4.9l-5.1 5.1a1.6 1.6 0 0 0 2.3 2.3l5.1-5.1a3.7 3.7 0 0 0 4.9-4.9l-2.2 2.2-2-2z"></path></svg>
+          </span>
+          <h3>Preventative Maintenance Recommendations</h3>
+          <p>Not all improvements are urgent, but many are smart investments. Common proactive services include semi-annual HVAC clean &amp; check, water heater flush, dryer vent cleaning, gutter cleaning, and perimeter pest control &mdash; protecting the property long-term and reducing emergency calls.</p>
+        </article>
+        <article class="step-card" data-step="5">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 12.5l2.5 2.5 4.5-5"></path></svg>
+          </span>
+          <h3>Owner Approval &amp; Immediate Execution</h3>
+          <p>You review and approve the suggested work. Once approved, our in-house maintenance team and trusted vendors get to work while Red Door coordinates scheduling, access, and quality control &mdash; with updates throughout, not surprises. A final punch walkthrough confirms the home is fully ready for showings.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container content-block reveal">
+      <h2>Why It Matters: Faster Leasing, Better Tenants, Fewer Headaches</h2>
+      <p>Owners who follow our Market Readiness Process consistently see:</p>
+      <ul class="two-col-list">
+        <li>Faster tenant placement (often in under 14 days, market dependent)</li>
+        <li>Higher-quality tenants who tend to stay longer</li>
+        <li>Fewer maintenance calls during the lease term</li>
+        <li>Lower turnover costs at the end of the lease</li>
+      </ul>
+      <p style="margin-top:24px">A properly prepared property photographs better, shows better, attracts more applications, and gives tenants confidence that the home is well cared for &mdash; an upfront investment that can save time, money, and stress over the life of the lease and beyond.</p>
+    </div>
+  </section>
+
+  <section class="section-dark guarantee-section">
+    <div class="container reveal" style="text-align:center">
+      <div class="section-kicker">Ready to Maximize Your Rental Property's Potential?</div>
+      <h2>Let Red Door Take the Stress Out of Preparing Your Home for Rent</h2>
+      <p>Our Market Readiness Process is just the beginning of a strategic partnership designed to protect your investment, increase your rental income, and reduce vacancy and turnover.</p>
+      <div class="cta-row" style="justify-content:center">
+        <a class="btn btn-primary" href="/rental-analysis">Schedule Your Free Market Analysis</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-soft" id="faq">
+    <div class="container reveal">
+      <div class="section-head center">
+        <div class="section-kicker">Questions Owners Ask</div>
+        <h2>Market Readiness FAQs</h2>
+      </div>
+      <div class="accordion" data-accordion>
+        <article class="accordion-item is-open">
+          <button class="accordion-trigger" type="button" aria-expanded="true">
+            <span>What is the Market Readiness Process (MRP)?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>The Market Readiness Process is Red Door's structured approach to preparing a rental home before it hits the market. It includes pricing analysis, video inspection, a detailed readiness report, recommended improvements, and fast execution of approved work.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What is included in the Market Readiness Assessment (MRA)?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>The MRA includes a free rental market analysis, a full video walkthrough, photo documentation, a categorized improvement report, cost estimates, and preventative maintenance recommendations.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Why is market readiness so important for rental properties?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Proper preparation helps your home rent faster, attract higher-quality tenants, and minimize future maintenance issues. It reduces vacancy time, boosts ROI, and lowers turnover costs.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>How long does the Market Readiness Process take?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Most properties can be fully assessed and prepared for the market within 48&ndash;72 hours, depending on the types of improvements approved. Larger updates may extend the timeline slightly, but owners are kept informed every step of the way.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Do I have to complete every recommendation in the report?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>No. You choose which items to approve. We categorize each recommendation by priority so you can easily focus on what's essential for marketing, move-in readiness, or long-term property health.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Can Red Door handle all the repairs and updates for me?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Yes. Our in-house maintenance team and vendor partners can complete nearly all recommended updates, from minor repairs to more involved turn services. You approve the work &mdash; our team handles the rest.</p></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <LandlordLibrary
+    heading="The Red Door Landlord Library"
+    subheading="Market updates, investment insights, and practical property-management guidance for Central Indiana rental owners."
+    posts={PILLAR_LANDLORD_LIBRARY_POSTS}
+  />
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Ready for a More Hands-Off Rental Experience?</h2>
+      <p>Whether you own one rental or a growing portfolio, Red Door Property Management is built to protect your asset and maximize results.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+        <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.querySelectorAll('[data-accordion]').forEach(function (accordion) {
+      accordion.querySelectorAll('.accordion-trigger').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          var item = trigger.closest('.accordion-item');
+          accordion.querySelectorAll('.accordion-item').forEach(function (candidate) {
+            var candidateTrigger = candidate.querySelector('.accordion-trigger');
+            var shouldOpen = candidate === item && !candidate.classList.contains('is-open');
+            candidate.classList.toggle('is-open', shouldOpen);
+            candidateTrigger.setAttribute('aria-expanded', String(shouldOpen));
+          });
+        });
+      });
+    });
+  </script>
+</BaseLayout>
