@@ -3,7 +3,7 @@
 // from the 18-city shared template (src/pages/[city]-property-management.astro)
 // because its approved mockup uses a meaningfully different, richer
 // design: no plain journey-wrap (replaced by its own 3D interactive
-// carousel, see src/components/IndianapolisJourneyCarousel.astro), plus
+// carousel, see src/components/PropertyManagementJourneyCarousel.astro), plus
 // a "What Makes Red Door Different" list, six detailed process-detail
 // sections (one per pillar-page stage), a "What's Included" list, an
 // "Owner Standards" list, and a 10-question FAQ accordion — none of
@@ -27,11 +27,12 @@
 import { env } from 'cloudflare:workers';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProofStrip from '../components/ProofStrip.astro';
-import IndianapolisJourneyCarousel from '../components/IndianapolisJourneyCarousel.astro';
+import PropertyManagementJourneyCarousel from '../components/PropertyManagementJourneyCarousel.astro';
 import ReviewsCarousel from '../components/ReviewsCarousel.astro';
 import AreasServedGrid from '../components/AreasServedGrid.astro';
 import LandlordLibrary from '../components/LandlordLibrary.astro';
 import { loadMarketSnapshot } from '../lib/property-management/market-snapshot';
+import { PILLAR_LANDLORD_LIBRARY_POSTS } from '../lib/property-management/pillar-landlord-library-posts';
 
 const snapshot = await loadMarketSnapshot(env.DB, 'indianapolis');
 
@@ -135,33 +136,6 @@ const faqs = [
   },
 ];
 
-const indianapolisLibraryPosts = [
-  {
-    slug: 'westfield-market-report-leasing-improves-as-rental-supply-drops-52--august-2026',
-    thumbnail: 'https://i.ytimg.com/vi/H1syUd2uJfE/hqdefault.jpg',
-    thumbnailAlt: "Westfield market report video thumbnail from Red Door's blog",
-    title: 'Westfield Market Report: Leasing Improves as Rental Supply Drops 52%',
-    dek: 'Westfield finally delivered some relief in August — rental days on market dropped sharply while active rental inventory continued falling.',
-    date: 'August 2026',
-  },
-  {
-    slug: 'greenwood-market-report-rents-hold-as-home-prices-fall-nearly-8--august-2026',
-    thumbnail: 'https://i.ytimg.com/vi/t6v_HJ0A1YA/hqdefault.jpg',
-    thumbnailAlt: "Greenwood market report video thumbnail from Red Door's blog",
-    title: 'Greenwood Market Report: Rents Hold as Home Prices Fall Nearly 8%',
-    dek: 'Greenwood is showing two different market stories at the same time — steady rental pricing alongside softer year-over-year home sale prices.',
-    date: 'August 2026',
-  },
-  {
-    slug: 'why-professional-rental-property-photos-matter-before-the-first-showing',
-    thumbnail: 'https://i.ytimg.com/vi/2CqrHkZik6g/hqdefault.jpg',
-    thumbnailAlt: 'Rental property photography article thumbnail from Red Door\'s blog',
-    title: 'Why Professional Rental Property Photos Matter Before the First Showing',
-    dek: 'For most rental properties, the first showing happens online, before a prospective tenant ever walks through the front door.',
-    date: '2026',
-    category: 'Owner Guidance',
-  },
-];
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription} path={pagePath}>
@@ -187,7 +161,7 @@ const indianapolisLibraryPosts = [
 
   <ProofStrip cityLabel="Indianapolis" />
 
-  <IndianapolisJourneyCarousel />
+  <PropertyManagementJourneyCarousel />
 
   <section class="section-soft">
     <div class="container">
@@ -401,7 +375,7 @@ const indianapolisLibraryPosts = [
   <LandlordLibrary
     heading="The Red Door Landlord Library"
     subheading="Market updates, investment insights, and practical property-management guidance for Central Indiana rental owners."
-    posts={indianapolisLibraryPosts}
+    posts={PILLAR_LANDLORD_LIBRARY_POSTS}
   />
 
   <section id="faq">

@@ -2562,9 +2562,13 @@
     /* Ported from indianapolis-property-management.html's own embedded
        <style> — the 6 numbered process-detail sections and their two
        supporting list styles (two-col-list for paired items, plain-list
-       for a single column). .step-grid/.step-card were also defined
-       there but never actually used anywhere in that page's markup —
-       dead CSS from an earlier design iteration, not ported. */
+       for a single column). indianapolis-property-management.html ALSO
+       defines .step-grid/.step-card but never actually uses them in its
+       own markup (dead CSS there); the pillar pages (e.g.
+       market-readiness-assessment.html) DO use them for real, with a
+       fuller rule set including .step-icon and the is-five-across/
+       is-three-across width variants — that complete version is what's
+       ported below, not the incomplete one. */
     .two-col-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 28px; margin: 18px 0 0; padding: 0; list-style: none; }
     .two-col-list li { position: relative; padding-left: 22px; color: var(--charcoal); font-size: .98rem; line-height: 1.5; }
     .two-col-list li::before { content: ""; position: absolute; left: 0; top: .6em; width: 8px; height: 8px; background: var(--red); border-radius: 50%; }
@@ -2576,6 +2580,106 @@
     .process-detail { padding: 44px 0; border-bottom: 1px solid var(--line); }
     .process-detail:last-of-type { border-bottom: 0; }
     .process-detail .step-num { color: var(--red); font-size: .78rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+
+    /* Ported from market-readiness-assessment.html's own embedded <style>
+       — the numbered step-card grid used by the pillar pages' "How It
+       Works" sections (5 or 3 cards depending on the page, hence the two
+       width variants), plus the video-section YouTube embed each pillar
+       page's hero scrolls down into. */
+    .video-section { padding: clamp(40px, 6vw, 64px) 0 0; }
+    .video-embed {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      max-width: 900px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-strong);
+      background: #000;
+    }
+    .video-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .step-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+      margin-top: 8px;
+    }
+    .step-card {
+      position: relative;
+      padding: 26px 24px;
+      background: linear-gradient(158deg, #ffffff 0%, #f7f9fc 100%);
+      border: 1px solid rgba(18, 22, 30, .08);
+      border-radius: 16px;
+      box-shadow: 0 20px 40px -22px rgba(20, 24, 33, .3);
+    }
+    .step-card::before {
+      content: attr(data-step);
+      position: absolute;
+      top: -8px;
+      right: 10px;
+      color: rgba(18, 22, 30, .045);
+      font-size: 4.6rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    .step-card h3 { position: relative; z-index: 1; margin: 0 0 10px; font-size: 1.15rem; }
+    .step-card p, .step-card ul { position: relative; z-index: 1; }
+    .step-card p { color: var(--muted); font-size: .95rem; margin-bottom: 10px; }
+    .step-card ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: .92rem; }
+    .step-card li { margin-bottom: 6px; }
+    .step-icon {
+      position: relative;
+      z-index: 1;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      color: var(--white);
+      background: linear-gradient(150deg, var(--red), var(--red-dark));
+      border-radius: 11px;
+      box-shadow: 0 12px 22px -8px rgba(140, 12, 3, .28);
+    }
+    .step-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    .step-grid.is-five-across {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+    .step-grid.is-three-across {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    @media (max-width: 1180px) {
+      .step-grid.is-five-across { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .step-grid.is-three-across { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .step-grid.is-five-across { grid-template-columns: 1fr; }
+      .step-grid.is-three-across { grid-template-columns: 1fr; }
+    }
+    /* Scoped to .hero-pillar specifically (added on the 7 pillar pages'
+       own hero section), NOT the bare .hero .cta-row base rule (which
+       has a deliberate -28px lift tuned for the homepage/property-
+       management pages' two-line H1 — see that rule above). The
+       source mockup's own embedded <style> only affected its own single
+       page since it wasn't in a shared stylesheet; porting it unscoped
+       into this shared one would have silently broken that lift
+       everywhere else `.hero .cta-row` is used. */
+    .hero-pillar .eyebrow + h1 { transform: none; margin-top: 6px; }
+    .hero-pillar .cta-row { transform: none; margin-top: 10px; }
 
     .callout-note { margin: 20px 0 0; padding: 16px 20px; color: var(--charcoal); background: var(--brand-tint); border-left: 4px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; font-size: .95rem; }
     .badge { width: fit-content; display: inline-flex; align-items: center; min-height: 28px; padding: 5px 10px; border-radius: 999px; background: var(--brand-tint); color: var(--red-dark); font-weight: 900; text-transform: uppercase; margin-bottom: 16px; font-size: .82rem; letter-spacing: .04em; }

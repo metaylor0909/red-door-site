@@ -1,15 +1,16 @@
 ---
-// "Landlord Library" blog-post teaser grid. The 3 posts themselves are
-// shared across the homepage and 18 of the 19 -property-management pages
-// (confirmed via diff — only Indianapolis's own page, not yet built, uses
-// a different 3) so they default here rather than being required props.
+// "Landlord Library" blog-post teaser grid. This module's own DEFAULT_POSTS
+// (3 posts) is shared across the homepage and the 18 simple
+// -property-management pages (confirmed via diff). Indianapolis's own
+// page and the 7 pillar pages use a DIFFERENT shared 3 — see
+// src/lib/property-management/pillar-landlord-library-posts.ts.
 // The heading/subheading text is NOT shared — the homepage's approved
 // copy says "The Indianapolis Landlord Library" / "...for Indianapolis
-// rental owners", while every -property-management page says "The Red
-// Door Landlord Library" / "...for Central Indiana rental owners" — a
-// real difference between two already-approved pieces of content, so
-// both are required props rather than derived.
-interface Post {
+// rental owners", while every -property-management/pillar page says
+// "The Red Door Landlord Library" / "...for Central Indiana rental
+// owners" — a real difference between two already-approved pieces of
+// content, so both are required props rather than derived.
+export interface Post {
   slug: string;
   thumbnail: string;
   thumbnailAlt: string;
