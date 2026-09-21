@@ -1,0 +1,234 @@
+---
+// /marketing-process — pillar page 2 of 7 built this way (the 8th,
+// Indianapolis property management, is a different page type, already
+// built separately). Ported from marketing-process.html. Shares the
+// same PropertyManagementJourneyCarousel used on 5 other pillar pages
+// and the Indianapolis property-management page (confirmed byte-
+// identical via diff before reuse) and the same Landlord Library post
+// set (src/lib/property-management/pillar-landlord-library-posts.ts).
+//
+// No page-level JSON-LD added beyond what the carousel component
+// already provides (its own ItemList schema) — the source mockup didn't
+// have page-level Organization/BreadcrumbList schema either, so none is
+// invented here per CLAUDE.md's "never rewrite content during
+// structural migration" rule.
+//
+// The hero uses the new `.hero-pillar` class (see global.css) for the
+// CTA-row/H1 spacing override these single-line-H1 pillar heroes need —
+// scoped so it doesn't affect the homepage/property-management pages'
+// two-line-H1 hero, which relies on the base lift this overrides.
+//
+// Same #rental-analysis -> /rental-analysis fix as every other page
+// built this session (the anchor target doesn't exist on this page at
+// all, unlike the homepage).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PropertyManagementJourneyCarousel from '../components/PropertyManagementJourneyCarousel.astro';
+import LandlordLibrary from '../components/LandlordLibrary.astro';
+import { PILLAR_LANDLORD_LIBRARY_POSTS } from '../lib/property-management/pillar-landlord-library-posts';
+
+const pageTitle = 'Marketing Process | Red Door Property Management';
+const pageDescription =
+  'How Red Door markets Indianapolis rental homes: professional photography, virtual walkthroughs, syndication to every major platform, and weekly owner updates.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/marketing-process">
+  <section class="hero hero-pillar" aria-labelledby="page-title">
+    <div class="hero-content">
+      <div class="eyebrow">Stage 02 &middot; Owner Roadmap</div>
+      <h1 id="page-title"><span>Marketing Process</span></h1>
+      <p class="hero-copy">Maximum exposure, minimal vacancy &mdash; professional visuals, smart showing technology, and real-time performance tracking on every listing.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/contact">Contact Us</a>
+        <a class="btn btn-secondary" href="/rental-analysis">Get a Free Rental Analysis</a>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#marketing-intro" aria-label="Scroll to content">
+      <span aria-hidden="true"></span>
+      Scroll
+    </a>
+  </section>
+
+  <section class="video-section">
+    <div class="container">
+      <div class="video-embed reveal">
+        <iframe src="https://www.youtube.com/embed/F4BRQ2HTE6Q" title="Marketing Process overview video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <PropertyManagementJourneyCarousel />
+
+  <section id="marketing-intro">
+    <div class="container content-block reveal">
+      <div class="section-kicker">Maximum Exposure, Minimal Vacancy</div>
+      <h2>Designed to Lease Faster, Not Just List Faster</h2>
+      <p>In today's digital rental market, effective marketing goes far beyond a yard sign. To lease faster and attract higher-quality tenants, your property must stand out across dozens of platforms while delivering a seamless experience for renters.</p>
+      <p>Red Door Property Management's Marketing Process is designed to maximize exposure, reduce days on market, and protect your ROI. We combine professional visuals, smart showing technology, and real-time performance tracking to ensure every listing performs at its highest potential.</p>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container reveal">
+      <div class="section-head">
+        <div class="section-kicker">What Sets Our Marketing Apart</div>
+        <h2>Four Pillars of Every Listing</h2>
+      </div>
+      <div class="step-grid">
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 9h3l2.5-2.5h7L17 9h4v9H3z"></path><circle cx="12" cy="13.5" r="3.4"></circle></svg>
+          </span>
+          <h3>Professional Photos That Convert</h3>
+          <p>Tenants shop with their eyes first. Every Red Door listing includes professional photography &mdash; bright, well-lit rooms, wide-angle shots, clear views of upgrades, and clean curb appeal &mdash; helping your home photograph better, show better, and generate more qualified interest.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M10 9.5l5 2.5-5 2.5z"></path></svg>
+          </span>
+          <h3>Virtual Walkthroughs</h3>
+          <p>We produce immersive video walkthroughs, hosted on YouTube and embedded directly into listings, that let renters tour the home before scheduling a showing. This increases transparency, pre-qualifies serious renters, and reduces wasted showings.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"></circle><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M5.5 5.5a10 10 0 0 0 0 13M18.5 5.5a10 10 0 0 1 0 13"></path></svg>
+          </span>
+          <h3>Unmatched Listing Syndication</h3>
+          <p>Your property is automatically syndicated to all major rental platforms &mdash; Zillow, Trulia, HotPads, Apartments.com, Zumper, Redfin, Realtor.com, and dozens more &mdash; with search-friendly language, amenities, and neighborhood highlights optimized for the right audience.</p>
+        </article>
+        <article class="step-card">
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"></rect><path d="M8 3v4M16 3v4M4 10h16"></path><path d="M9.5 14.5l2 2 3-3.5"></path></svg>
+          </span>
+          <h3>Smart Showing Technology</h3>
+          <p>We use Tenant Turner, a modern self-scheduling platform with identity verification and lead tracking, so pre-qualified renters can book showings safely and conveniently, seven days a week &mdash; faster leasing without sacrificing control or security.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container content-block reveal">
+      <h2>Weekly Owner Updates With Marketing Analytics</h2>
+      <p>We don't leave owners in the dark. Every week, you'll receive a video marketing update from our team that includes:</p>
+      <ul class="plain-list">
+        <li>Total listing views across platforms</li>
+        <li>Number of scheduled and completed showings</li>
+        <li>Feedback from prospective renters</li>
+        <li>Suggestions on adjusting rent, if needed</li>
+      </ul>
+      <p style="margin-top:20px">If activity is below expectations, we proactively review the data and make recommendations &mdash; such as adjusting the price, updating photos, or highlighting specific amenities &mdash; to minimize your vacancy time while keeping your rental competitive.</p>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container content-block reveal">
+      <h2>Price Adjustment Strategy Based on Market Performance</h2>
+      <p>Our job isn't just to market your home &mdash; it's to rent it quickly and profitably. If a property is seeing low showing volume or consistent feedback on a certain issue, we use that insight to recommend a rental price adjustment, minor upgrades to improve appeal, or re-positioning the listing. Our goal is to protect your bottom line by making data-backed decisions that get results.</p>
+    </div>
+  </section>
+
+  <section class="section-dark guarantee-section">
+    <div class="container reveal" style="text-align:center">
+      <div class="section-kicker">Why Our Marketing Process Matters</div>
+      <h2>Faster Lease-Ups, Higher-Quality Applicants</h2>
+      <div class="guarantee-grid" style="margin-top:28px">
+        <article class="guarantee-card">
+          <span>Exposure</span>
+          <h3>Faster Lease-Ups</h3>
+          <p>Targeted exposure across every major platform gets qualified renters looking at your home sooner.</p>
+        </article>
+        <article class="guarantee-card">
+          <span>Quality</span>
+          <h3>Higher-Quality Applicants</h3>
+          <p>Better screening and visuals mean the renters who show up are more likely to qualify.</p>
+        </article>
+        <article class="guarantee-card">
+          <span>Transparency</span>
+          <h3>Weekly Owner Updates</h3>
+          <p>Less downtime between tenants, and you always know how your listing is performing.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="container reveal">
+      <div class="section-head center">
+        <div class="section-kicker">Questions Owners Ask</div>
+        <h2>Marketing Process FAQs</h2>
+      </div>
+      <div class="accordion" data-accordion>
+        <article class="accordion-item is-open">
+          <button class="accordion-trigger" type="button" aria-expanded="true">
+            <span>How long does it usually take to rent my property?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Most of our homes rent within just a few weeks, depending on price point, location, and season. Our marketing strategy is designed to create fast exposure and attract qualified renters right away &mdash; which helps reduce vacancy time and maximize your return.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Do you really provide professional photos for every property?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Yes, every single Red Door listing receives professional photography. Great photos dramatically increase online engagement and showings. We highlight your home's lighting, layout, and best features to make sure it stands out against the competition.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What is a virtual walkthrough and why does it matter?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>A virtual walkthrough is a video tour that lets renters explore the property online before scheduling an in-person visit. It helps pre-qualify serious renters and reduces wasted showings &mdash; which means your home rents faster.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Where will my rental be advertised?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Your home is marketed on every major rental platform including Zillow, Trulia, HotPads, Apartments.com, Zumper, Realtor.com, Redfin, and more &mdash; as well as Red Door's own website and YouTube channel. This ensures maximum exposure to both local and out-of-state renters.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>How do I know how my listing is performing?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>We send weekly marketing updates that include total listing views, showing counts, and renter feedback. You'll also get suggestions if adjustments to rent or photos are needed &mdash; so you're never left wondering how things are going.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What happens if my home isn't getting much activity?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>If interest is lower than expected, we quickly analyze the data and make recommendations &mdash; like a price adjustment, improved visuals, or highlighting new features. Our process is data-driven to help you rent faster while protecting your ROI.</p></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <LandlordLibrary
+    heading="The Red Door Landlord Library"
+    subheading="Market updates, investment insights, and practical property-management guidance for Central Indiana rental owners."
+    posts={PILLAR_LANDLORD_LIBRARY_POSTS}
+  />
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>See the Results for Yourself</h2>
+      <p>Want to know what your property would rent for? Need help preparing and marketing your home? Schedule a free rental market analysis and let us show you what Red Door can do.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+        <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.querySelectorAll('[data-accordion]').forEach(function (accordion) {
+      accordion.querySelectorAll('.accordion-trigger').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          var item = trigger.closest('.accordion-item');
+          accordion.querySelectorAll('.accordion-item').forEach(function (candidate) {
+            var candidateTrigger = candidate.querySelector('.accordion-trigger');
+            var shouldOpen = candidate === item && !candidate.classList.contains('is-open');
+            candidate.classList.toggle('is-open', shouldOpen);
+            candidateTrigger.setAttribute('aria-expanded', String(shouldOpen));
+          });
+        });
+      });
+    });
+  </script>
+</BaseLayout>
