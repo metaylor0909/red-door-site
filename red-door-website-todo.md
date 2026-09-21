@@ -162,18 +162,27 @@ Other things found and resolved while migrating:
 
 ### Property-management pages — all 19 built (Sep 17)
 
-✅ **18 of 19 ported into real Astro (2026-09-21) —
-`src/pages/[city]-property-management.astro`, live at the real
-deployment.** Same relationship as the homepage above: this section
-describes the approved static-mockup design work; the pages themselves
-now actually exist as real, D1-wired Astro pages, not just standalone
-HTML. Indianapolis is the one exception — its own mockup uses a
-meaningfully different, richer design (its own interactive process
-carousel, extra content-block sections, no plain `journey-wrap` at all),
-confirmed via a class-name diff before starting, so it's deliberately
-out of scope here — same "build the flagship page separately" pattern
-already used for `indianapolis-homes-for-rent.astro`. Still needs its
-own dedicated build.
+✅ **All 19 of 19 now ported into real Astro (2026-09-21) —
+`src/pages/[city]-property-management.astro`** (18 simple cities) **and
+`src/pages/indianapolis-property-management.astro`** (the flagship,
+built separately once the 18 simple pages were confirmed working) — both
+live at the real deployment. Same relationship as the homepage above:
+this section describes the approved static-mockup design work; the
+pages themselves now actually exist as real, D1-wired Astro pages, not
+just standalone HTML. Indianapolis's own mockup used a meaningfully
+different, richer design — its own self-contained 3D "journey" carousel
+(`src/components/IndianapolisJourneyCarousel.astro`, ported verbatim
+from the mockup's own clearly-labeled drop-in-widget source blocks) in
+place of the plain journey-wrap, six detailed process-detail sections,
+a "What Makes Red Door Different" list, a "What's Included" list, an
+"Owner Standards" list, and a real 10-question FAQ accordion — same
+"build the flagship page separately" pattern already used for
+`indianapolis-homes-for-rent.astro`. The carousel's desktop 3D animation
+couldn't be interactively verified in this session (the browser pane
+was backgrounded, which stops `requestAnimationFrame` from firing at
+all — unrelated to the code); its mobile static fallback, initialization
+state, and every other section were verified working on a live deploy.
+Worth a real click-through once someone can see the live page.
 
 The Rental & Sales Market Snapshot section below is now genuinely live
 data, not the Sep 17 snapshot the rest of this section describes — it
