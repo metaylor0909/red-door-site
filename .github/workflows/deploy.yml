@@ -1,0 +1,61 @@
+# Builds and deploys red-door-site to Cloudflare on every push to main,
+# and on repository_dispatch — the second trigger is what
+# src/pages/api/rebuild-webhook.ts fires when RentEngine's `units`-table
+# webhook reports a listing change, per CLAUDE.md's locked "wire the
+# webhook directly to a rebuild on every INSERT/UPDATE/DELETE — no
+# debounce, no queue" decision. See that file's own header comment for
+# why this GitHub Actions relay exists instead of a Cloudflare "Deploy
+# Hook" (that feature is Pages-only; this site deploys as a Worker with
+# static assets, which has no equivalent manual-trigger URL of its own).
+name: Deploy to Cloudflare
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [rentengine-listing-changed]
+
+# Cancel a superseded in-flight run in favor of the newest one rather than
+# stacking up redundant deploys — every real event still triggers a fresh
+# build (nothing is dropped or delayed), this just avoids wasting Actions
+# minutes on a deploy that's about to be overwritten anyway.
+concurrency:
+  group: deploy-to-cloudflare
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - run: npm ci
+
+      # Build-time (Vite-inlined) env — see .env.example. Runtime secrets
+      # (Turnstile, Mapbox, RentEngine comps, RentCast, Resend, Zapier)
+      # already live on the deployed Worker itself via `wrangler secret
+      # put`, set once and untouched by this workflow.
+      - run: npm run build
+        env:
+          SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
+          SANITY_DATASET: production
+          PUBLIC_SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
+          PUBLIC_SANITY_DATASET: production
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.PUBLIC_TURNSTILE_SITE_KEY }}
+          RENTENGINE_LISTINGS_KEY: ${{ secrets.RENTENGINE_LISTINGS_KEY }}
+          # No RENTENGINE_LISTINGS_ACCOUNT_ID here — the build already
+          # falls back to the known-non-secret account id when this is
+          # unset (see src/pages/[city]-homes-for-rent.astro and
+          # src/pages/homes-for-rent/[city]/[slug].astro).
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: '0d7caebb9fcee4be86380c04533ac4ed'
+
+      - run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: '0d7caebb9fcee4be86380c04533ac4ed'
