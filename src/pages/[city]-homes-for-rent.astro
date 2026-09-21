@@ -17,22 +17,29 @@
 // What's genuinely live/dynamic per build, not baked from the static
 // reference:
 //   - The listing grid itself: fetched from RentEngine at build time and
-//     filtered by this city's real ZIP list (data/homes-for-rent/*.json's
-//     zipsUsed field), NOT the fixed cards the Sep 18 reference pages
-//     hardcoded from a one-time pull. Empty/thin inventory is the normal
-//     case (CLAUDE.md / listings-build-notes.md) — the honest empty-state
-//     message below is ported from the reference's own Zionsville/Fishers/
-//     Brownsburg empty-state pattern, not invented here.
-//   - The bedroom-rent breakdown: derived fresh from each city's own
-//     data/homes-for-rent/*.json (dataByBedrooms), per the data-schema doc's
-//     bedroomLadder shape. Not present as its own component in the static
-//     reference (which only mentions the ladder in prose) — added here as a
-//     small real-numbers table, per this task's explicit ask to build and
-//     surface it.
+//     filtered by this city's real ZIP list, NOT the fixed cards the Sep
+//     18 reference pages hardcoded from a one-time pull. Empty/thin
+//     inventory is the normal case (CLAUDE.md / listings-build-notes.md)
+//     — the honest empty-state message below is ported from the
+//     reference's own Zionsville/Fishers/Brownsburg empty-state pattern,
+//     not invented here.
+//   - REVISED 2026-09-21: the headline stat tiles, bedroom-rent
+//     breakdown, and ZIP list now all come from the shared
+//     rentcast_city_cache D1 table that workers/rentcast-refresh writes
+//     monthly (falls back to the static data/homes-for-rent/*.json
+//     snapshot if a city has no D1 row yet — see
+//     src/lib/listings/homes-for-rent-content.ts). Previously only the
+//     bedroom ladder was dynamic; the stat tiles were frozen at the
+//     original Sep 17 extraction even after that ladder was added —
+//     fixed now so the "live-refresh" pipeline actually keeps the page's
+//     most prominent numbers current, not just a bonus table underneath
+//     them. The hero copy, "What to Expect" prose, and CTA text stay
+//     static — genuine editorial content, not RentCast-derived numbers.
 //
 // Known real bugs from the sibling listing-detail page, avoided here too:
 //   - Never combine .container and .content-block on the same element —
 //     nest them, or the block centers instead of sitting flush-left.
+import { env } from 'cloudflare:workers';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { fetchAllAvailableUnits, addressSlug, citySlug } from '../lib/listings/rentengine';
 import type { RentEngineUnit } from '../lib/listings/types';
@@ -67,23 +74,36 @@ export async function getStaticPaths() {
   const cityContentMap = loadCityContentMap();
   const citySlugs = Object.keys(cityContentMap);
 
-  return citySlugs.map((slug) => {
-    const content = cityContentMap[slug];
-    const { zipsUsed, bedroomLadder } = loadCityMarketData(slug);
-    // City-to-listing matching is by ZIP, not RentEngine's own address.city
-    // field (which only returns a broad name, e.g. every Indianapolis-area
-    // address just says "Indianapolis") — see claude/red-door-rentcast-zip-
-    // mapping.md and this task's own instructions. A unit can legitimately
-    // match more than one city page when ZIPs overlap (shared township
-    // ZIPs) — that's correct, not a bug.
-    const zipSet = new Set(zipsUsed);
-    const cityUnits = units.filter((u) => zipSet.has(u.address.zip_code));
+  return Promise.all(
+    citySlugs.map(async (slug) => {
+      const staticContent = cityContentMap[slug];
+      const marketData = await loadCityMarketData(env.DB, slug);
 
-    return {
-      params: { city: slug },
-      props: { content, bedroomLadder, cityUnits },
-    };
-  });
+      // Fresh stat tiles/dataAsOf override the static extraction's frozen
+      // ones when available; fall back to the static values if the D1/
+      // static read came back with nothing usable (e.g. a city whose
+      // cached row has no rentalData yet) rather than show an empty tile row.
+      const content: CityContent = {
+        ...staticContent,
+        statTiles: marketData.statTiles.length > 0 ? marketData.statTiles : staticContent.statTiles,
+        dataAsOf: marketData.dataAsOf || staticContent.dataAsOf,
+      };
+
+      // City-to-listing matching is by ZIP, not RentEngine's own address.city
+      // field (which only returns a broad name, e.g. every Indianapolis-area
+      // address just says "Indianapolis") — see claude/red-door-rentcast-zip-
+      // mapping.md and this task's own instructions. A unit can legitimately
+      // match more than one city page when ZIPs overlap (shared township
+      // ZIPs) — that's correct, not a bug.
+      const zipSet = new Set(marketData.zipsUsed);
+      const cityUnits = units.filter((u) => zipSet.has(u.address.zip_code));
+
+      return {
+        params: { city: slug },
+        props: { content, bedroomLadder: marketData.bedroomLadder, cityUnits },
+      };
+    })
+  );
 }
 
 interface Props {
