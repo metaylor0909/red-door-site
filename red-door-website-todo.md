@@ -89,13 +89,47 @@ three-page model and the pillar-page set are both now fully built.
 
 ### Pillar pages — all 8 built (Sep 18)
 
-`market-readiness-assessment.html`, `marketing-process.html`,
-`tenant-screening.html`, `leasing-process.html`, `maintenance.html`,
-`communication.html`, `pricing.html`, and a rebuilt
-`indianapolis-property-management.html` (previously the thin
-generic-template version shared with the other 18 city pages — see
-"Property-management pages" above — now carries the real flagship
-content this section describes).
+✅ **All 8 now ported into real Astro (2026-09-21)** —
+`src/pages/market-readiness-assessment.astro`, `marketing-process.astro`,
+`tenant-screening.astro`, `leasing-process.astro`, `maintenance.astro`,
+`communication.astro`, `pricing.astro` (all live at the real
+deployment), plus `indianapolis-property-management.astro` (built
+separately, see the "Property-management pages" section above). Same
+relationship as the homepage/property-management sections above: this
+section describes the approved static-mockup design work; the pages
+themselves now actually exist as real Astro pages.
+
+6 of the 7 (all but `pricing`) share a `PropertyManagementJourneyCarousel`
+component (confirmed byte-identical across all of them, including
+Indianapolis's own page, via diff) and a `LandlordLibrary` post set
+different from the homepage/18-simple-property-management-page one
+(`src/lib/property-management/pillar-landlord-library-posts.ts`).
+`pricing.astro` is structurally its own thing — no carousel, no
+Landlord Library, but a genuinely working interactive self-manage/
+poor-management cost calculator (verified live: slider changes and
+mode switching both recalculate every line correctly), a services-
+comparison table, a fee-structure-comparison table, and its own
+20-question FAQ. Two stale project notes corrected in the process: the
+calculator's "Poor Management" mode was assumed unbuilt (it's fully
+implemented in the actual current mockup) and the FAQ was assumed to
+have 18 questions (it has 20) — both ported faithfully as actually
+found in the file, not as previously assumed.
+
+Added a real chunk of previously-missing CSS to `global.css` in the
+process — the full `step-grid`/`step-card`/`step-icon` rule set (the
+version already in `global.css` from the Indianapolis page was
+confirmed dead/unused there), the `video-section` YouTube-embed
+styling, and — for `pricing.astro` alone — ~150 lines covering the
+calculator, both comparison tables, and the Calendly-embed section,
+none of which existed anywhere in the shared stylesheet before.
+
+Same `#rental-analysis` → `/rental-analysis` fix as the homepage and
+every property-management page: each mockup's old placeholder 6-step
+form is replaced with a condensed pitch + CTA to the real tool.
+
+`tenant-screening.astro`'s eviction-language fix (see "Two deliberate
+departures" below) was independently re-verified byte-for-byte against
+the source mockup rather than just trusted — confirmed correct.
 
 **Content is migrated from the live site, not rewritten, per Hard Rule
 1** — read directly from `reddoorrents.com` (the 8 URLs Michael sent
