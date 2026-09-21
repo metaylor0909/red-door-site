@@ -45,19 +45,32 @@ CREATE TABLE IF NOT EXISTS rental_analyses (
   last_bd_alert_fired_at TEXT
 );
 
--- Shared with the homes-for-rent project's own Cron-Trigger Worker (see
--- claude/red-door-homes-for-rent-data-schema.md) — same store, not a
--- duplicate pull. If that Worker's own migration already created this
--- table under a different name/shape, reconcile before deploying rather
--- than running both.
+-- Genuinely shared between two consumers, not a duplicate pull each:
+--   1. workers/rentcast-refresh (its own standalone Cron-Trigger Worker,
+--      not part of this Astro site's request path) writes one row per
+--      served homes-for-rent city/township monthly, per
+--      claude/red-door-rentcast-zip-mapping.md's 20-area/50-ZIP list.
+--   2. src/lib/rental-analysis/bedroom-adjustment.ts (decision #10) reads
+--      these same rows for its tier 1/2 cache-hit path, and writes its
+--      own ad-hoc rows here for cities outside that served list (tier 3).
+-- REVISED 2026-09-20: originally scoped narrowly for decision #10 alone
+-- (just a pre-derived bedroom_ladder_json array) before the homes-for-rent
+-- pages' own live-refresh need made it clear this should hold the FULL
+-- per-city payload instead — a superset covers both consumers; the
+-- narrower shape didn't. city_key format is decision #10's own
+-- `${city}-${state}` (e.g. "avon-in", lowercase-hyphenated) — the
+-- homes-for-rent pages' plain citySlug ("avon") doesn't include state,
+-- so the Worker and the Astro pages both key off this format, not
+-- citySlug alone, to stay compatible with decision #10's existing keys.
 CREATE TABLE IF NOT EXISTS rentcast_city_cache (
   city_key TEXT PRIMARY KEY, -- e.g. "avon-in"
-  -- JSON array of { beds, avgRent, newListings, totalListings } per rung
-  -- (1BR-5BR, whatever RentCast actually returned) — newListings/
-  -- totalListings travel with each rung already, for the thin-data check,
-  -- so no separate sample-sizes column is needed.
-  bedroom_ladder_json TEXT NOT NULL,
-  rent_trend_json TEXT, -- trailing rent-trend history for decision #5's chart
+  -- Full per-city RentCast payload, matching claude/red-door-homes-for-
+  -- rent-data-schema.md's real shape (confirmed against data/homes-for-
+  -- rent/*.json, 2026-09-17 pull): { citySlug, zipsUsed, zipsMissing,
+  -- zipCount, dataAsOf, aggregationMethod, rentalData, saleData }.
+  -- bedroomLadder (decision #10's own need) is derived on read from
+  -- rentalData.dataByBedrooms, not stored separately.
+  market_data_json TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );
 

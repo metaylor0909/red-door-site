@@ -12,7 +12,7 @@
 // listings were flagged as thin, rungs with 41-47 were called
 // well-sampled) — not a confirmed number. Revisit if Michael sets one.
 
-import { fetchBedroomLadder, type RentCastBedroomRung } from './rentcast-client';
+import { fetchRentalMarketData, deriveBedroomLadder, type RentCastBedroomRung, type RentCastRentalData } from './rentcast-client';
 import type { RentEngineComp, SubjectProperty, CascadeCompromises } from './types';
 
 export const THIN_SAMPLE_THRESHOLD = 10;
@@ -20,9 +20,18 @@ const MONTHLY_AD_HOC_CALL_CAP = 50;
 
 export type BedroomAdjustmentTier = NonNullable<CascadeCompromises['bedroomAdjustment']>;
 
+/** market_data_json's real shape — see db/migrations/0001_rental_analysis_schema.sql
+ * and claude/red-door-homes-for-rent-data-schema.md. Only the fields this
+ * module actually reads are typed; the rest (saleData, dataByPropertyType,
+ * history, etc.) pass through untouched for the homes-for-rent consumer. */
+interface CityMarketData {
+  rentalData?: RentCastRentalData | null;
+  [key: string]: unknown;
+}
+
 export interface CachedCityRow {
   city_key: string;
-  bedroom_ladder_json: string;
+  market_data_json: string;
 }
 
 function cityKeyFor(subject: Pick<SubjectProperty, 'city' | 'state'>): string {
@@ -70,12 +79,13 @@ async function resolveCityLadder(
   const cityKey = cityKeyFor(subject);
 
   const cached = await db
-    .prepare('SELECT city_key, bedroom_ladder_json FROM rentcast_city_cache WHERE city_key = ?')
+    .prepare('SELECT city_key, market_data_json FROM rentcast_city_cache WHERE city_key = ?')
     .bind(cityKey)
     .first<CachedCityRow>();
 
   if (cached) {
-    return { ladder: JSON.parse(cached.bedroom_ladder_json), source: 'cache' };
+    const marketData: CityMarketData = JSON.parse(cached.market_data_json);
+    return { ladder: deriveBedroomLadder(marketData.rentalData), source: 'cache' };
   }
 
   // Tier 3: not cached — try an on-demand pull, subject to the monthly cap.
@@ -86,17 +96,27 @@ async function resolveCityLadder(
   }
 
   try {
-    const ladder = await fetchBedroomLadder(subject.zip, rentCastApiKey);
+    const rentalData = await fetchRentalMarketData(subject.zip, rentCastApiKey);
     await incrementMonthCallCount(db, month);
+    const ladder = deriveBedroomLadder(rentalData);
     if (ladder.length === 0) {
       return { ladder: [], source: 'unavailable' };
     }
+    // A leaner row than the Cron Worker's own (no saleData) — see the
+    // module header on rentcast-client.ts for why that's fine here.
+    const marketData: CityMarketData = {
+      citySlug: cityKey,
+      zipsUsed: [subject.zip],
+      dataAsOf: new Date().toISOString().slice(0, 10),
+      aggregationMethod: 'Single ZIP, ad-hoc pull for decision #10 tier 3.',
+      rentalData,
+    };
     await db
       .prepare(
-        `INSERT INTO rentcast_city_cache (city_key, bedroom_ladder_json, updated_at) VALUES (?, ?, ?)
-         ON CONFLICT(city_key) DO UPDATE SET bedroom_ladder_json = excluded.bedroom_ladder_json, updated_at = excluded.updated_at`
+        `INSERT INTO rentcast_city_cache (city_key, market_data_json, updated_at) VALUES (?, ?, ?)
+         ON CONFLICT(city_key) DO UPDATE SET market_data_json = excluded.market_data_json, updated_at = excluded.updated_at`
       )
-      .bind(cityKey, JSON.stringify(ladder), new Date().toISOString())
+      .bind(cityKey, JSON.stringify(marketData), new Date().toISOString())
       .run();
     return { ladder, source: 'fresh' };
   } catch (err) {
@@ -114,13 +134,14 @@ async function resolveCityLadder(
  * in that case rather than invent a number.
  */
 async function computePortfolioRatio(db: D1Database, subjectBeds: number, compBeds: number): Promise<number | null> {
-  const rows = await db.prepare('SELECT bedroom_ladder_json FROM rentcast_city_cache').all<{ bedroom_ladder_json: string }>();
+  const rows = await db.prepare('SELECT market_data_json FROM rentcast_city_cache').all<{ market_data_json: string }>();
 
   let weightedRatioSum = 0;
   let totalWeight = 0;
 
   for (const row of rows.results ?? []) {
-    const ladder: RentCastBedroomRung[] = JSON.parse(row.bedroom_ladder_json);
+    const marketData: CityMarketData = JSON.parse(row.market_data_json);
+    const ladder = deriveBedroomLadder(marketData.rentalData);
     const subjectRung = rungFor(ladder, subjectBeds);
     const compRung = rungFor(ladder, compBeds);
     if (!subjectRung || !compRung || compRung.avgRent <= 0) continue;
