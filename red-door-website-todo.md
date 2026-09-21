@@ -64,8 +64,22 @@ architecture, and the CMA tool are all decided. What's left is a handful
 of small open sub-decisions (mostly listings-specific) plus the actual
 build phases.
 
+✅ **Homepage ported into real Astro (2026-09-21) — `src/pages/index.astro`,
+live at the real deployment.** First of the static mockups below to
+actually move off "standalone static HTML" and into the real site.
+Header/footer/nav/reveal-scroll were already componentized from earlier
+work and reused as-is. One real content change from the mockup: its
+`#rental-analysis` section was a placeholder form that predated the real
+rental-analysis tool already built at `/rental-analysis` — replaced with
+a condensed pitch + CTA to the real page (every same-page
+`#rental-analysis` anchor sitewide now points there instead). Also fills
+the "homepage has no JSON-LD" gap noted elsewhere in this file — the
+mockup already had correct `Organization`/`LocalBusiness` schema
+written, just needed porting.
+
 **Real pages built so far (all standalone static HTML, matching one shared
-design system, ready to drop into Astro templates later):** `index.html`
+design system, ready to drop into Astro templates later — except
+`index.html`, now superseded by the real Astro port above):** `index.html`
 (homepage), `application-criteria.html`, all 9 confirmed `-market-reports`
 pages (Indianapolis, Fishers, Noblesville, Westfield, Greenwood, Westside,
 Anderson, Lebanon, Greenfield), **all 20 `-homes-for-rent` pages**,
