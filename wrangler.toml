@@ -28,12 +28,22 @@ binding = "ASSETS"
 # duplicate, see red-door-homes-for-rent-data-schema.md), and
 # rentcast_adhoc_call_log (decision #10 tier 3's 50-calls/month cap).
 #
-# database_id below is a placeholder until a real D1 database exists in a
-# Cloudflare account (`wrangler d1 create red-door-rental-analysis`) —
-# local development and testing works against `--local` emulation without
-# it; production deploys need the real id filled in here.
+# `remote = true` (Cloudflare's "remote bindings" feature) matters
+# specifically because the homes-for-rent pages read this binding during
+# `astro build`'s static prerendering (getStaticPaths), which — like
+# `wrangler dev`/`vite dev` — uses local Miniflare simulation by default,
+# NOT the real database. Without this flag, every build silently falls
+# back to each city's static Sep 17 snapshot even though the real
+# rentcast_city_cache table has fresh data (confirmed empirically:
+# 2026-09-21, Avon page showed "September 17" after a real production
+# deploy). This flag only affects local dev/build-time simulation — the
+# deployed Worker's own SSR routes (submit endpoint, bedroom-adjustment
+# tier-3 calls) already talk to the real database directly regardless,
+# since they run as the actual deployed Worker, not through this
+# simulation layer.
 [[d1_databases]]
 binding = "DB"
 database_name = "red-door-rental-analysis"
 database_id = "92f2e5cd-3589-4861-86d1-8a96d7d9afb9"
 migrations_dir = "db/migrations"
+remote = true
