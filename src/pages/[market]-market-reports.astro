@@ -1,0 +1,176 @@
+---
+// /[market]-market-reports — the 9 confirmed market-reports pages, one
+// per market cluster (not per city — "West Side" covers Avon,
+// Brownsburg, and Plainfield as a single page, matching the real
+// recurring report series; see red-door-website-todo.md's "Market-
+// reports page design" section for the full confirmed 9-market list).
+//
+// Ported from the approved static mockups (e.g.
+// westside-market-reports.html), all built from one shared template.
+// TWO sections that mockup explicitly self-labels as illustrative
+// placeholder — "will pull from the same RentCast market-data pipeline...
+// once that feed is wired up" and "will pull live from posts and videos
+// tagged [X] once the blog import is complete" — are now wired to real
+// data instead of ported verbatim, since both prerequisites are
+// genuinely done (the RentCast D1 pipeline and the full 309-post blog
+// migration, both confirmed this session). This isn't a Hard-Rule-1
+// content rewrite — it's fulfilling the template's own stated intent
+// now that what it was waiting on exists.
+//
+// Real per-market RentCast coverage is uneven: Indianapolis, Fishers,
+// Noblesville, Westfield, Greenwood, and (partially — Avon + Brownsburg
+// only, no Plainfield) West Side all have real rentcast_city_cache rows;
+// Anderson, Lebanon, and Greenfield have none (outside the 20-area ZIP
+// mapping workers/rentcast-refresh covers) — see markets.ts's own
+// rentCastSlugs per market. Those 3 pages omit the snapshot section
+// entirely rather than show fabricated numbers.
+//
+// Real blog-post matching is by title text, not a real taxonomy (none
+// exists yet in the Sanity schema — see posts.ts's own header comment)
+// — confirmed via a live query before building this that every one of
+// the 9 markets has multiple real, recent posts this way.
+import { env } from 'cloudflare:workers';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { MARKETS, type MarketConfig } from '../lib/market-reports/markets';
+import { loadMarketReportSnapshot, type MarketSnapshotStat } from '../lib/market-reports/snapshot';
+import { loadMarketReportPosts, type MarketReportPost } from '../lib/market-reports/posts';
+
+export async function getStaticPaths() {
+  return Promise.all(
+    MARKETS.map(async (market) => {
+      const otherMarketNames = MARKETS.filter((m) => m.slug !== market.slug).flatMap((m) => m.postTitleMatches);
+      const [snapshot, posts] = await Promise.all([
+        loadMarketReportSnapshot(env.DB, market.rentCastSlugs),
+        loadMarketReportPosts(market.postTitleMatches, otherMarketNames),
+      ]);
+      return {
+        params: { market: market.slug },
+        props: { market, snapshot, posts },
+      };
+    })
+  );
+}
+
+interface Props {
+  market: MarketConfig;
+  snapshot: MarketSnapshotStat | null;
+  posts: MarketReportPost[];
+}
+
+const { market, snapshot, posts } = Astro.props;
+const pageTitle = `${market.h1} | Red Door Property Management`;
+const pageDescription = `Rental market data and recent reports for ${market.serviceAreaChips.join(', ')} — tracked by Red Door Property Management.`;
+const pagePath = `/${market.slug}-market-reports`;
+const otherMarkets = MARKETS.filter((m) => m.slug !== market.slug);
+
+function formatCurrency(value: number | null): string {
+  return value == null ? '—' : `$${Math.round(value).toLocaleString()}`;
+}
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path={pagePath}>
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-kicker">Market Report</span>
+      <h1>{market.h1}</h1>
+      <p class="lead">{market.leadText}</p>
+      <div class="service-area">
+        {market.serviceAreaChips.map((chip) => <span class="area-chip">{chip}</span>)}
+      </div>
+    </div>
+  </section>
+
+  {snapshot && (
+    <section class="snapshot">
+      <div class="container">
+        {snapshot.dataAsOf && <p class="data-asof">Data as of {snapshot.dataAsOf}</p>}
+        <div class="snapshot-grid">
+          <div class="stat-tile">
+            <p class="stat-label">Median Rent</p>
+            <p class="stat-value">{formatCurrency(snapshot.medianRent)}</p>
+            <p class="stat-sub">{snapshot.isBlended ? 'Weighted average across this submarket' : 'Current market median'}</p>
+          </div>
+          <div class="stat-tile">
+            <p class="stat-label">Active Listings</p>
+            <p class="stat-value">{snapshot.activeListings}</p>
+            <p class="stat-sub">Homes currently available to rent</p>
+          </div>
+          <div class="stat-tile">
+            <p class="stat-label">Most Common Size</p>
+            <p class="stat-value">{snapshot.mostCommonBedrooms != null ? `${snapshot.mostCommonBedrooms}-Bedroom` : '—'}</p>
+            <p class="stat-sub">Largest share of current listings</p>
+          </div>
+        </div>
+        {snapshot.isBlended && (
+          <p class="snapshot-note">Blended from Avon and Brownsburg RentCast data (weighted by listing count) — Plainfield isn't yet in Red Door's monthly RentCast pull, so it's not reflected in these figures.</p>
+        )}
+      </div>
+    </section>
+  )}
+
+  <section class="content-section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Recent Reports &amp; Videos</h2>
+          <p>Monthly write-ups and video walkthroughs from Red Door's team, covering {market.serviceAreaChips.join(', ')}.</p>
+        </div>
+        <a class="view-all" href="/blog">View all {market.serviceAreaChips[0]} posts &rarr;</a>
+      </div>
+      {posts.length > 0 ? (
+        <div class="card-grid">
+          {posts.map((post) => (
+            <a class="content-card" href={`/blog/${post.slug}`}>
+              <div class="card-media">
+                {post.thumbnailUrl && <img src={post.thumbnailUrl} alt="" loading="lazy" />}
+                <span class={`type-tag${post.hasVideo ? '' : ' tag-report'}`}>{post.hasVideo ? 'Video' : 'Report'}</span>
+                {post.hasVideo && (
+                  <span class="play-badge"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>
+                )}
+              </div>
+              <div class="card-body">
+                <p class="card-date">{post.publishedAt}</p>
+                <h3 class="card-title">{post.title}</h3>
+                <p class="card-excerpt">{post.excerpt}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="snapshot-note">No reports published for this market yet — check back soon, or see everything on the <a class="area-link" href="/blog">Red Door blog</a>.</p>
+      )}
+    </div>
+  </section>
+
+  <section class="content-section is-soft">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Other Markets We Report On</h2>
+          <p>Red Door tracks rental conditions across Central Indiana. Explore another submarket.</p>
+        </div>
+      </div>
+      <div class="nearby-grid">
+        {otherMarkets.map((m) => (
+          <a class="nearby-link" href={`/${m.slug}-market-reports`}>
+            {m.h1.replace(' Market Report', '')}
+            <span>{m.county}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="container cta-inner">
+      <div>
+        <h2>{market.ctaHeading}</h2>
+        <p>See what your property could rent for, or talk with our team about how we manage homes in this market.</p>
+      </div>
+      <div class="cta-buttons">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-ghost" href={market.propertyManagementHref ?? '/indianapolis-property-management'}>See How We Manage Here</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
