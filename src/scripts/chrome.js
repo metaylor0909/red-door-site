@@ -56,6 +56,21 @@
     }
   });
 
+  document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+    link.addEventListener("click", function (event) {
+      var target = document.querySelector(link.getAttribute("href"));
+      if (!target) return;
+      event.preventDefault();
+      target.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start",
+      });
+      if (navMenu && navMenu.classList.contains("is-open")) {
+        menuToggle.click();
+      }
+    });
+  });
+
   if ("IntersectionObserver" in window) {
     var observer = new IntersectionObserver(
       function (entries) {

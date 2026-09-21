@@ -1,0 +1,1181 @@
+---
+// / — homepage. Ported from the approved static mockup at the repo root
+// (index.html, "v6"). Header/footer/mobile-sticky are already componentized
+// (SiteHeader/SiteFooter/MobileSticky, rendered by BaseLayout) and chrome.js
+// already handles header scroll state, mobile menu, nav dropdowns, and the
+// .reveal scroll-in observer — none of that is reimplemented here.
+//
+// One deliberate departure from a pixel-for-pixel port: index.html's
+// #rental-analysis section (old lines ~2675-2786) was a placeholder 6-step
+// form mockup that predates the real, already-built rental-analysis tool at
+// /rental-analysis (src/pages/rental-analysis/index.astro — a real
+// RentEngine/RentCast-backed intake flow with different fields entirely; the
+// mockup's own confirmation copy admitted as much: "In a production version,
+// this submission should connect to Red Door's existing lead-delivery
+// workflow"). Decision: keep that section's kicker/heading/lead/benefit-list
+// copy, drop the form, link to /rental-analysis instead. Every other
+// same-page `#rental-analysis` anchor on this page (hero CTA, final-cta) is
+// updated to `/rental-analysis` too, since the anchor target no longer
+// exists here. SiteHeader/MobileSticky/the two homes-for-rent pages were
+// already fixed to point at /rental-analysis separately.
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pageTitle = 'Indianapolis Property Management | Red Door Property Management';
+const pageDescription =
+  'Experience hands-off Indianapolis property management with local expertise, proactive communication, professional leasing, maintenance, and proven owner protections.';
+
+// Organization + LocalBusiness graph, ported verbatim (business data
+// unchanged) from index.html's existing JSON-LD (old lines ~3087-3155) —
+// this directly fills the "homepage has no JSON-LD at all" gap noted in
+// CLAUDE.md's Known Issues. The source block's third graph node was a
+// BreadcrumbList for "https://www.reddoorrents.com/homepage-mock" /
+// "Homepage Mockup" — clearly a mockup-file artifact, not real site data (a
+// single-entry breadcrumb pointing at a page named "Homepage Mockup" makes
+// no sense for the real homepage) — so it's left out here rather than
+// carried into production verbatim. Flagged in the port report.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://www.reddoorrents.com/#organization',
+      name: 'Red Door Property Management',
+      url: 'https://www.reddoorrents.com/',
+      telephone: '+1-317-660-1626',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: '3815 River Crossing Pkwy, Suite 100',
+        addressLocality: 'Indianapolis',
+        addressRegion: 'IN',
+        postalCode: '46240',
+        addressCountry: 'US',
+      },
+      sameAs: [
+        'https://www.youtube.com/@reddoorrents',
+        'https://www.facebook.com/RedDoorPropertyManagement/',
+        'https://www.linkedin.com/company/red-door-property-management/',
+        'https://www.instagram.com/reddoorrents/',
+        'https://www.tiktok.com/@reddoorrents',
+      ],
+    },
+    {
+      '@type': 'LocalBusiness',
+      '@id': 'https://www.reddoorrents.com/#localbusiness',
+      name: 'Red Door Property Management',
+      url: 'https://www.reddoorrents.com/',
+      telephone: '+1-317-660-1626',
+      parentOrganization: {
+        '@id': 'https://www.reddoorrents.com/#organization',
+      },
+      areaServed: [
+        'Indianapolis',
+        'Carmel',
+        'Fishers',
+        'Noblesville',
+        'Westfield',
+        'Zionsville',
+        'Greenwood',
+        'Avon',
+        'Brownsburg',
+      ],
+    },
+  ],
+};
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
+
+  <section class="hero" aria-labelledby="page-title">
+    <div class="hero-content">
+      <h1 id="page-title">
+        <span>Discover the Freedom of Truly</span>
+        <span>Hands-Off Property Management</span>
+      </h1>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis" data-track="hero-rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener" data-track="hero-schedule-call">Schedule a Call</a>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#trust-proof" aria-label="Scroll to proof points">
+      <span aria-hidden="true"></span>
+      Scroll
+    </a>
+  </section>
+
+  <section class="proof-strip" id="trust-proof" aria-label="Trust and proof points">
+    <div class="container">
+      <div class="proof-panel reveal">
+        <div class="proof-item">
+          <strong>450+</strong>
+          <span>Happy Customer Reviews</span>
+        </div>
+        <div class="proof-item">
+          <strong>50+ Years</strong>
+          <span>Combined Local Experience</span>
+        </div>
+        <div class="proof-item">
+          <strong>24/7</strong>
+          <span>Phone and Emergency Support</span>
+        </div>
+        <div class="proof-item proof-trust">
+          <span>Trusted by Indianapolis rental owners and investors.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="journey-wrap">
+    <div class="container">
+      <div class="section-head center reveal">
+        <div class="section-kicker">Owner Roadmap</div>
+        <h2>Follow the Indianapolis Property Management Journey</h2>
+        <p>See how Red Door's property management process moves your rental from market readiness and marketing through tenant screening, leasing, maintenance, and communication. Explore each step to see how the entire system works together to protect your investment and create a more hands-off ownership experience.</p>
+      </div>
+      <div class="journey-track reveal" aria-label="Red Door property management journey">
+        <a class="journey-card" href="/market-readiness-assessment" data-step="01">
+          <span class="journey-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="17" rx="2"></rect><path d="M9 4h6v3H9z"></path><path d="M8.5 13l2 2 4-4.5"></path></svg>
+          </span>
+          <span class="journey-stage">Stage 01</span>
+          <h3>Market Readiness</h3>
+          <p>A free rental market analysis, an HD video walkthrough, and a readiness report so pricing and condition are settled before the first showing, not after the third.</p>
+          <span class="text-link">Learn More</span>
+        </a>
+        <a class="journey-card" href="/marketing-process" data-step="02">
+          <span class="journey-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 9h3l2.5-2.5h7L17 9h4v9H3z"></path><circle cx="12" cy="13.5" r="3.4"></circle></svg>
+          </span>
+          <span class="journey-stage">Stage 02</span>
+          <h3>Marketing Process</h3>
+          <p>Professional photography, virtual walkthrough video, syndication to more than twenty platforms, and self-guided showing technology that keeps the calendar full.</p>
+          <span class="text-link">Learn More</span>
+        </a>
+        <a class="journey-card" href="/tenant-screening" data-step="03">
+          <span class="journey-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.6-3 7.7-7 9-4-1.3-7-4.4-7-9V6z"></path><path d="M9 12l2 2 4-4"></path></svg>
+          </span>
+          <span class="journey-stage">Stage 03</span>
+          <h3>Tenant Screening</h3>
+          <p>Credit, nationwide criminal and eviction searches, income verified at three times rent, rental history, employment and identity on every adult applicant.</p>
+          <span class="text-link">Learn More</span>
+        </a>
+        <a class="journey-card" href="/leasing-process" data-step="04">
+          <span class="journey-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"></path><path d="M14 3v4h4"></path><path d="M9.5 16.5c1-1.3 2-1.3 3 0s2 1.3 3 0"></path></svg>
+          </span>
+          <span class="journey-stage">Stage 04</span>
+          <h3>Leasing Process</h3>
+          <p>Documented move-in inspection, a legally robust lease signed digitally, and a renewal conversation that opens 110 days before the lease ends.</p>
+          <span class="text-link">Learn More</span>
+        </a>
+        <a class="journey-card" href="/maintenance" data-step="05">
+          <span class="journey-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M14.7 6.3a3.7 3.7 0 0 0-4.9 4.9l-5.1 5.1a1.6 1.6 0 0 0 2.3 2.3l5.1-5.1a3.7 3.7 0 0 0 4.9-4.9l-2.2 2.2-2-2z"></path></svg>
+          </span>
+          <span class="journey-stage">Stage 05</span>
+          <h3>Maintenance</h3>
+          <p>Troubleshooting before dispatch, vetted vendors, video documentation, and a 24/7 emergency line with your approval required above the agreed threshold.</p>
+          <span class="text-link">Learn More</span>
+        </a>
+        <a class="journey-card" href="/communication" data-step="06">
+          <span class="journey-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 5h16v10H9l-4 4z"></path><path d="M8.5 10h7M8.5 7.5h7"></path></svg>
+          </span>
+          <span class="journey-stage">Stage 06</span>
+          <h3>Communication</h3>
+          <p>Weekly updates while we market the property, monthly once it is leased, and immediate word on anything needing a decision. You never have to ask what is going on.</p>
+          <span class="text-link">Learn More</span>
+        </a>
+      </div>
+      <div class="journey-cta reveal">
+        <a class="btn btn-secondary" href="/indianapolis-property-management">Explore Our Complete Process</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container split">
+      <div class="image-frame reveal" role="img" aria-label="Well-kept Indianapolis area rental home with a red front door">
+        <div class="image-caption">A local team, a documented process, and fewer owner surprises.</div>
+      </div>
+      <div class="reveal">
+        <div class="section-kicker">A Better Management Experience</div>
+        <h2>Why Indianapolis Rental Owners Choose Red Door</h2>
+        <p class="lead">Great property management is more than collecting rent. It is a connected system of local expertise, documented processes, smart technology, and proactive communication working together to protect your investment.</p>
+        <div class="accordion" data-accordion>
+          <article class="accordion-item is-open">
+            <button class="accordion-trigger" type="button" aria-expanded="true">
+              <span>Proactive Communication</span><span aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-panel"><div><p>We do not wait for owners to ask what is happening. Our team provides clear updates through phone, email, text, video, and the owner portal so you understand what is happening, what decisions are needed, and why.</p></div></div>
+          </article>
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false">
+              <span>Maintenance With an Investor Mindset</span><span aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-panel"><div><p>Our in-house team and vetted local vendors focus on timely repairs, clear documentation, cost control, preventative recommendations, and protecting the property's long-term value.</p></div></div>
+          </article>
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false">
+              <span>Data-Driven Local Expertise</span><span aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-panel"><div><p>Our recommendations are informed by Indianapolis rental-market activity, comparable properties, renter feedback, property condition, and seasonal trends - not guesswork.</p></div></div>
+          </article>
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false">
+              <span>Market Readiness Before Marketing</span><span aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-panel"><div><p>We evaluate the property, document its condition, identify priorities, and help position it correctly before the listing goes live. Better preparation can lead to stronger tenant interest and fewer avoidable problems.</p></div></div>
+          </article>
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false">
+              <span>Technology With a Human Team Behind It</span><span aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-panel"><div><p>Professional photos, virtual walkthroughs, showing technology, online portals, digital documentation, and real-time maintenance tracking make management more efficient without replacing personal service.</p></div></div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-dark guarantee-section">
+    <div class="container">
+      <div class="section-head center reveal">
+        <div class="section-kicker">A Process We Are Willing to Stand Behind</div>
+        <h2>Property Management Backed by Real Guarantees</h2>
+        <p>Red Door's documented management system is backed by owner protections that make the next step easier to evaluate.</p>
+      </div>
+      <div class="guarantee-grid reveal">
+        <article class="guarantee-card">
+          <span>Leasing</span>
+          <h3>2-Week Leasing Guarantee</h3>
+          <p>Secure a viable tenant within two weeks of marketing or your first month's management fee is waived.</p>
+        </article>
+        <article class="guarantee-card">
+          <span>Tenant Placement</span>
+          <h3>6-Month Tenant Guarantee</h3>
+          <p>If a tenant placed by Red Door voids the lease within the first six months, your next New Lease Fee is waived.</p>
+        </article>
+        <article class="guarantee-card">
+          <span>Owner Confidence</span>
+          <h3>90-Day Money-Back Guarantee</h3>
+          <p>If you change your mind during the first 90 days, Red Door will refund the management fees paid.</p>
+        </article>
+      </div>
+      <div class="journey-cta reveal">
+        <a class="btn btn-secondary" href="/indianapolis-property-management">Review Guarantee Details</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="google-reviews" aria-labelledby="google-reviews-title">
+    <div class="container reviews-shell">
+      <div class="section-head center reveal">
+        <div class="section-kicker">Trusted by hundreds of property owners and residents.</div>
+        <h2 id="google-reviews-title">What People Say About Working With Red Door</h2>
+      </div>
+
+      <div class="reviews-toolbar reveal" aria-label="Review sources included">
+        <span class="review-source-tab">
+          <span class="source-mark" aria-hidden="true">G</span>
+          <span>Google</span>
+        </span>
+        <span class="review-source-tab">
+          <span class="source-mark is-yellow-pages" aria-hidden="true">YP</span>
+          <span>Yellow Pages</span>
+        </span>
+        <span class="review-source-tab">
+          <span class="source-mark is-client" aria-hidden="true">R</span>
+          <span>Client testimonials</span>
+        </span>
+      </div>
+
+      <div class="reviews-summary reveal" aria-label="Review summary">
+        <span class="reviews-score">540+</span>
+        <span class="review-stars" aria-label="Positive public reviews and client stories">
+          <span></span><span></span><span></span><span></span><span></span>
+        </span>
+        <span>Public reviews and client stories from multiple places</span>
+      </div>
+
+      <div class="reviews-viewport reveal" data-review-viewport aria-label="Customer review carousel" tabindex="0">
+        <div class="reviews-grid" data-review-grid></div>
+      </div>
+
+      <div class="reviews-nav reveal" aria-label="Review controls">
+        <button class="review-nav-button" type="button" data-review-prev aria-label="Show previous reviews">&lt;</button>
+        <button class="review-nav-button" type="button" data-review-next aria-label="Show more reviews">&gt;</button>
+      </div>
+      <p class="sr-only" aria-live="polite" data-review-status></p>
+    </div>
+  </section>
+
+  {/* Replaces index.html's old placeholder 6-step form (see module comment)
+      with a condensed pitch pointing at the real, already-built tool. */}
+  <section class="section-soft" id="rental-analysis">
+    <div class="container analysis-grid">
+      <div class="reveal">
+        <div class="section-kicker">Free Rental Analysis</div>
+        <h2>What Could Your Indianapolis Rental Earn?</h2>
+        <p class="lead">Get a professional rental analysis backed by local market activity, comparable homes, current competition, and Red Door's experience managing rentals across the Indianapolis area.</p>
+        <ul class="benefit-list">
+          <li><span>1</span>Understand your property's current rental value.</li>
+          <li><span>2</span>Identify improvements that may strengthen rent and tenant appeal.</li>
+          <li><span>3</span>See whether Red Door's management approach fits your goals.</li>
+        </ul>
+        <div class="journey-cta reveal">
+          <a class="btn btn-primary" href="/rental-analysis">Get Your Free Rental Analysis</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="areas-served">
+    <div class="container areas-visual">
+      <div class="areas-copy reveal">
+        <div class="section-kicker">Local Expertise Across Central Indiana</div>
+        <h2><span>Indianapolis Property Management</span><span>Where You Need It</span></h2>
+        <p class="lead">Red Door manages rental homes across Indianapolis and the surrounding Central Indiana communities where owners need steady leasing, responsive maintenance, and clear local guidance.</p>
+        <div class="county-grid" aria-label="Cities served by county">
+          <article class="county-card">
+            <div>
+              <h3>Marion County</h3>
+              <p>Indianapolis core, southside neighborhoods, and close-in rental markets.</p>
+            </div>
+            <ul class="city-list">
+              <li><a class="area-link" href="/indianapolis-property-management">Indianapolis</a></li>
+              <li><span class="area-text">Southport</span></li>
+              <li><span class="area-text">Beech Grove</span></li>
+              <li><span class="area-text">Lawrence</span></li>
+              <li><span class="area-text">Speedway</span></li>
+            </ul>
+          </article>
+          <article class="county-card">
+            <div>
+              <h3>Hamilton County</h3>
+              <p>Northside suburbs with strong single-family and executive rental demand.</p>
+            </div>
+            <ul class="city-list">
+              <li><a class="area-link" href="/carmel-property-management">Carmel</a></li>
+              <li><a class="area-link" href="/fishers-property-management">Fishers</a></li>
+              <li><a class="area-link" href="/noblesville-property-management">Noblesville</a></li>
+              <li><a class="area-link" href="/westfield-property-management">Westfield</a></li>
+            </ul>
+          </article>
+          <article class="county-card">
+            <div>
+              <h3>Madison County</h3>
+              <p>Northeast communities with commuter access and affordable rental options.</p>
+            </div>
+            <ul class="city-list">
+              <li><span class="area-text">Anderson</span></li>
+              <li><span class="area-text">Pendleton</span></li>
+              <li><span class="area-text">Lapel</span></li>
+              <li><span class="area-text">Ingalls</span></li>
+            </ul>
+          </article>
+          <article class="county-card">
+            <div>
+              <h3>Hendricks County</h3>
+              <p>Westside communities popular with commuters and long-term rental owners.</p>
+            </div>
+            <ul class="city-list">
+              <li><a class="area-link" href="/avon-property-management">Avon</a></li>
+              <li><a class="area-link" href="/brownsburg-property-management">Brownsburg</a></li>
+              <li><span class="area-text">Danville</span></li>
+              <li><span class="area-text">Plainfield</span></li>
+            </ul>
+          </article>
+          <article class="county-card">
+            <div>
+              <h3>Johnson County</h3>
+              <p>South metro rentals with steady demand from commuters and long-term renters.</p>
+            </div>
+            <ul class="city-list">
+              <li><a class="area-link" href="/greenwood-property-management">Greenwood</a></li>
+              <li><span class="area-text">Franklin</span></li>
+              <li><span class="area-text">Whiteland</span></li>
+              <li><span class="area-text">Bargersville</span></li>
+            </ul>
+          </article>
+          <article class="county-card">
+            <div>
+              <h3>Hancock County</h3>
+              <p>Eastside growth areas with newer-home inventory and suburban appeal.</p>
+            </div>
+            <ul class="city-list">
+              <li><span class="area-text">Greenfield</span></li>
+              <li><span class="area-text">McCordsville</span></li>
+              <li><span class="area-text">New Palestine</span></li>
+              <li><span class="area-text">Fortville</span></li>
+              <li><span class="area-text">Cumberland</span></li>
+            </ul>
+          </article>
+          <article class="county-card">
+            <div>
+              <h3>Shelby County</h3>
+              <p>Southeast rental markets serving owners near the Indianapolis outer ring.</p>
+            </div>
+            <ul class="city-list">
+              <li><span class="area-text">Shelbyville</span></li>
+              <li><span class="area-text">Fairland</span></li>
+              <li><span class="area-text">Morristown</span></li>
+              <li><span class="area-text">Boggstown</span></li>
+            </ul>
+          </article>
+          <article class="county-card">
+            <div>
+              <h3>Boone &amp; Morgan Counties</h3>
+              <p>Northwest and southwest communities around the Indianapolis rental ring.</p>
+            </div>
+            <ul class="city-list">
+              <li><a class="area-link" href="/zionsville-property-management">Zionsville</a></li>
+              <li><span class="area-text">Whitestown</span></li>
+              <li><span class="area-text">Lebanon</span></li>
+              <li><span class="area-text">Mooresville</span></li>
+              <li><span class="area-text">Martinsville</span></li>
+            </ul>
+          </article>
+          <article class="county-card is-wide">
+            <div>
+              <h3>Indianapolis Neighborhoods</h3>
+              <p>Close-in neighborhoods where property condition, tenant fit, and responsiveness matter.</p>
+            </div>
+            <ul class="city-list">
+              <li><a class="area-link" href="/broad-ripple-property-management">Broad Ripple</a></li>
+              <li><span class="area-text">Fountain Square</span></li>
+              <li><span class="area-text">Fletcher Place</span></li>
+              <li><span class="area-text">Irvington</span></li>
+              <li><span class="area-text">Downtown Indianapolis</span></li>
+              <li><span class="area-text">Mass Ave</span></li>
+              <li><span class="area-text">Wholesale District</span></li>
+              <li><span class="area-text">Indiana Avenue</span></li>
+              <li><span class="area-text">SoBro</span></li>
+              <li><span class="area-text">Meridian-Kessler</span></li>
+              <li><span class="area-text">Butler-Tarkington</span></li>
+              <li><span class="area-text">Herron-Morton</span></li>
+              <li><span class="area-text">Old Northside</span></li>
+              <li><span class="area-text">Lockerbie Square</span></li>
+              <li><span class="area-text">Chatham Arch</span></li>
+              <li><span class="area-text">Holy Cross</span></li>
+              <li><span class="area-text">Cottage Home</span></li>
+              <li><span class="area-text">Fall Creek Place</span></li>
+              <li><span class="area-text">Garfield Park</span></li>
+              <li><span class="area-text">Bates-Hendricks</span></li>
+              <li><span class="area-text">Woodruff Place</span></li>
+              <li><span class="area-text">Riverside</span></li>
+            </ul>
+          </article>
+        </div>
+        <details class="townships">
+          <summary><span><strong>Indianapolis Townships</strong><small>Click to view the township service areas Red Door manages.</small></span></summary>
+          <div class="township-grid">
+            <a class="area-link" href="/lawrence-township-property-management">Lawrence Township</a>
+            <a class="area-link" href="/warren-township-property-management">Warren Township</a>
+            <a class="area-link" href="/wayne-township-property-management">Wayne Township</a>
+            <a class="area-link" href="/perry-township-property-management">Perry Township</a>
+            <a class="area-link" href="/franklin-township-property-management">Franklin Township</a>
+            <a class="area-link" href="/pike-township-property-management">Pike Township</a>
+            <a class="area-link" href="/washington-township-property-management">Washington Township</a>
+            <a class="area-link" href="/decatur-township-property-management">Decatur Township</a>
+            <a class="area-link" href="/center-township-property-management">Center Township</a>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  {/* The three linked posts (checked live against Sanity's production
+      dataset during this port) already exist there, so all three link
+      internally rather than to the old absolute reddoorrents.com URLs. */}
+  <section class="section-soft" id="landlord-library">
+    <div class="container">
+      <div class="section-head center reveal">
+        <div class="section-kicker">Local Data. Practical Guidance.</div>
+        <h2>The Indianapolis Landlord Library</h2>
+        <p>Market updates, investment insights, and practical property-management guidance for Indianapolis rental owners.</p>
+      </div>
+      <div class="library-grid reveal">
+        <article class="article-card">
+          <div class="article-image" style="--article-image:url('https://i.ytimg.com/vi/H1syUd2uJfE/hqdefault.jpg')" role="img" aria-label="Westfield market report video thumbnail from Red Door's blog"></div>
+          <div class="article-body">
+            <span class="category">Market Report</span>
+            <h3><a href="/blog/is-westfield-indiana-still-worth-investing-in-with-127-rental-days-on-market--market-report">Is Westfield, Indiana Still Worth Investing In With 127 Rental Days on Market?</a></h3>
+            <p>Westfield remains one of the strongest long-term growth markets in the Indianapolis area, but the rental side is sending a clear warning.</p>
+            <span class="date">August 17, 2026</span>
+            <a class="text-link" href="/blog/is-westfield-indiana-still-worth-investing-in-with-127-rental-days-on-market--market-report">Read or Watch</a>
+          </div>
+        </article>
+        <article class="article-card">
+          <div class="article-image" style="--article-image:url('https://i.ytimg.com/vi/t6v_HJ0A1YA/hqdefault.jpg')" role="img" aria-label="Noblesville market report video thumbnail from Red Door's blog"></div>
+          <div class="article-body">
+            <span class="category">Market Report</span>
+            <h3><a href="/blog/is-noblesville-indiana-the-best-rental-market-near-indianapolis--july-2026-market-report">Is Noblesville, Indiana the Best Rental Market Near Indianapolis?</a></h3>
+            <p>Noblesville continues to stand out as one of the strongest investor markets in the Indianapolis metro.</p>
+            <span class="date">August 17, 2026</span>
+            <a class="text-link" href="/blog/is-noblesville-indiana-the-best-rental-market-near-indianapolis--july-2026-market-report">Read or Watch</a>
+          </div>
+        </article>
+        <article class="article-card">
+          <div class="article-image" style="--article-image:url('https://i.ytimg.com/vi/2CqrHkZik6g/hqdefault.jpg')" role="img" aria-label="Fishers market report video thumbnail from Red Door's blog"></div>
+          <div class="article-body">
+            <span class="category">Market Report</span>
+            <h3><a href="/blog/is-fishers-indiana-still-a-strong-rental-market-for-investors--july-2026-market-report">Is Fishers, Indiana Still a Strong Rental Market for Investors?</a></h3>
+            <p>Fishers continues to show the kind of stability rental property investors want to see, with tight inventory and healthy demand.</p>
+            <span class="date">August 14, 2026</span>
+            <a class="text-link" href="/blog/is-fishers-indiana-still-a-strong-rental-market-for-investors--july-2026-market-report">Read or Watch</a>
+          </div>
+        </article>
+      </div>
+      <div class="journey-cta reveal">
+        <a class="btn btn-primary" href="/blog">Explore the Landlord Library</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="local-section">
+    <div class="container split">
+      <div class="reveal">
+        <h2>Indianapolis Property Management Built on Local Experience</h2>
+        <p class="lead">Red Door Property Management helps accidental landlords, out-of-state owners, and growth-minded investors navigate the complete rental lifecycle. Our Indianapolis team combines documented processes, modern technology, and hands-on local market knowledge to help owners avoid costly mistakes and make better decisions for their properties.</p>
+        <p class="statement">Smarter Property Management Powered by Process, Data-Driven Decisions, and Local Market Expertise.</p>
+        <div class="cta-row" style="justify-content:flex-start">
+          <a class="btn btn-primary" href="/about">Meet Our Team</a>
+          <a class="btn btn-secondary" href="/indianapolis-property-management">Explore Our Process</a>
+        </div>
+      </div>
+      <div class="image-frame reveal" role="img" aria-label="Red Door placeholder home photo representing local Indianapolis property management">
+        <div class="image-caption">Indianapolis knowledge, practical recommendations, and clear owner visibility.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Ready for a More Hands-Off Rental Experience?</h2>
+      <p>Tell us about your Indianapolis rental property and discover how Red Door's proven management process can protect your investment, reduce day-to-day stress, and keep you informed without requiring you to manage every detail yourself.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+        <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+      </div>
+    </div>
+  </section>
+
+  {/* Page-specific interactivity not covered by chrome.js: the accordion
+      above and the Google-reviews carousel (chrome.js's own header comment
+      says as much — homepage-only pieces like the reviews carousel are
+      deliberately left out of the shared script). Ported near-verbatim from
+      index.html's trailing script block. */}
+  <script>
+    document.querySelectorAll('[data-accordion]').forEach(function (accordion) {
+      accordion.querySelectorAll('.accordion-trigger').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          var item = trigger.closest('.accordion-item');
+          accordion.querySelectorAll('.accordion-item').forEach(function (candidate) {
+            var candidateTrigger = candidate.querySelector('.accordion-trigger');
+            var shouldOpen = candidate === item && !candidate.classList.contains('is-open');
+            candidate.classList.toggle('is-open', shouldOpen);
+            candidateTrigger.setAttribute('aria-expanded', String(shouldOpen));
+          });
+        });
+      });
+    });
+
+    var reviewGrid = document.querySelector('[data-review-grid]') || document.querySelector('[data-google-review-grid]');
+    if (reviewGrid) {
+      var reviewViewport = document.querySelector('[data-review-viewport]');
+      var reviewArea = reviewGrid.closest('.reviews-shell');
+      var reviewStatus = document.querySelector('[data-review-status]');
+      var previousReviews = document.querySelector('[data-review-prev]');
+      var nextReviews = document.querySelector('[data-review-next]');
+      var reviewAutoFrame = null;
+      var reviewLastFrame = null;
+      var reviewLoopWidth = 0;
+      var reviewSpeed = 0.024;
+      var reviewsPaused = false;
+      var reduceReviewMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      var avatarGradients = [
+        'linear-gradient(135deg, #c8102e, #7b1f26)',
+        'linear-gradient(135deg, #146c94, #19a7ce)',
+        'linear-gradient(135deg, #4d7c0f, #84cc16)',
+        'linear-gradient(135deg, #6d28d9, #a78bfa)',
+        'linear-gradient(135deg, #b45309, #f59e0b)',
+        'linear-gradient(135deg, #0f766e, #2dd4bf)',
+      ];
+      var redDoorReviews = window.redDoorReviews || window.redDoorGoogleReviews || [
+        {
+          author: 'Carlo M.',
+          date: '18 days ago',
+          rating: 5,
+          source: 'Google',
+          text: 'Mark was incredible, fast and efficient, also very nice!',
+        },
+        {
+          author: 'Aaron B.',
+          date: '19 days ago',
+          rating: 5,
+          source: 'Google',
+          text: 'We moved in a week ago, and Mark M did a fantastic job helping us with some maintenance issues. The response was quick, clear, and professional.',
+        },
+        {
+          author: 'Lissa G.',
+          date: '19 days ago',
+          rating: 5,
+          source: 'Google',
+          text: 'Red Door took over the property I am renting and I am so pleased at how fast they took action on everything. Communication has been easy and helpful.',
+        },
+        {
+          author: 'Francis W.',
+          date: '18 days ago',
+          rating: 5,
+          source: 'Google',
+          text: 'I have been renting a home since 2/2026 and only started having a couple of issues that required help. The team handled the process and kept me updated.',
+        },
+        {
+          author: 'Tammy S.',
+          date: '19 days ago',
+          rating: 5,
+          source: 'Google',
+          text: 'The team has been responsive, friendly, and easy to work with. Every question I had was answered quickly.',
+        },
+        {
+          author: 'Douglas H.',
+          date: '16 days ago',
+          rating: 5,
+          source: 'Google',
+          text: 'Great customer service and communication from start to finish.',
+        },
+        {
+          author: 'Keala B.',
+          date: '8 years ago',
+          rating: 5,
+          source: 'Yellow Pages',
+          sourceShort: 'YP',
+          text: 'Third year with them. Red Door has been awesome to work with.',
+          context: 'Third-year renter',
+        },
+        {
+          author: 'Cheryl M.',
+          date: '8 years ago',
+          rating: 5,
+          source: 'Yellow Pages',
+          sourceShort: 'YP',
+          text: 'We live in New York and recently bought our first investment home in the Indianapolis area, sight unseen.',
+          context: 'New York investment owner',
+        },
+        {
+          author: 'Wendell D.',
+          date: '8 years ago',
+          rating: 5,
+          source: 'Yellow Pages',
+          sourceShort: 'YP',
+          text: 'Being out of state, we had never actually seen the home other than pictures. The team coordinated repairs and found a renter quickly.',
+          context: 'Out-of-state investor',
+        },
+        {
+          author: 'Richard P.',
+          date: '8 years ago',
+          rating: 5,
+          source: 'Yellow Pages',
+          sourceShort: 'YP',
+          text: 'We moved here from Michigan due to a job transfer and had to find a home to rent very quickly.',
+          context: 'Relocation renter',
+        },
+        {
+          author: 'Juliet J.',
+          date: '9 years ago',
+          rating: 5,
+          source: 'Yellow Pages',
+          sourceShort: 'YP',
+          text: 'Christopher understood rental homes from both the owner and tenant side and anticipated needs quickly.',
+          context: 'Owner and tenant perspective',
+        },
+        {
+          author: 'Theresa W.',
+          date: '9 years ago',
+          rating: 5,
+          source: 'Yellow Pages',
+          sourceShort: 'YP',
+          text: 'When a basement flood disrupted our home, Red Door worked around our schedules and helped turn it around.',
+          context: 'Emergency maintenance support',
+        },
+        {
+          author: 'Ben O.',
+          date: '9 years ago',
+          rating: 5,
+          source: 'Yellow Pages',
+          sourceShort: 'YP',
+          text: 'Chris helped my family find the right Indianapolis rental when we were new to the area.',
+          context: 'New-to-Indy renter',
+        },
+        {
+          author: 'Solomon L.',
+          date: 'Verified review',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'Thanks for everything! You guys have been wonderful and brought so much peace of mind while we enjoyed life at the beach. I would recommend Red Door Property Management to anyone who asked.',
+        },
+        {
+          author: 'Joshua J.',
+          date: 'Verified review',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'My experience with Red Door has been very positive and I have enjoyed working with you. It was a needed breath of fresh air in how property management should operate.',
+        },
+        {
+          author: 'Applicant Review',
+          date: 'Verified review',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'The process has been great. They are swift to respond and had a decision made on our application the same day we submitted it.',
+        },
+        {
+          author: 'Indianapolis Resident',
+          date: 'Verified review',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'Helpful staff, clear follow-up, and a smooth experience whenever we needed support.',
+        },
+        {
+          author: 'Scott B.',
+          date: 'Client testimonial',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'Red Door managed our two Fishers townhome rentals for several years and fulfilled its promises.',
+          context: 'Two townhome owner',
+        },
+        {
+          author: 'Sandra F.',
+          date: 'Client testimonial',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'After relocating to the West Coast, video inspections and communication helped us feel secure about our Broad Ripple home.',
+          context: 'West Coast owner',
+        },
+        {
+          author: 'Andrew H.',
+          date: 'Client testimonial',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'Brian spotted safety concerns, coordinated a fast fix, and found a strong tenant quickly.',
+          context: 'New rental owner',
+        },
+        {
+          author: 'Joseph F.',
+          date: 'Client testimonial',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'Moving our portfolio from another manager was worth it; the transition and service were a major upgrade.',
+          context: 'Portfolio transition owner',
+        },
+        {
+          author: 'Delbert A.',
+          date: 'Client testimonial',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'They helped turn around a ten-home portfolio and get nearly every home leased.',
+          context: 'Ten-home portfolio owner',
+        },
+        {
+          author: 'Fred S.',
+          date: 'Client testimonial',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'As Seattle-area landlords, Red Door made renting our Indianapolis home stress free.',
+          context: 'Seattle-area owner',
+        },
+        {
+          author: 'Karl G.',
+          date: 'Client testimonial',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'Red Door handled a major plumbing emergency at my Indianapolis properties without me needing to get involved.',
+          context: 'Two-property owner',
+        },
+        {
+          author: 'Raymond A.',
+          date: 'Client testimonial',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'My West Side Indy property leased in a few weeks with strong communication and move-in videos.',
+          context: 'Out-of-state owner',
+        },
+        {
+          author: 'Oscar M.',
+          date: 'Client testimonial',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'As an investor, photo documentation and maintenance communication made the portfolio transition feel organized.',
+          context: 'Investor portfolio owner',
+        },
+        {
+          author: 'Marie J.',
+          date: 'Client testimonial',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'Their home rented in about two weeks for full asking price with a two-year lease.',
+          context: 'Two-year lease owner',
+        },
+        {
+          author: 'William K.',
+          date: 'Client testimonial',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'As a California owner with Indianapolis investments, Red Door handled tenants, repairs, and leasing.',
+          context: 'California investment owner',
+        },
+        {
+          author: 'Burt R.',
+          date: 'Client testimonial',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'After trying to manage three rentals alone, Red Door handled leasing and maintenance.',
+          context: 'Three rental property owner',
+        },
+        {
+          author: 'Fred M.',
+          date: 'Client testimonial',
+          rating: 5,
+          source: 'Client Testimonial',
+          sourceShort: 'R',
+          text: 'Five investment properties transitioned quickly, with repairs coordinated and new tenants placed.',
+          context: 'Five-property investor',
+        },
+      ];
+      var positiveReviews = redDoorReviews.filter(function (review) {
+        return review.rating >= 5;
+      });
+
+      function createReviewStars(rating) {
+        var stars = document.createElement('span');
+        stars.className = 'review-stars';
+        stars.setAttribute('aria-label', rating + ' out of 5 stars');
+        for (var index = 0; index < rating; index += 1) {
+          stars.appendChild(document.createElement('span'));
+        }
+        return stars;
+      }
+
+      function sourceShortName(source) {
+        if (source === 'Yellow Pages') return 'YP';
+        if (source === 'Client Testimonial') return 'R';
+        return 'G';
+      }
+
+      function avatarBackgroundFor(author) {
+        var total = 0;
+        for (var index = 0; index < author.length; index += 1) {
+          total += author.charCodeAt(index);
+        }
+        return avatarGradients[total % avatarGradients.length];
+      }
+
+      function inferReviewContext(review) {
+        var text = review.text.toLowerCase();
+        var propertyCount = text.match(/\b(2|3|4|5|two|three|four|five)\s+(rental\s+)?(properties|homes)\b/);
+        if (propertyCount) {
+          return propertyCount[1].charAt(0).toUpperCase() + propertyCount[1].slice(1) + ' rental property owner';
+        }
+        if (text.indexOf('new york') !== -1 || text.indexOf('out of state') !== -1 || text.indexOf('sight unseen') !== -1) {
+          return 'Out-of-state property owner';
+        }
+        if (text.indexOf('life at the beach') !== -1) {
+          return 'Remote owner peace of mind';
+        }
+        if (text.indexOf('previous pm') !== -1 || text.indexOf('previous property manager') !== -1) {
+          return 'Owner switching property managers';
+        }
+        if (text.indexOf('third year') !== -1 || text.indexOf('renewed our lease') !== -1) {
+          return 'Long-term renter';
+        }
+        if (text.indexOf('michigan') !== -1 || text.indexOf('job transfer') !== -1) {
+          return 'Relocation renter';
+        }
+        if (text.indexOf('application') !== -1 || text.indexOf('lease signing') !== -1) {
+          return 'Fast leasing process';
+        }
+        if (text.indexOf('maintenance') !== -1 || text.indexOf('repair') !== -1) {
+          return 'Maintenance support';
+        }
+        if (text.indexOf('communication') !== -1 || text.indexOf('question') !== -1) {
+          return 'Responsive communication';
+        }
+        return 'Red Door customer experience';
+      }
+
+      function createReviewCard(review, isClone) {
+        var card = document.createElement('article');
+        card.className = 'review-card';
+        if (isClone) {
+          card.setAttribute('aria-hidden', 'true');
+        }
+
+        var header = document.createElement('div');
+        header.className = 'review-card-header';
+
+        var avatar = document.createElement('div');
+        avatar.className = 'review-avatar';
+        avatar.setAttribute('aria-hidden', 'true');
+        avatar.setAttribute('data-source', review.source);
+        avatar.setAttribute('data-source-short', review.sourceShort || sourceShortName(review.source));
+        avatar.style.setProperty('--avatar-bg', avatarBackgroundFor(review.author));
+        if (review.avatarUrl) {
+          var avatarImage = document.createElement('img');
+          avatarImage.src = review.avatarUrl;
+          avatarImage.alt = '';
+          avatarImage.loading = 'lazy';
+          avatarImage.addEventListener('error', function () {
+            avatar.classList.remove('has-image');
+            avatar.textContent = review.author.charAt(0);
+          });
+          avatar.classList.add('has-image');
+          avatar.appendChild(avatarImage);
+        } else {
+          avatar.textContent = review.author.charAt(0);
+        }
+
+        var identity = document.createElement('div');
+        var name = document.createElement('div');
+        name.className = 'review-name';
+        name.textContent = review.author;
+
+        var verified = document.createElement('span');
+        verified.className = 'review-verified';
+        verified.setAttribute('aria-label', 'Verified review');
+        name.appendChild(verified);
+
+        var date = document.createElement('div');
+        date.className = 'review-date';
+        date.textContent = review.source + ' - ' + review.date;
+
+        identity.appendChild(name);
+        identity.appendChild(date);
+        header.appendChild(avatar);
+        header.appendChild(identity);
+
+        var text = document.createElement('p');
+        text.className = 'review-text';
+        text.textContent = review.text;
+
+        card.appendChild(header);
+        card.appendChild(createReviewStars(review.rating));
+        card.appendChild(text);
+
+        if (review.text.length > 92) {
+          var more = document.createElement('button');
+          more.className = 'review-read-more';
+          more.type = 'button';
+          more.textContent = 'Read more';
+          if (isClone) {
+            more.tabIndex = -1;
+          }
+          more.addEventListener('click', function () {
+            var expanded = card.classList.toggle('is-expanded');
+            more.textContent = expanded ? 'Show less' : 'Read more';
+            setReviewsPaused(expanded);
+          });
+          card.appendChild(more);
+        }
+
+        var context = document.createElement('div');
+        context.className = 'review-context';
+        context.textContent = review.context || inferReviewContext(review);
+        card.appendChild(context);
+
+        return card;
+      }
+
+      function getReviewLoopWidth() {
+        var cards = reviewGrid.querySelectorAll('.review-card');
+        if (cards.length > positiveReviews.length) {
+          return cards[positiveReviews.length].offsetLeft - cards[0].offsetLeft;
+        }
+        return Math.round(reviewGrid.scrollWidth / 3);
+      }
+
+      function normalizeReviewPosition() {
+        if (!reviewLoopWidth) {
+          reviewLoopWidth = getReviewLoopWidth();
+        }
+        if (!reviewLoopWidth) {
+          return;
+        }
+        if (reviewViewport.scrollLeft >= reviewLoopWidth * 2) {
+          reviewViewport.scrollLeft -= reviewLoopWidth;
+        } else if (reviewViewport.scrollLeft <= 0) {
+          reviewViewport.scrollLeft += reviewLoopWidth;
+        }
+      }
+
+      function renderReviews(announce) {
+        reviewGrid.textContent = '';
+
+        if (!positiveReviews.length) {
+          var empty = document.createElement('p');
+          empty.className = 'lead';
+          empty.textContent = 'No customer reviews are available right now.';
+          reviewGrid.appendChild(empty);
+          if (previousReviews && nextReviews) {
+            previousReviews.disabled = true;
+            nextReviews.disabled = true;
+          }
+          return;
+        }
+
+        positiveReviews.concat(positiveReviews, positiveReviews).forEach(function (review, index) {
+          reviewGrid.appendChild(createReviewCard(review, index >= positiveReviews.length));
+        });
+        function primeReviewAuto() {
+          reviewLoopWidth = getReviewLoopWidth();
+          if (reviewViewport && reviewLoopWidth) {
+            reviewViewport.scrollLeft = reviewLoopWidth;
+          }
+          startReviewAuto();
+        }
+        // A single setTimeout(0) can fire before card layout (and any late
+        // web-font swap) settles, so reviewsCanScroll() reads false and
+        // autoplay never starts until the user manually advances the
+        // carousel. Retry a few times so it self-corrects without input.
+        window.setTimeout(primeReviewAuto, 0);
+        window.setTimeout(primeReviewAuto, 250);
+        window.setTimeout(primeReviewAuto, 800);
+
+        if (announce && reviewStatus) {
+          reviewStatus.textContent = 'Showing customer reviews from multiple sources.';
+        }
+      }
+
+      function reviewsCanScroll() {
+        return reviewViewport && reviewViewport.scrollWidth > reviewViewport.clientWidth + 8;
+      }
+
+      function moveReviews(direction) {
+        if (!reviewsCanScroll()) {
+          return;
+        }
+        normalizeReviewPosition();
+        var step = reviewViewport.clientWidth * 0.85;
+        reviewViewport.scrollBy({
+          left: step * direction,
+          behavior: reduceReviewMotion.matches ? 'auto' : 'smooth',
+        });
+        window.setTimeout(normalizeReviewPosition, 650);
+      }
+
+      function stopReviewAuto() {
+        if (reviewAutoFrame) {
+          window.cancelAnimationFrame(reviewAutoFrame);
+          reviewAutoFrame = null;
+        }
+        reviewLastFrame = null;
+      }
+
+      function startReviewAuto() {
+        stopReviewAuto();
+        if (reviewsPaused || reduceReviewMotion.matches || !reviewsCanScroll()) {
+          return;
+        }
+        reviewAutoFrame = window.requestAnimationFrame(autoMoveReviews);
+      }
+
+      function setReviewsPaused(paused) {
+        reviewsPaused = paused;
+        if (paused) {
+          stopReviewAuto();
+        } else {
+          startReviewAuto();
+        }
+      }
+
+      function autoMoveReviews(timestamp) {
+        if (!reviewLastFrame) {
+          reviewLastFrame = timestamp;
+        }
+        var elapsed = timestamp - reviewLastFrame;
+        reviewLastFrame = timestamp;
+
+        if (reviewViewport && !reviewsPaused && !reduceReviewMotion.matches && reviewsCanScroll()) {
+          reviewViewport.scrollLeft += elapsed * reviewSpeed;
+          normalizeReviewPosition();
+        }
+
+        reviewAutoFrame = window.requestAnimationFrame(autoMoveReviews);
+      }
+
+      function resumeReviewsIfClear() {
+        window.setTimeout(function () {
+          var expandedCard = reviewGrid.querySelector('.review-card.is-expanded');
+          var focusedCard = reviewGrid.contains(document.activeElement);
+          setReviewsPaused(Boolean(expandedCard || focusedCard));
+        }, 900);
+      }
+
+      if (reviewArea) {
+        reviewGrid.addEventListener('focusin', function () {
+          setReviewsPaused(true);
+        });
+        reviewGrid.addEventListener('focusout', resumeReviewsIfClear);
+        reviewArea.addEventListener(
+          'touchstart',
+          function () {
+            setReviewsPaused(true);
+          },
+          { passive: true }
+        );
+        reviewArea.addEventListener('touchend', resumeReviewsIfClear);
+      }
+
+      if (previousReviews && nextReviews && reviewViewport) {
+        previousReviews.addEventListener('click', function () {
+          setReviewsPaused(true);
+          moveReviews(-1);
+          window.setTimeout(function () {
+            setReviewsPaused(false);
+          }, 1100);
+        });
+
+        nextReviews.addEventListener('click', function () {
+          setReviewsPaused(true);
+          moveReviews(1);
+          window.setTimeout(function () {
+            setReviewsPaused(false);
+          }, 1100);
+        });
+      }
+
+      renderReviews(false);
+      window.addEventListener('resize', function () {
+        reviewLoopWidth = getReviewLoopWidth();
+        if (reviewViewport && reviewLoopWidth) {
+          reviewViewport.scrollLeft = reviewLoopWidth;
+        }
+        startReviewAuto();
+      });
+      if (reduceReviewMotion.addEventListener) {
+        reduceReviewMotion.addEventListener('change', startReviewAuto);
+      } else if (reduceReviewMotion.addListener) {
+        reduceReviewMotion.addListener(startReviewAuto);
+      }
+    }
+  </script>
+</BaseLayout>
