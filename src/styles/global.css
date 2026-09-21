@@ -1728,6 +1728,33 @@
       text-underline-offset: 4px;
     }
 
+    /* Ported from the -property-management mockups' own embedded <style>
+       (e.g. avon-property-management.html) — the "you are here" treatment
+       for the current page's own city in the Areas Served grid. Never
+       made it into this shared stylesheet before now since homes-for-rent
+       pages don't have this current-city-highlight concept. */
+    .area-link.is-current {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ink);
+      font-weight: 900;
+      cursor: default;
+      text-decoration: none;
+    }
+
+    .area-link.is-current::after {
+      content: "You are here";
+      padding: 2px 7px;
+      color: var(--white);
+      background: var(--red);
+      border-radius: 999px;
+      font-size: .62rem;
+      font-weight: 900;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
     .city-list .area-text {
       display: inline;
       color: var(--muted);
@@ -2869,4 +2896,94 @@
     @media (max-width: 620px) {
       .browser-layout .listing-grid-real, .browser-layout.is-map-hidden .listing-grid-real { grid-template-columns: 1fr; }
       .range-popover { width: 260px; }
+    }
+
+    /* Rental & Sales Market Snapshot — ported from the -property-
+       management mockups' own embedded <style> (e.g. avon-property-
+       management.html), see claude/avon-property-management-pilot-
+       notes.md for the section's design history. Never made it into this
+       shared stylesheet before now since only these pages use it. */
+    .snapshot-panels {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      margin-top: 28px;
+    }
+    .snapshot-panel {
+      padding: clamp(22px, 3vw, 30px);
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .snapshot-panel.is-sales {
+      color: var(--white);
+      background: linear-gradient(145deg, rgba(30, 35, 42, .97), rgba(15, 17, 21, .98)), #171717;
+      border-color: rgba(255, 255, 255, .08);
+    }
+    .snapshot-panel-label {
+      color: var(--red);
+      font-size: .76rem;
+      font-weight: 900;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .snapshot-panel.is-sales .snapshot-panel-label {
+      color: var(--brand-light);
+    }
+    .snapshot-panel h3 {
+      margin: 8px 0 18px;
+      font-size: 1.32rem;
+    }
+    .snapshot-panel.is-sales h3 {
+      color: var(--white);
+    }
+    .snapshot-stat-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 0;
+      border-top: 1px solid var(--line);
+    }
+    .snapshot-panel.is-sales .snapshot-stat-row {
+      border-top-color: rgba(255, 255, 255, .14);
+    }
+    .snapshot-stat-row:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+    .snapshot-stat-label {
+      color: var(--muted);
+      font-weight: 800;
+      font-size: .92rem;
+    }
+    .snapshot-panel.is-sales .snapshot-stat-label {
+      color: rgba(255, 255, 255, .72);
+    }
+    .snapshot-stat-value {
+      color: var(--ink);
+      font-family: var(--font-head);
+      font-weight: 500;
+      font-size: 1.2rem;
+    }
+    .snapshot-panel.is-sales .snapshot-stat-value {
+      color: var(--white);
+    }
+    .snapshot-panel p.snapshot-note {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+    .snapshot-panel.is-sales p.snapshot-note {
+      color: rgba(255, 255, 255, .68);
+    }
+    .snapshot-asof {
+      margin: 0 0 4px;
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 700;
+    }
+    @media (max-width: 720px) {
+      .snapshot-panels { grid-template-columns: 1fr; }
     }

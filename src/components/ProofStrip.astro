@@ -1,0 +1,30 @@
+---
+// Trust-proof stats strip — shared across the homepage and every
+// -property-management page; only the last line's city name changes
+// ("Trusted by {cityLabel} rental owners and investors.").
+interface Props {
+  cityLabel: string;
+}
+const { cityLabel } = Astro.props;
+---
+<section class="proof-strip" id="trust-proof" aria-label="Trust and proof points">
+  <div class="container">
+    <div class="proof-panel reveal">
+      <div class="proof-item">
+        <strong>450+</strong>
+        <span>Happy Customer Reviews</span>
+      </div>
+      <div class="proof-item">
+        <strong>50+ Years</strong>
+        <span>Combined Local Experience</span>
+      </div>
+      <div class="proof-item">
+        <strong>24/7</strong>
+        <span>Phone and Emergency Support</span>
+      </div>
+      <div class="proof-item proof-trust">
+        <span>Trusted by {cityLabel} rental owners and investors.</span>
+      </div>
+    </div>
+  </div>
+</section>

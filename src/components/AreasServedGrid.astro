@@ -1,0 +1,242 @@
+---
+// County/city grid — fully shared across the homepage and every
+// -property-management page; the ENTIRE grid (every county, every city,
+// every link) is byte-identical between pages (confirmed via diff), the
+// only per-page differences are the heading/lead text and which single
+// city (if any) is the current page and should render as
+// <span class="area-link is-current"> instead of a link to itself.
+interface Props {
+  headingLine1: string;
+  headingLine2: string;
+  leadText: string;
+  /** citySlug of the page this grid is rendered on, e.g. "avon" — that
+   * one entry renders as non-linked "is-current" text instead of an <a>.
+   * Omit on the homepage, where every city links out normally. */
+  currentSlug?: string;
+}
+const { headingLine1, headingLine2, leadText, currentSlug } = Astro.props;
+
+interface CityEntry {
+  slug: string;
+  label: string;
+}
+const cities: CityEntry[] = [
+  { slug: 'indianapolis', label: 'Indianapolis' },
+  { slug: 'carmel', label: 'Carmel' },
+  { slug: 'fishers', label: 'Fishers' },
+  { slug: 'noblesville', label: 'Noblesville' },
+  { slug: 'westfield', label: 'Westfield' },
+  { slug: 'avon', label: 'Avon' },
+  { slug: 'brownsburg', label: 'Brownsburg' },
+  { slug: 'greenwood', label: 'Greenwood' },
+  { slug: 'zionsville', label: 'Zionsville' },
+  { slug: 'broad-ripple', label: 'Broad Ripple' },
+];
+function hrefFor(slug: string) {
+  return `/${slug}-property-management`;
+}
+---
+<section id="areas-served">
+  <div class="container areas-visual">
+    <div class="areas-copy reveal">
+      <div class="section-kicker">Local Expertise Across Central Indiana</div>
+      <h2><span>{headingLine1}</span><span>{headingLine2}</span></h2>
+      <p class="lead">{leadText}</p>
+      <div class="county-grid" aria-label="Cities served by county">
+        <article class="county-card">
+          <div>
+            <h3>Marion County</h3>
+            <p>Indianapolis core, southside neighborhoods, and close-in rental markets.</p>
+          </div>
+          <ul class="city-list">
+            <li>
+              {currentSlug === 'indianapolis' ? (
+                <span class="area-link is-current">Indianapolis</span>
+              ) : (
+                <a class="area-link" href={hrefFor('indianapolis')}>Indianapolis</a>
+              )}
+            </li>
+            <li><span class="area-text">Southport</span></li>
+            <li><span class="area-text">Beech Grove</span></li>
+            <li><span class="area-text">Lawrence</span></li>
+            <li><span class="area-text">Speedway</span></li>
+          </ul>
+        </article>
+        <article class="county-card">
+          <div>
+            <h3>Hamilton County</h3>
+            <p>Northside suburbs with strong single-family and executive rental demand.</p>
+          </div>
+          <ul class="city-list">
+            {['carmel', 'fishers', 'noblesville', 'westfield'].map((slug) => {
+              const city = cities.find((c) => c.slug === slug)!;
+              return (
+                <li>
+                  {currentSlug === slug ? (
+                    <span class="area-link is-current">{city.label}</span>
+                  ) : (
+                    <a class="area-link" href={hrefFor(slug)}>{city.label}</a>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </article>
+        <article class="county-card">
+          <div>
+            <h3>Madison County</h3>
+            <p>Northeast communities with commuter access and affordable rental options.</p>
+          </div>
+          <ul class="city-list">
+            <li><span class="area-text">Anderson</span></li>
+            <li><span class="area-text">Pendleton</span></li>
+            <li><span class="area-text">Lapel</span></li>
+            <li><span class="area-text">Ingalls</span></li>
+          </ul>
+        </article>
+        <article class="county-card">
+          <div>
+            <h3>Hendricks County</h3>
+            <p>Westside communities popular with commuters and long-term rental owners.</p>
+          </div>
+          <ul class="city-list">
+            {['avon', 'brownsburg'].map((slug) => {
+              const city = cities.find((c) => c.slug === slug)!;
+              return (
+                <li>
+                  {currentSlug === slug ? (
+                    <span class="area-link is-current">{city.label}</span>
+                  ) : (
+                    <a class="area-link" href={hrefFor(slug)}>{city.label}</a>
+                  )}
+                </li>
+              );
+            })}
+            <li><span class="area-text">Danville</span></li>
+            <li><span class="area-text">Plainfield</span></li>
+          </ul>
+        </article>
+        <article class="county-card">
+          <div>
+            <h3>Johnson County</h3>
+            <p>South metro rentals with steady demand from commuters and long-term renters.</p>
+          </div>
+          <ul class="city-list">
+            <li>
+              {currentSlug === 'greenwood' ? (
+                <span class="area-link is-current">Greenwood</span>
+              ) : (
+                <a class="area-link" href={hrefFor('greenwood')}>Greenwood</a>
+              )}
+            </li>
+            <li><span class="area-text">Franklin</span></li>
+            <li><span class="area-text">Whiteland</span></li>
+            <li><span class="area-text">Bargersville</span></li>
+          </ul>
+        </article>
+        <article class="county-card">
+          <div>
+            <h3>Hancock County</h3>
+            <p>Eastside growth areas with newer-home inventory and suburban appeal.</p>
+          </div>
+          <ul class="city-list">
+            <li><span class="area-text">Greenfield</span></li>
+            <li><span class="area-text">McCordsville</span></li>
+            <li><span class="area-text">New Palestine</span></li>
+            <li><span class="area-text">Fortville</span></li>
+            <li><span class="area-text">Cumberland</span></li>
+          </ul>
+        </article>
+        <article class="county-card">
+          <div>
+            <h3>Shelby County</h3>
+            <p>Southeast rental markets serving owners near the Indianapolis outer ring.</p>
+          </div>
+          <ul class="city-list">
+            <li><span class="area-text">Shelbyville</span></li>
+            <li><span class="area-text">Fairland</span></li>
+            <li><span class="area-text">Morristown</span></li>
+            <li><span class="area-text">Boggstown</span></li>
+          </ul>
+        </article>
+        <article class="county-card">
+          <div>
+            <h3>Boone &amp; Morgan Counties</h3>
+            <p>Northwest and southwest communities around the Indianapolis rental ring.</p>
+          </div>
+          <ul class="city-list">
+            <li>
+              {currentSlug === 'zionsville' ? (
+                <span class="area-link is-current">Zionsville</span>
+              ) : (
+                <a class="area-link" href={hrefFor('zionsville')}>Zionsville</a>
+              )}
+            </li>
+            <li><span class="area-text">Whitestown</span></li>
+            <li><span class="area-text">Lebanon</span></li>
+            <li><span class="area-text">Mooresville</span></li>
+            <li><span class="area-text">Martinsville</span></li>
+          </ul>
+        </article>
+        <article class="county-card is-wide">
+          <div>
+            <h3>Indianapolis Neighborhoods</h3>
+            <p>Close-in neighborhoods where property condition, tenant fit, and responsiveness matter.</p>
+          </div>
+          <ul class="city-list">
+            <li>
+              {currentSlug === 'broad-ripple' ? (
+                <span class="area-link is-current">Broad Ripple</span>
+              ) : (
+                <a class="area-link" href={hrefFor('broad-ripple')}>Broad Ripple</a>
+              )}
+            </li>
+            <li><span class="area-text">Fountain Square</span></li>
+            <li><span class="area-text">Fletcher Place</span></li>
+            <li><span class="area-text">Irvington</span></li>
+            <li><span class="area-text">Downtown Indianapolis</span></li>
+            <li><span class="area-text">Mass Ave</span></li>
+            <li><span class="area-text">Wholesale District</span></li>
+            <li><span class="area-text">Indiana Avenue</span></li>
+            <li><span class="area-text">SoBro</span></li>
+            <li><span class="area-text">Meridian-Kessler</span></li>
+            <li><span class="area-text">Butler-Tarkington</span></li>
+            <li><span class="area-text">Herron-Morton</span></li>
+            <li><span class="area-text">Old Northside</span></li>
+            <li><span class="area-text">Lockerbie Square</span></li>
+            <li><span class="area-text">Chatham Arch</span></li>
+            <li><span class="area-text">Holy Cross</span></li>
+            <li><span class="area-text">Cottage Home</span></li>
+            <li><span class="area-text">Fall Creek Place</span></li>
+            <li><span class="area-text">Garfield Park</span></li>
+            <li><span class="area-text">Bates-Hendricks</span></li>
+            <li><span class="area-text">Woodruff Place</span></li>
+            <li><span class="area-text">Riverside</span></li>
+          </ul>
+        </article>
+      </div>
+      <details class="townships">
+        <summary><span><strong>Indianapolis Townships</strong><small>Click to view the township service areas Red Door manages.</small></span></summary>
+        <div class="township-grid">
+          {[
+            ['lawrence-township', 'Lawrence Township'],
+            ['warren-township', 'Warren Township'],
+            ['wayne-township', 'Wayne Township'],
+            ['perry-township', 'Perry Township'],
+            ['franklin-township', 'Franklin Township'],
+            ['pike-township', 'Pike Township'],
+            ['washington-township', 'Washington Township'],
+            ['decatur-township', 'Decatur Township'],
+            ['center-township', 'Center Township'],
+          ].map(([slug, label]) =>
+            currentSlug === slug ? (
+              <span class="area-link is-current">{label}</span>
+            ) : (
+              <a class="area-link" href={hrefFor(slug)}>{label}</a>
+            )
+          )}
+        </div>
+      </details>
+    </div>
+  </div>
+</section>

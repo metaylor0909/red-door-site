@@ -1,0 +1,79 @@
+---
+// "Why choose Red Door" accordion — used on the homepage and every
+// -property-management page. Only the H2 and the "Data-Driven Local
+// Expertise" panel's first clause change per page (confirmed via diff
+// against multiple city mockups) — everything else is identical
+// everywhere. Two separate props rather than deriving one text from the
+// other: the homepage's approved copy says "Indianapolis rental-market
+// activity" (no suffix) while every -property-management page says
+// "{City}-area rental-market activity" (with it) — a real, if small,
+// difference between two already-approved pieces of content, not a
+// mechanical city-name swap. Guessing which one to force here would risk
+// silently changing text CLAUDE.md's migration rules say to preserve
+// exactly.
+interface Props {
+  cityName: string;
+  areaLabel: string;
+}
+const { cityName, areaLabel } = Astro.props;
+---
+<section class="section-soft">
+  <div class="container split">
+    <div class="image-frame reveal" role="img" aria-label={`Well-kept ${cityName} area rental home with a red front door`}>
+      <div class="image-caption">A local team, a documented process, and fewer owner surprises.</div>
+    </div>
+    <div class="reveal">
+      <div class="section-kicker">A Better Management Experience</div>
+      <h2>Why {cityName} Rental Owners Choose Red Door</h2>
+      <p class="lead">Great property management is more than collecting rent. It is a connected system of local expertise, documented processes, smart technology, and proactive communication working together to protect your investment.</p>
+      <div class="accordion" data-accordion>
+        <article class="accordion-item is-open">
+          <button class="accordion-trigger" type="button" aria-expanded="true">
+            <span>Proactive Communication</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>We do not wait for owners to ask what is happening. Our team provides clear updates through phone, email, text, video, and the owner portal so you understand what is happening, what decisions are needed, and why.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Maintenance With an Investor Mindset</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Our in-house team and vetted local vendors focus on timely repairs, clear documentation, cost control, preventative recommendations, and protecting the property's long-term value.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Data-Driven Local Expertise</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Our recommendations are informed by {areaLabel} rental-market activity, comparable properties, renter feedback, property condition, and seasonal trends - not guesswork.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Market Readiness Before Marketing</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>We evaluate the property, document its condition, identify priorities, and help position it correctly before the listing goes live. Better preparation can lead to stronger tenant interest and fewer avoidable problems.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Technology With a Human Team Behind It</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Professional photos, virtual walkthroughs, showing technology, online portals, digital documentation, and real-time maintenance tracking make management more efficient without replacing personal service.</p></div></div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('[data-accordion]').forEach(function (accordion) {
+    accordion.querySelectorAll('.accordion-trigger').forEach(function (trigger) {
+      trigger.addEventListener('click', function () {
+        var item = trigger.closest('.accordion-item');
+        accordion.querySelectorAll('.accordion-item').forEach(function (candidate) {
+          var candidateTrigger = candidate.querySelector('.accordion-trigger');
+          var shouldOpen = candidate === item && !candidate.classList.contains('is-open');
+          candidate.classList.toggle('is-open', shouldOpen);
+          candidateTrigger.setAttribute('aria-expanded', String(shouldOpen));
+        });
+      });
+    });
+  });
+</script>

@@ -1,0 +1,239 @@
+---
+// /[city]-property-management — 18 of the 19 simple property-management
+// hub pages (Indianapolis excluded — its own mockup uses a meaningfully
+// different, richer design with its own interactive process carousel and
+// extra content-block sections, confirmed via a class-name diff against
+// this shared template's source; out of scope here, same "build the
+// flagship page separately" pattern already used for
+// indianapolis-homes-for-rent.astro).
+//
+// Ported from the approved static mockups at the repo root (e.g.
+// avon-property-management.html). Confirmed via diff across multiple
+// city mockups (avon vs carmel vs center-township) that EVERY piece of
+// per-city text on this page — hero, proof-strip, accordion, market-
+// snapshot copy, areas-served heading, local-section, final-cta — is
+// mechanically derivable from just the city's display name and slug;
+// there is no hand-written unique prose requiring a content-extraction
+// script the way the homes-for-rent pages' "What to Expect" facts needed
+// one. See claude/avon-property-management-pilot-notes.md for the page's
+// design history, including why the old placeholder rental-analysis form
+// (same stale mockup pattern as the homepage's) is replaced with a
+// condensed pitch + CTA to the real /rental-analysis tool here too.
+//
+// Shared sections (JourneyProcess, WhyChooseAccordion, GuaranteeSection,
+// ReviewsCarousel, AreasServedGrid, LandlordLibrary, ProofStrip) are the
+// same components the homepage uses — confirmed via diff that their
+// markup is byte-identical across every page that uses them.
+import { env } from 'cloudflare:workers';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProofStrip from '../components/ProofStrip.astro';
+import JourneyProcess from '../components/JourneyProcess.astro';
+import WhyChooseAccordion from '../components/WhyChooseAccordion.astro';
+import GuaranteeSection from '../components/GuaranteeSection.astro';
+import ReviewsCarousel from '../components/ReviewsCarousel.astro';
+import AreasServedGrid from '../components/AreasServedGrid.astro';
+import LandlordLibrary from '../components/LandlordLibrary.astro';
+import { loadMarketSnapshot } from '../lib/property-management/market-snapshot';
+import { CITIES, type CityEntry } from '../lib/property-management/cities';
+
+export async function getStaticPaths() {
+  return Promise.all(
+    CITIES.map(async (city) => {
+      const snapshot = await loadMarketSnapshot(env.DB, city.slug);
+      return {
+        params: { city: city.slug },
+        props: { city, snapshot },
+      };
+    })
+  );
+}
+
+interface Props {
+  city: CityEntry;
+  snapshot: Awaited<ReturnType<typeof loadMarketSnapshot>>;
+}
+
+const { city, snapshot } = Astro.props;
+const { slug, name } = city;
+
+const pageTitle = `${name} Property Management | Red Door Property Management`;
+const pageDescription = `Full-service ${name} property management from Red Door — marketing, tenant screening, leasing, maintenance, and communication for rental owners.`;
+const pagePath = `/${slug}-property-management`;
+const canonicalUrl = `https://www.reddoorrents.com${pagePath}`;
+
+function formatCurrency(value: number | null): string {
+  return value == null ? '—' : `$${Math.round(value).toLocaleString()}`;
+}
+function formatDays(value: number | null): string {
+  return value == null ? 'n/a' : `${Math.round(value)}`;
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://www.reddoorrents.com/#organization',
+      name: 'Red Door Property Management',
+      url: 'https://www.reddoorrents.com/',
+      telephone: '+1-317-660-1626',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: '3815 River Crossing Pkwy, Suite 100',
+        addressLocality: 'Indianapolis',
+        addressRegion: 'IN',
+        postalCode: '46240',
+        addressCountry: 'US',
+      },
+      sameAs: [
+        'https://www.youtube.com/@reddoorrents',
+        'https://www.facebook.com/RedDoorPropertyManagement/',
+        'https://www.linkedin.com/company/red-door-property-management/',
+        'https://www.instagram.com/reddoorrents/',
+        'https://www.tiktok.com/@reddoorrents',
+      ],
+    },
+    {
+      '@type': 'Service',
+      '@id': `${canonicalUrl}#service`,
+      serviceType: 'Residential Property Management',
+      provider: { '@id': 'https://www.reddoorrents.com/#organization' },
+      areaServed: `${name}, IN`,
+      url: canonicalUrl,
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumbs`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.reddoorrents.com/' },
+        { '@type': 'ListItem', position: 2, name: `${name} Property Management`, item: canonicalUrl },
+      ],
+    },
+  ],
+};
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path={pagePath}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
+
+  <section class="hero" aria-labelledby="page-title">
+    <div class="hero-content">
+      <div class="eyebrow">Full-Service Property Management</div>
+      <h1 id="page-title"><span>{name} Property Management</span></h1>
+      <p class="hero-copy">Hands-off management for {name} rental owners — from marketing and screening through leasing, maintenance, and communication.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis" data-track="hero-rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener" data-track="hero-schedule-call">Schedule a Call</a>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#trust-proof" aria-label="Scroll to proof points">
+      <span aria-hidden="true"></span>
+      Scroll
+    </a>
+  </section>
+
+  <ProofStrip cityLabel={name} />
+
+  <JourneyProcess />
+
+  <section class="section-soft">
+    <div class="container">
+      <div class="section-head center reveal">
+        <div class="section-kicker">Where the {name} Market Stands Right Now</div>
+        <h2>{name} Rental &amp; Sales Snapshot</h2>
+        <p>A condensed look at what's happening in {name} right now &mdash; for the full rental trend data and bedroom-by-bedroom breakdown, see the <a class="area-link" href={`/${slug}-homes-for-rent`}>{name} homes for rent page</a>.</p>
+      </div>
+      {snapshot.dataAsOf && <p class="snapshot-asof reveal">{snapshot.dataAsOf}</p>}
+      <div class="snapshot-panels reveal">
+        <div class="snapshot-panel">
+          <span class="snapshot-panel-label">Rental Market</span>
+          <h3>{name} Rentals</h3>
+          <div class="snapshot-stat-row"><span class="snapshot-stat-label">Average Rent</span><span class="snapshot-stat-value">{formatCurrency(snapshot.rental.averageRent)}</span></div>
+          <div class="snapshot-stat-row"><span class="snapshot-stat-label">Median Rent</span><span class="snapshot-stat-value">{formatCurrency(snapshot.rental.medianRent)}</span></div>
+          <div class="snapshot-stat-row"><span class="snapshot-stat-label">Active Listings</span><span class="snapshot-stat-value">{snapshot.rental.activeListings}</span></div>
+          <p class="snapshot-note"><a class="area-link" href={`/${slug}-homes-for-rent`}>See the full {name} rental market &rarr;</a></p>
+        </div>
+        <div class="snapshot-panel is-sales">
+          <span class="snapshot-panel-label">Sales Market</span>
+          <h3>{name} For-Sale Homes</h3>
+          <div class="snapshot-stat-row"><span class="snapshot-stat-label">Average Sale Price</span><span class="snapshot-stat-value">{formatCurrency(snapshot.sale.averagePrice)}</span></div>
+          <div class="snapshot-stat-row"><span class="snapshot-stat-label">Median Sale Price</span><span class="snapshot-stat-value">{formatCurrency(snapshot.sale.medianPrice)}</span></div>
+          <div class="snapshot-stat-row"><span class="snapshot-stat-label">Active Listings</span><span class="snapshot-stat-value">{snapshot.sale.activeListings}</span></div>
+          <p class="snapshot-note">
+            Weighing selling versus continuing to rent? {snapshot.sale.activeListings} active {name} listings are averaging {formatCurrency(snapshot.sale.averagePrice)} and moving in about {formatDays(snapshot.sale.averageDaysOnMarket)} days, compared to {formatDays(snapshot.rental.averageDaysOnMarket)} days for rentals.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <WhyChooseAccordion cityName={name} areaLabel={`${name}-area`} />
+
+  <GuaranteeSection />
+
+  <ReviewsCarousel />
+
+  {/* Replaces the mockup's old placeholder 6-step form (same stale
+      pre-real-tool pattern as the homepage's — see that page's own
+      module comment) with a condensed pitch pointing at /rental-analysis. */}
+  <section class="section-soft" id="rental-analysis">
+    <div class="container analysis-grid">
+      <div class="reveal">
+        <div class="section-kicker">Free Rental Analysis</div>
+        <h2>What Could Your {name} Rental Earn?</h2>
+        <p class="lead">Get a professional rental analysis backed by local market activity, comparable homes, current competition, and Red Door's experience managing rentals in {name} and across Central Indiana.</p>
+        <ul class="benefit-list">
+          <li><span>1</span>Understand your property's current rental value.</li>
+          <li><span>2</span>Identify improvements that may strengthen rent and tenant appeal.</li>
+          <li><span>3</span>See whether Red Door's management approach fits your goals.</li>
+        </ul>
+        <div class="journey-cta reveal">
+          <a class="btn btn-primary" href="/rental-analysis">Get Your Free Rental Analysis</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <AreasServedGrid
+    headingLine1={`${name} Property Management,`}
+    headingLine2="Plus Every Community Nearby"
+    leadText={`Red Door manages rental homes in ${name} and across the surrounding Central Indiana communities where owners need steady leasing, responsive maintenance, and clear local guidance.`}
+    currentSlug={slug}
+  />
+
+  <LandlordLibrary
+    heading="The Red Door Landlord Library"
+    subheading="Market updates, investment insights, and practical property-management guidance for Central Indiana rental owners."
+  />
+
+  <section class="local-section">
+    <div class="container split">
+      <div class="reveal">
+        <h2>{name} Property Management Built on Local Experience</h2>
+        <p class="lead">Red Door Property Management helps accidental landlords, out-of-state owners, and growth-minded investors navigate the complete rental lifecycle. Our local team combines documented processes, modern technology, and hands-on {name}-area market knowledge to help owners avoid costly mistakes and make better decisions for their properties.</p>
+        <p class="statement">Smarter Property Management Powered by Process, Data-Driven Decisions, and Local Market Expertise.</p>
+        <div class="cta-row" style="justify-content:flex-start">
+          <a class="btn btn-primary" href="/about">Meet Our Team</a>
+          <a class="btn btn-secondary" href="/pricing">See Management Pricing</a>
+        </div>
+      </div>
+      <div class="image-frame reveal" role="img" aria-label={`Red Door placeholder home photo representing local ${name} property management`}>
+        <div class="image-caption">{name}-area knowledge, practical recommendations, and clear owner visibility.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Ready for a More Hands-Off Rental Experience?</h2>
+      <p>Tell us about your {name} rental property and discover how Red Door's proven management process can protect your investment, reduce day-to-day stress, and keep you informed without requiring you to manage every detail yourself.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+        <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

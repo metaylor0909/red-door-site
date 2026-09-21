@@ -1,0 +1,644 @@
+---
+// Google/Yellow Pages/client-testimonial reviews carousel — fully shared,
+// byte-identical markup and copy across the homepage and every
+// -property-management page (confirmed via diff before extracting). The
+// review data and carousel behavior are self-contained here (not in
+// chrome.js — that script's own header comment already says this
+// carousel is deliberately left out of the shared sitewide script).
+---
+<section class="google-reviews" aria-labelledby="google-reviews-title">
+  <div class="container reviews-shell">
+    <div class="section-head center reveal">
+      <div class="section-kicker">Trusted by hundreds of property owners and residents.</div>
+      <h2 id="google-reviews-title">What People Say About Working With Red Door</h2>
+    </div>
+
+    <div class="reviews-toolbar reveal" aria-label="Review sources included">
+      <span class="review-source-tab">
+        <span class="source-mark" aria-hidden="true">G</span>
+        <span>Google</span>
+      </span>
+      <span class="review-source-tab">
+        <span class="source-mark is-yellow-pages" aria-hidden="true">YP</span>
+        <span>Yellow Pages</span>
+      </span>
+      <span class="review-source-tab">
+        <span class="source-mark is-client" aria-hidden="true">R</span>
+        <span>Client testimonials</span>
+      </span>
+    </div>
+
+    <div class="reviews-summary reveal" aria-label="Review summary">
+      <span class="reviews-score">540+</span>
+      <span class="review-stars" aria-label="Positive public reviews and client stories">
+        <span></span><span></span><span></span><span></span><span></span>
+      </span>
+      <span>Public reviews and client stories from multiple places</span>
+    </div>
+
+    <div class="reviews-viewport reveal" data-review-viewport aria-label="Customer review carousel" tabindex="0">
+      <div class="reviews-grid" data-review-grid></div>
+    </div>
+
+    <div class="reviews-nav reveal" aria-label="Review controls">
+      <button class="review-nav-button" type="button" data-review-prev aria-label="Show previous reviews">&lt;</button>
+      <button class="review-nav-button" type="button" data-review-next aria-label="Show more reviews">&gt;</button>
+    </div>
+    <p class="sr-only" aria-live="polite" data-review-status></p>
+  </div>
+</section>
+
+<script>
+  var reviewGrid = document.querySelector('[data-review-grid]') || document.querySelector('[data-google-review-grid]');
+  if (reviewGrid) {
+    var reviewViewport = document.querySelector('[data-review-viewport]');
+    var reviewArea = reviewGrid.closest('.reviews-shell');
+    var reviewStatus = document.querySelector('[data-review-status]');
+    var previousReviews = document.querySelector('[data-review-prev]');
+    var nextReviews = document.querySelector('[data-review-next]');
+    var reviewAutoFrame = null;
+    var reviewLastFrame = null;
+    var reviewLoopWidth = 0;
+    var reviewSpeed = 0.024;
+    var reviewsPaused = false;
+    var reduceReviewMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var avatarGradients = [
+      'linear-gradient(135deg, #c8102e, #7b1f26)',
+      'linear-gradient(135deg, #146c94, #19a7ce)',
+      'linear-gradient(135deg, #4d7c0f, #84cc16)',
+      'linear-gradient(135deg, #6d28d9, #a78bfa)',
+      'linear-gradient(135deg, #b45309, #f59e0b)',
+      'linear-gradient(135deg, #0f766e, #2dd4bf)',
+    ];
+    var redDoorReviews = window.redDoorReviews || window.redDoorGoogleReviews || [
+      {
+        author: 'Carlo M.',
+        date: '18 days ago',
+        rating: 5,
+        source: 'Google',
+        text: 'Mark was incredible, fast and efficient, also very nice!',
+      },
+      {
+        author: 'Aaron B.',
+        date: '19 days ago',
+        rating: 5,
+        source: 'Google',
+        text: 'We moved in a week ago, and Mark M did a fantastic job helping us with some maintenance issues. The response was quick, clear, and professional.',
+      },
+      {
+        author: 'Lissa G.',
+        date: '19 days ago',
+        rating: 5,
+        source: 'Google',
+        text: 'Red Door took over the property I am renting and I am so pleased at how fast they took action on everything. Communication has been easy and helpful.',
+      },
+      {
+        author: 'Francis W.',
+        date: '18 days ago',
+        rating: 5,
+        source: 'Google',
+        text: 'I have been renting a home since 2/2026 and only started having a couple of issues that required help. The team handled the process and kept me updated.',
+      },
+      {
+        author: 'Tammy S.',
+        date: '19 days ago',
+        rating: 5,
+        source: 'Google',
+        text: 'The team has been responsive, friendly, and easy to work with. Every question I had was answered quickly.',
+      },
+      {
+        author: 'Douglas H.',
+        date: '16 days ago',
+        rating: 5,
+        source: 'Google',
+        text: 'Great customer service and communication from start to finish.',
+      },
+      {
+        author: 'Keala B.',
+        date: '8 years ago',
+        rating: 5,
+        source: 'Yellow Pages',
+        sourceShort: 'YP',
+        text: 'Third year with them. Red Door has been awesome to work with.',
+        context: 'Third-year renter',
+      },
+      {
+        author: 'Cheryl M.',
+        date: '8 years ago',
+        rating: 5,
+        source: 'Yellow Pages',
+        sourceShort: 'YP',
+        text: 'We live in New York and recently bought our first investment home in the Indianapolis area, sight unseen.',
+        context: 'New York investment owner',
+      },
+      {
+        author: 'Wendell D.',
+        date: '8 years ago',
+        rating: 5,
+        source: 'Yellow Pages',
+        sourceShort: 'YP',
+        text: 'Being out of state, we had never actually seen the home other than pictures. The team coordinated repairs and found a renter quickly.',
+        context: 'Out-of-state investor',
+      },
+      {
+        author: 'Richard P.',
+        date: '8 years ago',
+        rating: 5,
+        source: 'Yellow Pages',
+        sourceShort: 'YP',
+        text: 'We moved here from Michigan due to a job transfer and had to find a home to rent very quickly.',
+        context: 'Relocation renter',
+      },
+      {
+        author: 'Juliet J.',
+        date: '9 years ago',
+        rating: 5,
+        source: 'Yellow Pages',
+        sourceShort: 'YP',
+        text: 'Christopher understood rental homes from both the owner and tenant side and anticipated needs quickly.',
+        context: 'Owner and tenant perspective',
+      },
+      {
+        author: 'Theresa W.',
+        date: '9 years ago',
+        rating: 5,
+        source: 'Yellow Pages',
+        sourceShort: 'YP',
+        text: 'When a basement flood disrupted our home, Red Door worked around our schedules and helped turn it around.',
+        context: 'Emergency maintenance support',
+      },
+      {
+        author: 'Ben O.',
+        date: '9 years ago',
+        rating: 5,
+        source: 'Yellow Pages',
+        sourceShort: 'YP',
+        text: 'Chris helped my family find the right Indianapolis rental when we were new to the area.',
+        context: 'New-to-Indy renter',
+      },
+      {
+        author: 'Solomon L.',
+        date: 'Verified review',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'Thanks for everything! You guys have been wonderful and brought so much peace of mind while we enjoyed life at the beach. I would recommend Red Door Property Management to anyone who asked.',
+      },
+      {
+        author: 'Joshua J.',
+        date: 'Verified review',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'My experience with Red Door has been very positive and I have enjoyed working with you. It was a needed breath of fresh air in how property management should operate.',
+      },
+      {
+        author: 'Applicant Review',
+        date: 'Verified review',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'The process has been great. They are swift to respond and had a decision made on our application the same day we submitted it.',
+      },
+      {
+        author: 'Indianapolis Resident',
+        date: 'Verified review',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'Helpful staff, clear follow-up, and a smooth experience whenever we needed support.',
+      },
+      {
+        author: 'Scott B.',
+        date: 'Client testimonial',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'Red Door managed our two Fishers townhome rentals for several years and fulfilled its promises.',
+        context: 'Two townhome owner',
+      },
+      {
+        author: 'Sandra F.',
+        date: 'Client testimonial',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'After relocating to the West Coast, video inspections and communication helped us feel secure about our Broad Ripple home.',
+        context: 'West Coast owner',
+      },
+      {
+        author: 'Andrew H.',
+        date: 'Client testimonial',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'Brian spotted safety concerns, coordinated a fast fix, and found a strong tenant quickly.',
+        context: 'New rental owner',
+      },
+      {
+        author: 'Joseph F.',
+        date: 'Client testimonial',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'Moving our portfolio from another manager was worth it; the transition and service were a major upgrade.',
+        context: 'Portfolio transition owner',
+      },
+      {
+        author: 'Delbert A.',
+        date: 'Client testimonial',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'They helped turn around a ten-home portfolio and get nearly every home leased.',
+        context: 'Ten-home portfolio owner',
+      },
+      {
+        author: 'Fred S.',
+        date: 'Client testimonial',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'As Seattle-area landlords, Red Door made renting our Indianapolis home stress free.',
+        context: 'Seattle-area owner',
+      },
+      {
+        author: 'Karl G.',
+        date: 'Client testimonial',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'Red Door handled a major plumbing emergency at my Indianapolis properties without me needing to get involved.',
+        context: 'Two-property owner',
+      },
+      {
+        author: 'Raymond A.',
+        date: 'Client testimonial',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'My West Side Indy property leased in a few weeks with strong communication and move-in videos.',
+        context: 'Out-of-state owner',
+      },
+      {
+        author: 'Oscar M.',
+        date: 'Client testimonial',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'As an investor, photo documentation and maintenance communication made the portfolio transition feel organized.',
+        context: 'Investor portfolio owner',
+      },
+      {
+        author: 'Marie J.',
+        date: 'Client testimonial',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'Their home rented in about two weeks for full asking price with a two-year lease.',
+        context: 'Two-year lease owner',
+      },
+      {
+        author: 'William K.',
+        date: 'Client testimonial',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'As a California owner with Indianapolis investments, Red Door handled tenants, repairs, and leasing.',
+        context: 'California investment owner',
+      },
+      {
+        author: 'Burt R.',
+        date: 'Client testimonial',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'After trying to manage three rentals alone, Red Door handled leasing and maintenance.',
+        context: 'Three rental property owner',
+      },
+      {
+        author: 'Fred M.',
+        date: 'Client testimonial',
+        rating: 5,
+        source: 'Client Testimonial',
+        sourceShort: 'R',
+        text: 'Five investment properties transitioned quickly, with repairs coordinated and new tenants placed.',
+        context: 'Five-property investor',
+      },
+    ];
+    var positiveReviews = redDoorReviews.filter(function (review) {
+      return review.rating >= 5;
+    });
+
+    function createReviewStars(rating) {
+      var stars = document.createElement('span');
+      stars.className = 'review-stars';
+      stars.setAttribute('aria-label', rating + ' out of 5 stars');
+      for (var index = 0; index < rating; index += 1) {
+        stars.appendChild(document.createElement('span'));
+      }
+      return stars;
+    }
+
+    function sourceShortName(source) {
+      if (source === 'Yellow Pages') return 'YP';
+      if (source === 'Client Testimonial') return 'R';
+      return 'G';
+    }
+
+    function avatarBackgroundFor(author) {
+      var total = 0;
+      for (var index = 0; index < author.length; index += 1) {
+        total += author.charCodeAt(index);
+      }
+      return avatarGradients[total % avatarGradients.length];
+    }
+
+    function inferReviewContext(review) {
+      var text = review.text.toLowerCase();
+      var propertyCount = text.match(/\b(2|3|4|5|two|three|four|five)\s+(rental\s+)?(properties|homes)\b/);
+      if (propertyCount) {
+        return propertyCount[1].charAt(0).toUpperCase() + propertyCount[1].slice(1) + ' rental property owner';
+      }
+      if (text.indexOf('new york') !== -1 || text.indexOf('out of state') !== -1 || text.indexOf('sight unseen') !== -1) {
+        return 'Out-of-state property owner';
+      }
+      if (text.indexOf('life at the beach') !== -1) {
+        return 'Remote owner peace of mind';
+      }
+      if (text.indexOf('previous pm') !== -1 || text.indexOf('previous property manager') !== -1) {
+        return 'Owner switching property managers';
+      }
+      if (text.indexOf('third year') !== -1 || text.indexOf('renewed our lease') !== -1) {
+        return 'Long-term renter';
+      }
+      if (text.indexOf('michigan') !== -1 || text.indexOf('job transfer') !== -1) {
+        return 'Relocation renter';
+      }
+      if (text.indexOf('application') !== -1 || text.indexOf('lease signing') !== -1) {
+        return 'Fast leasing process';
+      }
+      if (text.indexOf('maintenance') !== -1 || text.indexOf('repair') !== -1) {
+        return 'Maintenance support';
+      }
+      if (text.indexOf('communication') !== -1 || text.indexOf('question') !== -1) {
+        return 'Responsive communication';
+      }
+      return 'Red Door customer experience';
+    }
+
+    function createReviewCard(review, isClone) {
+      var card = document.createElement('article');
+      card.className = 'review-card';
+      if (isClone) {
+        card.setAttribute('aria-hidden', 'true');
+      }
+
+      var header = document.createElement('div');
+      header.className = 'review-card-header';
+
+      var avatar = document.createElement('div');
+      avatar.className = 'review-avatar';
+      avatar.setAttribute('aria-hidden', 'true');
+      avatar.setAttribute('data-source', review.source);
+      avatar.setAttribute('data-source-short', review.sourceShort || sourceShortName(review.source));
+      avatar.style.setProperty('--avatar-bg', avatarBackgroundFor(review.author));
+      if (review.avatarUrl) {
+        var avatarImage = document.createElement('img');
+        avatarImage.src = review.avatarUrl;
+        avatarImage.alt = '';
+        avatarImage.loading = 'lazy';
+        avatarImage.addEventListener('error', function () {
+          avatar.classList.remove('has-image');
+          avatar.textContent = review.author.charAt(0);
+        });
+        avatar.classList.add('has-image');
+        avatar.appendChild(avatarImage);
+      } else {
+        avatar.textContent = review.author.charAt(0);
+      }
+
+      var identity = document.createElement('div');
+      var name = document.createElement('div');
+      name.className = 'review-name';
+      name.textContent = review.author;
+
+      var verified = document.createElement('span');
+      verified.className = 'review-verified';
+      verified.setAttribute('aria-label', 'Verified review');
+      name.appendChild(verified);
+
+      var date = document.createElement('div');
+      date.className = 'review-date';
+      date.textContent = review.source + ' - ' + review.date;
+
+      identity.appendChild(name);
+      identity.appendChild(date);
+      header.appendChild(avatar);
+      header.appendChild(identity);
+
+      var text = document.createElement('p');
+      text.className = 'review-text';
+      text.textContent = review.text;
+
+      card.appendChild(header);
+      card.appendChild(createReviewStars(review.rating));
+      card.appendChild(text);
+
+      if (review.text.length > 92) {
+        var more = document.createElement('button');
+        more.className = 'review-read-more';
+        more.type = 'button';
+        more.textContent = 'Read more';
+        if (isClone) {
+          more.tabIndex = -1;
+        }
+        more.addEventListener('click', function () {
+          var expanded = card.classList.toggle('is-expanded');
+          more.textContent = expanded ? 'Show less' : 'Read more';
+          setReviewsPaused(expanded);
+        });
+        card.appendChild(more);
+      }
+
+      var context = document.createElement('div');
+      context.className = 'review-context';
+      context.textContent = review.context || inferReviewContext(review);
+      card.appendChild(context);
+
+      return card;
+    }
+
+    function getReviewLoopWidth() {
+      var cards = reviewGrid.querySelectorAll('.review-card');
+      if (cards.length > positiveReviews.length) {
+        return cards[positiveReviews.length].offsetLeft - cards[0].offsetLeft;
+      }
+      return Math.round(reviewGrid.scrollWidth / 3);
+    }
+
+    function normalizeReviewPosition() {
+      if (!reviewLoopWidth) {
+        reviewLoopWidth = getReviewLoopWidth();
+      }
+      if (!reviewLoopWidth) {
+        return;
+      }
+      if (reviewViewport.scrollLeft >= reviewLoopWidth * 2) {
+        reviewViewport.scrollLeft -= reviewLoopWidth;
+      } else if (reviewViewport.scrollLeft <= 0) {
+        reviewViewport.scrollLeft += reviewLoopWidth;
+      }
+    }
+
+    function renderReviews(announce) {
+      reviewGrid.textContent = '';
+
+      if (!positiveReviews.length) {
+        var empty = document.createElement('p');
+        empty.className = 'lead';
+        empty.textContent = 'No customer reviews are available right now.';
+        reviewGrid.appendChild(empty);
+        if (previousReviews && nextReviews) {
+          previousReviews.disabled = true;
+          nextReviews.disabled = true;
+        }
+        return;
+      }
+
+      positiveReviews.concat(positiveReviews, positiveReviews).forEach(function (review, index) {
+        reviewGrid.appendChild(createReviewCard(review, index >= positiveReviews.length));
+      });
+      function primeReviewAuto() {
+        reviewLoopWidth = getReviewLoopWidth();
+        if (reviewViewport && reviewLoopWidth) {
+          reviewViewport.scrollLeft = reviewLoopWidth;
+        }
+        startReviewAuto();
+      }
+      // A single setTimeout(0) can fire before card layout (and any late
+      // web-font swap) settles, so reviewsCanScroll() reads false and
+      // autoplay never starts until the user manually advances the
+      // carousel. Retry a few times so it self-corrects without input.
+      window.setTimeout(primeReviewAuto, 0);
+      window.setTimeout(primeReviewAuto, 250);
+      window.setTimeout(primeReviewAuto, 800);
+
+      if (announce && reviewStatus) {
+        reviewStatus.textContent = 'Showing customer reviews from multiple sources.';
+      }
+    }
+
+    function reviewsCanScroll() {
+      return reviewViewport && reviewViewport.scrollWidth > reviewViewport.clientWidth + 8;
+    }
+
+    function moveReviews(direction) {
+      if (!reviewsCanScroll()) {
+        return;
+      }
+      normalizeReviewPosition();
+      var step = reviewViewport.clientWidth * 0.85;
+      reviewViewport.scrollBy({
+        left: step * direction,
+        behavior: reduceReviewMotion.matches ? 'auto' : 'smooth',
+      });
+      window.setTimeout(normalizeReviewPosition, 650);
+    }
+
+    function stopReviewAuto() {
+      if (reviewAutoFrame) {
+        window.cancelAnimationFrame(reviewAutoFrame);
+        reviewAutoFrame = null;
+      }
+      reviewLastFrame = null;
+    }
+
+    function startReviewAuto() {
+      stopReviewAuto();
+      if (reviewsPaused || reduceReviewMotion.matches || !reviewsCanScroll()) {
+        return;
+      }
+      reviewAutoFrame = window.requestAnimationFrame(autoMoveReviews);
+    }
+
+    function setReviewsPaused(paused) {
+      reviewsPaused = paused;
+      if (paused) {
+        stopReviewAuto();
+      } else {
+        startReviewAuto();
+      }
+    }
+
+    function autoMoveReviews(timestamp) {
+      if (!reviewLastFrame) {
+        reviewLastFrame = timestamp;
+      }
+      var elapsed = timestamp - reviewLastFrame;
+      reviewLastFrame = timestamp;
+
+      if (reviewViewport && !reviewsPaused && !reduceReviewMotion.matches && reviewsCanScroll()) {
+        reviewViewport.scrollLeft += elapsed * reviewSpeed;
+        normalizeReviewPosition();
+      }
+
+      reviewAutoFrame = window.requestAnimationFrame(autoMoveReviews);
+    }
+
+    function resumeReviewsIfClear() {
+      window.setTimeout(function () {
+        var expandedCard = reviewGrid.querySelector('.review-card.is-expanded');
+        var focusedCard = reviewGrid.contains(document.activeElement);
+        setReviewsPaused(Boolean(expandedCard || focusedCard));
+      }, 900);
+    }
+
+    if (reviewArea) {
+      reviewGrid.addEventListener('focusin', function () {
+        setReviewsPaused(true);
+      });
+      reviewGrid.addEventListener('focusout', resumeReviewsIfClear);
+      reviewArea.addEventListener(
+        'touchstart',
+        function () {
+          setReviewsPaused(true);
+        },
+        { passive: true }
+      );
+      reviewArea.addEventListener('touchend', resumeReviewsIfClear);
+    }
+
+    if (previousReviews && nextReviews && reviewViewport) {
+      previousReviews.addEventListener('click', function () {
+        setReviewsPaused(true);
+        moveReviews(-1);
+        window.setTimeout(function () {
+          setReviewsPaused(false);
+        }, 1100);
+      });
+
+      nextReviews.addEventListener('click', function () {
+        setReviewsPaused(true);
+        moveReviews(1);
+        window.setTimeout(function () {
+          setReviewsPaused(false);
+        }, 1100);
+      });
+    }
+
+    renderReviews(false);
+    window.addEventListener('resize', function () {
+      reviewLoopWidth = getReviewLoopWidth();
+      if (reviewViewport && reviewLoopWidth) {
+        reviewViewport.scrollLeft = reviewLoopWidth;
+      }
+      startReviewAuto();
+    });
+    if (reduceReviewMotion.addEventListener) {
+      reduceReviewMotion.addEventListener('change', startReviewAuto);
+    } else if (reduceReviewMotion.addListener) {
+      reduceReviewMotion.addListener(startReviewAuto);
+    }
+  }
+</script>

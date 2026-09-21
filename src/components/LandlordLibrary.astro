@@ -1,0 +1,78 @@
+---
+// "Landlord Library" blog-post teaser grid. The 3 posts themselves are
+// shared across the homepage and 18 of the 19 -property-management pages
+// (confirmed via diff — only Indianapolis's own page, not yet built, uses
+// a different 3) so they default here rather than being required props.
+// The heading/subheading text is NOT shared — the homepage's approved
+// copy says "The Indianapolis Landlord Library" / "...for Indianapolis
+// rental owners", while every -property-management page says "The Red
+// Door Landlord Library" / "...for Central Indiana rental owners" — a
+// real difference between two already-approved pieces of content, so
+// both are required props rather than derived.
+interface Post {
+  slug: string;
+  thumbnail: string;
+  thumbnailAlt: string;
+  title: string;
+  dek: string;
+  date: string;
+}
+interface Props {
+  heading: string;
+  subheading: string;
+  posts?: Post[];
+}
+const DEFAULT_POSTS: Post[] = [
+  {
+    slug: 'is-westfield-indiana-still-worth-investing-in-with-127-rental-days-on-market--market-report',
+    thumbnail: 'https://i.ytimg.com/vi/H1syUd2uJfE/hqdefault.jpg',
+    thumbnailAlt: "Westfield market report video thumbnail from Red Door's blog",
+    title: 'Is Westfield, Indiana Still Worth Investing In With 127 Rental Days on Market?',
+    dek: 'Westfield remains one of the strongest long-term growth markets in the Indianapolis area, but the rental side is sending a clear warning.',
+    date: 'August 17, 2026',
+  },
+  {
+    slug: 'is-noblesville-indiana-the-best-rental-market-near-indianapolis--july-2026-market-report',
+    thumbnail: 'https://i.ytimg.com/vi/t6v_HJ0A1YA/hqdefault.jpg',
+    thumbnailAlt: "Noblesville market report video thumbnail from Red Door's blog",
+    title: 'Is Noblesville, Indiana the Best Rental Market Near Indianapolis?',
+    dek: 'Noblesville continues to stand out as one of the strongest investor markets in the Indianapolis metro.',
+    date: 'August 17, 2026',
+  },
+  {
+    slug: 'is-fishers-indiana-still-a-strong-rental-market-for-investors--july-2026-market-report',
+    thumbnail: 'https://i.ytimg.com/vi/2CqrHkZik6g/hqdefault.jpg',
+    thumbnailAlt: "Fishers market report video thumbnail from Red Door's blog",
+    title: 'Is Fishers, Indiana Still a Strong Rental Market for Investors?',
+    dek: 'Fishers continues to show the kind of stability rental property investors want to see, with tight inventory and healthy demand.',
+    date: 'August 14, 2026',
+  },
+];
+const { heading, subheading, posts = DEFAULT_POSTS } = Astro.props;
+---
+<section class="section-soft" id="landlord-library">
+  <div class="container">
+    <div class="section-head center reveal">
+      <div class="section-kicker">Local Data. Practical Guidance.</div>
+      <h2>{heading}</h2>
+      <p>{subheading}</p>
+    </div>
+    <div class="library-grid reveal">
+      {posts.map((post) => (
+        <article class="article-card">
+          <div class="article-image" style={`--article-image:url('${post.thumbnail}')`} role="img" aria-label={post.thumbnailAlt}></div>
+          <div class="article-body">
+            <span class="category">Market Report</span>
+            <h3><a href={`/blog/${post.slug}`}>{post.title}</a></h3>
+            <p>{post.dek}</p>
+            <span class="date">{post.date}</span>
+            <a class="text-link" href={`/blog/${post.slug}`}>Read or Watch</a>
+          </div>
+        </article>
+      ))}
+    </div>
+    <div class="journey-cta reveal">
+      <a class="btn btn-primary" href="/blog">Explore the Landlord Library</a>
+    </div>
+  </div>
+</section>
