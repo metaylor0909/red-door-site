@@ -46,8 +46,14 @@ export const POST: APIRoute = async ({ request }) => {
     return jsonResponse(503, { error: 'Rebuild webhook is not configured.' });
   }
 
+  // RentEngine's own webhook config UI sends its configured "API Key" as
+  // an `X-API-Key` header (confirmed 2026-09-21, its Create Webhook
+  // dialog) — checked alongside the two more generic options this
+  // endpoint originally supported, kept in case some other caller (or a
+  // future RentEngine UI change) uses one of those instead.
   const url = new URL(request.url);
-  const providedSecret = request.headers.get('x-webhook-secret') ?? url.searchParams.get('secret') ?? '';
+  const providedSecret =
+    request.headers.get('x-api-key') ?? request.headers.get('x-webhook-secret') ?? url.searchParams.get('secret') ?? '';
   if (providedSecret !== expectedSecret) {
     return jsonResponse(401, { error: 'Invalid or missing webhook secret.' });
   }
