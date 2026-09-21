@@ -162,6 +162,34 @@ Other things found and resolved while migrating:
 
 ### Property-management pages — all 19 built (Sep 17)
 
+✅ **18 of 19 ported into real Astro (2026-09-21) —
+`src/pages/[city]-property-management.astro`, live at the real
+deployment.** Same relationship as the homepage above: this section
+describes the approved static-mockup design work; the pages themselves
+now actually exist as real, D1-wired Astro pages, not just standalone
+HTML. Indianapolis is the one exception — its own mockup uses a
+meaningfully different, richer design (its own interactive process
+carousel, extra content-block sections, no plain `journey-wrap` at all),
+confirmed via a class-name diff before starting, so it's deliberately
+out of scope here — same "build the flagship page separately" pattern
+already used for `indianapolis-homes-for-rent.astro`. Still needs its
+own dedicated build.
+
+The Rental & Sales Market Snapshot section below is now genuinely live
+data, not the Sep 17 snapshot the rest of this section describes — it
+reads the same `rentcast_city_cache` D1 rows the homes-for-rent pages
+already read (every property-management city slug is a confirmed subset
+of the homes-for-rent slug list, so no new data pipeline was needed).
+Shared sections (accordion, guarantee cards, reviews carousel, areas-
+served grid, journey/process cards, landlord library) were extracted
+into `src/components/` and are now used by both these 18 pages and the
+homepage, rather than duplicated — see the "Build the homepage" commit
+and this build's own commit for the full list of what's byte-identical
+everywhere versus what needed explicit per-page text (nothing was
+silently guessed from a city name where the homepage's and the property-
+management pages' already-approved copy genuinely differ, e.g. the
+accordion's rental-market-activity sentence).
+
 Per CLAUDE.md, this was already the highest-priority page type on the
 site (Sep 11 decision) because the old 20-page set was found to be almost
 entirely identical service-description boilerplate copied city to city,
