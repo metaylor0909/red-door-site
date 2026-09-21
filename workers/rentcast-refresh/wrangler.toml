@@ -1,0 +1,27 @@
+name = "red-door-rentcast-refresh"
+main = "src/index.ts"
+# Matches the main Astro site's own pinned date (see the root wrangler.toml's
+# comment) for consistency — this Worker doesn't share that constraint
+# itself (no @astrojs/cloudflare/vite-plugin version lock here), so bump
+# this forward independently whenever convenient.
+compatibility_date = "2026-08-22"
+
+# Monthly, 6am UTC on the 1st — matches claude/listings-build-notes.md's
+# "Monthly RentCast refresh mechanism" decision.
+[triggers]
+crons = ["0 6 1 * *"]
+
+# The SAME database as the main site's rental-analysis tool (see
+# db/migrations/0001_rental_analysis_schema.sql's rentcast_city_cache
+# comment) — this Worker only ever writes rentcast_city_cache, never the
+# rental_analyses or rentcast_adhoc_call_log tables, but binds to the same
+# database since D1 bindings are per-database, not per-table.
+#
+# database_id is a placeholder until a real D1 database exists in a
+# Cloudflare account, same as the main site's own wrangler.toml — fill in
+# the real id in both places once `wrangler d1 create` has actually run.
+[[d1_databases]]
+binding = "DB"
+database_name = "red-door-rental-analysis"
+database_id = "REPLACE_WITH_REAL_D1_DATABASE_ID"
+migrations_dir = "../../db/migrations"
