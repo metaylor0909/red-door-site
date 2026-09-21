@@ -1,0 +1,907 @@
+---
+// /pricing — 7th of 7 "similar-pattern" pillar pages built this way (the
+// 8th, Indianapolis property management, is a different page type, already
+// built separately). Ported from pricing.html.
+//
+// Structurally different from the other 6 pillar pages: no video-section,
+// no PropertyManagementJourneyCarousel (confirmed pricing.html contains no
+// `rd-cx` markup at all — this page never had the carousel), and no
+// LandlordLibrary section either (confirmed absent from the source file).
+// Instead it has several genuinely unique sections: a pricing-at-a-glance
+// grid, a working interactive self-manage/poor-management cost calculator,
+// a full-service fee breakdown linking to the other 6 pillar pages, a
+// services-included comparison table, an industry-standard vs. Red Door
+// fee-comparison table, a $2,250 flat-fee tenant-placement plan, an inline
+// Calendly scheduling embed, and its own FAQ.
+//
+// Same #rental-analysis -> /rental-analysis fix as every other page built
+// this session: the source's old placeholder 6-step form (data-analysis-form)
+// is replaced with a condensed pitch + CTA, keeping the kicker/heading/lead/
+// benefit-list copy. Every other #rental-analysis anchor on this page (hero
+// CTA, glance-grid CTA row, fee-comparison CTA, final-cta) points to
+// /rental-analysis directly instead.
+//
+// FAQ note: the brief describing this task expected 18 questions; the
+// source file actually contains 20 (confirmed by counting
+// .accordion-item in the #faq section). All 20 are ported verbatim — see
+// this file's own commit/report notes rather than trusting the 18 count.
+//
+// Calendly: the widget.js script tag is placed once, directly above the
+// .calendly-section, so it loads before the inline embed div renders.
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pageTitle = 'Property Management Pricing | Red Door Property Management';
+const pageDescription =
+  'Clear, transparent Indianapolis property management pricing — 9% monthly management, no vacancy fee, and every cost disclosed up front.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/pricing">
+  <section class="hero hero-pillar" aria-labelledby="page-title">
+    <div class="hero-content">
+      <div class="eyebrow">Clear Fees Before the First Call</div>
+      <h1 id="page-title"><span>Indianapolis Property Management Pricing</span></h1>
+      <p class="hero-copy">Red Door&rsquo;s core pricing is simple to scan, with the full value explained below.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis" data-track="hero-rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#pricing-glance" aria-label="Scroll to content">
+      <span aria-hidden="true"></span>
+      Scroll
+    </a>
+  </section>
+
+  <section id="pricing-glance">
+    <div class="container reveal">
+      <div class="section-head center">
+        <div class="section-kicker">Pricing at a Glance</div>
+        <h2>Red Door Property Management</h2>
+      </div>
+      <div class="glance-grid">
+        <article class="glance-card featured">
+          <span>Monthly Management</span>
+          <strong>9%</strong>
+          <p>of monthly collected rent for full-service management. Investor pricing is 8% for owners with 3 or more doors.</p>
+        </article>
+        <article class="glance-card">
+          <span>New Lease Fee</span>
+          <strong>$995</strong>
+          <p>flat fee when Red Door places a new tenant.</p>
+        </article>
+        <article class="glance-card">
+          <span>Lease Renewal Fee</span>
+          <strong>$350</strong>
+          <p>charged when a tenant renewal is completed.</p>
+        </article>
+        <article class="glance-card">
+          <span>Vacancy Management Fee</span>
+          <strong>$0</strong>
+          <p>No monthly management fee while your property is vacant.</p>
+        </article>
+      </div>
+      <div class="pricing-cta-row">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container reveal">
+      <div class="pricing-widget-embed" aria-label="Self-manage versus professional management calculator">
+        <div class="rd-calc-widget" data-rd-calc-widget>
+          <div class="rd-calc-accent" aria-hidden="true"></div>
+          <div class="rd-calc-inner">
+            <div class="rd-calc-brand">
+              <span class="rd-calc-door" aria-hidden="true"></span>
+              <span>Red Door Property Management</span>
+            </div>
+
+            <h3>What does self-management or bad management <em>really cost</em> you?</h3>
+            <p class="rd-calc-subhead">Estimate the hidden cost of doing it yourself or choosing the wrong property manager. Vacancy, underpricing, turnover, maintenance mistakes, and weak tenant screening can quickly erase any savings from cheaper management.</p>
+
+            <div class="rd-calc-layout">
+              <div class="rd-calc-controls">
+                <div class="rd-calc-mode">
+                  <span>I'm comparing Red Door against:</span>
+                  <div class="rd-calc-segments" role="group" aria-label="Comparison type">
+                    <button class="is-active" type="button" data-rd-mode="self" aria-pressed="true">Self-Managing</button>
+                    <button type="button" data-rd-mode="poor" aria-pressed="false">Poor Management</button>
+                  </div>
+                </div>
+
+                <div class="rd-calc-field">
+                  <div class="rd-calc-field-top">
+                    <label for="rd-calc-rent">Monthly rent</label>
+                    <output for="rd-calc-rent" id="rd-calc-rent-out">$1,800</output>
+                  </div>
+                  <input type="range" id="rd-calc-rent" min="1000" max="3500" step="50" value="1800">
+                </div>
+
+                <div data-rd-panel="self">
+                  <div class="rd-calc-field">
+                    <div class="rd-calc-field-top">
+                      <label for="rd-calc-hours">Hours you spend managing / month</label>
+                      <output for="rd-calc-hours" id="rd-calc-hours-out">8 hrs</output>
+                    </div>
+                    <input type="range" id="rd-calc-hours" min="0" max="25" step="1" value="8">
+                  </div>
+
+                  <div class="rd-calc-field">
+                    <div class="rd-calc-field-top">
+                      <label for="rd-calc-hourly">What your time is worth / hour</label>
+                      <output for="rd-calc-hourly" id="rd-calc-hourly-out">$50</output>
+                    </div>
+                    <input type="range" id="rd-calc-hourly" min="0" max="200" step="5" value="50">
+                  </div>
+
+                  <div class="rd-calc-field">
+                    <div class="rd-calc-field-top">
+                      <label for="rd-calc-self-vacancy">Extra vacancy days from self-managing</label>
+                      <output for="rd-calc-self-vacancy" id="rd-calc-self-vacancy-out">14 days</output>
+                    </div>
+                    <input type="range" id="rd-calc-self-vacancy" min="0" max="45" step="1" value="14">
+                  </div>
+
+                  <label class="rd-calc-switch">
+                    <input type="checkbox" id="rd-calc-count-time" checked>
+                    <span class="track" aria-hidden="true"></span>
+                    Count my time as money?
+                  </label>
+                </div>
+
+                <div data-rd-panel="poor" hidden>
+                  <div class="rd-calc-field">
+                    <div class="rd-calc-field-top">
+                      <label for="rd-calc-poor-vacancy">Extra vacancy days from slow leasing</label>
+                      <output for="rd-calc-poor-vacancy" id="rd-calc-poor-vacancy-out">21 days</output>
+                    </div>
+                    <input type="range" id="rd-calc-poor-vacancy" min="0" max="60" step="1" value="21">
+                    <p class="rd-calc-help">Poor marketing, weak follow-up, or slow leasing can create extra vacant days.</p>
+                  </div>
+
+                  <div class="rd-calc-field">
+                    <div class="rd-calc-field-top">
+                      <label for="rd-calc-underpricing">Monthly rent underpricing</label>
+                      <output for="rd-calc-underpricing" id="rd-calc-underpricing-out">$100</output>
+                    </div>
+                    <input type="range" id="rd-calc-underpricing" min="0" max="300" step="25" value="100">
+                    <p class="rd-calc-help">Even $100/month under market rent equals $1,200/year in lost income.</p>
+                  </div>
+
+                  <div class="rd-calc-field">
+                    <div class="rd-calc-field-top">
+                      <label for="rd-calc-turnover">Avoidable turnover risk</label>
+                      <output for="rd-calc-turnover" id="rd-calc-turnover-out">35%</output>
+                    </div>
+                    <input type="range" id="rd-calc-turnover" min="0" max="100" step="5" value="35">
+                    <p class="rd-calc-help">Poor communication, weak tenant relations, or poor renewal strategy can increase avoidable turnover.</p>
+                  </div>
+
+                  <div class="rd-calc-selector">
+                    <span>Maintenance oversight risk</span>
+                    <div class="rd-calc-option-group" role="group" aria-label="Maintenance oversight risk">
+                      <button type="button" data-rd-risk="maintenance" data-value="250" aria-pressed="false">Conservative</button>
+                      <button class="is-active" type="button" data-rd-risk="maintenance" data-value="750" aria-pressed="true">Moderate</button>
+                      <button type="button" data-rd-risk="maintenance" data-value="1500" aria-pressed="false">High</button>
+                    </div>
+                    <p class="rd-calc-help">Poor maintenance coordination can lead to unnecessary dispatches, delayed repairs, bigger issues, or frustrated tenants.</p>
+                  </div>
+
+                  <div class="rd-calc-selector">
+                    <span>Tenant placement risk</span>
+                    <div class="rd-calc-option-group" role="group" aria-label="Tenant placement risk">
+                      <button type="button" data-rd-risk="tenant" data-value="0" aria-pressed="false">Low</button>
+                      <button class="is-active" type="button" data-rd-risk="tenant" data-value="1000" aria-pressed="true">Moderate</button>
+                      <button type="button" data-rd-risk="tenant" data-value="3500" aria-pressed="false">High</button>
+                    </div>
+                    <p class="rd-calc-help">Weak tenant screening can increase exposure to late rent, damage, early lease breaks, or eviction-related costs.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rd-calc-output">
+                <div class="rd-calc-result">
+                  <p class="rd-calc-kicker" id="rd-calc-kicker">Professional Management May Net You</p>
+                  <p class="rd-calc-big" id="rd-calc-big-number">$3,696</p>
+                  <p class="rd-calc-sentence" id="rd-calc-sentence">more per year than self-managing.</p>
+                  <p class="rd-calc-sr" id="rd-calc-sr-result" aria-live="polite" role="status">Self-management comparison: $3,696 estimated annual impact.</p>
+
+                  <div class="rd-calc-breakdown" id="rd-calc-breakdown" aria-label="Cost breakdown"><div class="rd-calc-breakdown-row"><span>Owner time cost</span><strong>$4,800</strong></div><div class="rd-calc-breakdown-row"><span>Extra vacancy cost</span><strong>$840</strong></div><div class="rd-calc-breakdown-row"><span>Red Door management cost</span><strong>-$1,944</strong></div><div class="rd-calc-breakdown-row total"><span>Estimated annual impact</span><strong>$3,696</strong></div></div>
+                  <p class="rd-calc-why" id="rd-calc-why">Red Door's process-driven management is built to reduce the hidden costs of owner time, vacancy, maintenance coordination, and tenant issues.</p>
+                </div>
+
+                <div class="calculator-cta-row">
+                  <a class="rd-calc-cta" href="/contact">Get an exact quote for your property</a>
+                  <a class="btn btn-secondary cta-call" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call to Review Your Numbers</a>
+                </div>
+
+                <p class="rd-calc-footnote">Estimates for illustration only and are not financial advice. Defaults use industry averages and Red Door's published pricing.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-dark guarantee-section">
+    <div class="container">
+      <div class="section-head center reveal">
+        <div class="section-kicker">Owner Confidence</div>
+        <h2>Guarantees Built Around Owner Peace of Mind</h2>
+        <p>Transparent pricing works best when it is backed by a management process owners can feel confident choosing.</p>
+      </div>
+      <div class="guarantee-grid reveal">
+        <article class="guarantee-card">
+          <span>Leasing</span>
+          <h3>2-Week Leasing Guarantee</h3>
+          <p>We will secure a viable tenant for your property within two weeks of marketing, or we will waive your first monthly management fee.</p>
+        </article>
+        <article class="guarantee-card">
+          <span>Tenant Placement</span>
+          <h3>6-Month Tenant Guarantee</h3>
+          <p>If a tenant we place breaks their lease within the first six months, Red Door will waive your next new lease fee.</p>
+        </article>
+        <article class="guarantee-card">
+          <span>Owner Confidence</span>
+          <h3>90-Day Money-Back Guarantee</h3>
+          <p>If you change your mind about working with us within the first 90 days, we will refund management fees paid during that period.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing" class="section-soft">
+    <div class="container reveal">
+      <div class="section-head">
+        <div class="section-kicker">Pricing Overview</div>
+        <h2>Full-Service Management Fee</h2>
+        <p>The monthly fee gives you access to Red Door's ongoing property management operating system, not just rent collection.</p>
+      </div>
+
+      <div class="management-pricing">
+        <div class="fee-block">
+          <span class="badge">Full-Service Property Management</span>
+          <div class="price"><strong>9%</strong><span>of monthly collected rent</span></div>
+          <p>Your monthly management fee is not just for collecting rent. It supports the systems, people, communication, maintenance coordination, documentation, and oversight needed to manage your rental property properly.</p>
+          <div class="investor-rate">
+            <strong>Investor Pricing:</strong> 8% monthly management for owners with 3 or more doors.
+          </div>
+          <div class="fee-details" aria-label="Full-service property management fees">
+            <div><span>No vacancy management fee</span><strong>$0</strong></div>
+            <div><span>New Lease Fee</span><strong>$995</strong></div>
+            <div><span>Lease Renewal Fee</span><strong>$350</strong></div>
+          </div>
+        </div>
+        <div class="value-summary">
+          <h3>What Your Monthly Management Fee Supports</h3>
+          <p>Red Door's fee supports a complete management system, from preparing your property for the market to marketing, screening, leasing, maintenance, communication, and long-term protection.</p>
+          <div class="management-pillar-grid">
+            <a href="/market-readiness-assessment" class="pillar-link-card">
+              <div class="pillar-card-content">
+                <h3>Market Readiness</h3>
+                <ul>
+                  <li>Rental pricing guidance, condition review, and readiness recommendations before marketing begins.</li>
+                  <li>Helps reduce vacancy risk by making sure the property is positioned correctly from day one.</li>
+                </ul>
+                <span class="learn-more">Learn more &rarr;</span>
+              </div>
+            </a>
+            <a href="/marketing-process" class="pillar-link-card">
+              <div class="pillar-card-content">
+                <h3>Marketing Process</h3>
+                <ul>
+                  <li>Professional photos, virtual walkthrough/video, listing syndication, and self-guided showing access.</li>
+                  <li>Built to create stronger exposure, better showing activity, and faster leasing decisions.</li>
+                </ul>
+                <span class="learn-more">Learn more &rarr;</span>
+              </div>
+            </a>
+            <a href="/tenant-screening" class="pillar-link-card">
+              <div class="pillar-card-content">
+                <h3>Tenant Screening</h3>
+                <ul>
+                  <li>Application review, income verification, rental history, criminal, eviction, fraud, and pet screening.</li>
+                  <li>Designed to reduce placement risk and protect the property long after move-in.</li>
+                </ul>
+                <span class="learn-more">Learn more &rarr;</span>
+              </div>
+            </a>
+            <a href="/leasing-process" class="pillar-link-card">
+              <div class="pillar-card-content">
+                <h3>Leasing Process</h3>
+                <ul>
+                  <li>Lease preparation, signing coordination, tenant onboarding, and move-in documentation.</li>
+                  <li>Helps create a cleaner handoff from approved applicant to resident.</li>
+                </ul>
+                <span class="learn-more">Learn more &rarr;</span>
+              </div>
+            </a>
+            <a href="/maintenance" class="pillar-link-card">
+              <div class="pillar-card-content">
+                <h3>Maintenance Coordination</h3>
+                <ul>
+                  <li>Maintenance request intake, troubleshooting, Property Meld tracking, vendor coordination, and emergency response.</li>
+                  <li>Protects the property by keeping maintenance organized, documented, and actioned properly.</li>
+                </ul>
+                <span class="learn-more">Learn more &rarr;</span>
+              </div>
+            </a>
+            <a href="/communication" class="pillar-link-card">
+              <div class="pillar-card-content">
+                <h3>Communication</h3>
+                <ul>
+                  <li>Owner updates, tenant communication, portal access, monthly statements, and documented communication systems.</li>
+                  <li>Gives owners better visibility into what is happening with their property.</li>
+                </ul>
+                <span class="learn-more">Learn more &rarr;</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="included">
+    <div class="container reveal">
+      <div class="section-head center">
+        <div class="section-kicker">What's Included</div>
+        <h2>What's Included With Red Door Property Management</h2>
+        <p>A clear breakdown of the services included with full-service management and tenant placement only.</p>
+      </div>
+
+      <div class="comparison-table-wrap" aria-label="Services included comparison">
+        <table class="service-comparison">
+          <thead>
+            <tr>
+              <th>Feature / Service</th>
+              <th>Full-Service Management</th>
+              <th>Tenant Placement Only</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="category-row"><td colspan="3">Leasing &amp; Marketing</td></tr>
+            <tr><td>Professional rental market analysis</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+            <tr><td>Market readiness recommendations</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+            <tr><td>Professional marketing photos</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+            <tr><td>Virtual walkthrough video</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+            <tr><td>Online listing syndication</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+            <tr><td>Self-guided showing technology</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+            <tr><td>Lead follow-up and showing coordination</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+            <tr><td>Tenant screening</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+            <tr><td>Lease preparation</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+            <tr><td>Move-in coordination</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+            <tr class="category-row"><td colspan="3">Ongoing Management</td></tr>
+            <tr><td>Monthly rent collection</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+            <tr><td>Owner portal access</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+            <tr><td>Monthly owner statements</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+            <tr><td>Tenant communication</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+            <tr><td>Lease enforcement</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+            <tr><td>Maintenance coordination</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+            <tr><td>24-hour emergency maintenance response</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+            <tr><td>Renewal coordination</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+            <tr><td>Annual inspection process</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+            <tr><td>Move-out coordination</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+            <tr><td>Security deposit processing</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+            <tr class="category-row"><td colspan="3">Owner Protection &amp; Oversight</td></tr>
+            <tr><td>Documented inspection process</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+            <tr><td>Maintenance troubleshooting before dispatch</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+            <tr><td>Vendor coordination</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+            <tr><td>Rental pricing guidance</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+            <tr><td>Vacancy reduction strategy</td><td><span class="included-mark">&#10003;</span></td><td><span class="included-mark">&#10003;</span></td></tr>
+            <tr><td>Communication systems and documented processes</td><td><span class="included-mark">&#10003;</span></td><td><span class="not-included">Not Included</span></td></tr>
+            <tr class="category-row fee-note-heading"><td colspan="3">Fees noted separately from monthly management</td></tr>
+            <tr class="service-fee-note">
+              <td>Separate service fees</td>
+              <td>
+                <div class="fee-disclosure-list">
+                  <span>Annual inspection <strong>$195</strong></span>
+                  <span>Pre lease renewal / pre move out inspection <strong>$145</strong></span>
+                  <span>Maintenance coordination <strong>$25/request</strong></span>
+                </div>
+              </td>
+              <td><span class="fee-disclosure-muted">Not applicable</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="fee-comparison" class="section-soft">
+    <div class="container reveal">
+      <div class="section-head center">
+        <div class="section-kicker">Fee Structure Comparison</div>
+        <h2>How Red Door's Fee Structure Compares</h2>
+        <p>Many property management companies advertise a low monthly rate but add multiple extra fees throughout the leasing and management process. Red Door's structure is designed to be clear, competitive, and value-driven.</p>
+      </div>
+
+      <div class="fee-compare-graphic" aria-label="Industry standard versus Red Door fee structure comparison">
+        <table class="fee-compare-table">
+          <thead>
+            <tr>
+              <th>Fee or Service</th>
+              <th>Industry Standard</th>
+              <th>Red Door Structure</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Monthly Management</td>
+              <td>A low advertised monthly rate may not include the full operating support owners expect.</td>
+              <td><span class="red-door-answer"><span><strong>9%</strong> of monthly collected rent for full-service management. Investor pricing is <strong>8%</strong> for owners with 3 or more doors.</span></span></td>
+            </tr>
+            <tr>
+              <td>New Lease Fee</td>
+              <td>Leasing fees are often equal to one full month's rent.</td>
+              <td><span class="red-door-answer"><span><strong>$995 flat fee</strong> when Red Door places a new tenant for full-service management.</span></span></td>
+            </tr>
+            <tr>
+              <td>Vacancy Fee</td>
+              <td>Vacancy fees may apply even while rent is not being collected.</td>
+              <td><span class="red-door-answer"><span><strong>$0 monthly management fee</strong> while your property is vacant.</span></span></td>
+            </tr>
+            <tr>
+              <td>Marketing</td>
+              <td>Marketing, setup, photos, or showing tools may be separate charges.</td>
+              <td><span class="red-door-answer"><span>Professional photos, virtual walkthrough video, listing syndication, and self-guided showing technology are included.</span></span></td>
+            </tr>
+            <tr>
+              <td>Renewal</td>
+              <td>Renewal fees can vary or be unclear until later in the lease cycle.</td>
+              <td><span class="red-door-answer"><span><strong>$350 renewal fee</strong> when a tenant renewal is completed.</span></span></td>
+            </tr>
+            <tr>
+              <td>Inspection</td>
+              <td>Inspection processes may be limited, separate, or not clearly documented.</td>
+              <td><span class="red-door-answer"><span>Documented inspection process with annual inspection pricing clearly listed above.</span></span></td>
+            </tr>
+            <tr>
+              <td>Maintenance Coordination</td>
+              <td>Maintenance coordination costs and dispatch process may be difficult to compare upfront.</td>
+              <td><span class="red-door-answer"><span>Troubleshooting before dispatch, vendor coordination, emergency response, and clear per-request pricing listed above.</span></span></td>
+            </tr>
+            <tr>
+              <td>Owner Communication</td>
+              <td>Communication systems and reporting cadence vary widely between management companies.</td>
+              <td><span class="red-door-answer"><span>Owner portal access, monthly owner statements, documented systems, and a clear communication process.</span></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="comparison-cta">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="/contact">Talk to Our Team</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container reveal">
+      <div class="section-head center">
+        <div class="section-kicker">Leasing Only Plan</div>
+        <h2>Tenant Placement Only</h2>
+        <p>Designed for owners who want Red Door to handle marketing, showings, tenant screening, and lease placement, but plan to self-manage after the tenant moves in.</p>
+      </div>
+      <div class="guarantee-card" style="max-width:520px;margin:0 auto;text-align:center">
+        <span>Flat Fee</span>
+        <h3 style="font-size:2.2rem;margin:10px 0">$2,250</h3>
+        <p style="margin-bottom:18px">One-time tenant placement fee</p>
+        <ul class="plain-list" style="text-align:left">
+          <li>Professional marketing setup</li>
+          <li>Showing coordination</li>
+          <li>Tenant screening</li>
+          <li>Lease preparation</li>
+          <li>Move-in coordination</li>
+          <li>Owner takes over management after tenant placement</li>
+        </ul>
+        <div class="cta-row" style="margin-top:20px">
+          <a class="btn btn-primary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Talk to Our Team About Tenant Placement</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+
+  <section class="calendly-section" id="schedule-call">
+    <div class="container">
+      <div class="calendly-card">
+        <div class="section-kicker">Schedule a Call</div>
+        <h2>Want to Talk Through Pricing?</h2>
+        <p>Schedule a quick phone call with Red Door to review your property, ask questions, and decide whether full-service management or tenant placement is the right fit.</p>
+        <p class="microcopy">Choose a time that works for you below.</p>
+        <div class="calendly-inline-widget" data-url="https://calendly.com/cknight-19/phone-call?hide_event_type_details=1" style="min-width:320px;height:700px"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="section-soft">
+    <div class="container reveal">
+      <div class="section-head center">
+        <div class="section-kicker">Pricing Questions Owners Ask First</div>
+        <h2>Transparent Answers Before the First Call</h2>
+      </div>
+      <div class="accordion" data-accordion>
+        <article class="accordion-item is-open">
+          <button class="accordion-trigger" type="button" aria-expanded="true">
+            <span>Do I pay the monthly management fee while the property is vacant?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>No. Red Door does not charge the monthly management fee while your property is vacant.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Who qualifies for investor pricing?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Owners with 3 or more doors qualify for Red Door's investor pricing of 8% monthly management.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What is the New Lease Fee?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>The New Lease Fee is $995 and is charged each time Red Door places a new tenant, once per tenant turnover &mdash; it is not a one-time fee. It covers the full placement process: marketing your property, coordinating showings, screening tenants, preparing and signing the new lease, performing a move-in inspection, and collecting the first rent payment and security deposit.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What is the Lease Renewal Fee?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>The Lease Renewal Fee is charged when a tenant renews. It supports renewal review, rental rate evaluation, lease documentation, and renewal coordination.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What is the difference between full-service management and tenant placement only?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Full-service management includes ongoing monthly management after the tenant moves in. Tenant placement only is for owners who want Red Door to find and place a qualified tenant, but plan to self-manage after move-in.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What is included in the 9% monthly management fee?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>The monthly management fee supports Red Door's ongoing management process, including rent collection, tenant communication, lease enforcement, owner statements, maintenance coordination, renewal coordination, move-out coordination, and owner portal access.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Why does the calculator compare management fees against hidden costs?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Management fees are only one part of the financial picture. Vacancy, underpricing, turnover, poor maintenance coordination, weak screening, and owner time can create costs that are easy to overlook when comparing management options.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Does the calculator include every Red Door fee?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>No. The calculator is designed to compare monthly management cost against common hidden risks. Lease fees, inspection fees, and maintenance coordination fees are disclosed elsewhere on this page so owners can review them separately.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>How does Red Door help reduce vacancy risk?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Red Door uses rental pricing guidance, market readiness recommendations, professional marketing, listing syndication, self-guided showing technology, lead follow-up, and tenant screening to help position the property and reduce avoidable vacancy time.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>How does maintenance coordination protect an owner?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>A documented maintenance process helps route requests, troubleshoot before dispatch when appropriate, coordinate vendors, respond to emergencies, and maintain clearer records for owners and residents.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Can Red Door help if my property is priced too low or too high?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Yes. Red Door provides rental pricing guidance based on the property, market conditions, and leasing activity. The goal is to avoid leaving money on the table while also reducing the risk of extended vacancy from overpricing.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What happens after Red Door places a tenant?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>With full-service management, Red Door continues managing the property after move-in. With tenant placement only, Red Door handles the leasing process and the owner takes over management after the tenant is placed.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Can I schedule a call before requesting a rental analysis?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Yes. If you want to talk through pricing, services, or whether Red Door is the right fit for your property, you can schedule a quick phone call with our team before requesting a full rental analysis.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>How much does property management cost in Indianapolis?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>In Indianapolis, full-service property management typically costs 8% to 12% of the monthly rent. Red Door charges 9% of monthly collected rent &mdash; 8% for investors with 3 or more doors, a $995 new lease fee once per new tenant placement, and a $350 fee when a tenant renews. You pay no management fee while your property is vacant. Because some companies advertise a low rate but add separate charges, the full fee breakdown is published on this page so you can compare the complete cost, not just the headline number.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Are there any hidden fees?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>No. Red Door discloses every fee up front. Beyond the 9% monthly management fee (8% for investors with 3 or more doors), the charges are: a $995 new lease fee each time we place a tenant (once per tenant turnover), a $350 lease renewal fee, a $9/month Utility Protection Program, a $195 annual inspection, a $145 pre-renewal or pre-move-out inspection, and $25 per maintenance coordination request. Properties that are already tenant-occupied when onboarded have a one-time $250 tenant-occupied onboarding fee. There is no fee while your property is vacant, and marketing, photos, video, and showing technology are included at no extra charge. If a fee isn't listed on this page, we don't charge it.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What is the New Lease Fee? (turnover detail)</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>The New Lease Fee is $995 and is charged each time Red Door places a new tenant, once per tenant turnover. It covers marketing your property, coordinating showings, screening tenants, preparing and signing the new lease, performing a move-in inspection, and collecting the first rent payment and security deposit.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Do you charge a setup or onboarding fee?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Red Door does not charge a setup fee for vacant properties that are newly onboarded &mdash; that onboarding is covered within the leasing fee. For properties that are already tenant-occupied at onboarding, there is a one-time $250 tenant-occupied onboarding fee.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>What is the Utility Protection Program?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>The Utility Protection Program is a $9/month service that protects your investment from both the physical damage of utility disconnections and the financial burden of unpaid tenant bills. Because the accounts stay in Red Door's name throughout our management of the home, Red Door assumes 100% of the financial risk if a tenant fails to pay or moves out with a balance, eliminates the risk of dropped utilities during vacancies and turnovers, and drastically reduces the chance of winter pipe bursts, HVAC damage, and water heater issues caused by abrupt power or gas shutoffs.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Does Red Door require a long-term contract?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>No. Red Door does not require a long-term cancellation contract, so you are not locked into a fixed term. We also back our service with a 90-Day Money-Back Guarantee &mdash; if you change your mind within the first 90 days, we refund the management fees paid during that period.</p></div></div>
+        </article>
+        <article class="accordion-item">
+          <button class="accordion-trigger" type="button" aria-expanded="false">
+            <span>Does Red Door charge a cancellation fee?</span><span aria-hidden="true">+</span>
+          </button>
+          <div class="accordion-panel"><div><p>Red Door does not use cancellation fees to trap owners &mdash; the fee exists only to protect the time, marketing, and work invested in getting a property rent-ready and leased. We charge it only when circumstances prevent us from performing the services we were hired to do (for example, a property isn't made rent-ready, the owner won't complete necessary repairs, cleaning, or improvements, the property becomes unavailable or non-compliant, or the owner lists it for sale with another brokerage). We also include a Performance Guarantee Fee Waiver: if we've actively marketed your property for 60 continuous days without securing a qualified tenant application, and you've completed all recommended market-readiness items within a reasonable timeframe, the cancellation fee may be waived.</p></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  {/* Replaces the source's old placeholder 6-step form (data-analysis-form —
+      same stale pre-real-tool mockup pattern as every other page built this
+      session) with a condensed pitch pointing at /rental-analysis, keeping
+      the kicker/heading/lead-paragraph/benefit-list copy. */}
+  <section class="section-soft" id="rental-analysis">
+    <div class="container analysis-grid">
+      <div class="reveal">
+        <div class="section-kicker">Next Step</div>
+        <h2>Ready to Compare Your Options?</h2>
+        <p class="lead">Get a property-specific rental analysis or schedule a quick call to talk through Red Door's pricing, services, and next steps.</p>
+        <ul class="benefit-list">
+          <li><span>1</span>Understand your property's current rental value.</li>
+          <li><span>2</span>Identify improvements that may strengthen rent and tenant appeal.</li>
+          <li><span>3</span>See whether Red Door's management approach fits your goals.</li>
+        </ul>
+        <div class="journey-cta reveal">
+          <a class="btn btn-primary" href="/rental-analysis">Get Your Free Rental Analysis</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Ready to Compare Your Options?</h2>
+      <p>Get a property-specific rental analysis or schedule a quick call to talk through Red Door's pricing, services, and next steps.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+        <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.querySelectorAll('[data-accordion]').forEach(function (accordion) {
+      accordion.querySelectorAll('.accordion-trigger').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          var item = trigger.closest('.accordion-item');
+          accordion.querySelectorAll('.accordion-item').forEach(function (candidate) {
+            var candidateTrigger = candidate.querySelector('.accordion-trigger');
+            var shouldOpen = candidate === item && !candidate.classList.contains('is-open');
+            candidate.classList.toggle('is-open', shouldOpen);
+            candidateTrigger.setAttribute('aria-expanded', String(shouldOpen));
+          });
+        });
+      });
+    });
+  </script>
+
+  <script>
+    (function () {
+      var rdCalc = document.querySelector("[data-rd-calc-widget]");
+      if (!rdCalc) { return; }
+
+      var rdCalcConfig = { managementFeePct: 0.09 };
+      var rdCalcMode = "self";
+      var rdCalcRisk = { maintenance: 750, tenant: 1000 };
+      var rdCalcDisplayed = 0;
+      var rdCalcAnimation = null;
+      var rdCalcAnnounceTimer = null;
+      var rdCalcReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var rdCalcUsd = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      });
+
+      function rdCalcById(id) {
+        return document.getElementById(id);
+      }
+
+      function rdCalcPaint(range) {
+        var low = parseFloat(range.min);
+        var high = parseFloat(range.max);
+        var value = parseFloat(range.value);
+        var percent = Math.min(100, Math.max(0, (value - low) / (high - low) * 100));
+        range.style.setProperty("--fill", percent + "%");
+      }
+
+      function rdCalcAnimateBig(target) {
+        var el = rdCalcById("rd-calc-big-number");
+
+        if (rdCalcReducedMotion) {
+          rdCalcDisplayed = target;
+          el.textContent = rdCalcUsd.format(Math.abs(target));
+          return;
+        }
+
+        if (rdCalcAnimation) {
+          cancelAnimationFrame(rdCalcAnimation);
+        }
+
+        var start = rdCalcDisplayed;
+        var change = target - start;
+        var duration = 500;
+        var startTime = performance.now();
+
+        function tick(now) {
+          var progress = Math.min(1, (now - startTime) / duration);
+          var eased = 1 - Math.pow(1 - progress, 3);
+          rdCalcDisplayed = start + change * eased;
+          el.textContent = rdCalcUsd.format(Math.abs(Math.round(rdCalcDisplayed)));
+
+          if (progress < 1) {
+            rdCalcAnimation = requestAnimationFrame(tick);
+          }
+        }
+
+        rdCalcAnimation = requestAnimationFrame(tick);
+      }
+
+      function rdCalcAnnounce(text) {
+        clearTimeout(rdCalcAnnounceTimer);
+        rdCalcAnnounceTimer = setTimeout(function () {
+          rdCalcById("rd-calc-sr-result").textContent = text;
+        }, 600);
+      }
+
+      function rdCalcFormatDays(value) {
+        return value + (value === 1 ? " day" : " days");
+      }
+
+      function rdCalcSetBreakdown(rows) {
+        var container = rdCalcById("rd-calc-breakdown");
+        container.innerHTML = rows.map(function (row) {
+          return '<div class="rd-calc-breakdown-row' + (row.total ? ' total' : '') + '"><span>' + row.label + '</span><strong>' + rdCalcUsd.format(row.value) + '</strong></div>';
+        }).join("");
+      }
+
+      function rdCalcSetMode(mode) {
+        rdCalcMode = mode;
+
+        rdCalc.querySelectorAll("[data-rd-mode]").forEach(function (button) {
+          var isActive = button.getAttribute("data-rd-mode") === mode;
+          button.classList.toggle("is-active", isActive);
+          button.setAttribute("aria-pressed", String(isActive));
+        });
+
+        rdCalc.querySelectorAll("[data-rd-panel]").forEach(function (panel) {
+          panel.hidden = panel.getAttribute("data-rd-panel") !== mode;
+        });
+
+        rdCalcUpdate();
+      }
+
+      function rdCalcUpdate() {
+        var monthlyRent = parseFloat(rdCalcById("rd-calc-rent").value) || 0;
+        var dailyRent = monthlyRent / 30;
+        var redDoorAnnualManagementFee = monthlyRent * rdCalcConfig.managementFeePct * 12;
+        var estimatedAnnualImpact = 0;
+        var displayValue = 0;
+        var big = rdCalcById("rd-calc-big-number");
+
+        rdCalcById("rd-calc-rent-out").textContent = rdCalcUsd.format(monthlyRent);
+
+        if (rdCalcMode === "self") {
+          var hours = parseFloat(rdCalcById("rd-calc-hours").value) || 0;
+          var hourly = parseFloat(rdCalcById("rd-calc-hourly").value) || 0;
+          var selfVacancyDays = parseFloat(rdCalcById("rd-calc-self-vacancy").value) || 0;
+          var ownerTimeCost = rdCalcById("rd-calc-count-time").checked ? hours * hourly * 12 : 0;
+          var selfExtraVacancyCost = dailyRent * selfVacancyDays;
+
+          estimatedAnnualImpact = ownerTimeCost + selfExtraVacancyCost - redDoorAnnualManagementFee;
+          displayValue = Math.max(0, estimatedAnnualImpact);
+
+          rdCalcById("rd-calc-hours-out").textContent = hours + (hours === 1 ? " hr" : " hrs");
+          rdCalcById("rd-calc-hourly-out").textContent = rdCalcUsd.format(hourly);
+          rdCalcById("rd-calc-self-vacancy-out").textContent = rdCalcFormatDays(selfVacancyDays);
+          rdCalcById("rd-calc-kicker").textContent = estimatedAnnualImpact > 0 ? "Professional Management May Net You" : "Cost Comparison Is Close";
+          rdCalcById("rd-calc-sentence").textContent = estimatedAnnualImpact > 0
+            ? "more per year than self-managing."
+            : "Self-management may cost less on paper, but risk still matters.";
+          rdCalcById("rd-calc-why").textContent = estimatedAnnualImpact > 0
+            ? "Red Door's process-driven management is built to reduce the hidden costs of owner time, vacancy, maintenance coordination, and tenant issues."
+            : "Self-management may cost less on paper, but the decision still depends on vacancy risk, time, maintenance, tenant quality, and long-term property protection.";
+
+          rdCalcSetBreakdown([
+            { label: "Owner time cost", value: ownerTimeCost },
+            { label: "Extra vacancy cost", value: selfExtraVacancyCost },
+            { label: "Red Door management cost", value: -redDoorAnnualManagementFee },
+            { label: "Estimated annual impact", value: displayValue, total: true }
+          ]);
+        } else {
+          var poorVacancyDays = parseFloat(rdCalcById("rd-calc-poor-vacancy").value) || 0;
+          var monthlyUnderpricing = parseFloat(rdCalcById("rd-calc-underpricing").value) || 0;
+          var turnoverRiskPct = (parseFloat(rdCalcById("rd-calc-turnover").value) || 0) / 100;
+          var poorExtraVacancyCost = dailyRent * poorVacancyDays;
+          var rentUnderpricingCost = monthlyUnderpricing * 12;
+          var turnoverRiskCost = 2500 * turnoverRiskPct;
+          var maintenanceRiskCost = rdCalcRisk.maintenance;
+          var tenantPlacementRiskCost = rdCalcRisk.tenant;
+
+          estimatedAnnualImpact = poorExtraVacancyCost + rentUnderpricingCost + turnoverRiskCost + maintenanceRiskCost + tenantPlacementRiskCost;
+          displayValue = Math.max(0, estimatedAnnualImpact);
+
+          rdCalcById("rd-calc-poor-vacancy-out").textContent = rdCalcFormatDays(poorVacancyDays);
+          rdCalcById("rd-calc-underpricing-out").textContent = rdCalcUsd.format(monthlyUnderpricing);
+          rdCalcById("rd-calc-turnover-out").textContent = Math.round(turnoverRiskPct * 100) + "%";
+          rdCalcById("rd-calc-kicker").textContent = estimatedAnnualImpact > 0 ? "Poor Management May Cost You" : "Cost Comparison Is Close";
+          rdCalcById("rd-calc-sentence").textContent = estimatedAnnualImpact > 0
+            ? "per year in preventable costs."
+            : "The numbers are close on paper, but management quality still matters.";
+          rdCalcById("rd-calc-why").textContent = estimatedAnnualImpact > 0
+            ? "This estimate shows how vacancy, underpricing, turnover, maintenance issues, and weak tenant placement can create preventable costs beyond the management fee itself."
+            : "The numbers are close on paper, but poor management can still create risk through vacancy, underpricing, maintenance mistakes, and tenant placement issues.";
+
+          rdCalcSetBreakdown([
+            { label: "Extra vacancy cost", value: poorExtraVacancyCost },
+            { label: "Rent underpricing cost", value: rentUnderpricingCost },
+            { label: "Avoidable turnover risk", value: turnoverRiskCost },
+            { label: "Maintenance oversight risk", value: maintenanceRiskCost },
+            { label: "Tenant placement risk", value: tenantPlacementRiskCost },
+            { label: "Estimated Cost of Poor Management", value: displayValue, total: true }
+          ]);
+        }
+
+        big.classList.toggle("negative", estimatedAnnualImpact <= 0);
+        rdCalcAnimateBig(displayValue);
+        rdCalcAnnounce((rdCalcMode === "self" ? "Self-management comparison: " : "Poor management comparison: ") + rdCalcUsd.format(displayValue) + " estimated annual impact.");
+      }
+
+      ["rd-calc-rent", "rd-calc-hours", "rd-calc-hourly", "rd-calc-self-vacancy", "rd-calc-poor-vacancy", "rd-calc-underpricing", "rd-calc-turnover"].forEach(function (id) {
+        var range = rdCalcById(id);
+        range.addEventListener("input", function () {
+          rdCalcPaint(range);
+          rdCalcUpdate();
+        });
+        rdCalcPaint(range);
+      });
+
+      rdCalcById("rd-calc-count-time").addEventListener("input", rdCalcUpdate);
+      rdCalc.querySelectorAll("[data-rd-mode]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          rdCalcSetMode(button.getAttribute("data-rd-mode"));
+        });
+      });
+      rdCalc.querySelectorAll("[data-rd-risk]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          var riskType = button.getAttribute("data-rd-risk");
+          rdCalcRisk[riskType] = parseFloat(button.getAttribute("data-value")) || 0;
+          rdCalc.querySelectorAll("[data-rd-risk='" + riskType + "']").forEach(function (option) {
+            var isActive = option === button;
+            option.classList.toggle("is-active", isActive);
+            option.setAttribute("aria-pressed", String(isActive));
+          });
+          rdCalcUpdate();
+        });
+      });
+
+      rdCalcUpdate();
+    })();
+  </script>
+</BaseLayout>
