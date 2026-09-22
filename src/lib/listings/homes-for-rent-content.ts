@@ -87,6 +87,7 @@ interface RentalDataBlock {
   medianRent?: number | null;
   minRent?: number | null;
   maxRent?: number | null;
+  averageDaysOnMarket?: number | null;
   totalListings?: number;
   dataByBedrooms?: RentCastBedroomEntry[];
   dataByPropertyType?: RentCastPropertyTypeEntry[];
@@ -104,6 +105,11 @@ export interface CityMarketData {
   bedroomLadder: BedroomLadderEntry[];
   statTiles: CityStatTile[];
   dataAsOf: string;
+  /** Raw value, not folded into a statTiles entry by default — added for
+   * the rental-analysis report page (2026-09-22), which swaps out the
+   * "Single-Family Average" tile for this instead. See that page's own
+   * stat-tile assembly. */
+  averageDaysOnMarket: number | null;
 }
 
 // Eagerly globbed at build time — becomes real bundled data, not a runtime
@@ -199,6 +205,7 @@ function marketDataFromRaw(raw: CityMarketDataRaw): CityMarketData {
     bedroomLadder: deriveBedroomLadder(raw.rentalData?.dataByBedrooms),
     statTiles: buildStatTiles(raw.citySlug, raw.rentalData),
     dataAsOf: raw.dataAsOf ? formatDataAsOf(raw.dataAsOf) : '',
+    averageDaysOnMarket: raw.rentalData?.averageDaysOnMarket ?? null,
   };
 }
 

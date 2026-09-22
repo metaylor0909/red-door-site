@@ -13,10 +13,16 @@ import type { RentEngineComp } from './types';
 export interface SupplyDemandStats {
   rentedCount: number;
   availableCount: number;
-  /** Rented ÷ Available — undefined when there are zero Available comps
-   * (avoids a divide-by-zero; the UI should treat this as "all demand". */
+  /** Available ÷ Rented — how much active inventory sits on the market
+   * for every home that's actually leased, over the same comp-pool
+   * window. Lower is healthier (homes get absorbed faster than they
+   * pile up); null when there are zero Rented comps to divide by.
+   * REVISED 2026-09-22 to match Michael's report-design reference (an
+   * 8-available/26-rented example labeled "Healthy" at a 0.31 ratio) —
+   * previously this was Rented ÷ Available, the inverse, which called
+   * that same scenario "Soft." */
   ratio: number | null;
-  statusLabel: 'Tight market' | 'Balanced market' | 'Soft market';
+  statusLabel: 'Healthy market' | 'Balanced market' | 'Soft market';
 }
 
 export interface TimeToLeaseStats {
@@ -32,16 +38,14 @@ export interface TimeToLeaseStats {
 export function computeSupplyDemand(pool: RentEngineComp[]): SupplyDemandStats {
   const rentedCount = pool.filter((c) => c.status === 'rented').length;
   const availableCount = pool.filter((c) => c.status === 'available').length;
-  const ratio = availableCount > 0 ? rentedCount / availableCount : null;
+  const ratio = rentedCount > 0 ? availableCount / rentedCount : null;
 
-  // Thresholds aren't numerically specified in the build brief (only the
-  // panel concept, styled after RentEngine's own report format) — picked
-  // so a market with meaningfully more turnover than active supply reads
-  // as "tight," roughly even reads "balanced," and supply-heavy reads
-  // "soft." Revisit if Michael gives explicit cutoffs later.
+  // Thresholds aren't numerically specified in the build brief — picked
+  // to match Michael's own report-design reference (0.31 → "Healthy").
+  // Revisit if Michael gives explicit cutoffs later.
   let statusLabel: SupplyDemandStats['statusLabel'] = 'Balanced market';
-  if (ratio === null || ratio >= 1.5) statusLabel = 'Tight market';
-  else if (ratio < 0.75) statusLabel = 'Soft market';
+  if (ratio === null || ratio > 1) statusLabel = 'Soft market';
+  else if (ratio <= 0.5) statusLabel = 'Healthy market';
 
   return { rentedCount, availableCount, ratio, statusLabel };
 }

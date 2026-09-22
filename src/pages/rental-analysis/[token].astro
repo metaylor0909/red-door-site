@@ -5,8 +5,8 @@
 //
 // Built so far: address line, estimate card + confidence, one CTA,
 // methodology note, market context (supply/demand + time-to-lease —
-// decision #5's third panel, average rent by bedroom, needs RentCast's
-// per-city file and isn't wired), comps table, the homes-for-rent
+// decision #5's third panel, average rent by bedroom, now wired — see
+// below), comps table (+ map, added 2026-09-22), the homes-for-rent
 // cross-sell (a small, narrowly-scoped live RentEngine /units call — NOT
 // the bigger listings-page rebuild project, which is separate and not
 // started), the "From Red Door" post carousel (real Sanity query), a
@@ -16,7 +16,20 @@
 //
 // Snapshot, not live, per decision #5 — this renders exactly what
 // submit.ts computed and stored; it never re-runs the cascade.
-
+//
+// REVISED 2026-09-22 (Michael's design pass, after seeing two real
+// generated reports): hero restructured to match the homes-for-rent
+// listing detail page's own template (dark breadcrumb bar + a summary
+// band with bed/bath/sqft specs) rather than a plain light section;
+// added a Street View photo and a subject-location Mapbox map as two of
+// three equally-sized boxes alongside the estimate; market context
+// rebuilt as three real card panels (adding an average-rent-by-bedroom
+// chart, previously not wired since it needs RentCast); added the same
+// RentCast city snapshot sections already built for the homes-for-rent
+// and property-management pages, reusing their loaders directly rather
+// than re-deriving the numbers; added a comps map with hover-sync
+// between the table rows and the map pins, matching the pattern already
+// built for the Indianapolis homes-for-rent search page.
 import { env } from 'cloudflare:workers';
 import { sanityClient } from 'sanity:client';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -24,11 +37,43 @@ import { haversineMiles } from '../../lib/rental-analysis/geo';
 import { computeViewTrackingUpdate, fireBdAlertWebhook, type RentalAnalysisRow } from '../../lib/rental-analysis/view-tracking';
 import { fetchAvailableUnits, type AvailableUnit } from '../../lib/rental-analysis/listings-client';
 import { selectCrossSellUnits } from '../../lib/rental-analysis/cross-sell';
+import { citySlug } from '../../lib/listings/rentengine';
+import { CITIES } from '../../lib/property-management/cities';
+import { loadCityMarketData, loadCityContentMap } from '../../lib/listings/homes-for-rent-content';
+import { loadMarketSnapshot } from '../../lib/property-management/market-snapshot';
 import type { RentEngineComp } from '../../lib/rental-analysis/types';
 import type { ConfidenceResult } from '../../lib/rental-analysis/confidence';
 import type { SupplyDemandStats, TimeToLeaseStats } from '../../lib/rental-analysis/market-context';
 
 export const prerender = false;
+
+// Mapbox public token (pk. prefix — publishable, not a secret) — same
+// value already embedded client-side on the homes-for-rent search and
+// listing-detail pages.
+const MAPBOX_TOKEN =
+  'pk.eyJ1IjoibWV0YXlsb3IwOTA5IiwiYSI6ImNtdTdmZXJ5MzBpM3cyenB1eXMwNWdwaXkifQ.0sGI21TcAeEe9v_Pa91a9A';
+
+const PROPERTY_TYPE_LABELS: Record<string, string> = {
+  'single-family': 'Single Family Residence',
+  townhome: 'Townhome',
+  condo: 'Condo',
+  duplex: 'Duplex',
+  'multi-family': 'Multi-Family',
+  other: 'Other',
+};
+
+// Every city the RentCast pipeline actually covers (workers/rentcast-
+// refresh's 20-area list) — the same slug the homes-for-rent and
+// property-management pages already key their D1 rows on. An address
+// outside this list (e.g. Plainfield — confirmed no rentcast_city_cache
+// row) gets both RentCast sections omitted entirely rather than a thrown
+// error or a fabricated number, same pattern as the market-reports
+// pages' own uncovered-city handling.
+const RENTCAST_COVERED_SLUGS = new Set([
+  'indianapolis',
+  'downtown-indianapolis',
+  ...CITIES.map((c) => c.slug),
+]);
 
 const CALENDLY_URL = 'https://calendly.com/cknight-19/phone-call';
 
@@ -42,6 +87,9 @@ interface DbRow extends RentalAnalysisRow {
   property_lat: number;
   property_lon: number;
   property_beds: number;
+  property_baths: number;
+  property_sqft: number | null;
+  property_type: string;
   snapshot_json: string;
 }
 
@@ -153,6 +201,71 @@ const compsWithDistance = snapshot.comps.map((c) => ({
   distance: haversineMiles(row.property_lat, row.property_lon, c.latitude, c.longitude),
 }));
 
+// RentCast city sections (homes-for-rent-style snapshot + property-
+// management-style rent/sales panels) — omitted entirely for a city
+// outside the 20-area RentCast pipeline (e.g. Plainfield) rather than
+// throw or fabricate a number; both loaders' own static-file fallback
+// would throw for an uncovered slug, so this checks membership first.
+const subjectCitySlug = citySlug(row.property_city);
+const isRentCastCovered = RENTCAST_COVERED_SLUGS.has(subjectCitySlug);
+
+const cityMarketData = isRentCastCovered ? await loadCityMarketData(db, subjectCitySlug, row.property_state) : null;
+const citySnapshot = isRentCastCovered ? await loadMarketSnapshot(db, subjectCitySlug, row.property_state) : null;
+
+// Indianapolis has no entry in homes-for-rent-content.json (it keeps its
+// own real search/filter/map page, not one of the 18 simple-template
+// cities) — the hand-written per-city prose paragraph is genuinely
+// unavailable there, not a bug; the section just omits it.
+const cityContentEntry = isRentCastCovered ? loadCityContentMap()[subjectCitySlug] : undefined;
+
+// Same 3-tile pattern as the homes-for-rent pages' own stat tiles
+// (src/lib/listings/homes-for-rent-content.ts's buildStatTiles), except
+// the third tile swaps "Single-Family Average" for average days on
+// market per Michael's request — more useful next to a rent estimate
+// than a figure this page already shows a size-adjusted version of.
+const reportStatTiles =
+  cityMarketData && cityMarketData.statTiles.length > 0
+    ? [
+        ...cityMarketData.statTiles.slice(0, 2),
+        ...(cityMarketData.averageDaysOnMarket != null
+          ? [
+              {
+                label: 'Average Days on Market',
+                value: `${Math.round(cityMarketData.averageDaysOnMarket)} days`,
+                sub: "This month's RentCast pull",
+              },
+            ]
+          : []),
+      ]
+    : [];
+
+function formatCurrency(value: number | null): string {
+  return value == null ? '—' : `$${Math.round(value).toLocaleString()}`;
+}
+
+// Average-rent-by-bedroom chart data for the rebuilt market-context
+// panel — reuses the same bedroomLadder RentCast already derives for
+// the homes-for-rent pages, just rendered as a small bar chart here
+// instead of a fee-list-style table.
+const bedroomChartData = (cityMarketData?.bedroomLadder ?? []).filter((b) => b.beds >= 1 && b.beds <= 5);
+const bedroomChartMax = Math.max(1, ...bedroomChartData.map((b) => b.avgRent));
+
+const propertyTypeLabel = PROPERTY_TYPE_LABELS[row.property_type] ?? 'Home';
+
+// Supply & Demand card display — status-key for the CSS class, and the
+// ratio bar's fill width capped at a sensible visual max (a literal
+// ratio of e.g. 4.0 would otherwise blow the bar past the container).
+const supplyStatusKey = snapshot.supplyDemand.statusLabel.split(' ')[0].toLowerCase();
+const supplyRatioPercent = snapshot.supplyDemand.ratio != null ? Math.min(100, Math.round(snapshot.supplyDemand.ratio * 50)) : 0;
+
+const timeToLeaseBucketMax = Math.max(
+  1,
+  snapshot.timeToLease.buckets.days0to14,
+  snapshot.timeToLease.buckets.days15to30,
+  snapshot.timeToLease.buckets.days31to45,
+  snapshot.timeToLease.buckets.days46plus
+);
+
 const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' });
 ---
 
@@ -161,36 +274,63 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
   description="Your free rental market analysis from Red Door Property Management."
   path={`/rental-analysis/${token}`}
 >
-  <section class="section-soft">
-    <div class="container">
-      <p class="report-address">{row.property_address}, {row.property_city}, {row.property_state} {row.property_zip}</p>
-      <h1>Your Rental Analysis</h1>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js" is:inline></script>
 
-      <div class={`report-hero-grid${row.property_lat != null && row.property_lon != null ? '' : ' is-photo-missing'}`}>
-        {row.property_lat != null && row.property_lon != null && (
-          <img
-            class="subject-photo"
-            src={`/api/street-view?lat=${row.property_lat}&lng=${row.property_lon}`}
-            alt={`Street view of ${row.property_address}`}
-            loading="eager"
-            onerror="this.remove(); this.parentElement.classList.add('is-photo-missing')"
-          />
-        )}
-        <div class="estimate-card reveal">
-          <div class="section-kicker">Estimated Monthly Rent</div>
-          <div class="estimate-figure">${snapshot.estimatedRent.toLocaleString()}/mo</div>
-          <p class="estimate-range">Range: ${snapshot.rangeLow.toLocaleString()} &ndash; ${snapshot.rangeHigh.toLocaleString()}/mo</p>
-          <div class={`confidence-badge is-${snapshot.confidence.bucket}`}>
-            {snapshot.confidence.displayPercent}% &mdash; {snapshot.confidence.bucketLabel}
-          </div>
-          <p class="methodology-note">{snapshot.confidence.templateSentence}</p>
-          <p class="methodology-note">
-            Based on the median rent of {snapshot.comps.length} comparable {snapshot.comps.length === 1 ? 'property' : 'properties'} near
-            this address, leased or currently listed within the past 12 months.
+  <section class="listing-hero">
+    <div class="listing-breadcrumb-bar">
+      <div class="listing-breadcrumb-inner">
+        <div class="container">
+          <p class="listing-breadcrumb">
+            <a href="/rental-analysis">Rental Market Analysis</a> &rsaquo; {row.property_address}, {row.property_city}, {row.property_state} {row.property_zip}
           </p>
-          <div class="cta-row" style="margin-top:20px">
-            <a class="btn btn-primary" href={CALENDLY_URL} target="_blank" rel="noopener">Talk to Red Door About Managing This Property</a>
-          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class={`container report-hero-grid${row.property_lat != null && row.property_lon != null ? '' : ' is-photo-missing'}`}>
+      {row.property_lat != null && row.property_lon != null && (
+        <img
+          class="subject-photo"
+          src={`/api/street-view?lat=${row.property_lat}&lng=${row.property_lon}`}
+          alt={`Street view of ${row.property_address}`}
+          loading="eager"
+          onerror="this.remove(); this.closest('.report-hero-grid')?.classList.add('is-photo-missing')"
+        />
+      )}
+      <div class="estimate-card reveal">
+        <div class="section-kicker">Estimated Monthly Rent</div>
+        <div class="estimate-figure">${snapshot.estimatedRent.toLocaleString()}/mo</div>
+        <p class="estimate-range">Range: ${snapshot.rangeLow.toLocaleString()} &ndash; ${snapshot.rangeHigh.toLocaleString()}/mo</p>
+        <div class={`confidence-badge is-${snapshot.confidence.bucket}`}>
+          {snapshot.confidence.displayPercent}% &mdash; {snapshot.confidence.bucketLabel}
+        </div>
+        <p class="methodology-note">{snapshot.confidence.templateSentence}</p>
+        <p class="methodology-note">
+          Based on the median rent of {snapshot.comps.length} comparable {snapshot.comps.length === 1 ? 'property' : 'properties'} near
+          this address, leased or currently listed within the past 12 months.
+        </p>
+        <div class="cta-row" style="margin-top:20px">
+          <a class="btn btn-primary" href={CALENDLY_URL} target="_blank" rel="noopener">Talk to Red Door About Managing This Property</a>
+        </div>
+      </div>
+      {row.property_lat != null && row.property_lon != null && (
+        <div class="subject-map" id="subject-map" data-lat={row.property_lat} data-lng={row.property_lon}></div>
+      )}
+    </div>
+  </section>
+
+  <section class="listing-summary-band">
+    <div class="container listing-summary-inner">
+      <div class="listing-summary-main">
+        <h1>Your Rental Analysis</h1>
+        <p class="listing-location">{row.property_address}, {row.property_city}, {row.property_state} {row.property_zip}</p>
+      </div>
+      <div class="listing-summary-stats">
+        <div class="listing-specs-row">
+          <span><strong>{row.property_beds}</strong> beds</span>
+          <span><strong>{row.property_baths}</strong> baths</span>
+          {row.property_sqft && <span><strong>{row.property_sqft.toLocaleString()}</strong> sq ft</span>}
+          <span>{propertyTypeLabel}</span>
         </div>
       </div>
     </div>
@@ -202,27 +342,76 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
         <div class="section-kicker">Market Context</div>
         <h2>What's Happening Nearby</h2>
       </div>
-      <div class="market-context-grid">
-        <div class="context-panel">
-          <h3>Supply &amp; Demand</h3>
-          <div class="context-figure">{snapshot.supplyDemand.statusLabel}</div>
-          <p class="consent">
-            {snapshot.supplyDemand.rentedCount} recently leased vs. {snapshot.supplyDemand.availableCount} currently
-            available nearby.
+      <p class="section-dek">How this submarket is behaving beyond the {snapshot.comps.length} comps above &mdash; supply relative to demand, and where rents sit by bedroom count.</p>
+      <div class="context-card-grid">
+        <div class="context-card">
+          <p class="context-card-label">Supply &amp; Demand Ratio</p>
+          <div class="context-card-figure">
+            {snapshot.supplyDemand.ratio != null ? snapshot.supplyDemand.ratio.toFixed(2) : '—'}
+            <span class={`context-status-badge is-${supplyStatusKey}`}>{snapshot.supplyDemand.statusLabel}</span>
+          </div>
+          <div class="context-ratio-bar"><span class="context-ratio-fill" style={`width:${supplyRatioPercent}%`}></span></div>
+          <div class="context-ratio-legend">
+            <span><i class="context-dot is-available"></i>{snapshot.supplyDemand.availableCount} available</span>
+            <span><i class="context-dot is-rented"></i>{snapshot.supplyDemand.rentedCount} rented</span>
+          </div>
+          <p class="context-card-note">
+            {snapshot.supplyDemand.ratio != null
+              ? `For every home leased nearby recently, about ${snapshot.supplyDemand.ratio.toFixed(1)} sit available at once — ${snapshot.supplyDemand.statusLabel === 'Healthy market' ? 'a healthy balance that supports steady, on-time leasing.' : snapshot.supplyDemand.statusLabel === 'Soft market' ? 'more supply than this comp set is currently absorbing.' : 'a roughly even balance between supply and demand.'}`
+              : 'Not enough recently-leased comps nearby to compute this ratio.'}
           </p>
         </div>
-        <div class="context-panel">
-          <h3>Time to Lease</h3>
-          <div class="context-figure">
-            {snapshot.timeToLease.medianDaysOnMarket != null ? `${snapshot.timeToLease.medianDaysOnMarket} days` : 'N/A'}
+
+        <div class="context-card">
+          <p class="context-card-label">Time to Lease &mdash; This Comp Set</p>
+          <div class="context-card-figure">
+            {snapshot.timeToLease.medianDaysOnMarket != null ? snapshot.timeToLease.medianDaysOnMarket : '—'}
+            <span class="context-card-figure-sub">median days on market</span>
           </div>
-          <p class="consent">Median days on market for comparable rentals nearby.</p>
-          <p class="consent">
-            0&ndash;14 days: {snapshot.timeToLease.buckets.days0to14} &middot;
-            15&ndash;30: {snapshot.timeToLease.buckets.days15to30} &middot;
-            31&ndash;45: {snapshot.timeToLease.buckets.days31to45} &middot;
-            46+: {snapshot.timeToLease.buckets.days46plus}
-          </p>
+          <div class="context-bucket-rows">
+            {[
+              ['0–14 days', snapshot.timeToLease.buckets.days0to14],
+              ['15–30 days', snapshot.timeToLease.buckets.days15to30],
+              ['31–45 days', snapshot.timeToLease.buckets.days31to45],
+              ['46+ days', snapshot.timeToLease.buckets.days46plus],
+            ].map(([label, count]) => (
+              <div class="context-bucket-row">
+                <span class="context-bucket-label">{label}</span>
+                <div class="context-bucket-bar"><span style={`width:${Math.round((Number(count) / timeToLeaseBucketMax) * 100)}%`}></span></div>
+                <span class="context-bucket-count">{count}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="context-card">
+          <p class="context-card-label">Average Rent by Bedroom Count</p>
+          {
+            bedroomChartData.length > 0 ? (
+              <>
+                <div class="context-bar-chart">
+                  {bedroomChartData.map((b) => (
+                    <div class="context-bar-col">
+                      <span class="context-bar-value">${Math.round(b.avgRent).toLocaleString()}</span>
+                      <div class={`context-bar${b.beds === row.property_beds ? ' is-subject' : ''}`} style={`height:${Math.max(6, Math.round((b.avgRent / bedroomChartMax) * 100))}%`} />
+                      <span class="context-bar-label">{b.beds}bd{b.beds === row.property_beds && ' (subject)'}</span>
+                    </div>
+                  ))}
+                </div>
+                <p class="context-card-note">This property's {row.property_beds}-bedroom estimate sits {(() => {
+                  const subjectRung = bedroomChartData.find((b) => b.beds === row.property_beds);
+                  if (!subjectRung) return 'outside the current bedroom-count data for this submarket.';
+                  return snapshot.estimatedRent > subjectRung.avgRent
+                    ? 'above the broader ladder for this submarket.'
+                    : snapshot.estimatedRent < subjectRung.avgRent
+                      ? 'below the broader ladder for this submarket.'
+                      : 'right in line with the broader ladder for this submarket.';
+                })()}</p>
+              </>
+            ) : (
+              <p class="context-card-note">Not enough RentCast bedroom-count data for {row.property_city} to chart this yet.</p>
+            )
+          }
         </div>
       </div>
     </div>
@@ -247,8 +436,8 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
             </tr>
           </thead>
           <tbody>
-            {compsWithDistance.map((c) => (
-              <tr>
+            {compsWithDistance.map((c, i) => (
+              <tr data-comp-index={i} class="comps-table-row">
                 <td>{c.address}</td>
                 <td>{c.beds}bd / {c.baths}ba</td>
                 <td>{c.sqft ?? '—'}</td>
@@ -267,8 +456,83 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
           </tbody>
         </table>
       </div>
+      {compsWithDistance.length > 0 && (
+        <div class="comps-map" id="comps-map" data-comps={JSON.stringify(compsWithDistance.map((c) => ({ lat: c.latitude, lng: c.longitude, address: c.address, rent: c.rent })))}></div>
+      )}
     </div>
   </section>
+
+  {
+    isRentCastCovered && reportStatTiles.length > 0 && (
+      <section>
+        <div class="container">
+          <div class="section-head">
+            <div class="section-kicker">{row.property_city} Rental Market</div>
+            <h2>What Homes Are Renting for Nearby</h2>
+          </div>
+          {cityMarketData?.dataAsOf && <p class="data-asof">{cityMarketData.dataAsOf}</p>}
+          <div class="snapshot-grid">
+            {reportStatTiles.map((tile) => (
+              <div class="stat-tile">
+                <p class="stat-label">{tile.label}</p>
+                <p class="stat-value">{tile.value}</p>
+                <p class="stat-sub">{tile.sub}</p>
+              </div>
+            ))}
+          </div>
+          {cityContentEntry?.snapshotDetail.map((paragraph) => <p class="snapshot-detail">{paragraph}</p>)}
+          {
+            cityMarketData && cityMarketData.bedroomLadder.length > 0 && (
+              <>
+                <p class="snapshot-note">Rent by bedroom count, this month&rsquo;s RentCast pull:</p>
+                <div class="bedroom-ladder">
+                  {cityMarketData.bedroomLadder.map((b) => (
+                    <div class="bedroom-ladder-row">
+                      <span class="bedroom-ladder-beds">{b.beds === 0 ? 'Studio' : `${b.beds}-Bedroom`}</span>
+                      <span class="bedroom-ladder-rent">${Math.round(b.avgRent).toLocaleString()}/mo</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )
+          }
+        </div>
+      </section>
+    )
+  }
+
+  {
+    isRentCastCovered && citySnapshot && (
+      <section class="section-soft">
+        <div class="container">
+          <div class="section-head">
+            <div class="section-kicker">{row.property_city} Rent &amp; Sales</div>
+            <h2>Own vs. Rent Context for This Market</h2>
+          </div>
+          {citySnapshot.dataAsOf && <p class="snapshot-asof">{citySnapshot.dataAsOf}</p>}
+          <div class="snapshot-panels">
+            <div class="snapshot-panel">
+              <span class="snapshot-panel-label">Rental Market</span>
+              <h3>{row.property_city} Rentals</h3>
+              <div class="snapshot-stat-row"><span class="snapshot-stat-label">Average Rent</span><span class="snapshot-stat-value">{formatCurrency(citySnapshot.rental.averageRent)}</span></div>
+              <div class="snapshot-stat-row"><span class="snapshot-stat-label">Median Rent</span><span class="snapshot-stat-value">{formatCurrency(citySnapshot.rental.medianRent)}</span></div>
+              <div class="snapshot-stat-row"><span class="snapshot-stat-label">Active Listings</span><span class="snapshot-stat-value">{citySnapshot.rental.activeListings}</span></div>
+            </div>
+            <div class="snapshot-panel is-sales">
+              <span class="snapshot-panel-label">Sales Market</span>
+              <h3>{row.property_city} For-Sale Homes</h3>
+              <div class="snapshot-stat-row"><span class="snapshot-stat-label">Average Sale Price</span><span class="snapshot-stat-value">{formatCurrency(citySnapshot.sale.averagePrice)}</span></div>
+              <div class="snapshot-stat-row"><span class="snapshot-stat-label">Median Sale Price</span><span class="snapshot-stat-value">{formatCurrency(citySnapshot.sale.medianPrice)}</span></div>
+              <div class="snapshot-stat-row"><span class="snapshot-stat-label">Active Listings</span><span class="snapshot-stat-value">{citySnapshot.sale.activeListings}</span></div>
+              <p class="snapshot-note">
+                Weighing selling versus continuing to rent? {citySnapshot.sale.activeListings} active {row.property_city} listings are averaging {formatCurrency(citySnapshot.sale.averagePrice)}.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   {
     crossSellUnits.length > 0 && (
@@ -292,6 +556,9 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
               </article>
             ))}
           </div>
+          <p style="text-align:center;margin-top:24px">
+            <a class="area-link" href="/indianapolis-homes-for-rent?areas=all">View all available Red Door properties &rarr;</a>
+          </p>
         </div>
       </section>
     )
@@ -328,4 +595,95 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
       </div>
     </div>
   </section>
+
+  <script define:vars={{ mapboxToken: MAPBOX_TOKEN }}>
+    (function () {
+      if (typeof mapboxgl === 'undefined') return;
+      mapboxgl.accessToken = mapboxToken;
+
+      // Subject-location map — one static marker, no interaction needed
+      // beyond the map's own default pan/zoom controls.
+      var subjectEl = document.getElementById('subject-map');
+      if (subjectEl) {
+        var lat = parseFloat(subjectEl.dataset.lat);
+        var lng = parseFloat(subjectEl.dataset.lng);
+        if (!isNaN(lat) && !isNaN(lng)) {
+          var subjectMap = new mapboxgl.Map({
+            container: 'subject-map',
+            style: 'mapbox://styles/mapbox/light-v11',
+            center: [lng, lat],
+            zoom: 14,
+            interactive: true,
+          });
+          subjectMap.addControl(new mapboxgl.NavigationControl(), 'top-right');
+          subjectMap.on('load', function () {
+            new mapboxgl.Marker({ color: '#8b0e04' }).setLngLat([lng, lat]).addTo(subjectMap);
+          });
+        }
+      }
+
+      // Comparable-properties map — one marker per comp, hover-synced
+      // with the comps table rows above (same two-way hover pattern
+      // already built for the Indianapolis homes-for-rent search page's
+      // map: hovering a table row highlights its pin, and vice versa).
+      var compsEl = document.getElementById('comps-map');
+      if (compsEl) {
+        var comps;
+        try {
+          comps = JSON.parse(compsEl.dataset.comps || '[]');
+        } catch (e) {
+          comps = [];
+        }
+        var withCoords = comps.filter(function (c) { return typeof c.lat === 'number' && typeof c.lng === 'number'; });
+        if (withCoords.length > 0) {
+          var compsMap = new mapboxgl.Map({
+            container: 'comps-map',
+            style: 'mapbox://styles/mapbox/light-v11',
+            center: [withCoords[0].lng, withCoords[0].lat],
+            zoom: 12,
+          });
+          compsMap.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+          var pinsByIndex = {};
+          var rows = document.querySelectorAll('.comps-table-row');
+
+          compsMap.on('load', function () {
+            var bounds = new mapboxgl.LngLatBounds();
+            comps.forEach(function (c, i) {
+              if (typeof c.lat !== 'number' || typeof c.lng !== 'number') return;
+              var el = document.createElement('div');
+              el.className = 'map-pin-price';
+              el.textContent = c.rent ? '$' + Math.round(c.rent).toLocaleString() : '—';
+              el.addEventListener('mouseenter', function () {
+                var row = document.querySelector('.comps-table-row[data-comp-index="' + i + '"]');
+                if (row) row.classList.add('is-map-hovered');
+              });
+              el.addEventListener('mouseleave', function () {
+                var row = document.querySelector('.comps-table-row[data-comp-index="' + i + '"]');
+                if (row) row.classList.remove('is-map-hovered');
+              });
+              var marker = new mapboxgl.Marker({ element: el, anchor: 'bottom' }).setLngLat([c.lng, c.lat]).addTo(compsMap);
+              pinsByIndex[i] = el;
+              bounds.extend([c.lng, c.lat]);
+            });
+            if (!bounds.isEmpty()) compsMap.fitBounds(bounds, { padding: 50, maxZoom: 14, duration: 0 });
+          });
+
+          rows.forEach(function (row) {
+            var index = row.getAttribute('data-comp-index');
+            row.addEventListener('mouseenter', function () {
+              row.classList.add('is-hovered');
+              var pin = pinsByIndex[index];
+              if (pin) pin.classList.add('is-highlighted');
+            });
+            row.addEventListener('mouseleave', function () {
+              row.classList.remove('is-hovered');
+              var pin = pinsByIndex[index];
+              if (pin) pin.classList.remove('is-highlighted');
+            });
+          });
+        }
+      }
+    })();
+  </script>
 </BaseLayout>

@@ -9,7 +9,7 @@
 import { haversineMiles } from './geo';
 import type { AvailableUnit } from './listings-client';
 
-const CARD_COUNT = 4;
+const CARD_COUNT = 3;
 
 export function selectCrossSellUnits(
   units: AvailableUnit[],

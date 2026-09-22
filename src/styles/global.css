@@ -2465,20 +2465,26 @@
     }
 
     /* ---------- Rental analysis hosted report page ---------- */
-    /* Subject property photo (2026-09-22, revised same day after
-       Michael's feedback that a full-width photo floating above the
-       estimate card looked wrong) — sits beside the estimate card
-       instead, matched to its height. Google Street View via
-       /api/street-view isn't always available for a given address, so
-       .is-photo-missing (added server-side when there's no lat/lon, or
-       client-side by the <img>'s own onerror) collapses back to a
-       single column rather than leave a narrow, off-balance card. */
-    .report-hero-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(320px, 1.1fr); align-items: stretch; gap: clamp(20px, 4vw, 32px); margin-top: 6px; }
-    .report-hero-grid.is-photo-missing { grid-template-columns: 1fr; max-width: 640px; }
-    .subject-photo { width: 100%; height: 100%; min-height: 280px; object-fit: cover; border-radius: var(--radius); box-shadow: var(--shadow); }
-    @media (max-width: 760px) {
-      .report-hero-grid { grid-template-columns: 1fr; }
-      .subject-photo { height: 240px; min-height: 0; }
+    /* Hero: three equally-sized boxes — photo, estimate, subject-
+       location map (2026-09-22, per Michael's design pass; revised same
+       day from an earlier full-width-photo-above-the-card layout after
+       his feedback that looked wrong). Now sits inside .listing-hero,
+       matching the homes-for-rent listing detail page's own template
+       (dark breadcrumb bar above, summary band below) rather than a
+       plain light section. .is-photo-missing (added server-side when
+       there's no lat/lon, or client-side by the photo's own onerror)
+       drops to two equal columns instead of leaving a dead gap. */
+    .listing-hero .container.report-hero-grid { padding-top: clamp(20px, 3vw, 32px); padding-bottom: clamp(20px, 3vw, 32px); }
+    .report-hero-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; gap: clamp(16px, 3vw, 24px); }
+    .report-hero-grid.is-photo-missing { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .subject-photo, .subject-map { width: 100%; height: 100%; min-height: 280px; border-radius: var(--radius); box-shadow: var(--shadow); }
+    .subject-photo { object-fit: cover; }
+    .subject-map { overflow: hidden; }
+    .report-hero-grid .estimate-card { min-height: 280px; }
+    .report-hero-grid .estimate-figure { font-size: clamp(1.7rem, 2.6vw, 2.3rem); }
+    @media (max-width: 900px) {
+      .report-hero-grid, .report-hero-grid.is-photo-missing { grid-template-columns: 1fr; }
+      .subject-photo, .subject-map { height: 240px; min-height: 0; }
     }
     /* Same previously-missing-rule gap as .content-block > h1 above —
        this page's h1 ("Your Rental Analysis") had no rule of its own. */
@@ -2535,29 +2541,46 @@
       font-size: .92rem;
     }
 
-    .market-context-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 18px;
-    }
+    /* Market-context card grid (2026-09-22 rebuild, replacing the
+       earlier plain-text panels) — three cards: supply/demand ratio,
+       time-to-lease bucket bars, and an average-rent-by-bedroom chart.
+       Ported from Michael's own report-design reference, not a static
+       mockup file (none existed for this page). */
+    .context-card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 20px; }
+    .context-card { padding: 22px; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); }
+    .context-card-label { margin: 0 0 10px; color: var(--muted); font-size: .78rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+    .context-card-figure { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; font-family: var(--font-head); font-size: 2.1rem; font-weight: 500; color: var(--ink); }
+    .context-card-figure-sub { font-family: var(--font); font-size: .82rem; font-weight: 700; color: var(--muted); }
+    .context-card-note { margin: 14px 0 0; color: var(--muted); font-size: .88rem; line-height: 1.5; }
 
-    .context-panel {
-      padding: 22px;
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-    }
+    .context-status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 999px; font-size: .76rem; font-weight: 800; }
+    .context-status-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .context-status-badge.is-healthy { background: #eaf6ee; color: #1f7a3d; }
+    .context-status-badge.is-balanced { background: #fdf3e3; color: #a5680b; }
+    .context-status-badge.is-soft { background: var(--brand-tint); color: var(--brand); }
 
-    .context-panel h3 {
-      margin: 0 0 6px;
-      font-size: 1.05rem;
-    }
+    .context-ratio-bar { height: 8px; background: #eceff3; border-radius: 999px; overflow: hidden; }
+    .context-ratio-fill { display: block; height: 100%; background: linear-gradient(90deg, #d9a441, #1f7a3d); }
+    .context-ratio-legend { display: flex; gap: 16px; margin-top: 10px; font-size: .8rem; color: var(--muted); font-weight: 700; }
+    .context-dot { display: inline-block; width: 8px; height: 8px; margin-right: 5px; border-radius: 50%; }
+    .context-dot.is-available { background: #d9a441; }
+    .context-dot.is-rented { background: #1f7a3d; }
 
-    .context-figure {
-      font-family: var(--font-head);
-      font-size: 1.8rem;
-      font-weight: 500;
-    }
+    .context-bucket-rows { display: grid; gap: 9px; }
+    .context-bucket-row { display: grid; grid-template-columns: 70px 1fr 20px; align-items: center; gap: 10px; font-size: .82rem; }
+    .context-bucket-label { color: var(--muted); }
+    .context-bucket-bar { height: 8px; background: var(--soft); border-radius: 999px; overflow: hidden; }
+    .context-bucket-bar span { display: block; height: 100%; background: var(--red); border-radius: 999px; }
+    .context-bucket-count { text-align: right; font-weight: 800; color: var(--ink); }
+
+    .context-bar-chart { display: grid; grid-template-columns: repeat(5, 1fr); align-items: end; gap: 10px; height: 140px; margin-top: 4px; }
+    .context-bar-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+    .context-bar-value { margin-bottom: 4px; font-size: .72rem; font-weight: 800; color: var(--muted); white-space: nowrap; }
+    .context-bar { width: 100%; background: var(--line); border-radius: 4px 4px 0 0; }
+    .context-bar.is-subject { background: var(--red); }
+    .context-bar-label { margin-top: 6px; font-size: .72rem; color: var(--muted); text-align: center; }
+
+    @media (max-width: 900px) { .context-card-grid { grid-template-columns: 1fr; } }
 
     .comps-table {
       width: 100%;
@@ -2589,6 +2612,13 @@
 
     .status-pill.is-rented { background: #eaf6ee; color: #1f7a3d; }
     .status-pill.is-available { background: #fdf3e3; color: #a5680b; }
+
+    /* Comps map + row/pin hover sync (2026-09-22) — same two-way pattern
+       already built for the Indianapolis homes-for-rent search page's
+       map (.map-pin-price/.is-highlighted, reused as-is from there). */
+    .comps-table-row { cursor: default; transition: background .12s ease; }
+    .comps-table-row.is-hovered, .comps-table-row.is-map-hovered { background: var(--soft); }
+    .comps-map { width: 100%; height: 360px; margin-top: 20px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
 
     .post-mini-grid {
       display: grid;
