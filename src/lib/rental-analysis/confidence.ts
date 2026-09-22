@@ -50,6 +50,12 @@ export function computeRawScore(compromises: CascadeCompromises): number {
   if (compromises.dateWindowMonths === 12) score -= 15;
   if (compromises.bedsRelaxed) score -= 20;
   if (compromises.blendPathUsed) score -= 20;
+  // Added 2026-09-22 with the RentCast comp blend — a real step down
+  // from blendPathUsed's 'inactive' tier specifically, not a duplicate
+  // penalty for it (see fallback-and-estimate.ts's module header: this
+  // only fires when even RentCast's 'inactive' comps ran out too and the
+  // estimate had to reach pure asking-price listings).
+  if (compromises.reachedActiveListingsTier) score -= 10;
   if (compromises.blendedPoolStillThin) score -= 15;
   if (compromises.multiUnitFellThroughToAreaWide) score -= 15;
   score -= bedroomAdjustmentDeduction(compromises.bedroomAdjustment);

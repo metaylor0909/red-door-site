@@ -23,6 +23,28 @@ function isWithinDateWindow(comp: RentEngineComp, months: number): boolean {
   return new Date(comp.date_rented) >= monthsAgo(months);
 }
 
+/** Just the street-address portion (before the first comma), normalized
+ * — used only for cross-source de-dup below. RentEngine and RentCast
+ * format the city/state/zip suffix differently (RentEngine's addresses
+ * often omit zip, RentCast's formattedAddress always includes it), so
+ * comparing full addresses risks missing a real duplicate. */
+function normalizeStreetAddress(address: string): string {
+  return normalizeAddress(address.split(',')[0]);
+}
+
+/** Merges RentEngine's and RentCast's comp pools into one, added
+ * 2026-09-22 with the RentCast comp blend — call this BEFORE
+ * selectComps() so the cascade's radius/date/beds/property-type filters
+ * run against a single unified pool rather than needing their own
+ * per-source branch. Prefers the RentEngine record whenever the same
+ * physical address appears in both pools (RentEngine's is the confirmed
+ * one; RentCast's would just be a duplicate signal, not new data). */
+export function mergeCompPools(rentEngineComps: RentEngineComp[], rentCastComps: RentEngineComp[]): RentEngineComp[] {
+  const seenStreets = new Set(rentEngineComps.map((c) => normalizeStreetAddress(c.address)));
+  const dedupedRentCast = rentCastComps.filter((c) => !seenStreets.has(normalizeStreetAddress(c.address)));
+  return [...rentEngineComps, ...dedupedRentCast];
+}
+
 function isSelfMatch(comp: RentEngineComp, subject: SubjectProperty): boolean {
   // Decision #4: RentEngine's comps can include the subject property
   // itself (a real prior/re-lease, not bad data) — must exclude by
@@ -139,7 +161,10 @@ function poolForStep(qualityFiltered: RentEngineComp[], subject: SubjectProperty
 function runStandardPath(
   qualityFiltered: RentEngineComp[],
   subject: SubjectProperty
-): { pool: RentEngineComp[]; compromises: Omit<CascadeCompromises, 'blendPathUsed' | 'blendedPoolStillThin' | 'multiUnitFellThroughToAreaWide'> } {
+): {
+  pool: RentEngineComp[];
+  compromises: Omit<CascadeCompromises, 'blendPathUsed' | 'blendedPoolStillThin' | 'multiUnitFellThroughToAreaWide' | 'reachedActiveListingsTier'>;
+} {
   let lastStep = STANDARD_CASCADE[0];
   let lastPool: RentEngineComp[] = [];
   for (const step of STANDARD_CASCADE) {
@@ -208,6 +233,7 @@ export function selectComps(
         bedsRelaxed: false,
         blendPathUsed: false,
         blendedPoolStillThin: false,
+        reachedActiveListingsTier: false,
         multiUnitFellThroughToAreaWide: false,
       };
     } else {
@@ -217,6 +243,7 @@ export function selectComps(
         ...standard.compromises,
         blendPathUsed: false,
         blendedPoolStillThin: false,
+        reachedActiveListingsTier: false,
         multiUnitFellThroughToAreaWide: true,
       };
     }
@@ -227,6 +254,7 @@ export function selectComps(
       ...standard.compromises,
       blendPathUsed: false,
       blendedPoolStillThin: false,
+      reachedActiveListingsTier: false,
       multiUnitFellThroughToAreaWide: false,
     };
   }

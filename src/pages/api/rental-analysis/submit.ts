@@ -21,6 +21,8 @@ import { validateIntake } from '../../../lib/rental-analysis/validation';
 import { verifyTurnstileToken } from '../../../lib/rental-analysis/turnstile';
 import { geocodeAddress } from '../../../lib/rental-analysis/geocode';
 import { fetchComps } from '../../../lib/rental-analysis/rentengine-client';
+import { fetchRentCastComps } from '../../../lib/rental-analysis/rentcast-comps-client';
+import { mergeCompPools } from '../../../lib/rental-analysis/comp-selection';
 import { analyze } from '../../../lib/rental-analysis/analyze';
 import { computeSupplyDemand, computeTimeToLease } from '../../../lib/rental-analysis/market-context';
 import { sendEmail } from '../../../lib/rental-analysis/resend-client';
@@ -170,6 +172,28 @@ export const POST: APIRoute = async ({ request }) => {
     return jsonError(502, 'Could not pull comparable properties right now. Please try again shortly.');
   }
 
+  // Second comp source, added 2026-09-22 — RentEngine's own pool landed
+  // too thin on real submissions (1-4 usable comps) even after this
+  // tool's property-type/status bugs were fixed; a real side-by-side
+  // pull confirmed RentCast's /avm/rent/long-term returns 20+ tightly-
+  // matched comps for the same addresses. Merged in (deduped by street
+  // address, RentEngine wins collisions) BEFORE the cascade runs, so
+  // comp-selection.ts's existing radius/date/beds/property-type filters
+  // apply to the combined pool uniformly — see mergeCompPools() and
+  // rentcast-comps-client.ts's own header for the full reasoning,
+  // including why RentCast's 'Inactive' comps are NOT treated as
+  // confirmed leases. Graceful skip if the key isn't configured or the
+  // call fails — RentEngine alone is still enough to run the estimate,
+  // same degrade-gracefully pattern as every other optional integration
+  // here.
+  const rentCastKey = envRecord.RENTCAST_API_KEY;
+  if (typeof rentCastKey === 'string' && rentCastKey.length > 0) {
+    const rentCastComps = await fetchRentCastComps(subject, { apiKey: rentCastKey });
+    comps = mergeCompPools(comps, rentCastComps);
+  } else {
+    console.warn('[rental-analysis/submit] RENTCAST_API_KEY not configured — RentCast comp blend skipped.');
+  }
+
   const db = env.DB;
   if (!db) {
     console.error('[rental-analysis/submit] D1 binding "DB" is not configured.');
@@ -181,7 +205,6 @@ export const POST: APIRoute = async ({ request }) => {
   // Michael's call. Graceful skip if not configured: the estimate still
   // works, ±1-bed comps just enter the median unadjusted, same as before
   // this tier existed.
-  const rentCastKey = envRecord.RENTCAST_API_KEY;
   const bedroomAdjustmentContext =
     typeof rentCastKey === 'string' && rentCastKey.length > 0 ? { db, rentCastApiKey: rentCastKey } : undefined;
   if (!bedroomAdjustmentContext) {

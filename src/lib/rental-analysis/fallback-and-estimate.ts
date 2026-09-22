@@ -3,6 +3,18 @@
 // already-selected, distance-then-recency-ranked comp list from
 // comp-selection.ts (which does not itself filter by status) and decides
 // which of those comps actually feed the rent estimate.
+//
+// REVISED 2026-09-22 — extended decision #2's two-tier Rented/Available
+// blend into three tiers, to fold in RentCast's comps (rentcast-comps-
+// client.ts) without treating them as equivalent to a confirmed
+// RentEngine lease: RentEngine 'rented' (confirmed) → 'inactive'
+// (RentCast, probably off-market for SOME reason, not confirmed leased —
+// see that client's own header note) → 'available' (currently listed,
+// asking price, RentEngine or RentCast, least reliable for what a
+// property will actually rent for). Each tier only gets used once the
+// tier(s) above it run out — never blended by simple proportion — same
+// "closest-first, only reach for the next tier if you have to" spirit as
+// the original two-tier version.
 
 import type { CascadeCompromises, RentEngineComp } from './types';
 
@@ -13,11 +25,12 @@ export interface EstimateResult {
   estimatedRent: number;
   rangeLow: number;
   rangeHigh: number;
-  /** The comps actually used for the median — Rented-only, or the
-   * Rented+Available blend when Rented alone falls short. */
+  /** The comps actually used for the median — see the module header for
+   * the three-tier fill order. */
   estimatePool: RentEngineComp[];
   blendPathUsed: boolean;
   blendedPoolStillThin: boolean;
+  reachedActiveListingsTier: boolean;
 }
 
 function median(values: number[]): number {
@@ -27,27 +40,29 @@ function median(values: number[]): number {
 }
 
 /**
- * Decision #2: if the selected pool has fewer than 5 Rented comps, blend
- * in Available comps (closest-first — `rankedComps` already arrives
- * distance-then-recency sorted from comp-selection.ts) until the blended
- * total reaches the 5-comp threshold or the pool is exhausted. Decision
- * #3: the estimate is the pool's median rent, with a fixed ±10% range
- * rather than a range computed from the pool's own spread.
+ * Decision #2 (extended): fills the estimate pool from the highest tier
+ * first — Rented, then Inactive, then Available — stopping as soon as the
+ * 5-comp threshold is reached, same closest-first ordering the ranked
+ * input already carries. Decision #3: the estimate is the pool's median
+ * rent, with a fixed ±10% range rather than a range computed from the
+ * pool's own spread.
  */
 export function buildEstimate(rankedComps: RentEngineComp[]): EstimateResult {
   const rented = rankedComps.filter((c) => c.status === 'rented');
+  const inactive = rankedComps.filter((c) => c.status === 'inactive');
   const available = rankedComps.filter((c) => c.status === 'available');
 
-  let estimatePool: RentEngineComp[];
-  let blendPathUsed: boolean;
+  const estimatePool: RentEngineComp[] = [...rented];
+  let blendPathUsed = false;
+  let reachedActiveListingsTier = false;
 
-  if (rented.length >= BLEND_THRESHOLD) {
-    estimatePool = rented;
-    blendPathUsed = false;
-  } else {
+  if (estimatePool.length < BLEND_THRESHOLD) {
     blendPathUsed = true;
-    const needed = BLEND_THRESHOLD - rented.length;
-    estimatePool = [...rented, ...available.slice(0, needed)];
+    estimatePool.push(...inactive.slice(0, BLEND_THRESHOLD - estimatePool.length));
+  }
+  if (estimatePool.length < BLEND_THRESHOLD) {
+    reachedActiveListingsTier = true;
+    estimatePool.push(...available.slice(0, BLEND_THRESHOLD - estimatePool.length));
   }
 
   const blendedPoolStillThin = estimatePool.length < BLEND_THRESHOLD;
@@ -67,19 +82,21 @@ export function buildEstimate(rankedComps: RentEngineComp[]): EstimateResult {
     estimatePool,
     blendPathUsed,
     blendedPoolStillThin,
+    reachedActiveListingsTier,
   };
 }
 
-/** Folds this module's two fallback signals into the cascade's own
+/** Folds this module's fallback signals into the cascade's own
  * compromise record, so confidence.ts (decision #9) has one complete
  * object to score against. */
 export function withEstimateCompromises(
   cascadeCompromises: CascadeCompromises,
-  estimate: Pick<EstimateResult, 'blendPathUsed' | 'blendedPoolStillThin'>
+  estimate: Pick<EstimateResult, 'blendPathUsed' | 'blendedPoolStillThin' | 'reachedActiveListingsTier'>
 ): CascadeCompromises {
   return {
     ...cascadeCompromises,
     blendPathUsed: estimate.blendPathUsed,
     blendedPoolStillThin: estimate.blendedPoolStillThin,
+    reachedActiveListingsTier: estimate.reachedActiveListingsTier,
   };
 }

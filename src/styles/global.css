@@ -2662,6 +2662,10 @@
 
     .status-pill.is-rented { background: #eaf6ee; color: #1f7a3d; }
     .status-pill.is-available { background: #fdf3e3; color: #a5680b; }
+    /* RentCast 'inactive' comps (2026-09-22) — off-market, not a
+       confirmed lease; a distinct neutral gray so it doesn't read as
+       either "Rented" (green) or "Available" (amber). */
+    .status-pill.is-inactive { background: var(--soft); color: var(--muted); }
 
     /* Comps map + row/pin hover sync (2026-09-22) — same two-way pattern
        already built for the Indianapolis homes-for-rent search page's

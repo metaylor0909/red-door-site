@@ -35,6 +35,13 @@ export interface TimeToLeaseStats {
   };
 }
 
+// REVISED 2026-09-22 — the pool can now also contain RentCast 'inactive'
+// comps (rentcast-comps-client.ts). Deliberately excluded from both
+// counts below by the exact-match filters (neither === 'rented' nor
+// === 'available' catches 'inactive') — it isn't a confirmed lease OR a
+// current listing, so counting it either way would misrepresent this
+// panel's whole point. It still appears in the comps table/estimate;
+// just not here.
 export function computeSupplyDemand(pool: RentEngineComp[]): SupplyDemandStats {
   const rentedCount = pool.filter((c) => c.status === 'rented').length;
   const availableCount = pool.filter((c) => c.status === 'available').length;

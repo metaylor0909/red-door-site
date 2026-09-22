@@ -501,7 +501,9 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
                 </td>
                 <td>{c.distance.toFixed(1)} mi</td>
                 <td>
-                  <span class={`status-pill ${c.status === 'rented' ? 'is-rented' : 'is-available'}`}>{c.status === 'rented' ? 'Rented' : 'Available'}</span>
+                  <span class={`status-pill is-${c.status}`}>
+                    {c.status === 'rented' ? 'Rented' : c.status === 'inactive' ? 'Off Market' : 'Available'}
+                  </span>
                 </td>
               </tr>
             ))}
