@@ -2465,12 +2465,21 @@
     }
 
     /* ---------- Rental analysis hosted report page ---------- */
-    /* Subject property photo (2026-09-22) — Google Street View via
-       /api/street-view, not always available for a given address, so
-       the <img> removes itself on error (see this page's own markup)
-       rather than show a broken-image icon or reserve dead space. */
-    .subject-photo { width: 100%; max-width: 640px; height: 320px; object-fit: cover; margin: 0 0 18px; border-radius: var(--radius); box-shadow: var(--shadow); }
-    @media (max-width: 640px) { .subject-photo { height: 220px; } }
+    /* Subject property photo (2026-09-22, revised same day after
+       Michael's feedback that a full-width photo floating above the
+       estimate card looked wrong) — sits beside the estimate card
+       instead, matched to its height. Google Street View via
+       /api/street-view isn't always available for a given address, so
+       .is-photo-missing (added server-side when there's no lat/lon, or
+       client-side by the <img>'s own onerror) collapses back to a
+       single column rather than leave a narrow, off-balance card. */
+    .report-hero-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(320px, 1.1fr); align-items: stretch; gap: clamp(20px, 4vw, 32px); margin-top: 6px; }
+    .report-hero-grid.is-photo-missing { grid-template-columns: 1fr; max-width: 640px; }
+    .subject-photo { width: 100%; height: 100%; min-height: 280px; object-fit: cover; border-radius: var(--radius); box-shadow: var(--shadow); }
+    @media (max-width: 760px) {
+      .report-hero-grid { grid-template-columns: 1fr; }
+      .subject-photo { height: 240px; min-height: 0; }
+    }
     /* Same previously-missing-rule gap as .content-block > h1 above —
        this page's h1 ("Your Rental Analysis") had no rule of its own. */
     .report-address + h1 {

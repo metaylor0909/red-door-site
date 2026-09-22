@@ -163,32 +163,34 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
 >
   <section class="section-soft">
     <div class="container">
-      {row.property_lat != null && row.property_lon != null && (
-        <img
-          class="subject-photo"
-          src={`/api/street-view?lat=${row.property_lat}&lng=${row.property_lon}`}
-          alt={`Street view of ${row.property_address}`}
-          loading="eager"
-          onerror="this.remove()"
-        />
-      )}
       <p class="report-address">{row.property_address}, {row.property_city}, {row.property_state} {row.property_zip}</p>
       <h1>Your Rental Analysis</h1>
 
-      <div class="estimate-card reveal">
-        <div class="section-kicker">Estimated Monthly Rent</div>
-        <div class="estimate-figure">${snapshot.estimatedRent.toLocaleString()}/mo</div>
-        <p class="estimate-range">Range: ${snapshot.rangeLow.toLocaleString()} &ndash; ${snapshot.rangeHigh.toLocaleString()}/mo</p>
-        <div class={`confidence-badge is-${snapshot.confidence.bucket}`}>
-          {snapshot.confidence.displayPercent}% &mdash; {snapshot.confidence.bucketLabel}
-        </div>
-        <p class="methodology-note">{snapshot.confidence.templateSentence}</p>
-        <p class="methodology-note">
-          Based on the median rent of {snapshot.comps.length} comparable {snapshot.comps.length === 1 ? 'property' : 'properties'} near
-          this address, leased or currently listed within the past 12 months.
-        </p>
-        <div class="cta-row" style="margin-top:20px">
-          <a class="btn btn-primary" href={CALENDLY_URL} target="_blank" rel="noopener">Talk to Red Door About Managing This Property</a>
+      <div class={`report-hero-grid${row.property_lat != null && row.property_lon != null ? '' : ' is-photo-missing'}`}>
+        {row.property_lat != null && row.property_lon != null && (
+          <img
+            class="subject-photo"
+            src={`/api/street-view?lat=${row.property_lat}&lng=${row.property_lon}`}
+            alt={`Street view of ${row.property_address}`}
+            loading="eager"
+            onerror="this.remove(); this.parentElement.classList.add('is-photo-missing')"
+          />
+        )}
+        <div class="estimate-card reveal">
+          <div class="section-kicker">Estimated Monthly Rent</div>
+          <div class="estimate-figure">${snapshot.estimatedRent.toLocaleString()}/mo</div>
+          <p class="estimate-range">Range: ${snapshot.rangeLow.toLocaleString()} &ndash; ${snapshot.rangeHigh.toLocaleString()}/mo</p>
+          <div class={`confidence-badge is-${snapshot.confidence.bucket}`}>
+            {snapshot.confidence.displayPercent}% &mdash; {snapshot.confidence.bucketLabel}
+          </div>
+          <p class="methodology-note">{snapshot.confidence.templateSentence}</p>
+          <p class="methodology-note">
+            Based on the median rent of {snapshot.comps.length} comparable {snapshot.comps.length === 1 ? 'property' : 'properties'} near
+            this address, leased or currently listed within the past 12 months.
+          </p>
+          <div class="cta-row" style="margin-top:20px">
+            <a class="btn btn-primary" href={CALENDLY_URL} target="_blank" rel="noopener">Talk to Red Door About Managing This Property</a>
+          </div>
         </div>
       </div>
     </div>
