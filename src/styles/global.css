@@ -1378,6 +1378,8 @@
       font-weight: 900;
     }
 
+    .lead-note { margin: 22px 0 0; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: .88rem; }
+
     /* contact.astro — ported from contact.html's own embedded <style>. */
     .contact-grid { display: grid; grid-template-columns: minmax(0, .86fr) minmax(360px, 1.14fr); gap: clamp(28px, 5vw, 54px); align-items: start; }
     .contact-address, .contact-phone { color: var(--charcoal); font-size: 1.02rem; line-height: 1.6; }
@@ -1397,15 +1399,25 @@
       box-shadow: var(--shadow);
     }
 
+    /* rental-analysis intake redesign (2026-09-22): static header at the
+       top of the form card, above the per-step progress/heading. */
+    .form-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 6px; }
+    .form-card-head h2 { margin: 0; font-size: 1.32rem; }
+    .form-card-head p { margin: 4px 0 0; color: var(--muted); font-size: .92rem; }
+    .time-badge { flex: 0 0 auto; padding: 6px 12px; color: var(--charcoal); background: var(--soft); border-radius: 999px; font-size: .78rem; font-weight: 800; white-space: nowrap; }
+    .step-subtext { margin: -8px 0 0; color: var(--muted); font-size: .92rem; }
+
     .progress-label {
       display: flex;
       justify-content: space-between;
       gap: 14px;
-      margin-bottom: 10px;
+      margin: 22px 0 10px;
       color: var(--muted);
       font-size: .9rem;
       font-weight: 900;
     }
+
+    .progress-label .progress-stepname { color: var(--ink); }
 
     .progress-track {
       height: 10px;

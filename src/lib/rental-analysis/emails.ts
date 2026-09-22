@@ -92,10 +92,18 @@ export interface LeadSimpleEmailParams {
   ownerName: string;
   ownerEmail: string;
   ownerPhone: string;
+  /** New 2026-09-22 intake fields — context only, folded into
+   * Comments per the PMW→LeadSimple field-mapping table's confirmed
+   * "any other form fields go in Comments" rule (decision #6). None of
+   * these feed the estimate logic itself. */
+  preferredContactMethod: string;
   propertyAddress: string;
   propertyCity: string;
   propertyState: string;
   propertyZip: string;
+  propertyStatus: string;
+  desiredTimeline: string;
+  currentRent: number | null;
   estimatedRent: number;
   rangeLow: number;
   rangeHigh: number;
@@ -107,6 +115,7 @@ export function buildLeadSimpleEmail(params: LeadSimpleEmailParams): { from: str
   // Decision #6's exact confirmed format — labeled plain-text lines,
   // lead source inferred by LeadSimple purely from the receiving
   // address, "Comments" carries everything else.
+  const currentRentLine = params.currentRent != null ? ` Current/expected rent: $${params.currentRent}/mo.` : '';
   const text = `Name: ${params.ownerName}
 Email: ${params.ownerEmail}
 Phone Number: ${params.ownerPhone}
@@ -114,7 +123,7 @@ Address: ${params.propertyAddress}
 City: ${params.propertyCity}
 State: ${params.propertyState}
 Zip Code: ${params.propertyZip}
-Comments: Rental analysis request for ${params.propertyAddress}. Estimated rent: $${params.estimatedRent}/mo (range $${params.rangeLow}-$${params.rangeHigh}). Confidence: ${params.confidencePercent}%. Full report: ${params.reportUrl}`;
+Comments: Rental analysis request for ${params.propertyAddress}. Estimated rent: $${params.estimatedRent}/mo (range $${params.rangeLow}-$${params.rangeHigh}). Confidence: ${params.confidencePercent}%. Property status: ${params.propertyStatus}. Timeline: ${params.desiredTimeline}. Preferred contact: ${params.preferredContactMethod}.${currentRentLine} Full report: ${params.reportUrl}`;
 
   return {
     from: SENDER,

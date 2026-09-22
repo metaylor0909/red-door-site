@@ -1,4 +1,36 @@
 ---
+// /rental-analysis — intake form redesigned 2026-09-22 per Michael's
+// screenshots. Changes from the original build
+// (claude/rental-analysis-tool-build.md):
+//   - Hero copy rewritten (new H1, lead, benefit-list wording, and a new
+//     "No obligation..." footer note under the benefit list).
+//   - Form card gained a static header ("Get your personalized rent
+//     estimate" + an "About 2 min" time badge) and each step gained a
+//     one-line subtext under its heading.
+//   - Progress indicator changed from "Step X of Y" + "Z%" to the
+//     current step's NAME on the left ("Property address" / "Property
+//     details" / "Your information") and "Step X of 3" on the right —
+//     no percent text anymore, though the fill bar itself is still
+//     percent-width under the hood.
+//   - 4 steps collapsed to 3: property type moved into step 1 (with the
+//     address), and step 2 dropped square footage + the furnished
+//     checkbox (neither is a hard requirement for the estimate —
+//     comp-selection.ts already tolerates null sqft / defaults
+//     furnished false, confirmed before removing them) in favor of four
+//     new fields — property status, desired timeline, and current/
+//     expected rent — per Michael's screenshots. None of these three
+//     feed the estimate logic, only the owner/LeadSimple emails (see
+//     validation.ts's header comment).
+//   - Address is now three fields (street/city/zip) instead of one
+//     freeform address field + an optional unit field; unit is dropped
+//     entirely, not carried over.
+//   - Name splits into first/last; a "preferred way to connect"
+//     dropdown and a real consent checkbox (replacing the old plain
+//     consent paragraph) were added to the final step.
+//   - Submit button reads "Get My Rental Analysis" on the last step
+//     (was "Request My Rental Analysis").
+// See db/migrations/0003_rental_analysis_intake_v2.sql and
+// validation.ts for the matching backend changes.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
@@ -13,49 +45,68 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
     <div class="container analysis-grid">
       <div class="reveal">
         <div class="section-kicker">Free Rental Analysis</div>
-        <h1>What Could Your Indianapolis Rental Earn?</h1>
+        <h1>What Could Your Indianapolis Property Rent For?</h1>
         <p class="lead">
-          Tell us about the property and we'll email a rent estimate backed by recently leased
-          and currently listed comparable homes nearby.
+          Start with the property address. We will use the details you provide to prepare a
+          local rental estimate and help you understand the next best step for your property.
         </p>
         <ul class="benefit-list">
-          <li><span>1</span>A rent estimate and range within minutes, not days.</li>
-          <li><span>2</span>Backed by real comparable properties near yours.</li>
-          <li><span>3</span>No obligation — see whether Red Door's approach fits your goals.</li>
+          <li><span>1</span>Estimated monthly rental range</li>
+          <li><span>2</span>Local market and comparable-property context</li>
+          <li><span>3</span>Practical recommendations from a local expert</li>
         </ul>
+        <p class="lead-note">No obligation and no generic national estimate. Your information is used to prepare your analysis and follow up about the property.</p>
       </div>
 
       <form class="form-card" data-analysis-form novalidate>
+        <div class="form-card-head">
+          <div>
+            <h2>Get your personalized rent estimate</h2>
+            <p>Answer a few quick questions to get started.</p>
+          </div>
+          <span class="time-badge">About 2 min</span>
+        </div>
+
         <div class="progress-label">
-          <span data-progress-text>Step 1 of 4</span>
-          <span data-progress-percent>25%</span>
+          <span data-progress-stepname class="progress-stepname">Property address</span>
+          <span data-progress-text>Step 1 of 3</span>
         </div>
         <div class="progress-track" aria-hidden="true"><span class="progress-fill" data-progress-fill></span></div>
 
         <div class="form-step is-active" data-step="0">
-          <h3>Property address</h3>
-          <label>Rental property address
-            <input name="property_address" autocomplete="street-address" required />
+          <h3>Where is the rental property?</h3>
+          <p class="step-subtext">The address helps us find the most relevant nearby rental comparisons.</p>
+          <label>Street address
+            <input name="property_street" autocomplete="address-line1" placeholder="123 Main Street" required />
           </label>
-          <label>Unit number <span class="consent">(if applicable)</span>
-            <input name="property_unit" autocomplete="address-line2" />
+          <div class="field-grid">
+            <label>City
+              <input name="property_city_input" autocomplete="address-level2" placeholder="Indianapolis" required />
+            </label>
+            <label>ZIP code
+              <input name="property_zip_input" autocomplete="postal-code" inputmode="numeric" placeholder="46220" required />
+            </label>
+          </div>
+          <label>Property type
+            <select name="property_type" required>
+              <option value="">Choose a property type</option>
+              <option value="single-family">Single-family home</option>
+              <option value="townhome">Townhome</option>
+              <option value="condo">Condo</option>
+              <option value="duplex">Duplex</option>
+              <option value="multi-family">Multi-family property</option>
+              <option value="other">Other</option>
+            </select>
           </label>
         </div>
 
         <div class="form-step" data-step="1">
-          <h3>Property basics</h3>
+          <h3>Tell us a little about the property</h3>
+          <p class="step-subtext">A few details help narrow the rental range and make the follow-up more useful.</p>
           <div class="field-grid">
-            <label>Property type
-              <select name="property_type" required>
-                <option value="">Select type</option>
-                <option value="single-family">Single-family home</option>
-                <option value="townhouse-duplex">Townhouse or duplex</option>
-                <option value="apartment-condo">Apartment or condo</option>
-              </select>
-            </label>
             <label>Bedrooms
               <select name="property_beds" required>
-                <option value="">Select bedrooms</option>
+                <option value="">Select</option>
                 <option value="0">Studio</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -66,7 +117,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
             </label>
             <label>Bathrooms
               <select name="property_baths" required>
-                <option value="">Select bathrooms</option>
+                <option value="">Select</option>
                 <option value="1">1</option>
                 <option value="1.5">1.5</option>
                 <option value="2">2</option>
@@ -75,33 +126,60 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
                 <option value="3.5">3.5+</option>
               </select>
             </label>
-            <label>Square footage <span class="consent">(optional)</span>
-              <input name="property_sqft" type="number" min="1" inputmode="numeric" />
-            </label>
           </div>
-          <label class="checkbox-label">
-            <input type="checkbox" name="property_furnished" value="true" />
-            This property is furnished
+          <label>Current property status
+            <select name="property_status" required>
+              <option value="">Choose the closest option</option>
+              <option value="vacant">Vacant and ready to rent</option>
+              <option value="owner-occupied">Owner occupied</option>
+              <option value="tenant-occupied">Tenant occupied</option>
+              <option value="being-purchased">Being purchased</option>
+              <option value="needs-repairs">Needs repairs or renovation</option>
+            </select>
+          </label>
+          <label>When would you like help?
+            <select name="desired_timeline" required>
+              <option value="">Select a timeline</option>
+              <option value="asap">As soon as possible</option>
+              <option value="within-30-days">Within 30 days</option>
+              <option value="within-2-3-months">Within 2-3 months</option>
+              <option value="just-researching">Just researching for now</option>
+            </select>
+          </label>
+          <label>Current or expected monthly rent <span class="consent">Optional</span>
+            <input name="current_rent" type="number" min="1" inputmode="numeric" placeholder="1750" />
           </label>
         </div>
 
         <div class="form-step" data-step="2">
-          <h3>Your contact details</h3>
+          <h3>Where should we send your analysis?</h3>
+          <p class="step-subtext">A local rental specialist can also follow up if there are details that affect the estimate.</p>
           <div class="field-grid">
-            <label>Name
-              <input name="owner_name" autocomplete="name" required />
+            <label>First name
+              <input name="owner_first_name" autocomplete="given-name" required />
             </label>
-            <label>Email
-              <input type="email" name="owner_email" autocomplete="email" required />
+            <label>Last name
+              <input name="owner_last_name" autocomplete="family-name" required />
             </label>
           </div>
-          <label>Phone
-            <input type="tel" name="owner_phone" autocomplete="tel" required />
+          <label>Email address
+            <input type="email" name="owner_email" autocomplete="email" placeholder="you@example.com" required />
           </label>
-          <p class="consent">
-            By requesting a rental analysis, you agree that Red Door may use the information
-            provided to follow up about your property management needs.
-          </p>
+          <label>Phone number
+            <input type="tel" name="owner_phone" autocomplete="tel" placeholder="(317) 555-0123" required />
+          </label>
+          <label>Preferred way to connect
+            <select name="preferred_contact_method" required>
+              <option value="">Choose one</option>
+              <option value="phone">Phone</option>
+              <option value="email">Email</option>
+              <option value="text">Text</option>
+            </select>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" name="contact_consent" required />
+            I agree that Red Door Property Management may contact me by phone, email, or text about this property and my rental analysis. Message and data rates may apply.
+          </label>
           {
             turnstileSiteKey && (
               <div class="cf-turnstile" data-sitekey={turnstileSiteKey} />
@@ -111,8 +189,8 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
         <p class="error-text" aria-live="polite" data-form-error></p>
         <div class="form-actions">
-          <button class="btn btn-secondary" type="button" data-form-prev>Previous</button>
-          <button class="btn btn-primary" type="button" data-form-next>Next</button>
+          <button class="btn btn-secondary" type="button" data-form-prev>Back</button>
+          <button class="btn btn-primary" type="button" data-form-next>Continue</button>
         </div>
       </form>
     </div>
@@ -125,12 +203,14 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       const form = document.querySelector<HTMLFormElement>('[data-analysis-form]');
       if (!form) return;
 
+      const STEP_NAMES = ['Property address', 'Property details', 'Your information'];
+
       const steps = Array.from(form.querySelectorAll<HTMLElement>('.form-step'));
       const previousButton = form.querySelector<HTMLButtonElement>('[data-form-prev]')!;
       const nextButton = form.querySelector<HTMLButtonElement>('[data-form-next]')!;
       const error = form.querySelector<HTMLElement>('[data-form-error]')!;
+      const progressStepname = form.querySelector('[data-progress-stepname]')!;
       const progressText = form.querySelector('[data-progress-text]')!;
-      const progressPercent = form.querySelector('[data-progress-percent]')!;
       const progressFill = form.querySelector<HTMLElement>('[data-progress-fill]')!;
       let current = 0;
       let submitting = false;
@@ -142,11 +222,11 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
       function updateForm() {
         steps.forEach((step, index) => step.classList.toggle('is-active', index === current));
         const percent = Math.round(((current + 1) / steps.length) * 100);
+        progressStepname.textContent = STEP_NAMES[current] ?? '';
         progressText.textContent = `Step ${current + 1} of ${steps.length}`;
-        progressPercent.textContent = `${percent}%`;
         progressFill.style.width = `${percent}%`;
         previousButton.style.visibility = current === 0 ? 'hidden' : 'visible';
-        nextButton.textContent = current === steps.length - 1 ? 'Request My Rental Analysis' : 'Next';
+        nextButton.textContent = current === steps.length - 1 ? 'Get My Rental Analysis' : 'Continue';
       }
 
       function validateStep(): boolean {

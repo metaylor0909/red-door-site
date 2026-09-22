@@ -103,8 +103,14 @@ export const POST: APIRoute = async ({ request }) => {
 
   let geocoded;
   try {
+    // Street/city/zip are now three separate fields (2026-09-22 intake
+    // redesign) instead of one freeform address + optional unit field —
+    // joined back into a single query string purely for Mapbox, which
+    // still returns the canonical geocoded city/state/zip used below
+    // (not the raw user-typed city/zip, which only exist to disambiguate
+    // the geocode search and aren't stored separately).
     geocoded = await geocodeAddress(
-      [intake.propertyAddress, intake.propertyUnit].filter(Boolean).join(' '),
+      [intake.propertyStreet, intake.propertyCityInput, intake.propertyZipInput].filter(Boolean).join(', '),
       mapboxToken
     );
   } catch (err) {
@@ -112,12 +118,12 @@ export const POST: APIRoute = async ({ request }) => {
     return jsonError(502, 'Could not verify that address right now. Please try again shortly.');
   }
   if (!geocoded) {
-    return jsonError(422, 'Could not locate that address.', { property_address: 'Double-check the address and try again.' });
+    return jsonError(422, 'Could not locate that address.', { property_street: 'Double-check the address and try again.' });
   }
 
   const subject: SubjectProperty = {
-    address: intake.propertyAddress,
-    unit_number: intake.propertyUnit,
+    address: intake.propertyStreet,
+    unit_number: null,
     city: geocoded.city,
     state: geocoded.state,
     zip: geocoded.zip,
@@ -125,14 +131,22 @@ export const POST: APIRoute = async ({ request }) => {
     longitude: geocoded.longitude,
     beds: intake.propertyBeds,
     baths: intake.propertyBaths,
-    sqft: intake.propertySqft,
+    // No longer collected in the 2026-09-22 intake redesign (see
+    // validation.ts's header comment) — comp-selection.ts's size/
+    // furnished filters already tolerate null/false gracefully, so
+    // dropping these from the form doesn't break the estimate, just
+    // loses two optional narrowing signals.
+    sqft: null,
     property_type: intake.propertyType,
-    furnished: intake.propertyFurnished,
-    // Self-reported apartment/condo strongly implies "part of a complex"
-    // for decision #1's same-building-first path; determineIsMultiUnit
-    // also checks the fetched pool itself for co-located units, so this
-    // is a starting signal, not the only one.
-    in_apartment_complex: intake.propertyType === 'apartment-condo',
+    furnished: false,
+    // Condo and multi-family read as "part of a complex" for decision
+    // #1's same-building-first path; determineIsMultiUnit also checks
+    // the fetched pool itself for co-located units, so this is a
+    // starting signal, not the only one. Townhome/duplex/single-family/
+    // other default to false — a townhome or duplex isn't reliably
+    // "one of many similar units at this address" the way a condo or
+    // multi-family property is.
+    in_apartment_complex: intake.propertyType === 'condo' || intake.propertyType === 'multi-family',
   };
 
   // Step 4-7: fetch comps (one RentEngine call) and run the cascade.
@@ -198,19 +212,22 @@ export const POST: APIRoute = async ({ request }) => {
   await db
     .prepare(
       `INSERT INTO rental_analyses (
-        token, created_at, owner_name, owner_email, owner_phone,
-        property_address, property_city, property_state, property_zip,
-        property_lat, property_lon, property_beds, property_baths,
-        property_sqft, property_type, property_furnished, snapshot_json,
-        distinct_visit_count
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)`
+        token, created_at, owner_first_name, owner_last_name, owner_email,
+        owner_phone, preferred_contact_method, property_address,
+        property_city, property_state, property_zip, property_lat,
+        property_lon, property_beds, property_baths, property_sqft,
+        property_type, property_furnished, property_status,
+        desired_timeline, current_rent, snapshot_json, distinct_visit_count
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)`
     )
     .bind(
       token,
       now,
-      intake.ownerName,
+      intake.ownerFirstName,
+      intake.ownerLastName,
       intake.ownerEmail,
       intake.ownerPhone,
+      intake.preferredContactMethod,
       subject.address,
       subject.city,
       subject.state,
@@ -222,6 +239,9 @@ export const POST: APIRoute = async ({ request }) => {
       subject.sqft,
       subject.property_type,
       subject.furnished ? 1 : 0,
+      intake.propertyStatus,
+      intake.desiredTimeline,
+      intake.currentRent,
       JSON.stringify(snapshot)
     )
     .run();
@@ -238,7 +258,7 @@ export const POST: APIRoute = async ({ request }) => {
     try {
       await sendEmail(
         buildOwnerEmail({
-          ownerName: intake.ownerName,
+          ownerName: `${intake.ownerFirstName} ${intake.ownerLastName}`,
           ownerEmail: intake.ownerEmail,
           propertyAddress: subject.address,
           estimatedRent: result.estimatedRent,
@@ -257,13 +277,17 @@ export const POST: APIRoute = async ({ request }) => {
     try {
       await sendEmail(
         buildLeadSimpleEmail({
-          ownerName: intake.ownerName,
+          ownerName: `${intake.ownerFirstName} ${intake.ownerLastName}`,
           ownerEmail: intake.ownerEmail,
           ownerPhone: intake.ownerPhone,
+          preferredContactMethod: intake.preferredContactMethod,
           propertyAddress: subject.address,
           propertyCity: subject.city,
           propertyState: subject.state,
           propertyZip: subject.zip,
+          propertyStatus: intake.propertyStatus,
+          desiredTimeline: intake.desiredTimeline,
+          currentRent: intake.currentRent,
           estimatedRent: result.estimatedRent,
           rangeLow: result.rangeLow,
           rangeHigh: result.rangeHigh,
