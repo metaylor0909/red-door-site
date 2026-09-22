@@ -14,6 +14,7 @@ on:
     branches: [main]
   repository_dispatch:
     types: [rentengine-listing-changed]
+  workflow_dispatch:
 
 # Cancel a superseded in-flight run in favor of the newest one rather than
 # stacking up redundant deploys — every real event still triggers a fresh
