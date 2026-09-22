@@ -926,23 +926,50 @@ population once the CMS import exists, not more page-building. Full list:
       confirmed that's this rental-analysis thank-you page's content,
       not contact's; reuse it when this gets built.
 
-### Rental analysis — Turnstile widget not verifying on localhost
+### Rental analysis / contact — Turnstile
 
-- [ ] **Cloudflare Turnstile widget fails with error 400020 ("hostname not
-      allowed") even after adding `localhost` to the widget's allowed
-      hostnames in the Cloudflare dashboard (2026-09-20).** Real site
-      key/secret key are both wired into `.env`/`.dev.vars` and the
-      server-side `siteverify` check is genuinely enforcing (confirmed:
-      submissions without a valid token get a real 400 "Spam check
-      failed," not a skipped/dev-mode pass). Only the widget's own
-      hostname allowlist is unresolved — didn't take effect after one
-      save + reload, cause not yet diagnosed (bad save vs. exact-string
-      mismatch vs. propagation delay). Blocks fully testing the intake
-      form's submit flow (Mapbox geocoding + the real RentEngine comps
-      call) locally. Re-check once the site is live on its real domain —
-      Turnstile should work there regardless of whether `localhost` ever
-      gets sorted out, since `reddoorrents.com` was the original working
-      hostname.
+- ✅ **Fixed (Sep 22): both forms' spam check was reading a field that
+  could never be filled.** Both `contact.astro` and `rental-analysis/
+  index.astro`'s Turnstile widgets used a `data-callback` naming a JS
+  function (`contactTurnstileDone` / `rentalAnalysisTurnstileDone`)
+  that was never actually defined anywhere — meant to copy the solved
+  token into a custom `turnstile_token` hidden field, but since that
+  callback never ran, the field stayed permanently empty. Invisible
+  the whole time `TURNSTILE_SECRET_KEY` was unset on the live Worker
+  (verification skipped entirely — see below), so it only surfaced
+  once that secret was actually pushed live and every genuine
+  submission started failing the spam check for real. Fixed by
+  reading Turnstile's own real auto-injected `cf-turnstile-response`
+  field server-side on both forms, and removing the dead custom
+  field/callback client-side.
+- ✅ **Fixed (Sep 22): `TURNSTILE_SECRET_KEY`, `RESEND_API_KEY`,
+  `MAPBOX_TOKEN`, and `RENTENGINE_RENTAL_ANALYSIS_KEY` were never
+  actually pushed to the live Worker.** All four existed locally in
+  `.dev.vars` from the original build (confirmed real, non-empty
+  values) but `wrangler secret put` had apparently never been run
+  against production for any of them — confirmed via `wrangler secret
+  list` showing only `GITHUB_PAT`, `REBUILD_WEBHOOK_SECRET`, and
+  `RENTCAST_API_KEY`. This meant the rental-analysis form's Mapbox
+  geocoding step (a hard requirement) was failing on every real
+  production submission with a 500, contact's notification email was
+  silently never sending (the bug Michael first reported — thank-you
+  page loaded, but nothing reached LeadSimple), and Turnstile was
+  unenforced sitewide. All four pushed live from the existing local
+  values.
+- [ ] **🚨 STILL OPEN: Turnstile widget fails with error 400020
+  ("hostname not allowed") on the live preview domain.** Found
+  2026-09-22 testing the fix above — confirmed via browser console
+  (`Uncaught TurnstileError: [Cloudflare Turnstile] Error: 400020`),
+  which fires before any token is ever generated, so no code-level fix
+  can work around it. Same root cause originally flagged 2026-09-20
+  for `localhost` (which also never got resolved), now confirmed to
+  also block `red-door-site.mtaylor-0d7.workers.dev` — the widget's
+  allowed-hostnames list in the Cloudflare dashboard needs this preview
+  domain added (and will need `reddoorrents.com` added/confirmed too,
+  once DNS actually cuts over — don't assume that one's already
+  correct just because it predates this rebuild). Michael is adding
+  the preview-domain hostname now; re-test both forms once that's
+  saved.
 
 ---
 
