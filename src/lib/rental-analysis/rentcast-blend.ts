@@ -42,6 +42,28 @@ interface RentCastBedroomEntry {
   totalListings?: number;
 }
 
+interface RentCastHistoryEntry {
+  /** Present on some pulls (e.g. the original static Avon extraction),
+   * already "YYYY-MM". */
+  month?: string;
+  /** Present on others (confirmed live against the real stored
+   * Indianapolis pull, 2026-09-22) — a full ISO datetime
+   * ("2025-10-01T00:00:00.000Z") instead. RentCast isn't consistent
+   * about which field a given history entry carries, so both are read;
+   * see resolveHistoryMonth() below. */
+  date?: string;
+  averageRent?: number | null;
+  totalListings?: number;
+}
+
+/** Normalizes a history entry's month across RentCast's two observed
+ * shapes (see RentCastHistoryEntry above) into a plain "YYYY-MM" string. */
+function resolveHistoryMonth(entry: RentCastHistoryEntry): string | null {
+  if (entry.month) return entry.month;
+  if (entry.date) return entry.date.slice(0, 7);
+  return null;
+}
+
 interface RentCastDataBlock {
   averageRent?: number | null;
   medianRent?: number | null;
@@ -50,6 +72,14 @@ interface RentCastDataBlock {
   averageDaysOnMarket?: number | null;
   totalListings?: number;
   dataByBedrooms?: RentCastBedroomEntry[];
+  /** RentCast's own trailing-12-month history, keyed by array index (not
+   * by month — each entry carries its own `month` field). City-wide only,
+   * no per-bedroom breakdown inside each month — confirmed 2026-09-22
+   * against the real stored Avon pull while scoping the report page's
+   * rent-trend chart. Passed through as-is by workers/rentcast-refresh's
+   * aggregate.ts (see that file's own header note on why history isn't
+   * multi-ZIP aggregated there). */
+  history?: Record<string, RentCastHistoryEntry>;
 }
 
 interface CityMarketDataRaw {
@@ -176,4 +206,65 @@ export async function loadBlendedMarketSnapshot(db: D1Database, slugs: string[],
       averageDaysOnMarket: weightedAverage(rows.map((r, i) => ({ value: r.saleData?.averageDaysOnMarket, weight: saleWeights[i] }))),
     },
   };
+}
+
+export interface RentTrendPoint {
+  month: string;
+  averageRent: number | null;
+}
+
+export interface RentTrendData {
+  /** Chronological, oldest first — whatever trailing months RentCast's
+   * `history` object actually has (confirmed 12 for a real live pull,
+   * 2026-09-22), never padded or interpolated. */
+  points: RentTrendPoint[];
+  /** Percent change from the earliest to the latest point that both have
+   * a real averageRent — null if there's fewer than 2 usable points.
+   * Deliberately NOT labeled "YoY" in the UI: the real history window is
+   * 11 months apart end-to-end (e.g. Oct '25 to Sep '26), not a true
+   * same-month-last-year comparison. */
+  changePercent: number | null;
+}
+
+/** City-wide (not per-bedroom) 12-month rent trend for the report page's
+ * hero chart, added 2026-09-22 per Michael's request to match a reference
+ * mockup's rent-trend box. RentCast's `history` entries only carry the
+ * city-wide aggregate per month, no nested dataByBedrooms — confirmed
+ * against the real stored Avon pull — so a bedroom-specific trend isn't
+ * buildable from real data yet (Michael confirmed city-wide is fine for
+ * now). Blends across 1+ cities the same weighted-by-totalListings way as
+ * the other loaders in this file, keyed by each history entry's own
+ * `month` string (RentCast's object keys are just array indices, not
+ * month strings, so those can't be used to align cities). */
+export async function loadBlendedRentTrend(db: D1Database, slugs: string[], state = 'IN'): Promise<RentTrendData | null> {
+  const rows = (await Promise.all(slugs.map((s) => loadRawCity(db, s, state)))).filter((r): r is CityMarketDataRaw => r != null);
+  if (rows.length === 0) return null;
+
+  const byMonth = new Map<string, Array<{ value: number | null | undefined; weight: number }>>();
+  for (const row of rows) {
+    const history = row.rentalData?.history;
+    if (!history) continue;
+    for (const entry of Object.values(history)) {
+      const month = resolveHistoryMonth(entry);
+      if (!month) continue;
+      const list = byMonth.get(month) ?? [];
+      list.push({ value: entry.averageRent, weight: entry.totalListings ?? 0 });
+      byMonth.set(month, list);
+    }
+  }
+  if (byMonth.size === 0) return null;
+
+  const points: RentTrendPoint[] = Array.from(byMonth.entries())
+    .map(([month, values]) => ({ month, averageRent: weightedAverage(values) }))
+    .sort((a, b) => a.month.localeCompare(b.month));
+
+  const withRent = points.filter((p): p is { month: string; averageRent: number } => p.averageRent != null);
+  const first = withRent[0];
+  const last = withRent[withRent.length - 1];
+  const changePercent =
+    first && last && first !== last && first.averageRent !== 0
+      ? Math.round(((last.averageRent - first.averageRent) / first.averageRent) * 1000) / 10
+      : null;
+
+  return { points, changePercent };
 }

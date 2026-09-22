@@ -30,6 +30,37 @@
 // than re-deriving the numbers; added a comps map with hover-sync
 // between the table rows and the map pins, matching the pattern already
 // built for the Indianapolis homes-for-rent search page.
+//
+// REVISED AGAIN 2026-09-22 (same day, second pass, against a reference
+// mockup Michael shared): hero's estimate+media 50/50 grid replaced with
+// an estimate + rent-trend-chart 60/40 grid — the Street View photo and
+// subject map moved out of the hero entirely, into their own 50/50
+// section directly below the summary band. The rent-trend chart is
+// CITY-WIDE, not bedroom-specific, even though the mockup's own label
+// read "3-bedroom" — RentCast's `history` object (confirmed against the
+// real stored Avon pull) only carries a city-wide aggregate per month, no
+// nested dataByBedrooms, so a bedroom-specific trend isn't buildable
+// without fabricating the split; Michael confirmed city-wide is fine.
+// Built as a server-rendered inline SVG (no charting library, no client
+// JS) from rentcast-blend.ts's new loadBlendedRentTrend(). Also: the
+// comps map now plots the subject property itself alongside the comp
+// pins, styled distinctly (see .map-pin-subject); the cross-sell cards'
+// "View & Apply" link now points at Red Door's own listing detail page
+// (AvailableUnit.detailHref) instead of RentEngine's external
+// custom_application_url.
+//
+// REVISED AGAIN 2026-09-22 (third pass, same day) — Michael wanted the
+// black/white/black sandwich back: breadcrumb bar (black) → estimate +
+// trend chart (white) → the summary band with address/beds/baths/sqft
+// (black), in that order, so the summary band now follows the estimate
+// instead of leading it. The CTA button moved back inside the estimate
+// card (it had briefly lived in its own full-width row between the grid
+// and the band); the comps-count dek moved to its own tight section
+// right after the band. Also re-compacted the estimate card's font
+// sizes/spacing (via .report-hero-grid .estimate-card overrides, not a
+// fixed pixel height this time) so breadcrumb + hero grid + summary band
+// genuinely fit above the fold on a typical laptop viewport — confirmed
+// live via getBoundingClientRect(), not just eyeballed.
 import { env } from 'cloudflare:workers';
 import { sanityClient } from 'sanity:client';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -40,7 +71,12 @@ import { selectCrossSellUnits } from '../../lib/rental-analysis/cross-sell';
 import { citySlug } from '../../lib/listings/rentengine';
 import { CITIES } from '../../lib/property-management/cities';
 import { loadCityContentMap } from '../../lib/listings/homes-for-rent-content';
-import { resolveRentCastSlugs, loadBlendedCityMarketData, loadBlendedMarketSnapshot } from '../../lib/rental-analysis/rentcast-blend';
+import {
+  resolveRentCastSlugs,
+  loadBlendedCityMarketData,
+  loadBlendedMarketSnapshot,
+  loadBlendedRentTrend,
+} from '../../lib/rental-analysis/rentcast-blend';
 import type { RentEngineComp } from '../../lib/rental-analysis/types';
 import type { ConfidenceResult } from '../../lib/rental-analysis/confidence';
 import type { SupplyDemandStats, TimeToLeaseStats } from '../../lib/rental-analysis/market-context';
@@ -217,6 +253,7 @@ const isRentCastBlended = rentCastSlugs.length > 1;
 
 const cityMarketData = isRentCastCovered ? await loadBlendedCityMarketData(db, rentCastSlugs, row.property_state) : null;
 const citySnapshot = isRentCastCovered ? await loadBlendedMarketSnapshot(db, rentCastSlugs, row.property_state) : null;
+const rentTrend = isRentCastCovered ? await loadBlendedRentTrend(db, rentCastSlugs, row.property_state) : null;
 
 // "Plainfield" alone would misrepresent blended West Side data as if it
 // were Plainfield's own real numbers — name the actual submarket being
@@ -262,6 +299,44 @@ function formatCurrency(value: number | null): string {
 const bedroomChartData = (cityMarketData?.bedroomLadder ?? []).filter((b) => b.beds >= 1 && b.beds <= 5);
 const bedroomChartMax = Math.max(1, ...bedroomChartData.map((b) => b.avgRent));
 
+// Hero rent-trend chart (2026-09-22) — server-rendered inline SVG, no
+// client JS or charting library, matching the simplicity of the bedroom
+// bar chart above. Only real months with a real averageRent are plotted;
+// never interpolated or padded to a fixed point count.
+const monthLabelFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '2-digit', timeZone: 'UTC' });
+function formatTrendMonth(month: string): string {
+  const parsed = new Date(`${month}-01T00:00:00Z`);
+  return Number.isNaN(parsed.getTime()) ? month : monthLabelFormatter.format(parsed);
+}
+
+const TREND_CHART_W = 320;
+const TREND_CHART_H = 84;
+const TREND_CHART_PAD = 4;
+
+const trendPoints = (rentTrend?.points ?? []).filter(
+  (p): p is { month: string; averageRent: number } => p.averageRent != null
+);
+
+function buildTrendPath(points: Array<{ averageRent: number }>): { line: string; area: string } | null {
+  if (points.length < 2) return null;
+  const values = points.map((p) => p.averageRent);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min || 1;
+  const stepX = (TREND_CHART_W - TREND_CHART_PAD * 2) / (points.length - 1);
+  const coords = points.map((p, i) => {
+    const x = TREND_CHART_PAD + i * stepX;
+    const y = TREND_CHART_PAD + (1 - (p.averageRent - min) / range) * (TREND_CHART_H - TREND_CHART_PAD * 2);
+    return [x, y] as const;
+  });
+  const line = coords.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+  const area = `${line} L${coords[coords.length - 1][0].toFixed(1)},${TREND_CHART_H} L${coords[0][0].toFixed(1)},${TREND_CHART_H} Z`;
+  return { line, area };
+}
+
+const trendChartPath = buildTrendPath(trendPoints);
+const trendChangePercent = rentTrend?.changePercent ?? null;
+
 const propertyTypeLabel = PROPERTY_TYPE_LABELS[row.property_type] ?? 'Home';
 
 // Supply & Demand card display — status-key for the CSS class, and the
@@ -305,32 +380,58 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
         </div>
       </div>
     </div>
+  </section>
 
-    <div class={`report-hero-grid${row.property_lat != null && row.property_lon != null ? '' : ' is-photo-missing'}`}>
-      <div class="estimate-card reveal">
-        <div class="section-kicker">Estimated Monthly Rent</div>
-        <div class="estimate-figure">${snapshot.estimatedRent.toLocaleString()}/mo</div>
-        <p class="estimate-range">Range: ${snapshot.rangeLow.toLocaleString()} &ndash; ${snapshot.rangeHigh.toLocaleString()}/mo</p>
-        <div class={`confidence-badge is-${snapshot.confidence.bucket}`}>
-          {snapshot.confidence.displayPercent}% &mdash; {snapshot.confidence.bucketLabel}
+  <section class="report-hero-section">
+    <div class="container">
+      <div class="report-hero-grid">
+        <div class="estimate-card reveal">
+          <div class="section-kicker">Estimated Monthly Rent</div>
+          <div class="estimate-figure">${snapshot.estimatedRent.toLocaleString()}/mo</div>
+          <p class="estimate-range">Range: ${snapshot.rangeLow.toLocaleString()} &ndash; ${snapshot.rangeHigh.toLocaleString()}/mo</p>
+          <div class={`confidence-badge is-${snapshot.confidence.bucket}`}>
+            {snapshot.confidence.displayPercent}% &mdash; {snapshot.confidence.bucketLabel}
+          </div>
+          <p class="methodology-note">{snapshot.confidence.templateSentence}</p>
+          <p class="report-hero-dek">
+            Based on the median rent of {snapshot.comps.length} comparable {snapshot.comps.length === 1 ? 'property' : 'properties'} near
+            this address, leased or currently listed within the past 12 months.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href={CALENDLY_URL} target="_blank" rel="noopener">Talk to Red Door About Managing This Property</a>
+          </div>
         </div>
-        <p class="methodology-note">{snapshot.confidence.templateSentence}</p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href={CALENDLY_URL} target="_blank" rel="noopener">Talk to Red Door About Managing This Property</a>
+        <div class="trend-card reveal">
+          <div class="trend-card-head">
+            <div class="section-kicker">{rentCastDisplayName} Rent Trend, {trendPoints.length || 12} Mo</div>
+            {trendChartPath && trendChangePercent != null && (
+              <span class={`trend-change-badge ${trendChangePercent >= 0 ? 'is-up' : 'is-down'}`}>
+                {trendChangePercent >= 0 ? '▲' : '▼'}{Math.abs(trendChangePercent)}%
+              </span>
+            )}
+          </div>
+          {trendChartPath ? (
+            <>
+              <svg
+                class="trend-svg"
+                viewBox={`0 0 ${TREND_CHART_W} ${TREND_CHART_H}`}
+                preserveAspectRatio="none"
+                role="img"
+                aria-label={`${rentCastDisplayName} average rent trend over the past ${trendPoints.length} months`}
+              >
+                <path d={trendChartPath.area} class="trend-area" />
+                <path d={trendChartPath.line} class="trend-line" />
+              </svg>
+              <div class="trend-range-labels">
+                <span>{formatTrendMonth(trendPoints[0].month)}</span>
+                <span>${Math.round(trendPoints[trendPoints.length - 1].averageRent).toLocaleString()}/mo</span>
+              </div>
+            </>
+          ) : (
+            <p class="context-card-note">Not enough RentCast history for {rentCastDisplayName} yet to chart a trend.</p>
+          )}
         </div>
       </div>
-      {row.property_lat != null && row.property_lon != null && (
-        <div class="hero-media-col">
-          <img
-            class="subject-photo"
-            src={`/api/street-view?lat=${row.property_lat}&lng=${row.property_lon}`}
-            alt={`Street view of ${row.property_address}`}
-            loading="eager"
-            onerror="this.remove()"
-          />
-          <div class="subject-map" id="subject-map" data-lat={row.property_lat} data-lng={row.property_lon}></div>
-        </div>
-      )}
     </div>
   </section>
 
@@ -348,6 +449,73 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
           <span>{propertyTypeLabel}</span>
         </div>
       </div>
+    </div>
+  </section>
+
+  {row.property_lat != null && row.property_lon != null && (
+    <section class="hero-media-section">
+      <div class="container">
+        <div class="hero-media-grid">
+          <img
+            class="subject-photo"
+            src={`/api/street-view?lat=${row.property_lat}&lng=${row.property_lon}`}
+            alt={`Street view of ${row.property_address}`}
+            loading="eager"
+            onerror="this.remove()"
+          />
+          <div class="subject-map" id="subject-map" data-lat={row.property_lat} data-lng={row.property_lon}></div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section-soft">
+    <div class="container">
+      <div class="section-head">
+        <div class="section-kicker">Comparable Properties</div>
+        <h2>{snapshot.comps.length} Properties Used in This Estimate</h2>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="comps-table">
+          <thead>
+            <tr>
+              <th>Address</th>
+              <th>Beds/Baths</th>
+              <th>Sqft</th>
+              <th>Rent</th>
+              <th>Distance</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {compsWithDistance.map((c, i) => (
+              <tr data-comp-index={i} class="comps-table-row">
+                <td>{c.address}</td>
+                <td>{c.beds}bd / {c.baths}ba</td>
+                <td>{c.sqft ?? '—'}</td>
+                <td>
+                  ${c.rent.toLocaleString()}
+                  {c.bedroomAdjustedRent != null && (
+                    <span class="consent"> (${c.bedroomAdjustedRent.toLocaleString()} adjusted for {row.property_beds}bd)</span>
+                  )}
+                </td>
+                <td>{c.distance.toFixed(1)} mi</td>
+                <td>
+                  <span class={`status-pill ${c.status === 'rented' ? 'is-rented' : 'is-available'}`}>{c.status === 'rented' ? 'Rented' : 'Available'}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {compsWithDistance.length > 0 && (
+        <div
+          class="comps-map"
+          id="comps-map"
+          data-comps={JSON.stringify(compsWithDistance.map((c) => ({ lat: c.latitude, lng: c.longitude, address: c.address, rent: c.rent })))}
+          data-subject={JSON.stringify({ lat: row.property_lat, lng: row.property_lon, address: row.property_address })}
+        ></div>
+      )}
     </div>
   </section>
 
@@ -429,55 +597,6 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
           }
         </div>
       </div>
-    </div>
-  </section>
-
-  <section class="section-soft">
-    <div class="container">
-      <div class="section-head">
-        <div class="section-kicker">Comparable Properties</div>
-        <h2>{snapshot.comps.length} Properties Used in This Estimate</h2>
-      </div>
-      <p class="section-dek">
-        Based on the median rent of {snapshot.comps.length} comparable {snapshot.comps.length === 1 ? 'property' : 'properties'} near
-        this address, leased or currently listed within the past 12 months.
-      </p>
-      <div style="overflow-x:auto">
-        <table class="comps-table">
-          <thead>
-            <tr>
-              <th>Address</th>
-              <th>Beds/Baths</th>
-              <th>Sqft</th>
-              <th>Rent</th>
-              <th>Distance</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {compsWithDistance.map((c, i) => (
-              <tr data-comp-index={i} class="comps-table-row">
-                <td>{c.address}</td>
-                <td>{c.beds}bd / {c.baths}ba</td>
-                <td>{c.sqft ?? '—'}</td>
-                <td>
-                  ${c.rent.toLocaleString()}
-                  {c.bedroomAdjustedRent != null && (
-                    <span class="consent"> (${c.bedroomAdjustedRent.toLocaleString()} adjusted for {row.property_beds}bd)</span>
-                  )}
-                </td>
-                <td>{c.distance.toFixed(1)} mi</td>
-                <td>
-                  <span class={`status-pill ${c.status === 'rented' ? 'is-rented' : 'is-available'}`}>{c.status === 'rented' ? 'Rented' : 'Available'}</span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {compsWithDistance.length > 0 && (
-        <div class="comps-map" id="comps-map" data-comps={JSON.stringify(compsWithDistance.map((c) => ({ lat: c.latitude, lng: c.longitude, address: c.address, rent: c.rent })))}></div>
-      )}
     </div>
   </section>
 
@@ -573,11 +692,9 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
                 {unit.photoUrl && <img src={unit.photoUrl} alt={unit.formattedAddress} style="width:100%;border-radius:6px;margin-bottom:10px;aspect-ratio:16/10;object-fit:cover;" />}
                 <h3>{unit.formattedAddress}</h3>
                 <p class="consent">{unit.beds}bd / {unit.baths}ba &middot; ${unit.rent.toLocaleString()}/mo &middot; {unit.city}</p>
-                {unit.applyUrl && (
-                  <a class="btn btn-secondary" href={unit.applyUrl} target="_blank" rel="noopener" style="margin-top:8px;display:inline-block;">
-                    View &amp; Apply
-                  </a>
-                )}
+                <a class="btn btn-secondary" href={unit.detailHref} style="margin-top:8px;display:inline-block;">
+                  View Listing
+                </a>
               </article>
             ))}
           </div>
@@ -672,6 +789,13 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
           var pinsByIndex = {};
           var rows = document.querySelectorAll('.comps-table-row');
 
+          var subject;
+          try {
+            subject = JSON.parse(compsEl.dataset.subject || 'null');
+          } catch (e) {
+            subject = null;
+          }
+
           compsMap.on('load', function () {
             var bounds = new mapboxgl.LngLatBounds();
             comps.forEach(function (c, i) {
@@ -691,6 +815,20 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
               pinsByIndex[i] = el;
               bounds.extend([c.lng, c.lat]);
             });
+
+            // Subject property — styled distinctly from the comp price
+            // pins (a house icon, not a rent figure) so it reads as the
+            // property being analyzed, not another comp.
+            if (subject && typeof subject.lat === 'number' && typeof subject.lng === 'number') {
+              var subjectPinEl = document.createElement('div');
+              subjectPinEl.className = 'map-pin-subject';
+              subjectPinEl.title = subject.address || 'Subject property';
+              subjectPinEl.innerHTML =
+                '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2 2 10.5V22h6v-7h8v7h6V10.5L12 2z"/></svg>';
+              new mapboxgl.Marker({ element: subjectPinEl, anchor: 'bottom' }).setLngLat([subject.lng, subject.lat]).addTo(compsMap);
+              bounds.extend([subject.lng, subject.lat]);
+            }
+
             if (!bounds.isEmpty()) compsMap.fitBounds(bounds, { padding: 50, maxZoom: 14, duration: 0 });
           });
 

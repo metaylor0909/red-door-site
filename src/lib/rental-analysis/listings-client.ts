@@ -28,6 +28,17 @@ export interface AvailableUnit {
   rent: number;
   photoUrl: string | null;
   applyUrl: string | null;
+  /** Red Door's own listing detail page, per CLAUDE.md's locked
+   * `/homes-for-rent/{city}/{address}` structure — added 2026-09-22, the
+   * cross-sell cards on the report page were linking straight to
+   * applyUrl (RentEngine's external hosted application), which skips the
+   * site's own listing page entirely. Built with the exact same slug
+   * transform as addressSlug() in src/lib/listings/rentengine.ts —
+   * duplicated rather than imported, since that function's signature
+   * takes a full RentEngineUnit, and this client only carries the flat
+   * AvailableUnit shape. Keep the two slug functions in sync if the
+   * address-slug rule ever changes. */
+  detailHref: string;
   latitude: number | null;
   longitude: number | null;
 }
@@ -50,6 +61,20 @@ interface RentEngineUnit {
 export interface ListingsClientConfig {
   apiKey: string;
   accountId?: string;
+}
+
+/** Lowercase, hyphenated address slug — must stay in sync with
+ * src/lib/listings/rentengine.ts's addressSlug(). */
+function addressSlugFromFormatted(formattedAddress: string): string {
+  return formattedAddress
+    .toLowerCase()
+    .replace(/[.,#]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function citySlugFromName(city: string): string {
+  return city.toLowerCase().replace(/\s+/g, '-');
 }
 
 export async function fetchAvailableUnits(config: ListingsClientConfig): Promise<AvailableUnit[]> {
@@ -80,6 +105,7 @@ export async function fetchAvailableUnits(config: ListingsClientConfig): Promise
         rent: u.target_rental_rate ?? 0,
         photoUrl: firstVisiblePhoto?.original ?? null,
         applyUrl: u.custom_application_url ?? null,
+        detailHref: `/homes-for-rent/${citySlugFromName(u.address.city)}/${addressSlugFromFormatted(u.address.formatted_address)}`,
         latitude: u.address.coordinates?.[1] ?? null,
         longitude: u.address.coordinates?.[0] ?? null,
       };

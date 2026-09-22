@@ -2465,56 +2465,77 @@
     }
 
     /* ---------- Rental analysis hosted report page ---------- */
-    /* Hero (2026-09-22, revised twice same day per Michael's feedback):
-       edge-to-edge like the homes-for-rent listing detail page's own
-       gallery — no .container, .listing-gallery-wrap's own pattern
-       reused here (see that rule). Two columns: a photo/map stack on
-       the left (each half the row's height) and the estimate card on
-       the right, sized to match — the estimate box is deliberately
-       "completely 50%" of the row per Michael's request, not a third
-       equal box like the previous pass. Fixed at 420px, the same height
-       as the listing detail gallery, so breadcrumb + hero + the summary
-       band below it fit above the fold there too. The estimate card's
-       own content (methodology notes, CTA) was trimmed to fit a 420px
-       box — the second methodology sentence moved down to the
-       Comparable Properties section instead of being cut. */
-    /* grid-template-rows (not just height) is required — see the
-       identical fix on .listing-gallery's own rule for why height alone
-       doesn't cap an auto-sized row track; the estimate card's real
-       content height (632px, confirmed live) was winning over the
-       intended 420px, spilling into the summary band below it. */
-    .report-hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: 420px; gap: 8px; height: 420px; }
-    .report-hero-grid.is-photo-missing { grid-template-columns: 1fr; max-width: 640px; margin: 0 auto; }
-    /* minmax(0, 1fr), not bare 1fr — a bare fr track still sizes to its
-       content's automatic MINIMUM size first (the photo's own intrinsic
-       aspect ratio, for a plain <img> child), only distributing leftover
-       space by the fr ratio after that — so the photo's real height
-       (593px, confirmed live) overrode the 210px half-share it was
-       supposed to get, pushing the map down and off-screen entirely.
-       minmax(0, 1fr) removes that content-based floor so the two rows
-       actually split evenly. */
-    .hero-media-col { display: grid; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; height: 100%; }
-    /* If the Street View photo fails to load (onerror removes it, e.g.
-       no coverage for that address) and only the map is left, let the
-       map fill the whole column instead of half-height with a dead gap
-       below it. */
-    .hero-media-col > *:only-child { grid-row: 1 / -1; }
-    .subject-photo, .subject-map { width: 100%; height: 100%; min-height: 0; }
+    /* Hero, sixth pass (2026-09-22, same day) — Michael wants the
+       breadcrumb → estimate/trend → summary-band sandwich to genuinely
+       fit above the fold with NOTHING else peeking in below the band, on
+       his real desktop viewport. This has now overshot in BOTH
+       directions on real screenshots he sent: shrinking the cards made
+       the band end too high (leaving the next section visible below it);
+       padding them up to what getBoundingClientRect() measured as a
+       precise fit in this tool's OWN emulated 1920x912 viewport instead
+       overshot the other way on his actual machine — his real browser
+       renders noticeably taller than this tool's viewport emulation
+       predicts for the same nominal size (a real, observed gap between
+       the two, not just imprecision), so tuning to an exact pixel target
+       in emulation isn't trustworthy here. This pass lands on a modest,
+       deliberately mid-range size — closer to the site's own default
+       .estimate-card padding than either extreme — and further tuning
+       should be calibrated against Michael's own screenshots, not this
+       tool's viewport emulation. Separately (settled, not part of the
+       fold tuning): the comps-count sentence now lives inside the
+       estimate card instead of its own section after the band. Cards
+       stay auto-height, no fixed px row — neither card has a
+       percentage-height <img>, so there's no repeat of the grid
+       auto-row-sizing bug fixed elsewhere on this page (.listing-gallery,
+       the two earlier hero passes). */
+    .report-hero-section { padding: 18px 0 16px; }
+    .report-hero-grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 20px; }
+    .report-hero-grid .estimate-card,
+    .report-hero-grid .trend-card { display: flex; flex-direction: column; padding: clamp(18px, 2.4vw, 26px); }
+    .report-hero-grid .confidence-badge { margin-top: 10px; }
+    .report-hero-grid .methodology-note { margin-top: 10px; }
+    .report-hero-grid .estimate-card .cta-row { justify-content: flex-start; margin-top: 12px; }
+    .report-hero-grid .estimate-card .report-hero-dek { margin-top: 8px; }
+
+    .report-hero-dek { max-width: 68ch; margin: 0; color: var(--muted); font-size: .88rem; }
+
+    .trend-card { justify-content: center; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .trend-card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 10px; margin-bottom: 14px; }
+    .trend-card-head .section-kicker { margin-bottom: 0; }
+    .trend-change-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; font-size: .8rem; font-weight: 800; white-space: nowrap; }
+    .trend-change-badge.is-up { background: #eaf6ee; color: #1f7a3d; }
+    .trend-change-badge.is-down { background: var(--brand-tint); color: var(--brand); }
+    .trend-svg { display: block; width: 100%; height: 84px; overflow: visible; }
+    .trend-line { fill: none; stroke: var(--red); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .trend-area { fill: var(--brand-tint); opacity: .6; stroke: none; }
+    .trend-range-labels { display: flex; justify-content: space-between; margin-top: 8px; color: var(--muted); font-size: .78rem; font-weight: 700; }
+
+    /* Street View photo + subject map — moved out of the hero (2026-09-22
+       third pass) into their own edge-to-edge 50/50 section directly
+       below it, per Michael's request. Same grid-auto-row-sizing gotcha
+       as the earlier two-row pass applies here too (the photo IS a
+       percentage-height <img>), so the same minmax(0,1fr)-equivalent
+       fix is needed — a single row this time, so an explicit height on
+       the grid container plus height:100%/min-height:0 on the children
+       is enough; no bare fr-track content-minimum issue since there's
+       only one row, not two stacked ones. */
+    .hero-media-section { padding: 0 0 8px; }
+    .hero-media-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; height: 340px; }
+    .hero-media-grid .subject-photo,
+    .hero-media-grid .subject-map { width: 100%; height: 100%; min-height: 0; border-radius: var(--radius); overflow: hidden; }
     .subject-photo { object-fit: cover; display: block; }
-    .subject-map { overflow: hidden; }
-    .report-hero-grid .estimate-card { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: clamp(16px, 2.4vw, 24px) clamp(20px, 3vw, 32px); border-radius: 0; overflow-y: auto; }
-    .report-hero-grid .estimate-card .section-kicker { margin-bottom: 8px; }
-    .report-hero-grid .estimate-figure { margin-bottom: 2px; font-size: clamp(1.5rem, 2.2vw, 1.9rem); line-height: 1.1; }
-    .report-hero-grid .estimate-range { font-size: .88rem; }
-    .report-hero-grid .confidence-badge { margin-top: 8px; padding: 5px 12px; font-size: .82rem; }
-    .report-hero-grid .methodology-note { margin-top: 8px; font-size: .82rem; line-height: 1.4; }
-    .report-hero-grid .cta-row { margin-top: 10px; }
-    .report-hero-grid .cta-row .btn { padding: 10px 16px; font-size: .86rem; }
     @media (max-width: 900px) {
-      .report-hero-grid, .report-hero-grid.is-photo-missing { grid-template-columns: 1fr; height: auto; max-width: none; margin: 0; }
-      .hero-media-col { height: 320px; }
-      .report-hero-grid .estimate-card { margin: 16px; height: auto; overflow-y: visible; }
+      .report-hero-grid { grid-template-columns: 1fr; }
+      .hero-media-grid { grid-template-columns: 1fr; height: auto; }
+      .hero-media-grid .subject-photo,
+      .hero-media-grid .subject-map { height: 240px; }
     }
+    /* Subject-property pin on the comps map (2026-09-22) — a house icon
+       in the brand ink color, deliberately not another red price pill,
+       so the property being analyzed reads as distinct from the
+       comparable listings around it. */
+    .map-pin-subject { display: grid; place-items: center; width: 30px; height: 30px; color: var(--white); background: var(--ink); border: 2px solid var(--white); border-radius: 50% 50% 50% 0; transform: rotate(-45deg); box-shadow: 0 3px 8px rgba(0,0,0,.3); }
+    .map-pin-subject svg { transform: rotate(45deg); }
     /* Same previously-missing-rule gap as .content-block > h1 above —
        this page's h1 ("Your Rental Analysis") had no rule of its own. */
     .report-address + h1 {
