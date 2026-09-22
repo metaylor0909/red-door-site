@@ -27,6 +27,23 @@ import type { RentEngineUnit } from './types';
 
 const BASE_URL = 'https://app.rentengine.io/api/public/v1';
 
+// RentEngine's own account id (not a secret — a public identifier used in
+// hosted-booking/schedule-showing URLs). Pulled into this shared module
+// rather than declared as a top-level const in each page's own
+// frontmatter: a bare frontmatter const isn't reliably visible inside
+// that same file's getStaticPaths() for a DYNAMIC route ([city], [slug])
+// — a recurring Astro prerendering gotcha hit repeatedly on this project
+// (see red-door-website-todo.md). It silently caused
+// [city]-homes-for-rent.astro and homes-for-rent/[city]/[slug].astro's
+// getStaticPaths() to throw `ReferenceError: RENTENGINE_ACCOUNT_ID is not
+// defined`, caught by their own try/catch and logged as a warning rather
+// than failing the build — so 19 of 20 city hub pages silently built with
+// zero live listings, and zero listing-detail pages built at all, without
+// ever failing CI. indianapolis-homes-for-rent.astro (a plain, non-
+// dynamic route) never hit this, which is why it alone showed real
+// listings. Confirmed and fixed 2026-09-22.
+export const RENTENGINE_ACCOUNT_ID = '6ecca3ec-8e5a-42ed-87ea-af21f97d546e';
+
 export interface ListingsFetchConfig {
   apiKey: string;
   accountId?: string;

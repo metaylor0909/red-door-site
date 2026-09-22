@@ -24,13 +24,9 @@
 //   - The sitewide `section` double-padding bug — `#listing-main` zeroes
 //     its own section padding and controls spacing via `.listing-grid`.
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { fetchAllAvailableUnits, addressSlug, citySlug } from '../../../lib/listings/rentengine';
+import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID } from '../../../lib/listings/rentengine';
 import { haversineMiles } from '../../../lib/rental-analysis/geo';
 import type { RentEngineUnit } from '../../../lib/listings/types';
-
-// Confirmed non-secret (CLAUDE.md) — RentEngine's own account id, used to
-// build the public "Schedule a Showing" hosted-booking URL.
-const RENTENGINE_ACCOUNT_ID = '6ecca3ec-8e5a-42ed-87ea-af21f97d546e';
 
 // Mapbox public token (`pk.` prefix — a publishable client-side key, not a
 // secret) already embedded directly in the approved static reference HTML

@@ -354,6 +354,27 @@ Judgment calls / open items carried forward from this build:
   Worker/Cron approach is decided (see `CLAUDE.md`) but not built; these
   20 pages currently reflect a single Sep 17 snapshot, dated as such in
   each page's data-as-of line.
+- 🐛 **Fixed (Sep 22): listing detail links 404'd on every city page
+  except Indianapolis's.** Michael caught this live — clicking any
+  listing card gave a 404. Root cause: `RENTENGINE_ACCOUNT_ID` was
+  declared as a bare top-level `const` in each page's own frontmatter,
+  the same recurring Astro gotcha already documented above (top-level
+  frontmatter consts aren't reliably visible inside that file's own
+  `getStaticPaths()` for a DYNAMIC route). It threw `ReferenceError:
+  RENTENGINE_ACCOUNT_ID is not defined`, silently caught by the existing
+  try/catch and logged as a warning instead of failing the build — so
+  `[city]-homes-for-rent.astro` built all 19 non-Indianapolis city hub
+  pages with **zero live listings** (not genuinely empty inventory, as
+  it first appeared), and `homes-for-rent/[city]/[slug].astro` built
+  **zero listing-detail pages at all**, while CI stayed green the whole
+  time. `indianapolis-homes-for-rent.astro` is a plain non-dynamic route
+  and never hit this, which is why it alone looked correct and why this
+  went unnoticed. Fixed by moving `RENTENGINE_ACCOUNT_ID` into
+  `src/lib/listings/rentengine.ts` as a real exported constant, imported
+  by all three pages instead of redeclared. Confirmed fixed: rebuilt,
+  30 listing-detail pages now generate (up from 0), Avon's hub page now
+  shows its real listing, and a live click-through from a listing card
+  to its detail page works end to end.
 
 ---
 

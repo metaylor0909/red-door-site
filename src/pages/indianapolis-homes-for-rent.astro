@@ -65,13 +65,9 @@
 //   - Never combine .container and .content-block on the same element —
 //     nest them, or the block centers instead of sitting flush-left.
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { fetchAllAvailableUnits, addressSlug, citySlug } from '../lib/listings/rentengine';
+import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID } from '../lib/listings/rentengine';
 import { loadCityContentMap } from '../lib/listings/homes-for-rent-content';
 import type { RentEngineUnit } from '../lib/listings/types';
-
-// Confirmed non-secret (CLAUDE.md) — RentEngine's own account id, same
-// fallback already hardcoded in the two sibling listings pages.
-const RENTENGINE_ACCOUNT_ID = '6ecca3ec-8e5a-42ed-87ea-af21f97d546e';
 
 // Mapbox public token (`pk.` prefix, publishable, not a secret) — the same
 // value already embedded in the approved static reference HTML and in the

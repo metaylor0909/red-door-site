@@ -41,14 +41,10 @@
 //     nest them, or the block centers instead of sitting flush-left.
 import { env } from 'cloudflare:workers';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { fetchAllAvailableUnits, addressSlug, citySlug } from '../lib/listings/rentengine';
+import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID } from '../lib/listings/rentengine';
 import type { RentEngineUnit } from '../lib/listings/types';
 import { loadCityContentMap, loadCityMarketData } from '../lib/listings/homes-for-rent-content';
 import type { CityContent, BedroomLadderEntry } from '../lib/listings/homes-for-rent-content';
-
-// Confirmed non-secret (CLAUDE.md) — RentEngine's own account id, already
-// hardcoded as the same fallback in src/pages/homes-for-rent/[city]/[slug].astro.
-const RENTENGINE_ACCOUNT_ID = '6ecca3ec-8e5a-42ed-87ea-af21f97d546e';
 
 export async function getStaticPaths() {
   const apiKey = import.meta.env.RENTENGINE_LISTINGS_KEY;
