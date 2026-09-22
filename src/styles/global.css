@@ -2465,26 +2465,37 @@
     }
 
     /* ---------- Rental analysis hosted report page ---------- */
-    /* Hero: three equally-sized boxes — photo, estimate, subject-
-       location map (2026-09-22, per Michael's design pass; revised same
-       day from an earlier full-width-photo-above-the-card layout after
-       his feedback that looked wrong). Now sits inside .listing-hero,
-       matching the homes-for-rent listing detail page's own template
-       (dark breadcrumb bar above, summary band below) rather than a
-       plain light section. .is-photo-missing (added server-side when
-       there's no lat/lon, or client-side by the photo's own onerror)
-       drops to two equal columns instead of leaving a dead gap. */
-    .listing-hero .container.report-hero-grid { padding-top: clamp(20px, 3vw, 32px); padding-bottom: clamp(20px, 3vw, 32px); }
-    .report-hero-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; gap: clamp(16px, 3vw, 24px); }
-    .report-hero-grid.is-photo-missing { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .subject-photo, .subject-map { width: 100%; height: 100%; min-height: 280px; border-radius: var(--radius); box-shadow: var(--shadow); }
-    .subject-photo { object-fit: cover; }
+    /* Hero (2026-09-22, revised twice same day per Michael's feedback):
+       edge-to-edge like the homes-for-rent listing detail page's own
+       gallery — no .container, .listing-gallery-wrap's own pattern
+       reused here (see that rule). Two columns: a photo/map stack on
+       the left (each half the row's height) and the estimate card on
+       the right, sized to match — the estimate box is deliberately
+       "completely 50%" of the row per Michael's request, not a third
+       equal box like the previous pass. Fixed at 420px, the same height
+       as the listing detail gallery, so breadcrumb + hero + the summary
+       band below it fit above the fold there too. The estimate card's
+       own content (methodology notes, CTA) was trimmed to fit a 420px
+       box — the second methodology sentence moved down to the
+       Comparable Properties section instead of being cut. */
+    .report-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; height: 420px; }
+    .report-hero-grid.is-photo-missing { grid-template-columns: 1fr; max-width: 640px; margin: 0 auto; }
+    .hero-media-col { display: grid; grid-template-rows: 1fr 1fr; gap: 8px; height: 100%; }
+    /* If the Street View photo fails to load (onerror removes it, e.g.
+       no coverage for that address) and only the map is left, let the
+       map fill the whole column instead of half-height with a dead gap
+       below it. */
+    .hero-media-col > *:only-child { grid-row: 1 / -1; }
+    .subject-photo, .subject-map { width: 100%; height: 100%; }
+    .subject-photo { object-fit: cover; display: block; }
     .subject-map { overflow: hidden; }
-    .report-hero-grid .estimate-card { min-height: 280px; }
-    .report-hero-grid .estimate-figure { font-size: clamp(1.7rem, 2.6vw, 2.3rem); }
+    .report-hero-grid .estimate-card { display: flex; flex-direction: column; justify-content: center; height: 100%; border-radius: 0; overflow-y: auto; }
+    .report-hero-grid .estimate-figure { font-size: clamp(1.6rem, 2.4vw, 2.1rem); }
+    .report-hero-grid .methodology-note { margin-top: 10px; font-size: .86rem; }
     @media (max-width: 900px) {
-      .report-hero-grid, .report-hero-grid.is-photo-missing { grid-template-columns: 1fr; }
-      .subject-photo, .subject-map { height: 240px; min-height: 0; }
+      .report-hero-grid, .report-hero-grid.is-photo-missing { grid-template-columns: 1fr; height: auto; max-width: none; margin: 0; }
+      .hero-media-col { height: 320px; }
+      .report-hero-grid .estimate-card { margin: 16px; height: auto; overflow-y: visible; }
     }
     /* Same previously-missing-rule gap as .content-block > h1 above —
        this page's h1 ("Your Rental Analysis") had no rule of its own. */
