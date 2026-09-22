@@ -449,16 +449,39 @@ Judgment calls / open items carried forward from this build:
       continuity, and conversion tracking, before going live.** Flagged
       by Michael 2026-09-22; nothing here has been researched or built
       yet. Three distinct pieces, all currently open:
-      - **Thank-you/conversion-tracking pages for BOTH `/rental-analysis`
-        and `/contact`.** The rental-analysis half of this was already
-        flagged above under "Rental analysis — thank-you/tracking
-        page" (see `claude/rental-analysis-tool-build.md`'s "Still
-        open" section for the existing reconciliation question against
-        that form's current submit flow) — Michael's request broadens
-        it to `/contact` too, which has no thank-you/tracking page
-        planned at all yet. Needs its own scoping pass: does contact's
-        form even redirect anywhere on submit currently, or just show
-        an inline success state?
+      - ✅ **`/contact` and `/contact-thank-you` built for real (Sep 22).**
+        `/contact` didn't exist as a real Astro page at all before this
+        (confirmed via a live 404) — built from `contact.html`, wired to
+        a real `POST /api/contact/submit` (Turnstile + D1 storage in the
+        new `contact_submissions` table, migration applied to the real
+        remote D1 database), redirecting to `/contact-thank-you`
+        (`noindex`) on success. Reuses the rental-analysis tool's
+        Turnstile/Resend helpers directly rather than duplicating them.
+        Lead delivery, per Michael (2026-09-22): one HTML notification
+        email to `cknight@rdpmindy.com`, CC'd to LeadSimple's own
+        Web-Forms inbound address (`new-leadfc2ef89f93@newlead.leadsimple.com`,
+        which LeadSimple itself sent Michael instructions for). **This is
+        a different LeadSimple mechanism than the rental-analysis tool's
+        own LeadSimple integration** — that one uses LeadSimple's manual
+        email-to-lead parser (strict format: subject exactly `New Lead`,
+        labeled plain-text body, sent alone to a dedicated address; see
+        `claude/rental-analysis-tool-build.md` decision #6). This one is
+        LeadSimple's separate "Web Forms" feature, which — per
+        LeadSimple's own setup instructions, forwarded verbatim by
+        Michael — expects to be CC'd directly on the regular
+        notification email instead. Not yet confirmed end-to-end with a
+        real Turnstile pass (server-side spam check verified working —
+        an unsolved-widget test correctly got rejected — but a full
+        real-token submission hasn't been run); **worth Michael sending
+        one real test submission after this deploys**, to confirm a
+        lead actually lands correctly in LeadSimple.
+        Rental-analysis's own thank-you-page item (below) is still
+        separately open — while researching this, found that the old
+        site's real `/thank-you` and `/success` pages (same generic
+        template) embed a Loom video
+        (`loom.com/embed/8975328b37a64d55bab0c7d16876cbe5`); Michael
+        confirmed that's the rental-analysis one, not contact's — worth
+        reusing when that item gets built.
       - **Audit the old site's actual Google Tag Manager container
         before reinstalling it.** CLAUDE.md and the old launch
         checklist below both already say "reuse the same GTM container
@@ -894,9 +917,14 @@ population once the CMS import exists, not more page-building. Full list:
       question against the existing submit-flow design, in
       `claude/rental-analysis-tool-build.md` under "Still open." Now
       part of a broader pre-launch analytics/tracking item (Michael,
-      2026-09-22) that also wants a `/contact` thank-you page and a
-      GTM/GA4 audit — see the 🚨 PRE-LAUNCH BLOCKER entry under
-      "Genuinely open — do these next."
+      2026-09-22) that also wanted a `/contact` thank-you page (✅ built,
+      see that same 🚨 PRE-LAUNCH BLOCKER entry under "Genuinely open —
+      do these next") and a GTM/GA4 audit (still open). While building
+      the contact one, found the old site's real `/thank-you` and
+      `/success` pages embed a Loom video
+      (`loom.com/embed/8975328b37a64d55bab0c7d16876cbe5`) — Michael
+      confirmed that's this rental-analysis thank-you page's content,
+      not contact's; reuse it when this gets built.
 
 ### Rental analysis — Turnstile widget not verifying on localhost
 

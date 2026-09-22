@@ -1,0 +1,177 @@
+---
+// /contact — ported from contact.html. Unlike every other simple content
+// page, this one didn't just need porting: /contact never existed as a
+// real Astro page at all (confirmed via a live 404, 2026-09-22), even
+// though the header/footer nav has linked to it everywhere this whole
+// project. The mockup's own form was JS-only smoke and mirrors — an
+// inline "Thanks for reaching out" swap with a comment literally saying
+// "In a production version, this submission should connect to Red Door's
+// existing lead-delivery workflow." That's what's wired here for real:
+// POST /api/contact/submit (Turnstile + D1 storage + Resend notification,
+// with LeadSimple CC'd per Michael's request), redirecting to
+// /contact-thank-you on success — same real-submission pattern already
+// working for the rental-analysis tool, reusing its Turnstile/Resend
+// helpers directly rather than duplicating them.
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+
+const pageTitle = 'Contact Us | Red Door Property Management';
+const pageDescription =
+  "Thanks for your interest in Red Door Property Management. Call us or send a message and we'll get back to you ASAP.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/contact">
+  <Fragment slot="head">
+    {turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />}
+  </Fragment>
+
+  <section class="hero" aria-labelledby="page-title">
+    <div class="hero-content">
+      <div class="eyebrow">We&rsquo;re Here to Help</div>
+      <h1 id="page-title"><span>Contact Us</span></h1>
+      <p class="hero-copy">Thanks for your interest in Red Door Property Management. Call us or send a message and we&rsquo;ll get back to you ASAP.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="tel:3176601626">Call 317.660.1626</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#contact-main" aria-label="Scroll to content">
+      <span aria-hidden="true"></span>
+      Scroll
+    </a>
+  </section>
+
+  <section id="contact-main">
+    <div class="container contact-grid">
+      <div class="reveal">
+        <h2>Red Door Property Management</h2>
+        <p class="contact-address">3815 River Crossing Parkway Suite 100<br />Indianapolis, IN 46240</p>
+        <p class="contact-phone">Phone: <a href="tel:3176601626">317.660.1626</a></p>
+
+        <div class="contact-map">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3060.078805973795!2d-86.10379294871727!3d39.917252593686925!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8814ad52e0b92e73%3A0xedce1c9690603e7!2s3815+River+Crossing+Pkwy+%23100%2C+Indianapolis%2C+IN+46240!5e0!3m2!1sen!2sus!4v1508175677246"
+            width="100%"
+            height="280"
+            style="border:0"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Red Door Property Management office location"
+          ></iframe>
+        </div>
+
+        <h3>Follow Us</h3>
+        <div class="contact-social">
+          <a href="https://www.youtube.com/@reddoorrents" target="_blank" rel="noopener">YouTube</a>
+          <a href="https://www.facebook.com/RedDoorPropertyManagement/" target="_blank" rel="noopener">Facebook</a>
+          <a href="https://www.linkedin.com/company/red-door-property-management/" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://www.instagram.com/reddoorrents/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.tiktok.com/@reddoorrents" target="_blank" rel="noopener">TikTok</a>
+        </div>
+      </div>
+
+      <form class="form-card reveal" data-contact-form novalidate>
+        <h2>Drop Us a Line!</h2>
+        <p>Thanks for your interest in Red Door Property Management. If you would like to get a hold of us, please feel free to either call us at <a href="tel:3176601626">317-660-1626</a> or fill out our form below and we will get back to you ASAP:</p>
+
+        <div class="field-grid">
+          <label>Name
+            <input name="name" autocomplete="name" required />
+          </label>
+          <label>Email
+            <input type="email" name="email" autocomplete="email" required />
+          </label>
+        </div>
+        <label>Phone
+          <input type="tel" name="phone" autocomplete="tel" />
+        </label>
+        <label>Inquiry Type
+          <select name="inquiry_type" required>
+            <option value="">Select One...</option>
+            <option>General Inquiry</option>
+            <option>Property Management</option>
+            <option>Vendor Request</option>
+            <option>Maintenance Request</option>
+            <option>Property Availability</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label>How did you hear about us?
+          <select name="referral_source" required>
+            <option value="">Select One...</option>
+            <option>Google Search</option>
+            <option>Social Media</option>
+            <option>Referral</option>
+            <option>Realtor</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label>Comment
+          <textarea name="comment"></textarea>
+        </label>
+        <label style="display:flex;flex-direction:row;align-items:flex-start;gap:10px;margin-top:2px">
+          <input type="checkbox" name="sms_consent" style="width:auto;min-height:0;margin-top:3px" />
+          <span class="consent" style="font-weight:400">By providing your mobile number you consent to receiving text messages from Red Door Property Management. Reply STOP to opt out. Msg &amp; data rates may apply.</span>
+        </label>
+
+        {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-callback="contactTurnstileDone" />}
+        <input type="hidden" name="turnstile_token" data-turnstile-token />
+
+        <p class="error-text" aria-live="polite" data-form-error></p>
+        <div class="form-actions" style="justify-content:flex-end">
+          <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+      if (!form) return;
+      const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      const error = form.querySelector<HTMLElement>('[data-form-error]');
+
+      form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        if (submitButton) submitButton.disabled = true;
+        if (error) error.textContent = '';
+
+        try {
+          const formData = new FormData(form);
+          const tokenField = form.querySelector<HTMLInputElement>('[data-turnstile-token]');
+          if (tokenField?.value) formData.set('turnstile_token', tokenField.value);
+
+          const response = await fetch('/api/contact/submit', { method: 'POST', body: formData });
+          const data = await response.json().catch(() => ({}));
+
+          if (response.ok && data.redirectUrl) {
+            window.location.href = data.redirectUrl;
+            return;
+          }
+
+          if (error) {
+            error.textContent = data.error || 'Something went wrong. Please try again.';
+          }
+        } catch {
+          if (error) error.textContent = 'Something went wrong. Please check your connection and try again.';
+        } finally {
+          if (submitButton) submitButton.disabled = false;
+        }
+      });
+    })();
+  </script>
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Prefer to Talk It Through First?</h2>
+      <p>Schedule a quick call or get a free rental analysis for your property.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+        <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

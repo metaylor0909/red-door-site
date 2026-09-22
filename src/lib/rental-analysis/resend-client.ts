@@ -10,6 +10,7 @@ export interface SendEmailParams {
   html?: string;
   text?: string;
   replyTo?: string;
+  cc?: string | string[];
 }
 
 export async function sendEmail(params: SendEmailParams, apiKey: string): Promise<void> {
@@ -26,6 +27,7 @@ export async function sendEmail(params: SendEmailParams, apiKey: string): Promis
       html: params.html,
       text: params.text,
       reply_to: params.replyTo,
+      cc: params.cc,
     }),
   });
 

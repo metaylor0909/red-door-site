@@ -1,0 +1,51 @@
+---
+// /contact-thank-you — real, distinct-URL landing page after a successful
+// /contact submission (src/pages/api/contact/submit.ts redirects here).
+// Built as its own page specifically so GTM/GA4 can track a "contact form
+// submitted" conversion as a plain URL-destination goal, per Michael's
+// 2026-09-22 request — the same reasoning applies to the rental-analysis
+// tool's own still-open thank-you-page item (see red-door-website-todo.md).
+//
+// Confirmation copy ("Your form has been successfully submitted... someone
+// from our team will be reaching out to you shortly") matches the old
+// site's own real /thank-you /success confirmation pages. Deliberately no
+// video here — Michael confirmed the old site's Loom-embedded thank-you
+// page is the rental-analysis one, not contact's (contact never had its
+// own thank-you page at all before this).
+//
+// noindex: a thank-you page reached only by form redirect has no organic
+// search value and indexing it risks it showing up for people who never
+// actually submitted anything.
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pageTitle = 'Thanks for Reaching Out | Red Door Property Management';
+const pageDescription = 'Your message has been sent to Red Door Property Management.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/contact-thank-you">
+  <Fragment slot="head">
+    <meta name="robots" content="noindex, nofollow" />
+  </Fragment>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-kicker">Message Sent</span>
+      <h1>Thanks for Reaching Out</h1>
+      <p class="lead">Your form has been successfully submitted. Someone from our team will be reaching out to you shortly!</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="criteria-content">
+      <div class="criteria-cta reveal">
+        <h2>While You Wait</h2>
+        <p>Browse available homes, schedule a call, or give us a ring directly.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/indianapolis-homes-for-rent">Browse Homes for Rent</a>
+          <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+          <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
