@@ -67,7 +67,15 @@ export const POST: APIRoute = async ({ request }) => {
   // fallback: set TURNSTILE_SECRET_KEY before this form goes live.
   const turnstileSecret = envRecord.TURNSTILE_SECRET_KEY;
   if (typeof turnstileSecret === 'string' && turnstileSecret.length > 0) {
-    const token = raw.turnstile_token;
+    // Turnstile auto-injects its solved token into the widget's own
+    // hidden `cf-turnstile-response` input once solved — that's the real
+    // field name to read. A previous version of this form tried to copy
+    // the token into a separate `turnstile_token` field via a
+    // `data-callback` JS function that was never actually defined
+    // anywhere, so that field stayed permanently empty and every real
+    // submission failed this check once TURNSTILE_SECRET_KEY was set —
+    // found and fixed 2026-09-22 (same bug copied into the contact form).
+    const token = raw['cf-turnstile-response'];
     // `Astro.clientAddress` isn't supported by this adapter version — the
     // `remoteip` param to Turnstile's siteverify is optional, so this
     // still verifies the token, just without binding it to the caller's IP.

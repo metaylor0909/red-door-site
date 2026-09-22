@@ -115,8 +115,7 @@ const pageDescription =
           <span class="consent" style="font-weight:400">By providing your mobile number you consent to receiving text messages from Red Door Property Management. Reply STOP to opt out. Msg &amp; data rates may apply.</span>
         </label>
 
-        {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-callback="contactTurnstileDone" />}
-        <input type="hidden" name="turnstile_token" data-turnstile-token />
+        {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey} />}
 
         <p class="error-text" aria-live="polite" data-form-error></p>
         <div class="form-actions" style="justify-content:flex-end">
@@ -140,8 +139,6 @@ const pageDescription =
 
         try {
           const formData = new FormData(form);
-          const tokenField = form.querySelector<HTMLInputElement>('[data-turnstile-token]');
-          if (tokenField?.value) formData.set('turnstile_token', tokenField.value);
 
           const response = await fetch('/api/contact/submit', { method: 'POST', body: formData });
           const data = await response.json().catch(() => ({}));

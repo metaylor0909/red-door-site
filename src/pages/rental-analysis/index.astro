@@ -104,10 +104,9 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           </p>
           {
             turnstileSiteKey && (
-              <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-callback="rentalAnalysisTurnstileDone" />
+              <div class="cf-turnstile" data-sitekey={turnstileSiteKey} />
             )
           }
-          <input type="hidden" name="turnstile_token" data-turnstile-token />
         </div>
 
         <p class="error-text" aria-live="polite" data-form-error></p>
@@ -192,8 +191,6 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
         try {
           const formData = new FormData(form!);
-          const tokenField = form!.querySelector<HTMLInputElement>('[data-turnstile-token]');
-          if (tokenField?.value) formData.set('turnstile_token', tokenField.value);
 
           const response = await fetch('/api/rental-analysis/submit', {
             method: 'POST',

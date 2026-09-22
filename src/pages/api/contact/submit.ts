@@ -48,7 +48,16 @@ export const POST: APIRoute = async ({ request }) => {
   // TURNSTILE_SECRET_KEY isn't set, but never ship without it.
   const turnstileSecret = envRecord.TURNSTILE_SECRET_KEY;
   if (typeof turnstileSecret === 'string' && turnstileSecret.length > 0) {
-    const token = raw.turnstile_token;
+    // Turnstile auto-injects its solved token into the widget's own
+    // hidden `cf-turnstile-response` input once the form's `<div
+    // class="cf-turnstile">` is solved — that's the real field name to
+    // read, not a custom one. (A previous version of this form tried to
+    // copy the token into a separate `turnstile_token` field via a
+    // `data-callback` JS function that was never actually defined
+    // anywhere, so that field stayed permanently empty and every real
+    // submission failed this check once TURNSTILE_SECRET_KEY was set —
+    // found and fixed 2026-09-22.)
+    const token = raw['cf-turnstile-response'];
     const passed = token ? await verifyTurnstileToken(token, turnstileSecret) : false;
     if (!passed) return jsonError(400, 'Spam check failed. Please try again.');
   } else {
