@@ -156,7 +156,7 @@ const nearbyUnits = allUnits
     if (a.sameCity !== b.sameCity) return a.sameCity ? -1 : 1;
     return a.distance - b.distance;
   })
-  .slice(0, 4)
+  .slice(0, 3)
   .map((entry) => entry.unit);
 
 const jsonLd = {
@@ -234,7 +234,7 @@ const jsonLd = {
       </div>
     </div>
 
-    <div class="container listing-gallery-wrap">
+    <div class="listing-gallery-wrap">
       {
         mainPhoto ? (
           <div class="listing-gallery" data-listing-gallery>
