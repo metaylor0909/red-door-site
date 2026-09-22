@@ -2465,6 +2465,12 @@
     }
 
     /* ---------- Rental analysis hosted report page ---------- */
+    /* Subject property photo (2026-09-22) — Google Street View via
+       /api/street-view, not always available for a given address, so
+       the <img> removes itself on error (see this page's own markup)
+       rather than show a broken-image icon or reserve dead space. */
+    .subject-photo { width: 100%; max-width: 640px; height: 320px; object-fit: cover; margin: 0 0 18px; border-radius: var(--radius); box-shadow: var(--shadow); }
+    @media (max-width: 640px) { .subject-photo { height: 220px; } }
     /* Same previously-missing-rule gap as .content-block > h1 above —
        this page's h1 ("Your Rental Analysis") had no rule of its own. */
     .report-address + h1 {

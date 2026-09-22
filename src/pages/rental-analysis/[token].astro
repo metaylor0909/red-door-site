@@ -163,6 +163,15 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
 >
   <section class="section-soft">
     <div class="container">
+      {row.property_lat != null && row.property_lon != null && (
+        <img
+          class="subject-photo"
+          src={`/api/street-view?lat=${row.property_lat}&lng=${row.property_lon}`}
+          alt={`Street view of ${row.property_address}`}
+          loading="eager"
+          onerror="this.remove()"
+        />
+      )}
       <p class="report-address">{row.property_address}, {row.property_city}, {row.property_state} {row.property_zip}</p>
       <h1>Your Rental Analysis</h1>
 
