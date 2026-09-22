@@ -1,0 +1,83 @@
+---
+// /residents-benefits-package — linked from application-criteria.astro's
+// "Resident Benefits Package" section and from several live listing
+// pages (see application-criteria.astro's own header comment for that
+// gap note). Unlike every other page built this session, this one had
+// NO prior static mockup anywhere in the repo — checked application-
+// criteria.html, red-door-migration-plan.csv, red-door-inventory-
+// analysis.md, and archive/pages (empty). The old PMW page itself was
+// just a heading and a linked graphic pointing to a PDF flyer
+// (reddoorrents.com/files/RDPM_resident-benefit-packager2.pdf), with no
+// real page text of its own.
+//
+// Content here is restructured from that real, company-produced PDF
+// flyer (downloaded directly from the live old site with Michael's
+// explicit permission) into the site's existing page-hero/criteria-
+// content template — same facts and figures as the flyer, laid out as
+// web copy instead of an infographic. Nothing invented: the coverage
+// amounts, the $45/month fee, the "required with every lease" language,
+// and the insurance-disclaimer paragraph are all pulled directly from
+// that PDF. Reuses application-criteria.astro's .criteria-content/
+// .criteria-callout/.fee-list/.criteria-note/.criteria-cta classes
+// since this is effectively that page's sibling.
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pageTitle = 'Resident Benefits Package | Red Door Property Management';
+const pageDescription =
+  "What's included in Red Door's $45/month Resident Benefits Package: renters and liability insurance coverage, credit reporting, 24/7 maintenance support, and more.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/residents-benefits-package">
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-kicker">For Current &amp; Prospective Residents</span>
+      <h1>Resident Benefits Package</h1>
+      <p class="lead">Every Red Door lease includes a bundle of insurance coverage and everyday conveniences for one flat monthly fee — here's exactly what's in it.</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="criteria-content">
+      <p>The Resident Benefits Package is required with every Red Door Property Management lease agreement and is billed as a single $45/month line item alongside rent. It bundles renters and liability insurance coverage with a set of conveniences designed to make renting easier.</p>
+
+      <div class="criteria-callout is-accent">
+        <p><strong>$45/month, included in every lease.</strong> The Resident Benefits Package satisfies your lease's insurance requirement — you don't need to purchase a separate renters insurance policy to move in.</p>
+      </div>
+
+      <h2>Insurance Coverage</h2>
+      <p>Your Resident Benefits Package includes renters insurance and liability insurance with the following coverages:</p>
+      <ul class="fee-list">
+        <li><span>Tenant personal contents</span> <strong>$20,000</strong></li>
+        <li><span>Tenant legal liability</span> <strong>$100,000</strong></li>
+        <li><span>Additional living expenses</span> <strong>$3,000</strong></li>
+        <li><span>Medical payments</span> <strong>$3,000</strong></li>
+      </ul>
+      <p>Tenant legal liability covers accidental damage to the rental home caused by fire, water damage, explosion, falling objects, civil unrest, and smoke, up to $100,000.</p>
+
+      <h2>Everyday Conveniences</h2>
+      <ul class="fee-list">
+        <li><span>24/7 maintenance hotline</span> <strong>Live person, after hours</strong></li>
+        <li><span>Mobile app for rent &amp; maintenance</span> <strong>Free</strong></li>
+        <li><span>Online payments via ACH</span> <strong>Free</strong></li>
+        <li><span>Credit reporting to Experian</span> <strong>On-time payments</strong></li>
+        <li><span>Air filter delivery</span> <strong>Free, quarterly</strong></li>
+        <li><span>Returned payment fee waiver</span> <strong>$50 value, 1x/year</strong></li>
+        <li><span>Real estate commission discount</span> <strong>$500 credit</strong></li>
+      </ul>
+      <p>On-time rental payments are reported to Experian, helping build your credit and establish a positive rental history. Air filters are mailed to you once per quarter for you to install. If a payment is returned, Red Door will waive the resulting late fee once per year. And when you're ready to buy a home, using a Red Door agent as your buyer's agent gets you a $500 rebate from our commission toward your closing costs.</p>
+
+      <div class="criteria-note">
+        <p><strong>A note on insurance:</strong> the Resident Benefits Package only waives your lease's insurance requirement — it doesn't replace personal insurance advice. You should consult an insurance professional to evaluate your own needs. Other coverages may be included; see the policy for full details and exclusions. All claims are subject to a $500 deductible, payable by the resident.</p>
+      </div>
+
+      <div class="criteria-cta reveal">
+        <h2>Questions About Your Lease?</h2>
+        <p>Review the full application criteria, or get in touch with our team directly.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/application-criteria">Application Criteria</a>
+          <a class="btn btn-secondary" href="/contact">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

@@ -864,6 +864,25 @@ population once the CMS import exists, not more page-building. Full list:
     an Astro page) — a known gap, not something to fabricate a page for
     speculatively. **Attorney sign-off on the criminal-history clause is
     still outstanding** — unchanged from above, not resolved by this port.
+- ✅ **`/residents-benefits-package` built (Sep 22)** —
+  `src/pages/residents-benefits-package.astro`. This was the gap flagged
+  above: unlike every other page this project has ported, it had no
+  static mockup anywhere in the repo (checked `application-criteria.html`,
+  the migration CSV/inventory analysis, and `archive/pages`, which is
+  empty). The old PMW page at this same URL turned out to be just a
+  heading and a linked graphic pointing to a PDF flyer
+  (`RDPM_resident-benefit-packager2.pdf`) — no real page text of its own.
+  Downloaded that PDF directly from the still-live old site (with
+  Michael's explicit permission) and restructured its real content — the
+  $20k/$100k/$3k/$3k insurance coverages, the $45/month required fee, the
+  mobile app / ACH / credit-reporting / air-filter / fee-waiver /
+  maintenance-hotline / commission-discount conveniences, and the
+  insurance-disclaimer paragraph — into the site's existing
+  `.criteria-content`/`.fee-list`/`.criteria-callout`/`.criteria-note`
+  template (application-criteria.astro's own classes, since this is
+  effectively that page's sibling). No new CSS needed. Same facts as the
+  flyer, laid out as web copy instead of an infographic — nothing
+  invented.
 - [ ] **Tune header/footer logo sizes.** 52px header, 60px footer are
       unmeasured guesses in the homepage CSS. Visual polish only, not urgent.
 - [ ] **Fix the `og:image` tag** — currently a relative path, so social
