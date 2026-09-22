@@ -274,6 +274,13 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
   description="Your free rental market analysis from Red Door Property Management."
   path={`/rental-analysis/${token}`}
 >
+  <Fragment slot="head">
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" />
+  </Fragment>
+
+  {/* Must load, unblocked by async/defer, before the module script below
+      that reads `mapboxgl` — see the homes-for-rent listing detail
+      page's own header comment on this exact script-load-order bug. */}
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js" is:inline></script>
 
   <section class="listing-hero">
