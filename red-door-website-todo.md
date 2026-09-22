@@ -445,6 +445,43 @@ Judgment calls / open items carried forward from this build:
       and delete `public/_headers`' `X-Robots-Tag` block (keep the
       Cloudflare-adapter-managed `/_astro/*` Cache-Control block above
       it).
+- [ ] **🚨 PRE-LAUNCH BLOCKER: analytics/tracking audit — tagging, GTM
+      continuity, and conversion tracking, before going live.** Flagged
+      by Michael 2026-09-22; nothing here has been researched or built
+      yet. Three distinct pieces, all currently open:
+      - **Thank-you/conversion-tracking pages for BOTH `/rental-analysis`
+        and `/contact`.** The rental-analysis half of this was already
+        flagged above under "Rental analysis — thank-you/tracking
+        page" (see `claude/rental-analysis-tool-build.md`'s "Still
+        open" section for the existing reconciliation question against
+        that form's current submit flow) — Michael's request broadens
+        it to `/contact` too, which has no thank-you/tracking page
+        planned at all yet. Needs its own scoping pass: does contact's
+        form even redirect anywhere on submit currently, or just show
+        an inline success state?
+      - **Audit the old site's actual Google Tag Manager container
+        before reinstalling it.** CLAUDE.md and the old launch
+        checklist below both already say "reuse the same GTM container
+        ID so historical data stays continuous," but that's only the
+        container shell — nobody has actually looked inside it yet at
+        what tags/triggers/variables it holds. Michael specifically
+        flagged one he half-remembers, possibly tied to a "Paperclip"
+        vendor integration (unconfirmed name, not found anywhere in
+        this repo or in `claude/` research docs — needs Michael to
+        check the GTM dashboard directly, since nobody else has access).
+        Needs a full export/review of the container's tags before
+        launch so nothing silently stops firing.
+      - **Add Google Analytics (GA4) tracking to the new site.** No GA4
+        measurement ID or gtag.js/GTM-tag wiring exists anywhere in this
+        repo yet — need to confirm whether the old site's GA4 property
+        should be reused (continuity, matching the GTM container
+        decision) or a new one created, then wire it in (likely as a
+        GTM tag, once the container audit above is done, rather than a
+        second separate snippet). Also worth confirming during the same
+        pass whether anything beyond the domain property already added
+        to Search Console (see below) is needed for tracking purposes
+        specifically, vs. that property's existing SEO/crawl-data
+        purpose.
 - [ ] **Confirm whether the Guaranteed Lease Program still exists.** The
       About page (`about.html`, migrated as-is Sep 18) mentions "a very
       unique Guaranteed Lease Program" for owners moving up without
@@ -855,7 +892,11 @@ population once the CMS import exists, not more page-building. Full list:
 - [ ] **Add a thank-you page after rental-analysis form submission, for
       conversion tracking.** Captured in full, with the reconciliation
       question against the existing submit-flow design, in
-      `claude/rental-analysis-tool-build.md` under "Still open."
+      `claude/rental-analysis-tool-build.md` under "Still open." Now
+      part of a broader pre-launch analytics/tracking item (Michael,
+      2026-09-22) that also wants a `/contact` thank-you page and a
+      GTM/GA4 audit — see the 🚨 PRE-LAUNCH BLOCKER entry under
+      "Genuinely open — do these next."
 
 ### Rental analysis — Turnstile widget not verifying on localhost
 
