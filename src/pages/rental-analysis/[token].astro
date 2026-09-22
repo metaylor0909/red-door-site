@@ -307,18 +307,6 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
     </div>
 
     <div class={`report-hero-grid${row.property_lat != null && row.property_lon != null ? '' : ' is-photo-missing'}`}>
-      {row.property_lat != null && row.property_lon != null && (
-        <div class="hero-media-col">
-          <img
-            class="subject-photo"
-            src={`/api/street-view?lat=${row.property_lat}&lng=${row.property_lon}`}
-            alt={`Street view of ${row.property_address}`}
-            loading="eager"
-            onerror="this.remove()"
-          />
-          <div class="subject-map" id="subject-map" data-lat={row.property_lat} data-lng={row.property_lon}></div>
-        </div>
-      )}
       <div class="estimate-card reveal">
         <div class="section-kicker">Estimated Monthly Rent</div>
         <div class="estimate-figure">${snapshot.estimatedRent.toLocaleString()}/mo</div>
@@ -331,6 +319,18 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
           <a class="btn btn-primary" href={CALENDLY_URL} target="_blank" rel="noopener">Talk to Red Door About Managing This Property</a>
         </div>
       </div>
+      {row.property_lat != null && row.property_lon != null && (
+        <div class="hero-media-col">
+          <img
+            class="subject-photo"
+            src={`/api/street-view?lat=${row.property_lat}&lng=${row.property_lon}`}
+            alt={`Street view of ${row.property_address}`}
+            loading="eager"
+            onerror="this.remove()"
+          />
+          <div class="subject-map" id="subject-map" data-lat={row.property_lat} data-lng={row.property_lon}></div>
+        </div>
+      )}
     </div>
   </section>
 

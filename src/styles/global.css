@@ -2483,15 +2483,23 @@
        doesn't cap an auto-sized row track; the estimate card's real
        content height (632px, confirmed live) was winning over the
        intended 420px, spilling into the summary band below it. */
-    .report-hero-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 420px; gap: 8px; height: 420px; }
+    .report-hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: 420px; gap: 8px; height: 420px; }
     .report-hero-grid.is-photo-missing { grid-template-columns: 1fr; max-width: 640px; margin: 0 auto; }
-    .hero-media-col { display: grid; grid-template-rows: 1fr 1fr; gap: 8px; height: 100%; }
+    /* minmax(0, 1fr), not bare 1fr — a bare fr track still sizes to its
+       content's automatic MINIMUM size first (the photo's own intrinsic
+       aspect ratio, for a plain <img> child), only distributing leftover
+       space by the fr ratio after that — so the photo's real height
+       (593px, confirmed live) overrode the 210px half-share it was
+       supposed to get, pushing the map down and off-screen entirely.
+       minmax(0, 1fr) removes that content-based floor so the two rows
+       actually split evenly. */
+    .hero-media-col { display: grid; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; height: 100%; }
     /* If the Street View photo fails to load (onerror removes it, e.g.
        no coverage for that address) and only the map is left, let the
        map fill the whole column instead of half-height with a dead gap
        below it. */
     .hero-media-col > *:only-child { grid-row: 1 / -1; }
-    .subject-photo, .subject-map { width: 100%; height: 100%; }
+    .subject-photo, .subject-map { width: 100%; height: 100%; min-height: 0; }
     .subject-photo { object-fit: cover; display: block; }
     .subject-map { overflow: hidden; }
     .report-hero-grid .estimate-card { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: clamp(16px, 2.4vw, 24px) clamp(20px, 3vw, 32px); border-radius: 0; overflow-y: auto; }
