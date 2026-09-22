@@ -1,0 +1,114 @@
+---
+// /application-criteria — standalone page for prospective residents,
+// ported from application-criteria.html (built Sep 17, see CLAUDE.md's
+// "Locked structural decisions" section). Fair-Housing-researched
+// content: criminal history reviewed case-by-case (no arrest-only,
+// sealed, or expunged records), eviction standard limited to judgments
+// only (matches tenant-screening.astro's already-verified language),
+// pet policy carves out service/assistance animals. The criminal-
+// history clause still needs actual attorney sign-off before launch —
+// a pre-existing flag, not resolved here.
+//
+// Structurally simple: one .page-hero section plus a single
+// .criteria-content block of plain headings/paragraphs/lists — no
+// interactive widgets, no old placeholder form, no #rental-analysis
+// anchor to fix.
+//
+// The "Resident Benefits Package" section links to
+// /residents-benefits-package, which doesn't exist yet anywhere in this
+// repo (neither as a static mockup nor an Astro page). Ported as-is per
+// CLAUDE.md Hard Rule 2 (preserve existing URLs/links as written, don't
+// invent or remove them speculatively) — this is a known gap, not
+// something to resolve in this build.
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pageTitle = 'Rental Application Criteria | Red Door Property Management';
+const pageDescription =
+  "Red Door's full rental application criteria: fees and required documents, income and credit standards, rental history, pet policy, and lease fees, explained before you apply.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/application-criteria">
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-kicker">For Prospective Residents</span>
+      <h1>Rental Application Criteria</h1>
+      <p class="lead">Before you apply, here's exactly what we look for and what to expect — the fees, the documents, and the standards every application is screened against.</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="criteria-content">
+      <p>Red Door Property Management screens every rental application against the same written standards below, applied consistently regardless of race, color, religion, sex, national origin, familial status, disability, or ancestry. This page explains those standards in full so you know what to expect before you apply.</p>
+
+      <h2>Before You Apply</h2>
+      <div class="criteria-callout is-accent">
+        <p>Be prepared to pay the application fee listed on the property's listing page. In addition to this application, you'll need to provide a valid form of identification and proof of income.</p>
+        <p><strong>Application fees, including any pet screening fee, are non-refundable once submitted.</strong> This is true even if you are not approved, do not provide all requested documentation, change your mind, or another applicant is approved for the home instead.</p>
+        <p>To complete an application, be ready to provide three years of residential history, including contact information for your rental references, and your monthly income — most properties require combined gross income of at least three times the monthly rent.</p>
+        <p>Each resident 18 or older must submit a separate application.</p>
+      </div>
+
+      <h2>Application Criteria</h2>
+
+      <h3>Basic Rental Criteria</h3>
+      <p>We evaluate every application against the following baseline standards. Pet-related standards are covered separately under Pet Policy &amp; Screening below.</p>
+      <ul>
+        <li>Verifiable income of at least three times the monthly rent</li>
+        <li>Debt-to-income ratio of 55% or less</li>
+        <li>Credit score of 580 or above</li>
+        <li>No credit history isn't an automatic decline — an additional deposit may apply instead</li>
+        <li>Criminal history reviewed under the standard described below</li>
+      </ul>
+      <p>If your income or debt-to-income ratio falls short on its own, a qualified co-signer may still allow approval.</p>
+
+      <h3>Criminal History</h3>
+      <p>We consider criminal convictions on a case-by-case basis — the nature and severity of the conviction, how much time has passed, and conduct since. We do not use arrest records that didn't lead to a conviction, sealed records, or expunged records, and we don't apply blanket bans based on record type alone. If a conviction could affect your application, we'll give you the opportunity to explain the circumstances before a final decision is made.</p>
+
+      <h3>Rental History</h3>
+      <p>The following is used when evaluating your rental history:</p>
+      <ul>
+        <li>No more than 3 late rent payments in the previous 12 months</li>
+        <li>No more than 3 returned payments (NSFs) in the previous 12 months</li>
+        <li>No unpaid balances owed to a current or previous landlord</li>
+        <li>No eviction judgments (a court order to vacate) — an eviction filing that was dismissed, decided in your favor, or never resulted in a judgment does not count against you, nor does a sealed eviction record</li>
+        <li>No excessive tenant-caused damage during a previous tenancy</li>
+        <li>No unauthorized pets during a previous tenancy</li>
+      </ul>
+
+      <div class="criteria-note">
+        <p><strong>Need an accommodation?</strong> If you need a reasonable accommodation because of a disability at any point in the application process, <a href="/contact">contact us</a> or call <a href="tel:3176601626">317.660.1626</a> and we'll work with you.</p>
+      </div>
+
+      <h2>Pet Policy &amp; Screening</h2>
+      <p>A welcoming environment is paramount to all of our residents. To help ensure everyone understands our pet and animal-related policies, we use a third-party screening service and require every applicant to complete a profile (No Pet/Pet/Animal). Get started by selecting a profile category at <a href="https://reddoor.petscreening.com/" target="_blank" rel="noopener">reddoor.petscreening.com</a>.</p>
+      <p>If a pet is approved, expect an additional $250 refundable pet deposit, a one-time $150 non-refundable pet fee, and $45/month/pet in pet rent.</p>
+      <p>Because many insurers have identified greater liability risk with certain dog breeds, we generally do not allow: Akita, Alaskan Malamute, Chow Chow, Doberman Pinscher, German Shepherd, Pit Bull, Presa Canario, Rottweiler, Siberian Husky, Staffordshire Bull Terrier, or other breeds our insurance carrier restricts.</p>
+      <div class="criteria-callout">
+        <p><strong>Service animals and emotional support/assistance animals are not pets under this policy.</strong> Breed restrictions, pet fees, pet deposits, and pet rent do not apply to a documented service or assistance animal. If you need an assistance animal as a reasonable accommodation, contact us directly — a PetScreening profile is still required for documentation purposes, but no fee applies to that profile.</p>
+      </div>
+
+      <h2>Resident Benefits Package</h2>
+      <p>In addition to monthly rent, a Resident Benefits Package fee of $45/month applies to every lease. It includes renters insurance, liability insurance, HVAC filter delivery, and more. See the full details on our <a href="/residents-benefits-package">Resident Benefits Package</a> page.</p>
+
+      <h2>Utility Management Service</h2>
+      <p>Skip the hassle of setting up utilities yourself. Applicable utilities can remain in Red Door Property Management's name — no utility credit checks, no utility deposits, and one portal for all your utility bills.</p>
+      <ul class="fee-list">
+        <li><span>One-time activation fee</span> <strong>$25</strong></li>
+        <li><span>Monthly service fee</span> <strong>$15</strong></li>
+        <li><span>One-time deactivation fee</span> <strong>$25</strong></li>
+      </ul>
+
+      <h2>Lease Preparation Fee</h2>
+      <p>A one-time $195 lease preparation fee is charged at the beginning of every lease agreement.</p>
+
+      <div class="criteria-cta reveal">
+        <h2>Ready to Find Your Next Home?</h2>
+        <p>Browse available homes for rent, or contact us with questions about the application process.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/indianapolis-homes-for-rent">Browse Homes for Rent</a>
+          <a class="btn btn-secondary" href="/contact">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

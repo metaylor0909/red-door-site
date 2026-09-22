@@ -854,6 +854,16 @@ population once the CMS import exists, not more page-building. Full list:
   - Full research trail (exact HUD/FHCCI quotes, source PDFs) is in this
     conversation, not yet copied into a standing repo file — worth doing
     if this page needs revisiting later.
+  - ✅ **Ported to real Astro (Sep 21):** `src/pages/application-criteria.astro`,
+    content and structure carried over verbatim from the static mockup
+    (no interactive widgets on this page, so no data-wiring needed —
+    the CSS-and-content-only pages built fastest this session). The
+    "Resident Benefits Package" section's link to
+    `/residents-benefits-package` was preserved as-is even though that
+    page doesn't exist yet anywhere in the repo (neither as a mockup nor
+    an Astro page) — a known gap, not something to fabricate a page for
+    speculatively. **Attorney sign-off on the criminal-history clause is
+    still outstanding** — unchanged from above, not resolved by this port.
 - [ ] **Tune header/footer logo sizes.** 52px header, 60px footer are
       unmeasured guesses in the homepage CSS. Visual polish only, not urgent.
 - [ ] **Fix the `og:image` tag** — currently a relative path, so social

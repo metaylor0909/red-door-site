@@ -3292,3 +3292,34 @@
     .card-city { margin: 2px 0 0; color: var(--red); font-size: .78rem; font-weight: 800; }
     @media (max-width: 900px) { .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 720px) { .card-grid { grid-template-columns: 1fr; } }
+
+    /* application-criteria.astro — ported from application-criteria.html's
+       own embedded <style>. .criteria-content/.criteria-callout/
+       .criteria-note/.fee-list/.criteria-cta. */
+    .criteria-content { max-width: 820px; margin: 0 auto; padding: 56px 0 40px; }
+    .criteria-content h2 { margin: 52px 0 16px; padding-top: 32px; border-top: 1px solid var(--line); color: var(--ink); font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.15; }
+    .criteria-content > h2:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+    .criteria-content h3 { margin: 26px 0 10px; color: var(--ink); font-size: 1.18rem; }
+    .criteria-content p { margin: 0 0 16px; color: var(--charcoal); }
+    .criteria-content ul { margin: 0 0 20px; padding-left: 22px; }
+    .criteria-content li { margin-bottom: 8px; }
+    .criteria-content a { color: var(--red); font-weight: 700; text-decoration: underline; text-decoration-color: rgba(140, 12, 3, .35); text-underline-offset: 3px; }
+    .criteria-content a:hover { color: var(--red-dark); }
+    .criteria-callout { margin: 0 0 32px; padding: 22px 24px; background: var(--soft); border: 1px solid var(--line); border-radius: var(--radius); }
+    .criteria-callout p:last-child, .criteria-callout ul:last-child { margin-bottom: 0; }
+    .criteria-callout.is-accent { background: var(--brand-tint); border-color: rgba(140, 12, 3, .18); }
+    .criteria-note { margin: 0 0 32px; padding: 16px 20px; background: var(--white); border: 1px solid var(--line); border-left: 4px solid var(--brand-mid); border-radius: 0 var(--radius) var(--radius) 0; font-size: .95rem; }
+    .criteria-note p:last-child { margin-bottom: 0; }
+    .fee-list { margin: 0 0 32px; padding: 0; list-style: none; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .fee-list li { display: flex; justify-content: space-between; gap: 16px; margin: 0; padding: 14px 18px; border-bottom: 1px solid var(--line); font-size: .95rem; }
+    .fee-list li:last-child { border-bottom: 0; }
+    .fee-list li:nth-child(odd) { background: var(--soft); }
+    .fee-list strong { flex: 0 0 auto; color: var(--ink); font-weight: 800; white-space: nowrap; }
+    .criteria-cta { margin-top: 16px; padding: 36px 32px; text-align: center; background: var(--charcoal); border-radius: var(--radius); color: var(--white); }
+    .criteria-cta h2 { margin: 0 0 8px; padding-top: 0; border-top: 0; color: var(--white); }
+    .criteria-cta p { color: #dcdcdc; }
+    .criteria-cta .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+    @media (max-width: 720px) {
+      .criteria-content h2 { margin-top: 40px; }
+      .fee-list li { flex-direction: column; gap: 4px; }
+    }
