@@ -475,7 +475,18 @@
       margin-top: 0;
     }
 
-    h1 {
+    /* Scoped to .hero specifically — this is the homepage/property-
+       management/blog-listing/pillar-page hero's own two-line (or
+       single-line, for .hero-pillar) H1 treatment, not a sitewide h1
+       default. A bare, unscoped `h1 { transform: translateY(-58px) }`
+       here previously leaked this lift onto every OTHER h1 on the site
+       too (.page-hero pages — application-criteria, all market-reports,
+       all homes-for-rent, residents-benefits-package — plus blog posts
+       and the rental-analysis pages), shifting each one up 58px and
+       overlapping it with whatever sits directly above it (kicker,
+       breadcrumb, address line). Found and fixed 2026-09-22 after
+       Michael caught the overlap on the homes-for-rent hero. */
+    .hero h1 {
       max-width: 1240px;
       margin: 0 auto 22px;
       color: var(--white);
@@ -486,7 +497,7 @@
       transform: translateY(-58px);
     }
 
-    h1 span {
+    .hero h1 span {
       display: block;
       white-space: nowrap;
     }
@@ -1330,6 +1341,15 @@
       align-items: start;
     }
 
+    /* Same previously-missing-rule gap as .content-block > h1 above —
+       this page's h1 had no rule of its own. */
+    .analysis-grid h1 {
+      color: var(--ink);
+      font-size: clamp(2rem, 4.2vw, 3rem);
+      line-height: 1.15;
+      margin: 0 0 14px;
+    }
+
     .benefit-list {
       display: grid;
       gap: 12px;
@@ -1413,9 +1433,19 @@
       font-weight: 900;
     }
 
-    input,
-    select,
-    textarea {
+    /* Scoped to fields inside an actual <label> (the real-form pattern
+       used by the rental-analysis intake form and the homes-for-rent
+       price/sqft range popovers' Min/Max fields) — not a sitewide input
+       default. A bare, unscoped `input, select, textarea { width: 100% }`
+       here previously leaked onto the homes-for-rent filter bar's beds/
+       pets <select> elements too (they use aria-label, not a wrapping
+       <label>), forcing each onto its own full-width row inside
+       .filter-row's flex layout instead of sitting inline with the
+       other filters. Found and fixed 2026-09-22 alongside the hero h1
+       overlap bug, both reported by Michael on the same page. */
+    label input,
+    label select,
+    label textarea {
       width: 100%;
       min-height: 50px;
       padding: 12px 14px;
@@ -2266,7 +2296,7 @@
         margin: 0 auto 10px;
       }
 
-      h1 {
+      .hero h1 {
         max-width: 100%;
         font-size: clamp(1.28rem, 5.25vw, 1.54rem);
         line-height: 1.12;
@@ -2362,7 +2392,7 @@
     }
 
     @media (max-width: 360px) {
-      h1 {
+      .hero h1 {
         font-size: 1.12rem;
       }
     }
@@ -2412,6 +2442,14 @@
     }
 
     /* ---------- Rental analysis hosted report page ---------- */
+    /* Same previously-missing-rule gap as .content-block > h1 above —
+       this page's h1 ("Your Rental Analysis") had no rule of its own. */
+    .report-address + h1 {
+      color: var(--ink);
+      font-size: clamp(2rem, 4.2vw, 3rem);
+      line-height: 1.15;
+      margin: 0 0 24px;
+    }
     .report-address {
       color: var(--muted);
       font-weight: 700;
@@ -2550,6 +2588,12 @@
        with it on the same element. */
     .content-block { max-width: 900px; }
     .content-block + .content-block { margin-top: 40px; }
+    /* blog/[slug].astro's post title — previously had no real rule of its
+       own and was silently relying on the (bare, unscoped, since-fixed)
+       .hero h1 rule, which was both white text on this page's white
+       background AND shifted up 58px into the header. Found alongside
+       the homes-for-rent hero overlap this same bug caused. */
+    .content-block > h1 { color: var(--ink); font-size: clamp(2rem, 4.5vw, 3.2rem); line-height: 1.15; margin: 0 0 14px; }
     .content-block h2 { margin-bottom: 14px; }
     .content-block > p { color: var(--muted); font-size: 1.02rem; margin-bottom: 16px; }
     /* Ported from indianapolis-property-management.html's own embedded
@@ -2670,15 +2714,32 @@
       .step-grid.is-five-across { grid-template-columns: 1fr; }
       .step-grid.is-three-across { grid-template-columns: 1fr; }
     }
-    /* Scoped to .hero-pillar specifically (added on the 7 pillar pages'
-       own hero section), NOT the bare .hero .cta-row base rule (which
-       has a deliberate -28px lift tuned for the homepage/property-
-       management pages' two-line H1 — see that rule above). The
-       source mockup's own embedded <style> only affected its own single
-       page since it wasn't in a shared stylesheet; porting it unscoped
-       into this shared one would have silently broken that lift
-       everywhere else `.hero .cta-row` is used. */
-    .hero-pillar .eyebrow + h1 { transform: none; margin-top: 6px; }
+    /* .hero .eyebrow + h1 (not .hero-pillar-scoped): whenever a hero has
+       an .eyebrow directly above its h1 — the 7 pillar pages AND the 20
+       property-management pages, both share this markup pattern — the
+       base -58px h1 lift (tuned for the homepage's eyebrow-less 2-line
+       H1) overlaps the eyebrow instead of clearing it. This was already
+       correctly scoped this way in pricing.html's own source <style>
+       (see this file's "Ported from pricing.html" comment below), but
+       when that page was ported here the fix only got applied via the
+       narrower `.hero-pillar` selector, which happened to cover the 7
+       pillar pages (all `.hero-pillar`) but silently missed the 20
+       property-management pages (plain `.hero`, no `-pillar` class) —
+       found live on indianapolis-property-management 2026-09-22, the
+       eyebrow visibly overlapping the H1 there. `.eyebrow + h1 span`'s
+       white-space is switched from nowrap to normal here too: harmless
+       for the pillar pages' short 1-2-word titles, but required for
+       property-management's long single-sentence H1
+       ("Indianapolis Property Management Services That Protect Your
+       Investment"), which was overflowing off the right edge of the
+       viewport under forced nowrap.
+       .hero-pillar .cta-row stays scoped to .hero-pillar specifically,
+       NOT broadened the same way — it has a deliberate, DIFFERENT
+       -28px lift on plain .hero (tuned for the homepage/property-
+       management two-line H1's own cta-row spacing) that this override
+       must not touch. */
+    .hero .eyebrow + h1 { transform: none; margin-top: 6px; }
+    .hero .eyebrow + h1 span { white-space: normal; }
     .hero-pillar .cta-row { transform: none; margin-top: 10px; }
 
     .callout-note { margin: 20px 0 0; padding: 16px 20px; color: var(--charcoal); background: var(--brand-tint); border-left: 4px solid var(--red); border-radius: 0 var(--radius) var(--radius) 0; font-size: .95rem; }

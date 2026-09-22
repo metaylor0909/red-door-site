@@ -375,6 +375,53 @@ Judgment calls / open items carried forward from this build:
   30 listing-detail pages now generate (up from 0), Avon's hub page now
   shows its real listing, and a live click-through from a listing card
   to its detail page works end to end.
+- 🐛 **Fixed (Sep 22): sitewide hero H1 overlap + homes-for-rent filter
+  bar wrapping.** Michael reported both on the homes-for-rent hero
+  (kicker text overlapping the H1) and filter row (beds/price/sqft/pets
+  scattered across multiple lines instead of sitting in one row).
+  Root-caused to two more bare, unscoped rules bleeding across the site
+  — the same class of bug as the `RENTENGINE_ACCOUNT_ID` fix above:
+  - `h1 { transform: translateY(-58px) }` was written unscoped instead
+    of `.hero h1`, so the homepage's deliberate 2-line-hero lift was
+    shifting up the H1 on **every other page on the site** —
+    application-criteria, all 9 market-reports, all 20 homes-for-rent
+    (the reported bug), residents-benefits-package, and, worse, blog
+    posts and the rental-analysis pages, where it wasn't just an overlap
+    but genuinely **invisible white-on-white text shifted up into the
+    header** (confirmed live on a real blog post in production). Fixed
+    by scoping to `.hero h1` (its true intended target) and adding real
+    (previously entirely missing) h1 styling for
+    `.content-block > h1` (blog posts), `.report-address + h1` and
+    `.analysis-grid h1` (rental-analysis pages) — all three had been
+    silently depending on the leaked rule and had no styling of their
+    own once it was properly scoped away.
+  - `input, select, textarea { width: 100% }` was written unscoped
+    instead of `label input/select/textarea` (the real-form pattern),
+    so it forced the homes-for-rent filter bar's `#filter-beds`/
+    `#filter-pets` `<select>` elements (which use `aria-label`, not a
+    wrapping `<label>`) to full width inside `.filter-row`'s flex
+    layout, pushing each onto its own row. Fixed by scoping to
+    `label input/select/textarea`, matching every real dependent
+    (rental-analysis's form, the price/sqft range popovers' Min/Max
+    fields) which are all genuinely `<label>`-wrapped.
+  - **Found in the course of fixing the above, same root cause:** all 20
+    `-property-management` pages' hero also had the eyebrow overlapping
+    the H1, and indianapolis-property-management's long single-sentence
+    H1 was overflowing off the right edge of the viewport entirely
+    (forced `white-space: nowrap` on a long span). `.hero-pillar
+    .eyebrow + h1 { transform: none; margin-top: 6px }` already existed
+    for the 7 pillar pages but was scoped too narrowly — confirmed via
+    this file's own comment that pricing.html's original source
+    `<style>` had this as a general `.hero .eyebrow + h1` rule, and
+    porting it only through the `.hero-pillar`-scoped copy silently
+    missed the plain-`.hero` property-management pages. Broadened to
+    `.hero .eyebrow + h1` and added `white-space: normal` on that span.
+  - Verified across the board after the fix: homes-for-rent (both the
+    hero and the filter row), application-criteria,
+    indianapolis-property-management (both the overlap and the text
+    overflow), avon-property-management, a blog post (title now visible
+    and properly sized), rental-analysis, the homepage, and a pillar
+    page (marketing-process) — all pixel-checked, no regressions.
 
 ---
 
