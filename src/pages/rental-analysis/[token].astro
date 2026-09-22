@@ -249,7 +249,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
                 </td>
                 <td>{c.distance.toFixed(1)} mi</td>
                 <td>
-                  <span class={`status-pill ${c.status === 'Rented' ? 'is-rented' : 'is-available'}`}>{c.status}</span>
+                  <span class={`status-pill ${c.status === 'rented' ? 'is-rented' : 'is-available'}`}>{c.status === 'rented' ? 'Rented' : 'Available'}</span>
                 </td>
               </tr>
             ))}

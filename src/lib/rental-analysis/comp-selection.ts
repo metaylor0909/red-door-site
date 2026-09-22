@@ -6,6 +6,7 @@
 
 import type { CascadeCompromises, RentEngineComp, SubjectProperty } from './types';
 import { haversineMiles, normalizeAddress } from './geo';
+import { classifyRentEnginePropertyType } from './property-type';
 
 const RENTED_COMP_MINIMUM = 5;
 const FINAL_COMP_CAP = 12;
@@ -17,7 +18,7 @@ function monthsAgo(months: number): Date {
 }
 
 function isWithinDateWindow(comp: RentEngineComp, months: number): boolean {
-  if (comp.status === 'Available') return true; // no date_rented to check; see module notes below
+  if (comp.status === 'available') return true; // no date_rented to check; see module notes below
   if (!comp.date_rented) return false;
   return new Date(comp.date_rented) >= monthsAgo(months);
 }
@@ -43,7 +44,12 @@ function isSelfMatch(comp: RentEngineComp, subject: SubjectProperty): boolean {
 function applyQualityFilters(comps: RentEngineComp[], subject: SubjectProperty, isMultiUnit: boolean): RentEngineComp[] {
   return comps.filter((c) => {
     if (isSelfMatch(c, subject)) return false;
-    if (c.property_type !== subject.property_type) return false;
+    // subject.property_type is this tool's internal enum ('single-family',
+    // 'townhome', etc. — see validation.ts); c.property_type is
+    // RentEngine's own raw string ("Single Family", "Apartment", ...),
+    // never directly comparable — see property-type.ts's header comment
+    // for the real bug this fixes.
+    if (classifyRentEnginePropertyType(c.property_type) !== subject.property_type) return false;
     if (subject.sqft != null && c.sqft != null) {
       const lower = subject.sqft * 0.8;
       const upper = subject.sqft * 1.2;
@@ -66,7 +72,7 @@ function withinBeds(comp: RentEngineComp, subject: SubjectProperty, relaxed: boo
 }
 
 function countRented(comps: RentEngineComp[]): number {
-  return comps.filter((c) => c.status === 'Rented').length;
+  return comps.filter((c) => c.status === 'rented').length;
 }
 
 /** Rank by distance first, recency second (closest wins ties over

@@ -30,8 +30,8 @@ export interface TimeToLeaseStats {
 }
 
 export function computeSupplyDemand(pool: RentEngineComp[]): SupplyDemandStats {
-  const rentedCount = pool.filter((c) => c.status === 'Rented').length;
-  const availableCount = pool.filter((c) => c.status === 'Available').length;
+  const rentedCount = pool.filter((c) => c.status === 'rented').length;
+  const availableCount = pool.filter((c) => c.status === 'available').length;
   const ratio = availableCount > 0 ? rentedCount / availableCount : null;
 
   // Thresholds aren't numerically specified in the build brief (only the
@@ -48,7 +48,7 @@ export function computeSupplyDemand(pool: RentEngineComp[]): SupplyDemandStats {
 
 export function computeTimeToLease(pool: RentEngineComp[]): TimeToLeaseStats {
   const withDom = pool
-    .filter((c) => c.status === 'Rented' && c.days_on_market != null)
+    .filter((c) => c.status === 'rented' && c.days_on_market != null)
     .map((c) => c.days_on_market as number);
 
   const buckets = { days0to14: 0, days15to30: 0, days31to45: 0, days46plus: 0 };

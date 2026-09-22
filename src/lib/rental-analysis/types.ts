@@ -14,8 +14,15 @@ export interface RentEngineComp {
   sqft: number | null;
   rent: number;
   days_on_market: number | null;
-  date_rented: string | null; // ISO date; null for Available comps
-  status: 'Rented' | 'Available';
+  date_rented: string | null; // ISO date; null for available comps
+  // Lowercase — confirmed live 2026-09-22 against a real /market-tool/
+  // comps response. Deliberately NOT the same casing as RentEngineUnit's
+  // status field (src/lib/listings/types.ts) — that's a different
+  // RentEngine endpoint (/units) which really does use capitalized
+  // 'Available'/'Leased', confirmed working in production. The two
+  // endpoints simply don't agree with each other; don't "fix" this one
+  // to match the other.
+  status: 'rented' | 'available';
   latitude: number;
   longitude: number;
   property_type: string;

@@ -35,8 +35,8 @@ function median(values: number[]): number {
  * rather than a range computed from the pool's own spread.
  */
 export function buildEstimate(rankedComps: RentEngineComp[]): EstimateResult {
-  const rented = rankedComps.filter((c) => c.status === 'Rented');
-  const available = rankedComps.filter((c) => c.status === 'Available');
+  const rented = rankedComps.filter((c) => c.status === 'rented');
+  const available = rankedComps.filter((c) => c.status === 'available');
 
   let estimatePool: RentEngineComp[];
   let blendPathUsed: boolean;
