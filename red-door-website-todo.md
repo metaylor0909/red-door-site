@@ -469,12 +469,12 @@ Judgment calls / open items carried forward from this build:
         LeadSimple's separate "Web Forms" feature, which — per
         LeadSimple's own setup instructions, forwarded verbatim by
         Michael — expects to be CC'd directly on the regular
-        notification email instead. Not yet confirmed end-to-end with a
-        real Turnstile pass (server-side spam check verified working —
-        an unsolved-widget test correctly got rejected — but a full
-        real-token submission hasn't been run); **worth Michael sending
-        one real test submission after this deploys**, to confirm a
-        lead actually lands correctly in LeadSimple.
+        notification email instead. **Confirmed working end-to-end
+        (Sep 22)** after a separate Turnstile sitekey bug (see "Rental
+        analysis / contact — Turnstile" below) was found and fixed —
+        Michael's real test submission passed the spam check, landed in
+        D1, reached `cknight@rdpmindy.com`, and the lead appeared in
+        LeadSimple.
         Rental-analysis's own thank-you-page item (below) is still
         separately open — while researching this, found that the old
         site's real `/thank-you` and `/success` pages (same generic
@@ -956,20 +956,29 @@ population once the CMS import exists, not more page-building. Full list:
   page loaded, but nothing reached LeadSimple), and Turnstile was
   unenforced sitewide. All four pushed live from the existing local
   values.
-- [ ] **🚨 STILL OPEN: Turnstile widget fails with error 400020
-  ("hostname not allowed") on the live preview domain.** Found
-  2026-09-22 testing the fix above — confirmed via browser console
-  (`Uncaught TurnstileError: [Cloudflare Turnstile] Error: 400020`),
-  which fires before any token is ever generated, so no code-level fix
-  can work around it. Same root cause originally flagged 2026-09-20
-  for `localhost` (which also never got resolved), now confirmed to
-  also block `red-door-site.mtaylor-0d7.workers.dev` — the widget's
-  allowed-hostnames list in the Cloudflare dashboard needs this preview
-  domain added (and will need `reddoorrents.com` added/confirmed too,
-  once DNS actually cuts over — don't assume that one's already
-  correct just because it predates this rebuild). Michael is adding
-  the preview-domain hostname now; re-test both forms once that's
-  saved.
+- ✅ **Fixed and confirmed end-to-end (Sep 22): Turnstile error 400020
+  was an invalid sitekey, not a hostname problem — correcting both this
+  session's and the 2026-09-20 session's misdiagnosis.** Error 400020
+  is Cloudflare's own "Invalid sitekey" code (confirmed against
+  Cloudflare's official docs), not a hostname-allowlist error as both
+  the earlier `localhost` note and this session's first pass assumed.
+  Adding hostnames to the widget (done first, didn't help) was the
+  wrong fix. The real problem: `PUBLIC_TURNSTILE_SITE_KEY`
+  (`0x4AAAAAAE9vQxyuh-6dE7ocM4D0D5ZaGkk`) didn't match any real widget
+  in the Cloudflare account — Michael confirmed no such sitekey exists
+  in the dashboard. Fixed with the real sitekey
+  (`0x4AAAAAAE9vQ5M8AWJTqVhj`, not a secret — safe to reference here),
+  pushed as the `PUBLIC_TURNSTILE_SITE_KEY` GitHub Actions repo secret,
+  redeployed (added a `workflow_dispatch` trigger to deploy.yml along
+  the way, so a secrets-only change can redeploy without a throwaway
+  commit next time). **Verified for real**, not just "should work now":
+  Michael submitted a real contact-form test after the redeploy — it
+  passed Turnstile, the row landed in D1's `contact_submissions`, the
+  notification email reached `cknight@rdpmindy.com`, and the lead
+  landed in LeadSimple. Both forms share the same sitekey/secret, so
+  rental-analysis's submit flow should now work too, but hasn't been
+  separately re-tested since this fix — worth a real test before
+  relying on it.
 
 ---
 
