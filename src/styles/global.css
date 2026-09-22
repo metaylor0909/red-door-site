@@ -2839,8 +2839,19 @@
        white space was just removed. */
     .listing-gallery-wrap { width: 100%; margin: 0; padding-top: 0; }
 
-    /* Real gallery grid + lightbox */
-    .listing-gallery { display: grid; grid-template-columns: 1.5fr 1fr; gap: 8px; height: 420px; }
+    /* Real gallery grid + lightbox. grid-template-rows (not just height)
+       is required here — height alone sets the container's own box size
+       but doesn't cap auto-sized row tracks, so a wide-viewport column
+       width could make .gallery-main's percentage-height <img> resolve
+       against its own intrinsic aspect ratio instead of a definite
+       420px, growing the row past the container. With .listing-gallery-
+       wrap's overflow left at visible (needed for the edge-to-edge
+       gallery), that overflow silently bled down and covered the
+       summary band below it — found 2026-09-22 on a real listing page
+       at a full-width desktop viewport, after the edge-to-edge gallery
+       change made this reachable (a narrower pre-existing container
+       width had never triggered it). */
+    .listing-gallery { display: grid; grid-template-columns: 1.5fr 1fr; grid-template-rows: 420px; gap: 8px; height: 420px; }
     .gallery-main { position: relative; padding: 0; border: 0; border-radius: 0; overflow: hidden; cursor: pointer; background: #000; }
     .gallery-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .gallery-thumbs { display: grid; gap: 8px; height: 100%; }
@@ -2854,7 +2865,7 @@
     .listing-gallery-empty { display: grid; place-items: center; height: 320px; background: var(--soft); border-radius: var(--radius); color: var(--muted); }
 
     @media (max-width: 760px) {
-      .listing-gallery { grid-template-columns: 1fr; height: auto; }
+      .listing-gallery { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
       .gallery-main { aspect-ratio: 4/3; }
       .gallery-thumbs { display: none; }
     }
