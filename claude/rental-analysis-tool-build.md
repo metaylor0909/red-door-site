@@ -17,8 +17,32 @@ arriving fast matters more than it being defensible to the decimal point.
 
 ## Decision — FINAL, do not re-litigate
 
-**Build a custom tool. Use RentEngine's `market-tool/comps` as the sole
-source of the comps that drive the estimate itself.**
+**REVISED (2026-09-22/23) — RentEngine is no longer the sole comps source.**
+Once the tool was actually generating real reports, RentEngine's comp pool
+proved too thin in practice: two real submissions (a 3bd/2ba Indianapolis
+address, a 4bd/2.5ba Plainfield one) landed 1 and 4 usable comps
+respectively after quality filters, even after fixing real property-type/
+status-casing bugs elsewhere in the pipeline (see the 2026-09-22 session
+notes). Michael's own read, comparing a live side-by-side pull: "the
+RentCast numbers are way more realistic." A real pull against both same
+addresses via RentCast's `GET /avm/rent/long-term` returned 20+ tightly-
+correlated comps each (0.93–0.98 correlation, mostly under a mile).
+**RentCast is now blended into the comp pool alongside RentEngine — see
+the new "Decision #1/#2 revision" and "Decision #9 revision" subsections
+below for exactly how.** New client: `src/lib/rental-analysis/rentcast-
+comps-client.ts`, calling `GET /v1/avm/rent/long-term` (5mi radius,
+compCount 25, matching decision #1's own widest cascade radius) — one
+new RentCast call per submission, on top of decision #10's existing
+bedroom-adjustment calls, well within the Foundation plan's 1,000/month
+pool.
+
+The reasoning below (kept for the historical record, not because it's
+still fully in force) explains why RentEngine-only was the original call;
+it's superseded specifically on the "sole source" point, not on using
+RentEngine at all — RentEngine's confirmed-leased comps are still the
+top-priority tier in the blend.
+
+**Original decision (2026-09-12/13), RentEngine-only:**
 
 Not RentRange (ruled out on pricing — sits between small-operator and
 enterprise tiers, neither viable for Red Door's volume). Not Rentometer (would
@@ -36,6 +60,23 @@ This was a deliberate reversal of an earlier "don't automate a lead magnet"
 instinct — Michael confirmed it directly and it's settled.
 
 ### Why RentEngine data only, not RentEngine + RentCast, for the estimate itself
+
+**Superseded 2026-09-22/23 on the coverage point specifically — see the
+revision note above.** The bullet below about RentCast's Active/Inactive
+status having "no way to tell rented from withdrawn from expired" is still
+literally true (confirmed directly: pulled a real RentCast comparable
+showing `listedDate` and `removedDate` one day apart — "Inactive" really
+does just mean "no longer listed," not "confirmed leased"), but the
+resolution wasn't "therefore don't use RentCast comps" — it was "use them,
+just as an honestly-labeled lower-confidence tier, never conflated with a
+RentEngine-confirmed lease." See the new revision subsections under
+decisions #1, #2, and #9 for exactly how that's implemented. The
+cost/vendor-relationship point below is also moot now — Red Door is on the
+upgraded RentCast plan regardless (decision #10), with ample headroom (the
+Foundation plan's 1,000 calls/month against ~50/month already used by the
+monthly city refresh).
+
+**Original reasoning (2026-09-12), kept for the record:**
 
 - RentCast's `GET /avm/rent/long-term` computes an estimate for you (median +
   range + correlation-ranked comps) — convenient, but it's ordinary,
@@ -229,6 +270,34 @@ This was locked in without a further live re-test (Michael's call, given
 budget/time) — reasoning is extrapolated from the one real validation run,
 not separately confirmed.
 
+**REVISED (2026-09-22/23) — the cascade's "stop widening" check now counts
+RentCast's off-market comps too, not just RentEngine's `Rented` ones.**
+Once RentCast comps were merged into the pool (see the top-level revision
+note), a real bug surfaced: the cascade's stopping condition
+(`count of Rented comps >= 5`) checked RentEngine's `Rented` status only.
+Both real test addresses' RentEngine pulls happened to have **zero**
+`Rented` comps at all — meaning the cascade could never satisfy its own
+threshold, no matter how much real, close, well-matched data RentCast
+supplied, and always fell through to its widest, most-compromised step
+(5mi radius, 12-month window, beds relaxed to ±1) — tanking the confidence
+score (see decision #9's revision) even when the real, displayed comp set
+was excellent (12 comps, most under a mile). Fixed by counting RentEngine
+`Rented` **and** RentCast `Inactive` (off-market, not a confirmed lease,
+but real comparable data — see the top-level revision note) toward the
+5-comp threshold — RentCast `Available`/Active listings still don't count
+toward it, since a search shouldn't stop early just because there are
+plenty of raw asking-price listings around. This only changes when the
+*search* decides it has found enough to stop widening; it does not change
+which comps actually feed the estimate median — see decision #2's
+revision for that.
+
+**Also added: cross-source de-duplication.** Before the cascade runs, the
+merged RentEngine + RentCast pool is de-duped by street address (comparing
+just the portion before the first comma, since the two sources format the
+city/state/zip suffix differently) — RentEngine's record wins on a
+collision, since it's the confirmed one. Implemented in `mergeCompPools()`,
+`src/lib/rental-analysis/comp-selection.ts`.
+
 ## Decision #2 — Rented-vs-Available fallback rule — FINAL (2026-09-12)
 
 Same sparsity threshold as decision #1 (5 comps), applied after the full
@@ -250,6 +319,27 @@ This does not fix the thin-market or multi-unit failure modes surfaced in
 decision #4 — decision #1's comp-selection rules are what address those.
 This fallback only governs which numbers feed the median once the comp set
 is settled.
+
+**REVISED (2026-09-22/23) — extended from two tiers to three, to fold in
+RentCast comps (see the top-level revision note) without treating them as
+equivalent to a confirmed RentEngine lease.** Fill order for the estimate
+median, each tier only used once the tier(s) above it run out:
+
+1. **RentEngine `Rented`** (confirmed lease) — unchanged from the original
+   rule above.
+2. **RentCast `Inactive`** (off-market — probably leased, but not
+   confirmed; see the top-level revision note on what RentCast's status
+   actually means) — new middle tier.
+3. **`Available`/Active** (currently listed, asking price — RentEngine or
+   RentCast) — same bottom tier as the original rule, just now sourced
+   from either vendor.
+
+Mark the report lower-confidence whenever tier 1 alone falls short of 5
+(same `blendPathUsed` signal as before, deduction reduced — see decision
+#9's revision) **and** an additional, smaller deduction when the estimate
+has to reach all the way to tier 3 (a real, separate step down from tier
+2 — see decision #9). Implemented in `buildEstimate()`,
+`src/lib/rental-analysis/fallback-and-estimate.ts`.
 
 ## Decision #3 — Range/estimate math — FINAL (2026-09-12)
 
@@ -377,10 +467,14 @@ design):
   count highlighted) — both submarket-level, not comp-level. Data source:
   the same RentCast `/v1/markets` per-city file already being pulled and
   cached for decision #10's bedroom adjustment (`bedroomLadder` gives the
-  bar chart directly; the file's 6-month trailing history — see the Avon
-  draft's "what I'm holding back" note — plus ongoing monthly pulls builds
-  the 12-month line over time). No new vendor or integration; reusing data
-  the tool already has.
+  bar chart directly). **Corrected 2026-09-22/23** — the rest of this
+  bullet originally guessed the 12-month line would need "the file's
+  6-month trailing history... plus ongoing monthly pulls" to build up
+  over time; confirmed directly against real stored pulls that this was
+  unnecessary — RentCast's `history` object already returns a full
+  trailing ~12 months in one pull, no accumulation needed. See decision
+  #5's 2026-09-22/23 revision block for the real mechanics and the two
+  more trend charts (days on market, inventory) added alongside it.
 - **Homes-for-rent cross-sell section** ("Homes for rent near this
   property") — mirrors the exact default-city-then-nearby-fallback pattern
   already locked in for the `-homes-for-rent` pages (`red-door-website-
@@ -393,13 +487,112 @@ design):
   posts, at the very bottom of the hosted page (just above the final CTA),
   so an owner sees this is an active resource, not a one-time report.
 
-**Final locked layout, top to bottom (hosted page):** address line → estimate
-card + 12-month rent trend chart side by side → CTA → one-line compact
-methodology note → market context (supply/demand ratio, time-to-lease,
-average rent by bedroom — 3 panels) → comps table (12 comps) → homes-for-rent
-cross-sell (default city + nearby fallback) → "From Red Door" post carousel →
-final CTA. The email stays simpler and headline-only: estimate, range,
-confidence, one CTA, no charts or tables.
+**Final locked layout, top to bottom (hosted page) — SUPERSEDED, see the
+2026-09-22/23 revision block below for the actual current layout:** address
+line → estimate card + 12-month rent trend chart side by side → CTA →
+one-line compact methodology note → market context (supply/demand ratio,
+time-to-lease, average rent by bedroom — 3 panels) → comps table (12 comps)
+→ homes-for-rent cross-sell (default city + nearby fallback) → "From Red
+Door" post carousel → final CTA. The email stays simpler and
+headline-only: estimate, range, confidence, one CTA, no charts or tables
+(this part is still accurate — unchanged).
+
+**REVISED (2026-09-22/23) — the hosted page went through several more
+design passes with Michael after the above was actually built and
+reviewed against real data, landing on a meaningfully different final
+layout.** Current locked layout, top to bottom:
+
+1. **Breadcrumb bar** (dark) — unchanged.
+2. **Estimate card (60%) + rent-trend chart (40%)**, side by side, white
+   cards — CTA button now lives *inside* the estimate card (not a
+   separate row), along with a comps-count sentence ("Based on the
+   median rent of N comparable properties…"). The rent-trend chart is
+   **city-wide, not bedroom-specific** — RentCast's `history` object
+   (confirmed against real pulls) only carries a city-wide aggregate per
+   month, no nested per-bedroom breakdown, so a bedroom-specific trend
+   isn't buildable from real data; Michael confirmed city-wide is fine.
+3. **Summary band** (dark: address, beds/baths/sqft/type) — moved to
+   *after* the estimate/trend row, not before it, so the page reads
+   black (breadcrumb) → white (estimate/trend) → black (summary) →
+   white (rest of page). This exact ordering was a specific, deliberate
+   Michael request ("the black, white, black sandwich"), tuned to fit
+   above the fold on a real desktop viewport — worth preserving exactly,
+   not "simplifying" back to address-first.
+4. **Street View photo + subject map**, 50/50, edge-to-edge — moved out
+   of the hero entirely into its own section directly below the summary
+   band.
+5. **Comparable properties**: table (60%) + map (40%), side by side, map
+   `position: sticky` so it stays in view while a long table scrolls —
+   previously stacked (table full width, then map full width below).
+   Comps map plots the subject property itself too, styled distinctly
+   (a house-icon pin, not a red price pill) from the comp pins. Status
+   pills ("Rented" / "Off Market" / "Available") each carry a small
+   hover/focus tooltip explaining what the status actually means — see
+   the RentCast-blend note below for why "Off Market" needed one.
+6. **"What Homes Are Renting for Nearby"** (RentCast city section): stat
+   tiles (avg/median rent, avg days on market) → **three new 12-month
+   trend charts** (average rent, days on market, rental inventory — see
+   below) → snapshot-detail prose → **bedroom rent ladder table (50%) +
+   average-rent-by-bedroom bar chart (50%)**, side by side.
+7. **"Rental & Sales Data for the [Market]"** (RentCast property-
+   management-style panels) — unchanged.
+8. Homes-for-rent cross-sell → "From Red Door" post carousel → final CTA
+   — unchanged in position; see below for what changed within the
+   cross-sell.
+
+**The "market context" section (supply/demand ratio, time-to-lease — the
+3rd panel used to be average-rent-by-bedroom) is gone entirely, not just
+redesigned.** Both supply/demand and time-to-lease were computed from
+RentEngine's `Rented` comp status across the full area-wide comp pool
+(not just the top-12) — and per the decision #1 revision above, that
+count was ~zero on real submissions, so both panels reported nonsense
+(a "Soft market — 105 available, 0 rented" ratio; an all-zero
+time-to-lease bucket chart) even after the RentCast blend fixed the
+underlying estimate itself. Rather than try to patch comp-level math that
+structurally doesn't have the data it needs, both panels were replaced
+with real **city-level RentCast data instead**, which does have exactly
+what's needed:
+
+- **Average Rent, 12 Mo** and **Days on Market, 12 Mo** and **Rental
+  Inventory, 12 Mo** — three real trend charts, all from RentCast's
+  `history` object (the *same* per-city cache file `/v1/markets` already
+  writes monthly — nothing new pulled). **Correction to this doc's
+  earlier assumption**, two paragraphs below the "12-month rent trend
+  chart" bullet further down: it was assumed the 12-month line would need
+  to be *built up over time* from a shorter trailing history plus ongoing
+  monthly pulls. Not true — confirmed directly against real stored pulls
+  (Indianapolis, Avon): RentCast's `history` object already carries a
+  full trailing ~12 months in a single pull, keyed by month, with
+  `averageRent`, `medianDaysOnMarket`, and `totalListings` all present
+  per month. No accumulation needed; the chart has always had 12 real
+  points from day one.
+- Days-on-market and inventory both use an **inverted** up/down color
+  convention from the rent chart — rising DOM/inventory is a softening
+  signal (bad for a landlord), not growth (good), so green/red are
+  swapped for those two metrics specifically.
+- The average-rent-by-bedroom chart (the one real, useful piece of the
+  old market-context section) survived, just relocated — see layout
+  step 6 above.
+- Chart rendering itself (gridlines, axis labels, smooth curve, point
+  markers, hover tooltips) went through a second polish pass after
+  Michael flagged the first version as "less polished than the rest of
+  the page" — no data change, just visual. All four trend-chart
+  instances on the page (the hero's + these three) share one component,
+  `src/components/rental-analysis/TrendChartCard.astro`. **No "this year
+  vs. last year" dual-line comparison** (Michael asked, referencing a
+  reference screenshot) — RentCast's `history` only has ~12 trailing
+  months, not two full separate calendar years to overlay; building that
+  would mean fabricating a second line, which this project doesn't do.
+
+**Homes-for-rent cross-sell — both previously-open items now resolved:**
+card count is **3** (not the mockup's "1 default + 3 nearby" — Michael's
+explicit request, "reduce the number of available properties nearby from
+4 to 3"), and each card's "View & Apply" button now links to **Red Door's
+own listing detail page** (`/homes-for-rent/{city}/{address}`) instead of
+RentEngine's external `custom_application_url` — the cards were sending
+prospects off-site to apply without ever seeing Red Door's own listing
+page, which also meant that page's own SEO/conversion value was being
+skipped entirely.
 
 **Design is locked.** A working mockup of both the email and the hosted page,
 through this final layout, is built and published for review (through v6,
@@ -431,12 +624,17 @@ not this doc's text description of it.
   already in production use elsewhere on the site, not a new one. All three
   CTA instances (two on the hosted page, one in the email) can point at this
   now.
-- Chart/data-source mechanics (supply/demand ratio, time-to-lease, rent
-  trend, bedroom ladder) are specified at the "what data, from where" level,
-  not yet at the "exact query/field" level — reasonable given decision #10
-  already established the RentCast per-city file pattern this reuses.
-- Homes-for-rent cross-sell: exact card count (mockup uses 1 default + 3
-  nearby) and the definition of "nearby" — both still open on the
+- ~~Chart/data-source mechanics (supply/demand ratio, time-to-lease, rent
+  trend, bedroom ladder)~~ — **resolved 2026-09-22/23, and differently than
+  guessed here.** Supply/demand and time-to-lease were dropped entirely
+  (RentEngine's `Rented` comp status was too sparse to compute them
+  honestly); rent trend, days-on-market, and inventory are now three real
+  city-level trend charts straight from RentCast's `history` object, and
+  bedroom ladder is unchanged. See decision #5's 2026-09-22/23 revision
+  block for the exact fields and mechanics.
+- ~~Homes-for-rent cross-sell: exact card count~~ — **resolved 2026-09-22/23:
+  card count is 3** (Michael's explicit request, down from the mockup's
+  4). The definition of "nearby" — both still open on the
   `-homes-for-rent` pages themselves, so this tool should follow whatever
   gets decided there rather than diverge with its own definition.
 - **"From Red Door" post carousel:** titles/dates in the mockup are
@@ -698,6 +896,37 @@ Round the final displayed number to the nearest whole percent.
 plain-language bucket label and a fixed template sentence, not the number
 alone.
 
+**REVISED (2026-09-22/23), two changes, both tied to the RentCast comp
+blend (see the top-level revision note and decisions #1/#2's own
+revisions):**
+
+1. **"Final Rented-comp count < 5" deduction cut from −20 to −10.** This
+   deduction now fires any time the estimate needed *any* non-confirmed-
+   leased comps — which, since RentCast's `Inactive` tier became a real,
+   decent-quality fallback (not just RentEngine's raw asking-price
+   `Available` comps, the only fallback this deduction was originally
+   calibrated against), is a much more common and much less severe
+   situation than when this table was first built. Confirmed live before
+   shipping: on two real reports, this single change (plus the decision
+   #1 cascade fix) moved confidence from 61% (both reports, artificially
+   tanked by the countRented bug) to 90% and 86% respectively — both
+   correctly landing in the "Strong data support" bucket, matching what
+   12 genuinely close, well-matched comps should score.
+2. **New deduction: −10 when the estimate has to reach decision #2's
+   third tier** (pure `Available`/Active asking-price listings, RentEngine
+   or RentCast) — a real, separate step down from the `Inactive` tier,
+   which is at least probably off-market for some reason, not just a
+   current ask. Distinct from the deduction above, not a duplicate of it —
+   see decision #2's revision for why a flat penalty for "used any
+   RentCast data" was rejected (it would double-penalize the same
+   underlying fact, and would score a RentCast-richer estimate *worse*
+   than a thin RentEngine-only one).
+
+Both implemented in `computeRawScore()`, `src/lib/rental-analysis/
+confidence.ts`. The deduction table above still applies exactly as
+written for every other row (radius, date window, beds, multi-unit
+fallback, bedroom-adjustment tiers) — only the two changes above apply.
+
 ## Decision #10 — Bedroom-count rent adjustment — FINAL (2026-09-13)
 
 When decision #1's bed-count cascade relaxes to ±1 bedroom, the ±1 comp's
@@ -842,9 +1071,15 @@ specifies it:**
    same store at request time**, plus its own persisted monthly-call
    counter (a small table/row keyed by month, reset naturally by month
    value) to enforce the 50-calls/month cap.
-9. **Compute the market-context panels** (supply/demand ratio, time-to-
+9. ~~Compute the market-context panels~~ (supply/demand ratio, time-to-
    lease buckets) from the same area-wide comp pool already fetched in
-   step 4 — pure arithmetic, no new calls, per decision #5.
+   step 4 — pure arithmetic, no new calls, per decision #5. **Removed
+   2026-09-22/23** — `submit.ts` no longer computes or stores either
+   figure; see decision #5's revision block for why (RentEngine's
+   `Rented` count was too sparse) and what replaced them (RentCast
+   city-level trend charts, computed fresh on each page view by
+   `[token].astro` itself, not snapshotted at submission time the way
+   this step originally did it).
 10. **Fetch the homes-for-rent cross-sell set and the "From Red Door" post
     carousel.** Recommendation, not yet explicitly settled: snapshot the
     *analysis-specific* data (steps 4–9) at generation time per decision
@@ -907,8 +1142,9 @@ tables:
 - `rental_analyses` — one row per submission: token (PK), timestamps,
   owner contact fields, property fields (address/city/state/zip/lat/lon/
   beds/baths/sqft/type), the full computed snapshot (estimate, range,
-  confidence + bucket, comp list, market-context figures, which decision
-  #10 tier was used), view timestamps, a running distinct-visit counter,
+  confidence + bucket, comp list, which decision #10 tier was used —
+  **not market-context figures**, removed 2026-09-22/23, see decision
+  #5's revision), view timestamps, a running distinct-visit counter,
   and `last_bd_alert_fired_at` (nullable — null until the first alert
   fires, then used to enforce the 24-hour cap on subsequent visits).
 - `rentcast_city_cache` — the same shared per-city file decision #10
@@ -1037,7 +1273,11 @@ decision #4 already established (that ceiling doesn't change here).
    2026-09-13 (mockup through v6). What's left is external inputs and build
    detail, not design: the Calendly link, final template-sentence wording,
    exact chart data fields, and the homes-for-rent card-styling match noted
-   above.
+   above. **Layout revised again, substantially, 2026-09-22/23 once real
+   data was flowing — see decision #5's own revision block for the actual
+   current layout (market-context panels dropped, RentCast trend charts
+   added, comps table/map now 60/40, cross-sell card count/links
+   resolved).**
 6. ~~Lead capture and BD-alert wiring~~ — **done, see above.** Destination
    (LeadSimple only), source tag, split creation-vs-note mechanism, the
    email format, the dedicated inbound address, and the RentEngine-webhook
@@ -1079,12 +1319,21 @@ external, in parallel with Michael verifying the Resend domain.
 - **RentEngine's out-of-the-box embeddable widget** — genuinely viable (free,
   self-service, already Red-Door-branded, automated lead-gate) but passed
   over in favor of full control via a custom build.
-- **RentCast as the estimate engine or comps source** — including just for
-  its pre-computed estimate. See reasoning above. **Narrower carve-out, not
-  a reversal:** RentCast's city-level market data is approved as a
-  supplementary input for the bedroom-count adjustment (decision #10) and,
-  as of decision #5's expansion, the rent-trend and average-rent-by-bedroom
-  chart panels — it still does not supply comps or drive the core estimate.
+- **RentCast as the estimate engine or comps source** — **REVISED
+  2026-09-22/23, this one did eventually reverse on the "comps source"
+  half.** Originally: RentCast's *pre-computed estimate* (`/avm/rent/
+  long-term`'s own `rent` field) is still not used — that reasoning holds.
+  But RentCast's own comparables (the same endpoint's `comparables` array)
+  are now blended into the comp pool that feeds this tool's *own* median
+  calculation — see the top-level decision's revision note and decisions
+  #1/#2/#9's revisions. What changed the call: this was never tested
+  against real generated reports until 2026-09-22, and once it was,
+  RentEngine's own comp pool proved too thin in practice (1–4 usable
+  comps on two real addresses) in a way the original decision didn't
+  anticipate. RentCast's city-level market data was already approved
+  (decision #10, bedroom adjustment; decision #5, chart panels) — this
+  extends that same already-approved vendor relationship to a new use,
+  it isn't a new vendor decision.
 - **An AI-generated "agent comment" note in the report** — considered for
   decision #5, killed by Michael: replaced with fixed, data-driven template
   sentences instead of freeform generation. (Red Door's own real RentEngine
