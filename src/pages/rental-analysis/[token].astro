@@ -749,6 +749,33 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
       if (typeof mapboxgl === 'undefined') return;
       mapboxgl.accessToken = mapboxToken;
 
+      // Mapbox GL doesn't notice its own container being resized after
+      // init — the canvas stays locked to whatever pixel size existed at
+      // construction time, and only .resize() re-syncs it. A
+      // ResizeObserver on each container catches genuine later resizes
+      // (phone rotation, browser chrome show/hide) — kept, but on its
+      // own this did NOT fix the real mobile bug (confirmed on an actual
+      // phone, 2026-09-23, not just this tool's own screenshot capture):
+      // the comps map rendered its real tiles/pins pinned near the very
+      // top of the page, overlapping the hero, instead of down in the
+      // comps section. Root cause: both maps were constructed the
+      // instant this script ran, before images/fonts finished loading
+      // and the page's final layout had settled — on mobile Safari
+      // especially, Mapbox can bake a wrong canvas position from that
+      // initial measurement, and a later .resize() call doesn't always
+      // fully correct it (resize re-syncs canvas pixel dimensions, not
+      // necessarily whatever internal transform Mapbox already computed).
+      // Fix: don't construct either map until the whole page (not just
+      // this script) has finished loading — see initMaps()/window 'load'
+      // below.
+      function keepMapSizedToContainer(map, container) {
+        if (typeof ResizeObserver === 'undefined') return;
+        new ResizeObserver(function () {
+          map.resize();
+        }).observe(container);
+      }
+
+      function initMaps() {
       // Subject-location map — one static marker, no interaction needed
       // beyond the map's own default pan/zoom controls.
       var subjectEl = document.getElementById('subject-map');
@@ -763,6 +790,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
             zoom: 14,
             interactive: true,
           });
+          keepMapSizedToContainer(subjectMap, subjectEl);
           subjectMap.addControl(new mapboxgl.NavigationControl(), 'top-right');
           subjectMap.on('load', function () {
             new mapboxgl.Marker({ color: '#8b0e04' }).setLngLat([lng, lat]).addTo(subjectMap);
@@ -790,6 +818,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
             center: [withCoords[0].lng, withCoords[0].lat],
             zoom: 12,
           });
+          keepMapSizedToContainer(compsMap, compsEl);
           compsMap.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
           var pinsByIndex = {};
@@ -852,6 +881,18 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
             });
           });
         }
+      }
+      } // end initMaps()
+
+      // Don't construct either map until the whole page — images, fonts,
+      // final layout — has actually finished loading. See the note above
+      // keepMapSizedToContainer() for why: constructing while the page is
+      // still settling is the real cause of the mobile mis-positioned-
+      // canvas bug, confirmed on a real phone 2026-09-23.
+      if (document.readyState === 'complete') {
+        initMaps();
+      } else {
+        window.addEventListener('load', initMaps);
       }
     })();
   </script>
