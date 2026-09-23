@@ -8,7 +8,7 @@ import type { CascadeCompromises, RentEngineComp, SubjectProperty } from './type
 import { haversineMiles, normalizeAddress } from './geo';
 import { classifyRentEnginePropertyType } from './property-type';
 
-const RENTED_COMP_MINIMUM = 5;
+const CASCADE_SIGNAL_MINIMUM = 5;
 const FINAL_COMP_CAP = 12;
 
 function monthsAgo(months: number): Date {
@@ -93,8 +93,33 @@ function withinBeds(comp: RentEngineComp, subject: SubjectProperty, relaxed: boo
   return relaxed ? Math.abs(comp.beds - subject.beds) <= 1 : comp.beds === subject.beds;
 }
 
-function countRented(comps: RentEngineComp[]): number {
-  return comps.filter((c) => c.status === 'rented').length;
+/** The cascade's own widening-stop check (below, runStandardPath/
+ * runMultiUnitPath) — REVISED 2026-09-22 to count RentEngine 'rented'
+ * (confirmed lease) AND RentCast 'inactive' (off-market, not confirmed,
+ * but real comparable data — see rentcast-comps-client.ts's header) as
+ * "enough signal to stop widening." Excludes 'available'/Active — pure
+ * asking-price listings shouldn't stop the search from looking for
+ * something better.
+ *
+ * Why this matters: counting 'rented' alone stayed 0 for both real demo
+ * addresses even after RentCast comps were blended in (the cached
+ * RentEngine pool for both happened to have zero confirmed leases at
+ * all), so the cascade had no way to ever satisfy its own threshold and
+ * always exhausted to its widest, most-penalized step (5mi/12mo/beds
+ * relaxed) — regardless of how close or plentiful the REAL comp data
+ * actually was. Confirmed live: both addresses' real top comps sit
+ * within ~1mi, but scored as if a full 5-mile search had been necessary.
+ * This function is the fix — decision #1's radius/date/beds cascade
+ * should stop once there's enough genuinely comparable data, not once
+ * there are enough comps specifically confirmed-leased through
+ * RentEngine, which was always a stricter bar than the report's actual
+ * confidence language ("comparable properties... recently leased")
+ * implies. buildEstimate's own three-tier fill (fallback-and-estimate.ts)
+ * is unaffected by this — it still prefers rented over inactive over
+ * available for the actual median, this only changes when the SEARCH
+ * decides it's found enough to stop widening. */
+function countConfirmedOrOffMarket(comps: RentEngineComp[]): number {
+  return comps.filter((c) => c.status === 'rented' || c.status === 'inactive').length;
 }
 
 /** Rank by distance first, recency second (closest wins ties over
@@ -170,7 +195,7 @@ function runStandardPath(
   for (const step of STANDARD_CASCADE) {
     lastStep = step;
     lastPool = poolForStep(qualityFiltered, subject, step);
-    if (countRented(lastPool) >= RENTED_COMP_MINIMUM) break;
+    if (countConfirmedOrOffMarket(lastPool) >= CASCADE_SIGNAL_MINIMUM) break;
   }
   // If the cascade is exhausted without reaching the minimum, lastPool is
   // whatever the final (5mi/12mo/±1) step produced — used as-is per
@@ -198,7 +223,7 @@ function runMultiUnitPath(
   );
   for (const months of [6, 12] as const) {
     const pool = sameBuilding.filter((c) => isWithinDateWindow(c, months));
-    if (countRented(pool) >= RENTED_COMP_MINIMUM) {
+    if (countConfirmedOrOffMarket(pool) >= CASCADE_SIGNAL_MINIMUM) {
       return { pool, usedSameBuilding: true, dateWindowMonths: months };
     }
   }

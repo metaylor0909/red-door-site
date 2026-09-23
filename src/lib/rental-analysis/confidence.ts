@@ -49,7 +49,15 @@ export function computeRawScore(compromises: CascadeCompromises): number {
   score -= radiusDeduction(compromises.radiusMiles);
   if (compromises.dateWindowMonths === 12) score -= 15;
   if (compromises.bedsRelaxed) score -= 20;
-  if (compromises.blendPathUsed) score -= 20;
+  // Cut from -20 to -10 on 2026-09-22 with the RentCast comp blend.
+  // blendPathUsed now fires whenever the estimate needed ANY non-
+  // confirmed-leased comps — which, since RentCast's 'inactive' tier
+  // became a real, decent-quality fallback (not just RentEngine's raw
+  // asking-price 'available' comps, the only fallback this deduction was
+  // originally calibrated against), is a much more common and much less
+  // severe situation than it used to be. reachedActiveListingsTier below
+  // is the deduction for the genuinely worse case (pure asking prices).
+  if (compromises.blendPathUsed) score -= 10;
   // Added 2026-09-22 with the RentCast comp blend — a real step down
   // from blendPathUsed's 'inactive' tier specifically, not a duplicate
   // penalty for it (see fallback-and-estimate.ts's module header: this
