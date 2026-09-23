@@ -1,12 +1,18 @@
 // RentCast city resolution + blending for the rental-analysis report
-// page. Avon, Brownsburg, and Plainfield are reported together as one
-// "West Side" submarket everywhere else on the site (market-reports'
-// own westside cluster, src/lib/market-reports/markets.ts) — Plainfield
-// specifically has no rentcast_city_cache row of its own (outside the
-// 20-area ZIP mapping workers/rentcast-refresh covers), so a bare
-// single-city lookup for it always came back empty. Michael flagged this
-// live (2026-09-22): "Anything from Avon, Brownsburg, and Plainfield
-// needs to include the West Side data."
+// page. Historically (2026-09-22) this also special-cased Avon/
+// Brownsburg/Plainfield into a shared "West Side" blend, since Plainfield
+// had no rentcast_city_cache row of its own — a bare single-city lookup
+// for it always came back empty. REVISED 2026-09-23: Plainfield now has
+// its own real row (workers/rentcast-refresh/src/cities.ts), so that
+// special-case is gone — every city, including all three of these,
+// resolves to itself and shows its own real numbers on its own report,
+// same as any other covered area. The combined "West Side" view Michael
+// still wants available lives on the dedicated westside market-reports
+// page instead (src/lib/market-reports/markets.ts's own MARKETS config,
+// a separate blending implementation, not this file) — see that file's
+// own note. resolveRentCastSlugs() is kept as a real function (not
+// inlined at each call site) specifically so a future genuine blend case
+// has one obvious place to add it back, the way this one worked.
 //
 // A new small module rather than extending homes-for-rent-content.ts's
 // or property-management/market-snapshot.ts's existing single-city
@@ -21,17 +27,11 @@
 import type { CityMarketData, BedroomLadderEntry } from '../listings/homes-for-rent-content';
 import type { MarketSnapshot } from '../property-management/market-snapshot';
 
-const WEST_SIDE_CITIES = ['avon', 'brownsburg'];
-
 /** Maps a subject property's own city slug to the RentCast slug(s) that
- * should actually be queried — Avon/Brownsburg/Plainfield all resolve to
- * the West Side pair (Plainfield itself is never queried directly, same
- * as the market-reports westside page). Every other covered city maps
- * to itself, unchanged. */
+ * should actually be queried. Currently always just itself — see the
+ * module header for why the old Avon/Brownsburg/Plainfield special-case
+ * was removed 2026-09-23. */
 export function resolveRentCastSlugs(citySlug: string): string[] {
-  if (citySlug === 'avon' || citySlug === 'brownsburg' || citySlug === 'plainfield') {
-    return WEST_SIDE_CITIES;
-  }
   return [citySlug];
 }
 

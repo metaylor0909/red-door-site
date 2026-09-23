@@ -86,7 +86,6 @@ import { computeViewTrackingUpdate, fireBdAlertWebhook, type RentalAnalysisRow }
 import { fetchAvailableUnits, type AvailableUnit } from '../../lib/rental-analysis/listings-client';
 import { selectCrossSellUnits } from '../../lib/rental-analysis/cross-sell';
 import { citySlug } from '../../lib/listings/rentengine';
-import { CITIES } from '../../lib/property-management/cities';
 import { loadCityContentMap } from '../../lib/listings/homes-for-rent-content';
 import {
   resolveRentCastSlugs,
@@ -114,21 +113,6 @@ const PROPERTY_TYPE_LABELS: Record<string, string> = {
   'multi-family': 'Multi-Family',
   other: 'Other',
 };
-
-// Every city the RentCast pipeline actually covers (workers/rentcast-
-// refresh's 20-area list), PLUS Plainfield — which has no
-// rentcast_city_cache row of its own, but is reported together with
-// Avon/Brownsburg as one "West Side" submarket everywhere else on the
-// site (see rentcast-blend.ts's own header comment). Any other address
-// outside this list gets both RentCast sections omitted entirely rather
-// than a thrown error or a fabricated number, same pattern as the
-// market-reports pages' own uncovered-city handling.
-const RENTCAST_COVERED_SLUGS = new Set([
-  'indianapolis',
-  'downtown-indianapolis',
-  'plainfield',
-  ...CITIES.map((c) => c.slug),
-]);
 
 const CALENDLY_URL = 'https://calendly.com/cknight-19/phone-call';
 
@@ -256,31 +240,32 @@ const compsWithDistance = snapshot.comps.map((c) => ({
 
 // RentCast city sections (homes-for-rent-style snapshot + property-
 // management-style rent/sales panels) — omitted entirely for a city
-// outside the RentCast pipeline (and outside the West Side cluster)
-// rather than throw or fabricate a number. Avon/Brownsburg/Plainfield
-// resolve to the West Side pair per Michael's request (2026-09-22) —
-// see rentcast-blend.ts's own header comment for why Plainfield alone
-// has no direct row to fall back to.
+// outside the RentCast pipeline rather than throw or fabricate a number.
+// REVISED 2026-09-23: previously gated behind a static
+// RENTCAST_COVERED_SLUGS allowlist that had to be hand-updated every
+// time workers/rentcast-refresh grew its city list (which happens
+// often now — see that file's own header note on why coverage keeps
+// expanding to homepage-listed areas with no dedicated city page).
+// Simpler and self-maintaining: just attempt the D1 read for whatever
+// city the address geocoded to, and treat "no row" as "not covered" —
+// loadBlendedCityMarketData() etc. already return null gracefully in
+// that case, same pattern used everywhere else in this project for
+// missing data. No allowlist to keep in sync.
 const subjectCitySlug = citySlug(row.property_city);
-const isRentCastCovered = RENTCAST_COVERED_SLUGS.has(subjectCitySlug);
 const rentCastSlugs = resolveRentCastSlugs(subjectCitySlug);
-const isRentCastBlended = rentCastSlugs.length > 1;
 
-const cityMarketData = isRentCastCovered ? await loadBlendedCityMarketData(db, rentCastSlugs, row.property_state) : null;
-const citySnapshot = isRentCastCovered ? await loadBlendedMarketSnapshot(db, rentCastSlugs, row.property_state) : null;
-const cityTrend = isRentCastCovered ? await loadBlendedCityTrend(db, rentCastSlugs, row.property_state) : null;
+const cityMarketData = await loadBlendedCityMarketData(db, rentCastSlugs, row.property_state);
+const citySnapshot = await loadBlendedMarketSnapshot(db, rentCastSlugs, row.property_state);
+const cityTrend = await loadBlendedCityTrend(db, rentCastSlugs, row.property_state);
+const isRentCastCovered = cityMarketData != null;
 
-// "Plainfield" alone would misrepresent blended West Side data as if it
-// were Plainfield's own real numbers — name the actual submarket being
-// shown instead, matching how the market-reports westside page frames
-// this same blend.
-const rentCastDisplayName = isRentCastBlended ? 'West Side (Avon, Brownsburg & Plainfield)' : row.property_city;
+const rentCastDisplayName = row.property_city;
 
 // Indianapolis has no entry in homes-for-rent-content.json (it keeps its
 // own real search/filter/map page, not one of the 18 simple-template
 // cities) — the hand-written per-city prose paragraph is genuinely
 // unavailable there, not a bug; the section just omits it.
-const cityContentEntry = isRentCastCovered ? loadCityContentMap()[subjectCitySlug] : undefined;
+const cityContentEntry = loadCityContentMap()[subjectCitySlug];
 
 // Same 3-tile pattern as the homes-for-rent pages' own stat tiles
 // (src/lib/listings/homes-for-rent-content.ts's buildStatTiles), except
@@ -519,9 +504,6 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
             <h2>What Homes Are Renting for Nearby</h2>
           </div>
           {cityMarketData?.dataAsOf && <p class="data-asof">{cityMarketData.dataAsOf}</p>}
-          {isRentCastBlended && (
-            <p class="snapshot-note">Blended from Avon and Brownsburg RentCast data (weighted by listing count) — Plainfield isn&rsquo;t yet in Red Door&rsquo;s monthly RentCast pull, so it&rsquo;s not reflected separately in these figures.</p>
-          )}
           <div class="snapshot-grid">
             {reportStatTiles.map((tile) => (
               <div class="stat-tile">
@@ -634,9 +616,6 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
             <h2>Rental &amp; Sales Data for the {rentCastDisplayName} Market</h2>
           </div>
           {citySnapshot.dataAsOf && <p class="snapshot-asof">{citySnapshot.dataAsOf}</p>}
-          {isRentCastBlended && (
-            <p class="snapshot-note">Blended from Avon and Brownsburg RentCast data (weighted by listing count) — Plainfield isn&rsquo;t yet in Red Door&rsquo;s monthly RentCast pull, so it&rsquo;s not reflected separately in these figures.</p>
-          )}
           <div class="snapshot-panels">
             <div class="snapshot-panel">
               <span class="snapshot-panel-label">Rental Market</span>

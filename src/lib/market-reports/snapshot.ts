@@ -9,8 +9,9 @@
 // page type needs a different stat (most common bedroom size, not a
 // full bedroom ladder or sale-side data) and, uniquely among the three,
 // needs to average across MULTIPLE cities for the West Side cluster
-// (Avon + Brownsburg — Plainfield has no D1 row, see markets.ts's own
-// comment on that gap).
+// (Avon + Brownsburg + Plainfield, all three with their own real D1 row
+// as of 2026-09-23 — Plainfield previously had none, see markets.ts's
+// own note on that gap and its fix).
 
 interface RentCastBedroomEntry {
   bedrooms: number;

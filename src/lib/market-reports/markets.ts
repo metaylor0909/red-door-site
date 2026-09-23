@@ -14,9 +14,11 @@ export interface MarketConfig {
    * before "-in") this market's snapshot should read. Multiple entries
    * are weighted-averaged (by totalListings, matching workers/rentcast-
    * refresh's own multi-ZIP convention). Empty array = no RentCast
-   * coverage for this market at all (Anderson/Lebanon/Greenfield are
-   * outside the 20-area ZIP mapping the refresh Worker covers) — the
-   * snapshot section is omitted rather than faking numbers.
+   * coverage for this market at all — the snapshot section is omitted
+   * rather than faking numbers. (Anderson/Lebanon/Greenfield used to be
+   * the empty-array example here, before workers/rentcast-refresh grew
+   * to cover them 2026-09-23 — kept as a real possibility for any future
+   * market added before its own coverage lands, not a dead comment.)
    */
   rentCastSlugs: string[];
   /** Sanity GROQ `match` patterns (each becomes `title match "*X*"`,
@@ -100,12 +102,11 @@ export const MARKETS: MarketConfig[] = [
     leadText:
       'Red Door manages rental homes across Avon, Brownsburg, and Plainfield — three Hendricks County communities we track together as one westside submarket, since pricing, inventory, and demand here move as a single market more than they follow city lines.',
     serviceAreaChips: ['Avon', 'Brownsburg', 'Plainfield'],
-    // Plainfield has no rentcast_city_cache row (outside the 20-area ZIP
-    // mapping workers/rentcast-refresh covers) — the snapshot below
-    // averages Avon + Brownsburg only and says so explicitly, rather
-    // than silently presenting a 2-of-3-city number as if it covered
-    // all three.
-    rentCastSlugs: ['avon', 'brownsburg'],
+    // REVISED 2026-09-23: Plainfield now has its own rentcast_city_cache
+    // row (workers/rentcast-refresh/src/cities.ts) — this now genuinely
+    // averages all 3 real cities. Previously averaged Avon + Brownsburg
+    // only, since Plainfield had no row of its own yet.
+    rentCastSlugs: ['avon', 'brownsburg', 'plainfield'],
     postTitleMatches: ['Avon', 'Brownsburg', 'Plainfield', 'Westside', 'West Side'],
     ctaHeading: 'Own a Rental in Avon, Brownsburg, or Plainfield?',
     propertyManagementHref: '/avon-property-management',
@@ -117,7 +118,9 @@ export const MARKETS: MarketConfig[] = [
     leadText:
       'Red Door tracks rental conditions in Anderson, the Madison County seat about 35 miles northeast of Indianapolis — a market with an older housing stock and rents that typically run below the Hamilton County suburbs.',
     serviceAreaChips: ['Anderson'],
-    rentCastSlugs: [],
+    // REVISED 2026-09-23 — was [] ("outside the 20-area ZIP mapping"):
+    // Anderson now has its own rentcast_city_cache row.
+    rentCastSlugs: ['anderson'],
     postTitleMatches: ['Anderson'],
     ctaHeading: 'Own a Rental in Anderson?',
     propertyManagementHref: null,
@@ -129,7 +132,9 @@ export const MARKETS: MarketConfig[] = [
     leadText:
       "Red Door tracks rental conditions in Lebanon, the Boone County seat about 28 miles northwest of Indianapolis — a market drawing new attention from the LEAP Innovation and Research District's major manufacturing investment nearby.",
     serviceAreaChips: ['Lebanon'],
-    rentCastSlugs: [],
+    // REVISED 2026-09-23 — was [] ("outside the 20-area ZIP mapping"):
+    // Lebanon now has its own rentcast_city_cache row.
+    rentCastSlugs: ['lebanon'],
     postTitleMatches: ['Lebanon'],
     ctaHeading: 'Own a Rental in Lebanon?',
     propertyManagementHref: null,
@@ -141,7 +146,9 @@ export const MARKETS: MarketConfig[] = [
     leadText:
       'Red Door tracks rental conditions in Greenfield, the Hancock County seat about 14 miles east of Indianapolis — one of the fastest-growing counties in the state, driven by new subdivisions near I-70.',
     serviceAreaChips: ['Greenfield'],
-    rentCastSlugs: [],
+    // REVISED 2026-09-23 — was [] ("outside the 20-area ZIP mapping"):
+    // Greenfield now has its own rentcast_city_cache row.
+    rentCastSlugs: ['greenfield'],
     postTitleMatches: ['Greenfield'],
     ctaHeading: 'Own a Rental in Greenfield?',
     propertyManagementHref: null,

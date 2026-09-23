@@ -55,6 +55,52 @@ export const CITIES: CityConfig[] = [
       '46254', '46256', '46259', '46260', '46268', '46278', '46282',
     ],
   },
+
+  // Homepage-listed service areas with no dedicated homes-for-rent/
+  // property-management page — added 2026-09-23 so the rental-analysis
+  // (CMA) tool can serve real city-level data for these on request,
+  // instead of omitting the section entirely (Michael: "we get lots of
+  // requests" for towns like Ingalls with no city page). ZIPs verified
+  // against each town's Wikipedia infobox, cross-checked against a live
+  // Mapbox geocode of the town center — not guessed. Several (Southport,
+  // Beech Grove, Lawrence, Speedway, Cumberland) share a ZIP already
+  // pulled for a Marion County township above — distinctZips() below
+  // already dedupes, so those cost zero additional API calls; the rest
+  // are net-new. See [token].astro's own note on why RENTCAST_COVERED_SLUGS
+  // was removed in favor of just trying the D1 read — this list can keep
+  // growing without another code change on the report-page side.
+  { citySlug: 'southport', cityName: 'Southport', state: 'IN', zips: ['46227'] },
+  { citySlug: 'beech-grove', cityName: 'Beech Grove', state: 'IN', zips: ['46107'] },
+  { citySlug: 'lawrence', cityName: 'Lawrence', state: 'IN', zips: ['46216', '46226', '46235', '46236'] },
+  { citySlug: 'speedway', cityName: 'Speedway', state: 'IN', zips: ['46224'] },
+  { citySlug: 'cumberland', cityName: 'Cumberland', state: 'IN', zips: ['46229'] },
+  { citySlug: 'anderson', cityName: 'Anderson', state: 'IN', zips: ['46011', '46012', '46013', '46016', '46017'] },
+  { citySlug: 'pendleton', cityName: 'Pendleton', state: 'IN', zips: ['46064'] },
+  { citySlug: 'lapel', cityName: 'Lapel', state: 'IN', zips: ['46051'] },
+  { citySlug: 'ingalls', cityName: 'Ingalls', state: 'IN', zips: ['46048'] },
+  { citySlug: 'danville', cityName: 'Danville', state: 'IN', zips: ['46122'] },
+  { citySlug: 'franklin', cityName: 'Franklin', state: 'IN', zips: ['46131'] },
+  { citySlug: 'whiteland', cityName: 'Whiteland', state: 'IN', zips: ['46184'] },
+  { citySlug: 'bargersville', cityName: 'Bargersville', state: 'IN', zips: ['46106'] },
+  { citySlug: 'greenfield', cityName: 'Greenfield', state: 'IN', zips: ['46140'] },
+  { citySlug: 'mccordsville', cityName: 'McCordsville', state: 'IN', zips: ['46055'] },
+  { citySlug: 'new-palestine', cityName: 'New Palestine', state: 'IN', zips: ['46163'] },
+  { citySlug: 'fortville', cityName: 'Fortville', state: 'IN', zips: ['46040'] },
+  { citySlug: 'shelbyville', cityName: 'Shelbyville', state: 'IN', zips: ['46176'] },
+  { citySlug: 'fairland', cityName: 'Fairland', state: 'IN', zips: ['46126'] },
+  { citySlug: 'morristown', cityName: 'Morristown', state: 'IN', zips: ['46161'] },
+  { citySlug: 'boggstown', cityName: 'Boggstown', state: 'IN', zips: ['46110'] },
+  { citySlug: 'whitestown', cityName: 'Whitestown', state: 'IN', zips: ['46075'] },
+  { citySlug: 'lebanon', cityName: 'Lebanon', state: 'IN', zips: ['46052'] },
+  { citySlug: 'mooresville', cityName: 'Mooresville', state: 'IN', zips: ['46158'] },
+  { citySlug: 'martinsville', cityName: 'Martinsville', state: 'IN', zips: ['46151'] },
+  // Plainfield previously had no row of its own — the rental-analysis
+  // tool blended it into an Avon+Brownsburg "West Side" average instead
+  // (2026-09-22). Now gets its own real data like every other area;
+  // see rentcast-blend.ts and markets.ts for the "West Side combined"
+  // view, which still exists (now correctly averaging all 3 real cities
+  // instead of silently 2 of 3) but is separate from this per-city row.
+  { citySlug: 'plainfield', cityName: 'Plainfield', state: 'IN', zips: ['46168'] },
 ];
 
 /** Every distinct ZIP across all 20 areas — 50 total per the mapping doc.
