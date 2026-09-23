@@ -4,15 +4,19 @@
 //
 // Steps wired up so far: 1 (Turnstile), 2 (geocode), 3 (validate fields),
 // 4 (comp-selection cascade), 5-6 (blend fallback + estimate), 7
-// (confidence score), 8 (decision #10's RentCast bedroom adjustment), 9
-// (market-context panels), 11 (store snapshot in D1), 12 (Resend owner
-// email + LeadSimple lead-creation email). Deliberately NOT yet wired:
-// step 10 (cross-sell content — the homes-for-rent listings feed it
-// needs hasn't been built in Astro at all yet), and the Zapier BD-alert
-// webhook (that's the [token] report page's concern, on return visits —
-// see view-tracking.ts). Missing RESEND_API_KEY or RENTCAST_API_KEY
-// degrade gracefully (skip sending / skip the bedroom adjustment) rather
-// than failing the submission — only Mapbox and RentEngine are hard
+// (confidence score), 8 (decision #10's RentCast bedroom adjustment), 11
+// (store snapshot in D1), 12 (Resend owner email + LeadSimple lead-
+// creation email). Step 9's old market-context panels (supply/demand
+// ratio, time-to-lease) were dropped 2026-09-22 — see this function's own
+// note further down for why — and replaced on the report page with
+// RentCast city-level trend data, computed fresh per page view rather
+// than stored here. Deliberately NOT yet wired: step 10 (cross-sell
+// content — the homes-for-rent listings feed it needs hasn't been built
+// in Astro at all yet), and the Zapier BD-alert webhook (that's the
+// [token] report page's concern, on return visits — see
+// view-tracking.ts). Missing RESEND_API_KEY or RENTCAST_API_KEY degrade
+// gracefully (skip sending / skip the bedroom adjustment) rather than
+// failing the submission — only Mapbox and RentEngine are hard
 // requirements, since the core estimate can't be computed without them.
 
 import type { APIRoute } from 'astro';
@@ -24,7 +28,6 @@ import { fetchComps } from '../../../lib/rental-analysis/rentengine-client';
 import { fetchRentCastComps } from '../../../lib/rental-analysis/rentcast-comps-client';
 import { mergeCompPools } from '../../../lib/rental-analysis/comp-selection';
 import { analyze } from '../../../lib/rental-analysis/analyze';
-import { computeSupplyDemand, computeTimeToLease } from '../../../lib/rental-analysis/market-context';
 import { sendEmail } from '../../../lib/rental-analysis/resend-client';
 import { buildOwnerEmail, buildLeadSimpleEmail } from '../../../lib/rental-analysis/emails';
 import { requireEnvString } from '../../../lib/rental-analysis/env';
@@ -213,12 +216,14 @@ export const POST: APIRoute = async ({ request }) => {
 
   const result = await analyze(comps, subject, bedroomAdjustmentContext);
 
-  // Step 9: market-context panels, from the same full pool just fetched
-  // (not the narrowed top-12) — no new RentEngine call.
-  const supplyDemand = computeSupplyDemand(comps);
-  const timeToLease = computeTimeToLease(comps);
-
-  // Step 11: store the snapshot.
+  // Step 11: store the snapshot. (Step 9's old market-context panels —
+  // supply/demand ratio and time-to-lease, both derived from RentEngine's
+  // `rented` comps — were dropped 2026-09-22: RentEngine's comp pool had
+  // ~zero confirmed-leased comps for either real demo address, so both
+  // panels were computing off empty data. Replaced on the report page
+  // with RentCast's city-level trend data instead — see
+  // rentcast-blend.ts's loadBlendedCityTrend(), read fresh on each page
+  // view like the rest of the RentCast city sections, not snapshotted.)
   const token = crypto.randomUUID();
   const now = new Date().toISOString();
   const snapshot = {
@@ -228,8 +233,6 @@ export const POST: APIRoute = async ({ request }) => {
     rangeHigh: result.rangeHigh,
     confidence: result.confidence,
     isMultiUnitPath: result.isMultiUnitPath,
-    supplyDemand,
-    timeToLease,
   };
 
   await db

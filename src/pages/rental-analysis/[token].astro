@@ -4,9 +4,7 @@
 // decision #8's view-tracking/BD-alert spec.
 //
 // Built so far: address line, estimate card + confidence, one CTA,
-// methodology note, market context (supply/demand + time-to-lease —
-// decision #5's third panel, average rent by bedroom, now wired — see
-// below), comps table (+ map, added 2026-09-22), the homes-for-rent
+// methodology note, comps table (+ map, added 2026-09-22), the homes-for-rent
 // cross-sell (a small, narrowly-scoped live RentEngine /units call — NOT
 // the bigger listings-page rebuild project, which is separate and not
 // started), the "From Red Door" post carousel (real Sanity query), a
@@ -49,6 +47,24 @@
 // (AvailableUnit.detailHref) instead of RentEngine's external
 // custom_application_url.
 //
+// REVISED AGAIN 2026-09-22 (fourth pass, same day) — the "What's
+// Happening Nearby" market-context section (Supply & Demand Ratio, Time
+// to Lease) is gone entirely: both were computed from RentEngine's
+// `rented` comp status, which was ~empty for both real demo addresses
+// (see submit.ts's own note), making both panels report nonsense (a
+// "Soft market — 105 available, 0 rented" ratio, an all-zero time-to-
+// lease bucket chart) even once the RentCast comp blend fixed the
+// underlying estimate. Its one surviving piece, the Average Rent by
+// Bedroom Count bar chart, moved into the RentCast "What Homes Are
+// Renting for Nearby" section, now paired 50/50 with the existing
+// bedroom-ladder table (same data, no longer duplicated as two separate
+// mini-sections). That section also gained three new city-level trend
+// charts (average rent, days on market, rental inventory — see
+// rentcast-blend.ts's loadBlendedCityTrend) right after its stat tiles,
+// replacing the deleted panels' "how is this market moving" role with
+// real, clean RentCast aggregates instead of comp-set math starved of
+// data.
+//
 // REVISED AGAIN 2026-09-22 (third pass, same day) — Michael wanted the
 // black/white/black sandwich back: breadcrumb bar (black) → estimate +
 // trend chart (white) → the summary band with address/beds/baths/sqft
@@ -75,11 +91,11 @@ import {
   resolveRentCastSlugs,
   loadBlendedCityMarketData,
   loadBlendedMarketSnapshot,
-  loadBlendedRentTrend,
+  loadBlendedCityTrend,
+  type CityTrendPoint,
 } from '../../lib/rental-analysis/rentcast-blend';
 import type { RentEngineComp } from '../../lib/rental-analysis/types';
 import type { ConfidenceResult } from '../../lib/rental-analysis/confidence';
-import type { SupplyDemandStats, TimeToLeaseStats } from '../../lib/rental-analysis/market-context';
 
 export const prerender = false;
 
@@ -138,8 +154,6 @@ interface Snapshot {
   rangeHigh: number;
   confidence: ConfidenceResult;
   isMultiUnitPath: boolean;
-  supplyDemand: SupplyDemandStats;
-  timeToLease: TimeToLeaseStats;
 }
 
 const db = env.DB;
@@ -253,7 +267,7 @@ const isRentCastBlended = rentCastSlugs.length > 1;
 
 const cityMarketData = isRentCastCovered ? await loadBlendedCityMarketData(db, rentCastSlugs, row.property_state) : null;
 const citySnapshot = isRentCastCovered ? await loadBlendedMarketSnapshot(db, rentCastSlugs, row.property_state) : null;
-const rentTrend = isRentCastCovered ? await loadBlendedRentTrend(db, rentCastSlugs, row.property_state) : null;
+const cityTrend = isRentCastCovered ? await loadBlendedCityTrend(db, rentCastSlugs, row.property_state) : null;
 
 // "Plainfield" alone would misrepresent blended West Side data as if it
 // were Plainfield's own real numbers — name the actual submarket being
@@ -299,10 +313,13 @@ function formatCurrency(value: number | null): string {
 const bedroomChartData = (cityMarketData?.bedroomLadder ?? []).filter((b) => b.beds >= 1 && b.beds <= 5);
 const bedroomChartMax = Math.max(1, ...bedroomChartData.map((b) => b.avgRent));
 
-// Hero rent-trend chart (2026-09-22) — server-rendered inline SVG, no
-// client JS or charting library, matching the simplicity of the bedroom
-// bar chart above. Only real months with a real averageRent are plotted;
-// never interpolated or padded to a fixed point count.
+// Trend charts (2026-09-22, broadened same day from just the hero's rent
+// chart to three metrics — see rentcast-blend.ts's loadBlendedCityTrend
+// header for why) — server-rendered inline SVG, no client JS or charting
+// library, matching the simplicity of the bedroom bar chart. Only real
+// months with a real value for that specific metric are plotted; never
+// interpolated or padded to a fixed point count, and a month missing one
+// metric doesn't drop it from the others (see buildMetricPoints).
 const monthLabelFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '2-digit', timeZone: 'UTC' });
 function formatTrendMonth(month: string): string {
   const parsed = new Date(`${month}-01T00:00:00Z`);
@@ -313,20 +330,27 @@ const TREND_CHART_W = 320;
 const TREND_CHART_H = 84;
 const TREND_CHART_PAD = 4;
 
-const trendPoints = (rentTrend?.points ?? []).filter(
-  (p): p is { month: string; averageRent: number } => p.averageRent != null
-);
+interface MetricPoint {
+  month: string;
+  value: number;
+}
 
-function buildTrendPath(points: Array<{ averageRent: number }>): { line: string; area: string } | null {
+function buildMetricPoints(points: CityTrendPoint[], accessor: (p: CityTrendPoint) => number | null): MetricPoint[] {
+  return points
+    .map((p) => ({ month: p.month, value: accessor(p) }))
+    .filter((p): p is MetricPoint => p.value != null);
+}
+
+function buildTrendPath(points: MetricPoint[]): { line: string; area: string } | null {
   if (points.length < 2) return null;
-  const values = points.map((p) => p.averageRent);
+  const values = points.map((p) => p.value);
   const min = Math.min(...values);
   const max = Math.max(...values);
   const range = max - min || 1;
   const stepX = (TREND_CHART_W - TREND_CHART_PAD * 2) / (points.length - 1);
   const coords = points.map((p, i) => {
     const x = TREND_CHART_PAD + i * stepX;
-    const y = TREND_CHART_PAD + (1 - (p.averageRent - min) / range) * (TREND_CHART_H - TREND_CHART_PAD * 2);
+    const y = TREND_CHART_PAD + (1 - (p.value - min) / range) * (TREND_CHART_H - TREND_CHART_PAD * 2);
     return [x, y] as const;
   });
   const line = coords.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
@@ -334,24 +358,32 @@ function buildTrendPath(points: Array<{ averageRent: number }>): { line: string;
   return { line, area };
 }
 
-const trendChartPath = buildTrendPath(trendPoints);
-const trendChangePercent = rentTrend?.changePercent ?? null;
+/** First-to-last percent change across whichever points actually have a
+ * value — null if fewer than 2. Deliberately NOT labeled "YoY" anywhere
+ * this feeds the UI: the real history window is 11 months apart
+ * end-to-end (e.g. Oct '25 to Sep '26), not a true same-month-last-year
+ * comparison. */
+function changePercent(points: MetricPoint[]): number | null {
+  if (points.length < 2) return null;
+  const first = points[0].value;
+  const last = points[points.length - 1].value;
+  if (first === 0) return null;
+  return Math.round(((last - first) / first) * 1000) / 10;
+}
+
+const rentPoints = buildMetricPoints(cityTrend?.points ?? [], (p) => p.averageRent);
+const rentTrendPath = buildTrendPath(rentPoints);
+const rentChangePercent = changePercent(rentPoints);
+
+const domPoints = buildMetricPoints(cityTrend?.points ?? [], (p) => p.medianDaysOnMarket);
+const domTrendPath = buildTrendPath(domPoints);
+const domChangePercent = changePercent(domPoints);
+
+const inventoryPoints = buildMetricPoints(cityTrend?.points ?? [], (p) => p.totalListings);
+const inventoryTrendPath = buildTrendPath(inventoryPoints);
+const inventoryChangePercent = changePercent(inventoryPoints);
 
 const propertyTypeLabel = PROPERTY_TYPE_LABELS[row.property_type] ?? 'Home';
-
-// Supply & Demand card display — status-key for the CSS class, and the
-// ratio bar's fill width capped at a sensible visual max (a literal
-// ratio of e.g. 4.0 would otherwise blow the bar past the container).
-const supplyStatusKey = snapshot.supplyDemand.statusLabel.split(' ')[0].toLowerCase();
-const supplyRatioPercent = snapshot.supplyDemand.ratio != null ? Math.min(100, Math.round(snapshot.supplyDemand.ratio * 50)) : 0;
-
-const timeToLeaseBucketMax = Math.max(
-  1,
-  snapshot.timeToLease.buckets.days0to14,
-  snapshot.timeToLease.buckets.days15to30,
-  snapshot.timeToLease.buckets.days31to45,
-  snapshot.timeToLease.buckets.days46plus
-);
 
 const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' });
 ---
@@ -403,28 +435,28 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
         </div>
         <div class="trend-card reveal">
           <div class="trend-card-head">
-            <div class="section-kicker">{rentCastDisplayName} Rent Trend, {trendPoints.length || 12} Mo</div>
-            {trendChartPath && trendChangePercent != null && (
-              <span class={`trend-change-badge ${trendChangePercent >= 0 ? 'is-up' : 'is-down'}`}>
-                {trendChangePercent >= 0 ? '▲' : '▼'}{Math.abs(trendChangePercent)}%
+            <div class="section-kicker">{rentCastDisplayName} Rent Trend, {rentPoints.length || 12} Mo</div>
+            {rentTrendPath && rentChangePercent != null && (
+              <span class={`trend-change-badge ${rentChangePercent >= 0 ? 'is-up' : 'is-down'}`}>
+                {rentChangePercent >= 0 ? '▲' : '▼'}{Math.abs(rentChangePercent)}%
               </span>
             )}
           </div>
-          {trendChartPath ? (
+          {rentTrendPath ? (
             <>
               <svg
                 class="trend-svg"
                 viewBox={`0 0 ${TREND_CHART_W} ${TREND_CHART_H}`}
                 preserveAspectRatio="none"
                 role="img"
-                aria-label={`${rentCastDisplayName} average rent trend over the past ${trendPoints.length} months`}
+                aria-label={`${rentCastDisplayName} average rent trend over the past ${rentPoints.length} months`}
               >
-                <path d={trendChartPath.area} class="trend-area" />
-                <path d={trendChartPath.line} class="trend-line" />
+                <path d={rentTrendPath.area} class="trend-area" />
+                <path d={rentTrendPath.line} class="trend-line" />
               </svg>
               <div class="trend-range-labels">
-                <span>{formatTrendMonth(trendPoints[0].month)}</span>
-                <span>${Math.round(trendPoints[trendPoints.length - 1].averageRent).toLocaleString()}/mo</span>
+                <span>{formatTrendMonth(rentPoints[0].month)}</span>
+                <span>${Math.round(rentPoints[rentPoints.length - 1].value).toLocaleString()}/mo</span>
               </div>
             </>
           ) : (
@@ -521,87 +553,6 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
     </div>
   </section>
 
-  <section>
-    <div class="container">
-      <div class="section-head">
-        <div class="section-kicker">Market Context</div>
-        <h2>What's Happening Nearby</h2>
-      </div>
-      <p class="section-dek">How this submarket is behaving beyond the {snapshot.comps.length} comps above &mdash; supply relative to demand, and where rents sit by bedroom count.</p>
-      <div class="context-card-grid">
-        <div class="context-card">
-          <p class="context-card-label">Supply &amp; Demand Ratio</p>
-          <div class="context-card-figure">
-            {snapshot.supplyDemand.ratio != null ? snapshot.supplyDemand.ratio.toFixed(2) : '—'}
-            <span class={`context-status-badge is-${supplyStatusKey}`}>{snapshot.supplyDemand.statusLabel}</span>
-          </div>
-          <div class="context-ratio-bar"><span class="context-ratio-fill" style={`width:${supplyRatioPercent}%`}></span></div>
-          <div class="context-ratio-legend">
-            <span><i class="context-dot is-available"></i>{snapshot.supplyDemand.availableCount} available</span>
-            <span><i class="context-dot is-rented"></i>{snapshot.supplyDemand.rentedCount} rented</span>
-          </div>
-          <p class="context-card-note">
-            {snapshot.supplyDemand.ratio != null
-              ? `For every home leased nearby recently, about ${snapshot.supplyDemand.ratio.toFixed(1)} sit available at once — ${snapshot.supplyDemand.statusLabel === 'Healthy market' ? 'a healthy balance that supports steady, on-time leasing.' : snapshot.supplyDemand.statusLabel === 'Soft market' ? 'more supply than this comp set is currently absorbing.' : 'a roughly even balance between supply and demand.'}`
-              : 'Not enough recently-leased comps nearby to compute this ratio.'}
-          </p>
-        </div>
-
-        <div class="context-card">
-          <p class="context-card-label">Time to Lease &mdash; This Comp Set</p>
-          <div class="context-card-figure">
-            {snapshot.timeToLease.medianDaysOnMarket != null ? snapshot.timeToLease.medianDaysOnMarket : '—'}
-            <span class="context-card-figure-sub">median days on market</span>
-          </div>
-          <div class="context-bucket-rows">
-            {[
-              ['0–14 days', snapshot.timeToLease.buckets.days0to14],
-              ['15–30 days', snapshot.timeToLease.buckets.days15to30],
-              ['31–45 days', snapshot.timeToLease.buckets.days31to45],
-              ['46+ days', snapshot.timeToLease.buckets.days46plus],
-            ].map(([label, count]) => (
-              <div class="context-bucket-row">
-                <span class="context-bucket-label">{label}</span>
-                <div class="context-bucket-bar"><span style={`width:${Math.round((Number(count) / timeToLeaseBucketMax) * 100)}%`}></span></div>
-                <span class="context-bucket-count">{count}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div class="context-card">
-          <p class="context-card-label">Average Rent by Bedroom Count</p>
-          {
-            bedroomChartData.length > 0 ? (
-              <>
-                <div class="context-bar-chart">
-                  {bedroomChartData.map((b) => (
-                    <div class="context-bar-col">
-                      <span class="context-bar-value">${Math.round(b.avgRent).toLocaleString()}</span>
-                      <div class={`context-bar${b.beds === row.property_beds ? ' is-subject' : ''}`} style={`height:${Math.max(6, Math.round((b.avgRent / bedroomChartMax) * 100))}%`} />
-                      <span class="context-bar-label">{b.beds}bd{b.beds === row.property_beds && ' (subject)'}</span>
-                    </div>
-                  ))}
-                </div>
-                <p class="context-card-note">This property's {row.property_beds}-bedroom estimate sits {(() => {
-                  const subjectRung = bedroomChartData.find((b) => b.beds === row.property_beds);
-                  if (!subjectRung) return 'outside the current bedroom-count data for this submarket.';
-                  return snapshot.estimatedRent > subjectRung.avgRent
-                    ? 'above the broader ladder for this submarket.'
-                    : snapshot.estimatedRent < subjectRung.avgRent
-                      ? 'below the broader ladder for this submarket.'
-                      : 'right in line with the broader ladder for this submarket.';
-                })()}</p>
-              </>
-            ) : (
-              <p class="context-card-note">Not enough RentCast bedroom-count data for {row.property_city} to chart this yet.</p>
-            )
-          }
-        </div>
-      </div>
-    </div>
-  </section>
-
   {
     isRentCastCovered && reportStatTiles.length > 0 && (
       <section>
@@ -623,20 +574,145 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
               </div>
             ))}
           </div>
+
+          {/* Three city-level trend charts (2026-09-22) — replaced the old
+              comp-set "Supply & Demand"/"Time to Lease" panels, which were
+              computing off RentEngine's near-empty 'rented' status (see
+              submit.ts's own note on why those were dropped). Same
+              server-rendered inline-SVG pattern as the hero's rent chart,
+              just three of them side by side. Days-on-market and
+              inventory both flip the up/down badge color from the rent
+              chart's convention — rising DOM/inventory reads as softening
+              (bad for a landlord), not growth (good), so is-up/is-down are
+              swapped for those two rather than reusing the raw sign. */}
+          <div class="metric-trend-grid">
+            <div class="metric-trend-card">
+              <div class="trend-card-head">
+                <div class="section-kicker">Average Rent, {rentPoints.length || 12} Mo</div>
+                {rentTrendPath && rentChangePercent != null && (
+                  <span class={`trend-change-badge ${rentChangePercent >= 0 ? 'is-up' : 'is-down'}`}>
+                    {rentChangePercent >= 0 ? '▲' : '▼'}{Math.abs(rentChangePercent)}%
+                  </span>
+                )}
+              </div>
+              {rentTrendPath ? (
+                <>
+                  <svg class="trend-svg" viewBox={`0 0 ${TREND_CHART_W} ${TREND_CHART_H}`} preserveAspectRatio="none" role="img" aria-label={`${rentCastDisplayName} average rent trend`}>
+                    <path d={rentTrendPath.area} class="trend-area" />
+                    <path d={rentTrendPath.line} class="trend-line" />
+                  </svg>
+                  <div class="trend-range-labels">
+                    <span>{formatTrendMonth(rentPoints[0].month)}</span>
+                    <span>${Math.round(rentPoints[rentPoints.length - 1].value).toLocaleString()}/mo</span>
+                  </div>
+                </>
+              ) : (
+                <p class="context-card-note">Not enough RentCast history for {rentCastDisplayName} yet to chart a trend.</p>
+              )}
+            </div>
+
+            <div class="metric-trend-card">
+              <div class="trend-card-head">
+                <div class="section-kicker">Days on Market, {domPoints.length || 12} Mo</div>
+                {domTrendPath && domChangePercent != null && (
+                  <span class={`trend-change-badge ${domChangePercent <= 0 ? 'is-up' : 'is-down'}`}>
+                    {domChangePercent >= 0 ? '▲' : '▼'}{Math.abs(domChangePercent)}%
+                  </span>
+                )}
+              </div>
+              {domTrendPath ? (
+                <>
+                  <svg class="trend-svg" viewBox={`0 0 ${TREND_CHART_W} ${TREND_CHART_H}`} preserveAspectRatio="none" role="img" aria-label={`${rentCastDisplayName} median days on market trend`}>
+                    <path d={domTrendPath.area} class="trend-area" />
+                    <path d={domTrendPath.line} class="trend-line" />
+                  </svg>
+                  <div class="trend-range-labels">
+                    <span>{formatTrendMonth(domPoints[0].month)}</span>
+                    <span>{Math.round(domPoints[domPoints.length - 1].value)} days</span>
+                  </div>
+                </>
+              ) : (
+                <p class="context-card-note">Not enough RentCast history for {rentCastDisplayName} yet to chart a trend.</p>
+              )}
+            </div>
+
+            <div class="metric-trend-card">
+              <div class="trend-card-head">
+                <div class="section-kicker">Rental Inventory, {inventoryPoints.length || 12} Mo</div>
+                {inventoryTrendPath && inventoryChangePercent != null && (
+                  <span class={`trend-change-badge ${inventoryChangePercent <= 0 ? 'is-up' : 'is-down'}`}>
+                    {inventoryChangePercent >= 0 ? '▲' : '▼'}{Math.abs(inventoryChangePercent)}%
+                  </span>
+                )}
+              </div>
+              {inventoryTrendPath ? (
+                <>
+                  <svg class="trend-svg" viewBox={`0 0 ${TREND_CHART_W} ${TREND_CHART_H}`} preserveAspectRatio="none" role="img" aria-label={`${rentCastDisplayName} rental inventory trend`}>
+                    <path d={inventoryTrendPath.area} class="trend-area" />
+                    <path d={inventoryTrendPath.line} class="trend-line" />
+                  </svg>
+                  <div class="trend-range-labels">
+                    <span>{formatTrendMonth(inventoryPoints[0].month)}</span>
+                    <span>{Math.round(inventoryPoints[inventoryPoints.length - 1].value).toLocaleString()} listings</span>
+                  </div>
+                </>
+              ) : (
+                <p class="context-card-note">Not enough RentCast history for {rentCastDisplayName} yet to chart a trend.</p>
+              )}
+            </div>
+          </div>
+
           {cityContentEntry?.snapshotDetail.map((paragraph) => <p class="snapshot-detail">{paragraph}</p>)}
+
+          {/* Bedroom rent ladder, 50/50 split (2026-09-22) — table on the
+              left (unchanged), the bar chart that used to live in the
+              removed "What's Happening Nearby" section on the right. Same
+              underlying cityMarketData.bedroomLadder for both — no new
+              data, just no longer duplicated across two sections. */}
           {
             cityMarketData && cityMarketData.bedroomLadder.length > 0 && (
-              <>
-                <p class="snapshot-note">Rent by bedroom count, this month&rsquo;s RentCast pull:</p>
-                <div class="bedroom-ladder">
-                  {cityMarketData.bedroomLadder.map((b) => (
-                    <div class="bedroom-ladder-row">
-                      <span class="bedroom-ladder-beds">{b.beds === 0 ? 'Studio' : `${b.beds}-Bedroom`}</span>
-                      <span class="bedroom-ladder-rent">${Math.round(b.avgRent).toLocaleString()}/mo</span>
-                    </div>
-                  ))}
+              <div class="bedroom-split-grid">
+                <div>
+                  <p class="snapshot-note">Rent by bedroom count, this month&rsquo;s RentCast pull:</p>
+                  <div class="bedroom-ladder">
+                    {cityMarketData.bedroomLadder.map((b) => (
+                      <div class="bedroom-ladder-row">
+                        <span class="bedroom-ladder-beds">{b.beds === 0 ? 'Studio' : `${b.beds}-Bedroom`}</span>
+                        <span class="bedroom-ladder-rent">${Math.round(b.avgRent).toLocaleString()}/mo</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </>
+                <div class="context-card">
+                  <p class="context-card-label">Average Rent by Bedroom Count</p>
+                  {
+                    bedroomChartData.length > 0 ? (
+                      <>
+                        <div class="context-bar-chart">
+                          {bedroomChartData.map((b) => (
+                            <div class="context-bar-col">
+                              <span class="context-bar-value">${Math.round(b.avgRent).toLocaleString()}</span>
+                              <div class={`context-bar${b.beds === row.property_beds ? ' is-subject' : ''}`} style={`height:${Math.max(6, Math.round((b.avgRent / bedroomChartMax) * 100))}%`} />
+                              <span class="context-bar-label">{b.beds}bd{b.beds === row.property_beds && ' (subject)'}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <p class="context-card-note">This property's {row.property_beds}-bedroom estimate sits {(() => {
+                          const subjectRung = bedroomChartData.find((b) => b.beds === row.property_beds);
+                          if (!subjectRung) return 'outside the current bedroom-count data for this submarket.';
+                          return snapshot.estimatedRent > subjectRung.avgRent
+                            ? 'above the broader ladder for this submarket.'
+                            : snapshot.estimatedRent < subjectRung.avgRent
+                              ? 'below the broader ladder for this submarket.'
+                              : 'right in line with the broader ladder for this submarket.';
+                        })()}</p>
+                      </>
+                    ) : (
+                      <p class="context-card-note">Not enough RentCast bedroom-count data for {row.property_city} to chart this yet.</p>
+                    )
+                  }
+                </div>
+              </div>
             )
           }
         </div>
