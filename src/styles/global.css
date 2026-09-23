@@ -2491,24 +2491,52 @@
     .report-hero-section { padding: 18px 0 16px; }
     .report-hero-grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 20px; }
     .report-hero-grid .estimate-card,
-    .report-hero-grid .trend-card { display: flex; flex-direction: column; padding: clamp(18px, 2.4vw, 26px); }
+    .report-hero-grid .metric-trend-card { display: flex; flex-direction: column; padding: clamp(18px, 2.4vw, 26px); }
     .report-hero-grid .confidence-badge { margin-top: 10px; }
     .report-hero-grid .methodology-note { margin-top: 10px; }
     .report-hero-grid .estimate-card .cta-row { justify-content: flex-start; margin-top: 12px; }
     .report-hero-grid .estimate-card .report-hero-dek { margin-top: 8px; }
+    /* Centered price/range (2026-09-22, Michael's request) — deliberately
+       scoped to just these two lines, not the whole card: kicker,
+       confidence badge, methodology note, dek, and CTA all stay
+       left-aligned, so the centered price reads as a hero figure sitting
+       above left-aligned supporting detail, not a fully centered card. */
+    .report-hero-grid .estimate-figure,
+    .report-hero-grid .estimate-range { text-align: center; }
 
     .report-hero-dek { max-width: 68ch; margin: 0; color: var(--muted); font-size: .88rem; }
 
-    .trend-card { justify-content: center; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
-    .trend-card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 10px; margin-bottom: 14px; }
+    /* Trend chart card (2026-09-22, second pass — replaced a bare
+       sparkline with no axis labels or gridlines after Michael called it
+       "less polished than the rest of the page"). One shared component,
+       TrendChartCard.astro, renders this markup for all 4 instances on
+       the page (hero's rent chart + the 3-up average rent/days-on-
+       market/inventory row) — .report-hero-grid scopes this card's
+       flex/padding for the hero's 40% column above; the plain rule here
+       covers the 3-up grid context (see .metric-trend-grid below). */
+    .metric-trend-card { justify-content: center; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: clamp(18px, 2.2vw, 24px); }
+    .trend-card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 10px; margin-bottom: 10px; }
     .trend-card-head .section-kicker { margin-bottom: 0; }
     .trend-change-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; font-size: .8rem; font-weight: 800; white-space: nowrap; }
     .trend-change-badge.is-up { background: #eaf6ee; color: #1f7a3d; }
     .trend-change-badge.is-down { background: var(--brand-tint); color: var(--brand); }
-    .trend-svg { display: block; width: 100%; height: 84px; overflow: visible; }
-    .trend-line { fill: none; stroke: var(--red); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-    .trend-area { fill: var(--brand-tint); opacity: .6; stroke: none; }
-    .trend-range-labels { display: flex; justify-content: space-between; margin-top: 8px; color: var(--muted); font-size: .78rem; font-weight: 700; }
+    .trend-svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .trend-line { fill: none; stroke: var(--red); stroke-width: 2.25; stroke-linecap: round; stroke-linejoin: round; }
+    .trend-area { fill: var(--brand-tint); opacity: .55; stroke: none; }
+    .trend-grid-line { stroke: var(--line); stroke-width: 1; shape-rendering: crispEdges; }
+    .trend-grid-label { fill: var(--muted); font-family: var(--font); font-size: 8.5px; font-weight: 700; }
+    .trend-x-label { fill: var(--muted); font-family: var(--font); font-size: 8.5px; font-weight: 700; }
+    .trend-point-hit { fill: transparent; cursor: pointer; }
+    .trend-point-dot { fill: var(--white); stroke: var(--red); stroke-width: 2; transition: r .1s ease; pointer-events: none; }
+    .trend-point:hover .trend-point-dot,
+    .trend-point.is-active .trend-point-dot { r: 4.5; fill: var(--red); }
+
+    /* Single shared tooltip (2026-09-22) — one element reused by every
+       chart's points on the page rather than one per chart, positioned
+       via getBoundingClientRect() in [token].astro's own script. */
+    .trend-tooltip { position: fixed; z-index: 50; display: none; align-items: baseline; gap: 6px; padding: 6px 10px; background: var(--ink); color: var(--white); border-radius: 6px; font-size: .78rem; font-weight: 700; white-space: nowrap; pointer-events: none; transform: translate(-50%, -100%); box-shadow: 0 6px 16px rgba(0,0,0,.25); }
+    .trend-tooltip.is-visible { display: flex; }
+    .trend-tooltip-month { color: rgba(255,255,255,.68); font-weight: 600; }
 
     /* Street View photo + subject map — moved out of the hero (2026-09-22
        third pass) into their own edge-to-edge 50/50 section directly
@@ -2649,7 +2677,30 @@
        map (.map-pin-price/.is-highlighted, reused as-is from there). */
     .comps-table-row { cursor: default; transition: background .12s ease; }
     .comps-table-row.is-hovered, .comps-table-row.is-map-hovered { background: var(--soft); }
-    .comps-map { width: 100%; height: 360px; margin-top: 20px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+    /* Comps table + map, 60/40 split (2026-09-22, Michael's request —
+       previously stacked, table full width then map full width below).
+       Map is sticky so it stays in view while a long comp table scrolls
+       past, matching the sidebar-map pattern already used on the
+       homes-for-rent listing detail page. */
+    .comps-split-grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 24px; align-items: start; margin-top: 20px; }
+    .comps-map { width: 100%; height: 520px; margin: 0; position: sticky; top: 100px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+    @media (max-width: 900px) {
+      .comps-split-grid { grid-template-columns: 1fr; }
+      .comps-map { position: static; height: 360px; margin-top: 20px; }
+    }
+
+    /* Small hover/focus-triggered info tooltip (2026-09-22) — used next
+       to the comps table's "Off Market" and "Rented" status pills to
+       explain what each one actually means, since neither is a fully
+       confirmed lease outcome (RentCast's "Off Market" specifically)
+       or needs the same caveat spelled out once (RentEngine's "Rented"). */
+    .info-tip { position: relative; display: inline-flex; margin-left: 4px; }
+    .info-tip-icon { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 50%; background: rgba(0,0,0,.14); color: inherit; font-size: 9px; font-weight: 900; line-height: 1; cursor: help; }
+    .info-tip-bubble { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); width: 220px; padding: 8px 10px; background: var(--ink); color: var(--white); border-radius: 6px; font-size: .74rem; font-weight: 600; line-height: 1.4; text-align: left; white-space: normal; opacity: 0; visibility: hidden; transition: opacity .12s ease; pointer-events: none; z-index: 20; box-shadow: 0 6px 16px rgba(0,0,0,.25); }
+    .info-tip-bubble::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--ink); }
+    .info-tip:hover .info-tip-bubble,
+    .info-tip:focus .info-tip-bubble,
+    .info-tip:focus-within .info-tip-bubble { opacity: 1; visibility: visible; }
 
     .post-mini-grid {
       display: grid;
@@ -3027,13 +3078,10 @@
 
     /* Three city-level trend charts, added 2026-09-22 to "What Homes Are
        Renting for Nearby" (replacing the deleted market-context panels —
-       see [token].astro's own header note). Reuses .trend-card-head/
-       .trend-svg/.trend-line/.trend-area/.trend-change-badge/
-       .trend-range-labels as-is (already generic, not scoped to the
-       hero's .report-hero-grid), just needs its own grid + card shell
-       since the hero's .trend-card padding is scoped to that context. */
+       see [token].astro's own header note). .metric-trend-card's own
+       styling lives up near .report-hero-grid, shared with the hero's
+       rent chart — this is just the 3-up grid wrapper. */
     .metric-trend-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin: 24px 0; }
-    .metric-trend-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(18px, 2.2vw, 24px); }
     @media (max-width: 900px) { .metric-trend-grid { grid-template-columns: 1fr; } }
 
     /* Bedroom rent ladder, 50/50 split (2026-09-22) — table left

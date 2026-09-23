@@ -80,6 +80,7 @@
 import { env } from 'cloudflare:workers';
 import { sanityClient } from 'sanity:client';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import TrendChartCard from '../../components/rental-analysis/TrendChartCard.astro';
 import { haversineMiles } from '../../lib/rental-analysis/geo';
 import { computeViewTrackingUpdate, fireBdAlertWebhook, type RentalAnalysisRow } from '../../lib/rental-analysis/view-tracking';
 import { fetchAvailableUnits, type AvailableUnit } from '../../lib/rental-analysis/listings-client';
@@ -313,23 +314,14 @@ function formatCurrency(value: number | null): string {
 const bedroomChartData = (cityMarketData?.bedroomLadder ?? []).filter((b) => b.beds >= 1 && b.beds <= 5);
 const bedroomChartMax = Math.max(1, ...bedroomChartData.map((b) => b.avgRent));
 
-// Trend charts (2026-09-22, broadened same day from just the hero's rent
-// chart to three metrics — see rentcast-blend.ts's loadBlendedCityTrend
-// header for why) — server-rendered inline SVG, no client JS or charting
-// library, matching the simplicity of the bedroom bar chart. Only real
-// months with a real value for that specific metric are plotted; never
-// interpolated or padded to a fixed point count, and a month missing one
-// metric doesn't drop it from the others (see buildMetricPoints).
-const monthLabelFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '2-digit', timeZone: 'UTC' });
-function formatTrendMonth(month: string): string {
-  const parsed = new Date(`${month}-01T00:00:00Z`);
-  return Number.isNaN(parsed.getTime()) ? month : monthLabelFormatter.format(parsed);
-}
-
-const TREND_CHART_W = 320;
-const TREND_CHART_H = 84;
-const TREND_CHART_PAD = 4;
-
+// Trend chart point data (2026-09-22, broadened same day from just the
+// hero's rent chart to three metrics — see rentcast-blend.ts's
+// loadBlendedCityTrend header for why). Actual chart rendering (SVG
+// geometry, gridlines, smoothing, tooltips) lives in the shared
+// TrendChartCard component now — see that file's own header for why it
+// was extracted. Only real months with a real value for that specific
+// metric are plotted; never interpolated or padded to a fixed point
+// count, and a month missing one metric doesn't drop it from the others.
 interface MetricPoint {
   month: string;
   value: number;
@@ -341,47 +333,16 @@ function buildMetricPoints(points: CityTrendPoint[], accessor: (p: CityTrendPoin
     .filter((p): p is MetricPoint => p.value != null);
 }
 
-function buildTrendPath(points: MetricPoint[]): { line: string; area: string } | null {
-  if (points.length < 2) return null;
-  const values = points.map((p) => p.value);
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const range = max - min || 1;
-  const stepX = (TREND_CHART_W - TREND_CHART_PAD * 2) / (points.length - 1);
-  const coords = points.map((p, i) => {
-    const x = TREND_CHART_PAD + i * stepX;
-    const y = TREND_CHART_PAD + (1 - (p.value - min) / range) * (TREND_CHART_H - TREND_CHART_PAD * 2);
-    return [x, y] as const;
-  });
-  const line = coords.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
-  const area = `${line} L${coords[coords.length - 1][0].toFixed(1)},${TREND_CHART_H} L${coords[0][0].toFixed(1)},${TREND_CHART_H} Z`;
-  return { line, area };
-}
-
-/** First-to-last percent change across whichever points actually have a
- * value — null if fewer than 2. Deliberately NOT labeled "YoY" anywhere
- * this feeds the UI: the real history window is 11 months apart
- * end-to-end (e.g. Oct '25 to Sep '26), not a true same-month-last-year
- * comparison. */
-function changePercent(points: MetricPoint[]): number | null {
-  if (points.length < 2) return null;
-  const first = points[0].value;
-  const last = points[points.length - 1].value;
-  if (first === 0) return null;
-  return Math.round(((last - first) / first) * 1000) / 10;
-}
-
 const rentPoints = buildMetricPoints(cityTrend?.points ?? [], (p) => p.averageRent);
-const rentTrendPath = buildTrendPath(rentPoints);
-const rentChangePercent = changePercent(rentPoints);
-
 const domPoints = buildMetricPoints(cityTrend?.points ?? [], (p) => p.medianDaysOnMarket);
-const domTrendPath = buildTrendPath(domPoints);
-const domChangePercent = changePercent(domPoints);
-
 const inventoryPoints = buildMetricPoints(cityTrend?.points ?? [], (p) => p.totalListings);
-const inventoryTrendPath = buildTrendPath(inventoryPoints);
-const inventoryChangePercent = changePercent(inventoryPoints);
+
+const formatRentAxis = (v: number) => `$${Math.round(v).toLocaleString()}`;
+const formatDaysAxis = (v: number) => `${Math.round(v)}d`;
+const formatInventoryAxis = (v: number) => `${Math.round(v)}`;
+const formatRentLatest = (v: number) => `$${Math.round(v).toLocaleString()}/mo`;
+const formatDaysLatest = (v: number) => `${Math.round(v)} days`;
+const formatInventoryLatest = (v: number) => `${Math.round(v).toLocaleString()} listings`;
 
 const propertyTypeLabel = PROPERTY_TYPE_LABELS[row.property_type] ?? 'Home';
 
@@ -433,36 +394,14 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
             <a class="btn btn-primary" href={CALENDLY_URL} target="_blank" rel="noopener">Talk to Red Door About Managing This Property</a>
           </div>
         </div>
-        <div class="trend-card reveal">
-          <div class="trend-card-head">
-            <div class="section-kicker">{rentCastDisplayName} Rent Trend, {rentPoints.length || 12} Mo</div>
-            {rentTrendPath && rentChangePercent != null && (
-              <span class={`trend-change-badge ${rentChangePercent >= 0 ? 'is-up' : 'is-down'}`}>
-                {rentChangePercent >= 0 ? '▲' : '▼'}{Math.abs(rentChangePercent)}%
-              </span>
-            )}
-          </div>
-          {rentTrendPath ? (
-            <>
-              <svg
-                class="trend-svg"
-                viewBox={`0 0 ${TREND_CHART_W} ${TREND_CHART_H}`}
-                preserveAspectRatio="none"
-                role="img"
-                aria-label={`${rentCastDisplayName} average rent trend over the past ${rentPoints.length} months`}
-              >
-                <path d={rentTrendPath.area} class="trend-area" />
-                <path d={rentTrendPath.line} class="trend-line" />
-              </svg>
-              <div class="trend-range-labels">
-                <span>{formatTrendMonth(rentPoints[0].month)}</span>
-                <span>${Math.round(rentPoints[rentPoints.length - 1].value).toLocaleString()}/mo</span>
-              </div>
-            </>
-          ) : (
-            <p class="context-card-note">Not enough RentCast history for {rentCastDisplayName} yet to chart a trend.</p>
-          )}
-        </div>
+        <TrendChartCard
+          class="reveal"
+          kicker={`${rentCastDisplayName} Rent Trend, ${rentPoints.length || 12} Mo`}
+          points={rentPoints}
+          formatAxisValue={formatRentAxis}
+          formatLatestValue={formatRentLatest}
+          emptyMessage={`Not enough RentCast history for ${rentCastDisplayName} yet to chart a trend.`}
+        />
       </div>
     </div>
   </section>
@@ -507,49 +446,67 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
         <div class="section-kicker">Comparable Properties</div>
         <h2>{snapshot.comps.length} Properties Used in This Estimate</h2>
       </div>
-      <div style="overflow-x:auto">
-        <table class="comps-table">
-          <thead>
-            <tr>
-              <th>Address</th>
-              <th>Beds/Baths</th>
-              <th>Sqft</th>
-              <th>Rent</th>
-              <th>Distance</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {compsWithDistance.map((c, i) => (
-              <tr data-comp-index={i} class="comps-table-row">
-                <td>{c.address}</td>
-                <td>{c.beds}bd / {c.baths}ba</td>
-                <td>{c.sqft ?? '—'}</td>
-                <td>
-                  ${c.rent.toLocaleString()}
-                  {c.bedroomAdjustedRent != null && (
-                    <span class="consent"> (${c.bedroomAdjustedRent.toLocaleString()} adjusted for {row.property_beds}bd)</span>
-                  )}
-                </td>
-                <td>{c.distance.toFixed(1)} mi</td>
-                <td>
-                  <span class={`status-pill is-${c.status}`}>
-                    {c.status === 'rented' ? 'Rented' : c.status === 'inactive' ? 'Off Market' : 'Available'}
-                  </span>
-                </td>
+      <div class="comps-split-grid">
+        <div style="overflow-x:auto">
+          <table class="comps-table">
+            <thead>
+              <tr>
+                <th>Address</th>
+                <th>Beds/Baths</th>
+                <th>Sqft</th>
+                <th>Rent</th>
+                <th>Distance</th>
+                <th>Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {compsWithDistance.map((c, i) => (
+                <tr data-comp-index={i} class="comps-table-row">
+                  <td>{c.address}</td>
+                  <td>{c.beds}bd / {c.baths}ba</td>
+                  <td>{c.sqft ?? '—'}</td>
+                  <td>
+                    ${c.rent.toLocaleString()}
+                    {c.bedroomAdjustedRent != null && (
+                      <span class="consent"> (${c.bedroomAdjustedRent.toLocaleString()} adjusted for {row.property_beds}bd)</span>
+                    )}
+                  </td>
+                  <td>{c.distance.toFixed(1)} mi</td>
+                  <td>
+                    {c.status === 'rented' ? (
+                      <span class="status-pill is-rented">
+                        Rented
+                        <span class="info-tip" tabindex="0">
+                          <span class="info-tip-icon" aria-hidden="true">?</span>
+                          <span class="info-tip-bubble">Confirmed through RentEngine as an actual signed lease, not just an asking price.</span>
+                        </span>
+                      </span>
+                    ) : c.status === 'inactive' ? (
+                      <span class="status-pill is-inactive">
+                        Off Market
+                        <span class="info-tip" tabindex="0">
+                          <span class="info-tip-icon" aria-hidden="true">?</span>
+                          <span class="info-tip-bubble">This home is no longer listed. It most likely rented, but the data doesn&rsquo;t confirm that with certainty.</span>
+                        </span>
+                      </span>
+                    ) : (
+                      <span class="status-pill is-available">Available</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {compsWithDistance.length > 0 && (
+          <div
+            class="comps-map"
+            id="comps-map"
+            data-comps={JSON.stringify(compsWithDistance.map((c) => ({ lat: c.latitude, lng: c.longitude, address: c.address, rent: c.rent })))}
+            data-subject={JSON.stringify({ lat: row.property_lat, lng: row.property_lon, address: row.property_address })}
+          ></div>
+        )}
       </div>
-      {compsWithDistance.length > 0 && (
-        <div
-          class="comps-map"
-          id="comps-map"
-          data-comps={JSON.stringify(compsWithDistance.map((c) => ({ lat: c.latitude, lng: c.longitude, address: c.address, rent: c.rent })))}
-          data-subject={JSON.stringify({ lat: row.property_lat, lng: row.property_lon, address: row.property_address })}
-        ></div>
-      )}
     </div>
   </section>
 
@@ -578,88 +535,35 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
           {/* Three city-level trend charts (2026-09-22) — replaced the old
               comp-set "Supply & Demand"/"Time to Lease" panels, which were
               computing off RentEngine's near-empty 'rented' status (see
-              submit.ts's own note on why those were dropped). Same
-              server-rendered inline-SVG pattern as the hero's rent chart,
-              just three of them side by side. Days-on-market and
-              inventory both flip the up/down badge color from the rent
-              chart's convention — rising DOM/inventory reads as softening
-              (bad for a landlord), not growth (good), so is-up/is-down are
-              swapped for those two rather than reusing the raw sign. */}
+              submit.ts's own note on why those were dropped). Days-on-
+              market and inventory both flip the up/down badge color from
+              the rent chart's convention via invertColor — rising
+              DOM/inventory reads as softening (bad for a landlord), not
+              growth (good). */}
           <div class="metric-trend-grid">
-            <div class="metric-trend-card">
-              <div class="trend-card-head">
-                <div class="section-kicker">Average Rent, {rentPoints.length || 12} Mo</div>
-                {rentTrendPath && rentChangePercent != null && (
-                  <span class={`trend-change-badge ${rentChangePercent >= 0 ? 'is-up' : 'is-down'}`}>
-                    {rentChangePercent >= 0 ? '▲' : '▼'}{Math.abs(rentChangePercent)}%
-                  </span>
-                )}
-              </div>
-              {rentTrendPath ? (
-                <>
-                  <svg class="trend-svg" viewBox={`0 0 ${TREND_CHART_W} ${TREND_CHART_H}`} preserveAspectRatio="none" role="img" aria-label={`${rentCastDisplayName} average rent trend`}>
-                    <path d={rentTrendPath.area} class="trend-area" />
-                    <path d={rentTrendPath.line} class="trend-line" />
-                  </svg>
-                  <div class="trend-range-labels">
-                    <span>{formatTrendMonth(rentPoints[0].month)}</span>
-                    <span>${Math.round(rentPoints[rentPoints.length - 1].value).toLocaleString()}/mo</span>
-                  </div>
-                </>
-              ) : (
-                <p class="context-card-note">Not enough RentCast history for {rentCastDisplayName} yet to chart a trend.</p>
-              )}
-            </div>
-
-            <div class="metric-trend-card">
-              <div class="trend-card-head">
-                <div class="section-kicker">Days on Market, {domPoints.length || 12} Mo</div>
-                {domTrendPath && domChangePercent != null && (
-                  <span class={`trend-change-badge ${domChangePercent <= 0 ? 'is-up' : 'is-down'}`}>
-                    {domChangePercent >= 0 ? '▲' : '▼'}{Math.abs(domChangePercent)}%
-                  </span>
-                )}
-              </div>
-              {domTrendPath ? (
-                <>
-                  <svg class="trend-svg" viewBox={`0 0 ${TREND_CHART_W} ${TREND_CHART_H}`} preserveAspectRatio="none" role="img" aria-label={`${rentCastDisplayName} median days on market trend`}>
-                    <path d={domTrendPath.area} class="trend-area" />
-                    <path d={domTrendPath.line} class="trend-line" />
-                  </svg>
-                  <div class="trend-range-labels">
-                    <span>{formatTrendMonth(domPoints[0].month)}</span>
-                    <span>{Math.round(domPoints[domPoints.length - 1].value)} days</span>
-                  </div>
-                </>
-              ) : (
-                <p class="context-card-note">Not enough RentCast history for {rentCastDisplayName} yet to chart a trend.</p>
-              )}
-            </div>
-
-            <div class="metric-trend-card">
-              <div class="trend-card-head">
-                <div class="section-kicker">Rental Inventory, {inventoryPoints.length || 12} Mo</div>
-                {inventoryTrendPath && inventoryChangePercent != null && (
-                  <span class={`trend-change-badge ${inventoryChangePercent <= 0 ? 'is-up' : 'is-down'}`}>
-                    {inventoryChangePercent >= 0 ? '▲' : '▼'}{Math.abs(inventoryChangePercent)}%
-                  </span>
-                )}
-              </div>
-              {inventoryTrendPath ? (
-                <>
-                  <svg class="trend-svg" viewBox={`0 0 ${TREND_CHART_W} ${TREND_CHART_H}`} preserveAspectRatio="none" role="img" aria-label={`${rentCastDisplayName} rental inventory trend`}>
-                    <path d={inventoryTrendPath.area} class="trend-area" />
-                    <path d={inventoryTrendPath.line} class="trend-line" />
-                  </svg>
-                  <div class="trend-range-labels">
-                    <span>{formatTrendMonth(inventoryPoints[0].month)}</span>
-                    <span>{Math.round(inventoryPoints[inventoryPoints.length - 1].value).toLocaleString()} listings</span>
-                  </div>
-                </>
-              ) : (
-                <p class="context-card-note">Not enough RentCast history for {rentCastDisplayName} yet to chart a trend.</p>
-              )}
-            </div>
+            <TrendChartCard
+              kicker={`Average Rent, ${rentPoints.length || 12} Mo`}
+              points={rentPoints}
+              formatAxisValue={formatRentAxis}
+              formatLatestValue={formatRentLatest}
+              emptyMessage={`Not enough RentCast history for ${rentCastDisplayName} yet to chart a trend.`}
+            />
+            <TrendChartCard
+              kicker={`Days on Market, ${domPoints.length || 12} Mo`}
+              points={domPoints}
+              formatAxisValue={formatDaysAxis}
+              formatLatestValue={formatDaysLatest}
+              invertColor
+              emptyMessage={`Not enough RentCast history for ${rentCastDisplayName} yet to chart a trend.`}
+            />
+            <TrendChartCard
+              kicker={`Rental Inventory, ${inventoryPoints.length || 12} Mo`}
+              points={inventoryPoints}
+              formatAxisValue={formatInventoryAxis}
+              formatLatestValue={formatInventoryLatest}
+              invertColor
+              emptyMessage={`Not enough RentCast history for ${rentCastDisplayName} yet to chart a trend.`}
+            />
           </div>
 
           {cityContentEntry?.snapshotDetail.map((paragraph) => <p class="snapshot-detail">{paragraph}</p>)}
@@ -672,8 +576,9 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
           {
             cityMarketData && cityMarketData.bedroomLadder.length > 0 && (
               <div class="bedroom-split-grid">
-                <div>
-                  <p class="snapshot-note">Rent by bedroom count, this month&rsquo;s RentCast pull:</p>
+                <div class="context-card">
+                  <p class="context-card-label">Rent by Bedroom Count</p>
+                  <p class="snapshot-note">This month&rsquo;s RentCast pull:</p>
                   <div class="bedroom-ladder">
                     {cityMarketData.bedroomLadder.map((b) => (
                       <div class="bedroom-ladder-row">
@@ -815,6 +720,50 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
       </div>
     </div>
   </section>
+
+  {/* Shared tooltip for every TrendChartCard's point markers on this
+      page (2026-09-22) — one element, positioned per-hover via the
+      script below, rather than one per chart. */}
+  <div class="trend-tooltip" id="trend-tooltip">
+    <span class="trend-tooltip-month"></span>
+    <span class="trend-tooltip-value"></span>
+  </div>
+
+  <script is:inline>
+    (function () {
+      var tooltip = document.getElementById('trend-tooltip');
+      if (!tooltip) return;
+      var monthEl = tooltip.querySelector('.trend-tooltip-month');
+      var valueEl = tooltip.querySelector('.trend-tooltip-value');
+      var activePoint = null;
+
+      function showTooltip(point) {
+        var rect = point.getBoundingClientRect();
+        monthEl.textContent = point.dataset.month || '';
+        valueEl.textContent = point.dataset.value || '';
+        tooltip.style.left = (rect.left + rect.width / 2) + 'px';
+        tooltip.style.top = (rect.top - 6) + 'px';
+        tooltip.classList.add('is-visible');
+        if (activePoint) activePoint.classList.remove('is-active');
+        activePoint = point;
+        point.classList.add('is-active');
+      }
+
+      function hideTooltip() {
+        tooltip.classList.remove('is-visible');
+        if (activePoint) activePoint.classList.remove('is-active');
+        activePoint = null;
+      }
+
+      document.querySelectorAll('.trend-point').forEach(function (point) {
+        point.addEventListener('mouseenter', function () { showTooltip(point); });
+        point.addEventListener('mouseleave', hideTooltip);
+        point.addEventListener('touchstart', function (e) { e.preventDefault(); showTooltip(point); }, { passive: false });
+      });
+
+      document.addEventListener('scroll', hideTooltip, true);
+    })();
+  </script>
 
   <script define:vars={{ mapboxToken: MAPBOX_TOKEN }}>
     (function () {

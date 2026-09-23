@@ -1,0 +1,160 @@
+---
+// Reusable 12-month trend chart card for the rental-analysis report page
+// — added 2026-09-22, replacing the first-pass bare sparkline (a single
+// polyline, no axis labels, no gridlines, no hover detail) after Michael
+// flagged it as looking "less polished than the rest of the page."
+// Extracted into its own component once the same chart started appearing
+// 4 times on one page (the hero's rent trend + the 3-up average
+// rent/days-on-market/inventory row) — identical structure each time,
+// only the metric, its formatting, and the up/down color convention
+// differ.
+//
+// Deliberately does NOT attempt a "this year vs. last year" dual-line
+// comparison (Michael asked) — RentCast's `history` object only carries
+// ~12 trailing months, not two full separate calendar years, confirmed
+// against real pulls. A second line would have to be fabricated, which
+// this project's data doesn't get to do. Real improvement instead: Y-axis
+// gridlines with value labels, X-axis month labels, smooth (Catmull-Rom)
+// curve instead of straight segments, point markers, and a hover tooltip
+// (wired up by the shared script in [token].astro — see .trend-point's
+// data-month/data-value attributes) — all real per-point data, nothing
+// interpolated beyond the curve's own visual smoothing between actual
+// points.
+export interface Props {
+  kicker: string;
+  points: Array<{ month: string; value: number }>;
+  formatAxisValue: (value: number) => string;
+  formatLatestValue: (value: number) => string;
+  /** Default false: rising = green ("is-up"), falling = red. Set true
+   * for metrics where rising is the bad signal (days on market,
+   * inventory) — flips which direction gets the green/red class without
+   * changing the ▲/▼ arrow, which always just reflects the raw sign. */
+  invertColor?: boolean;
+  emptyMessage: string;
+  class?: string;
+}
+
+const { kicker, points, formatAxisValue, formatLatestValue, invertColor = false, emptyMessage, class: className } = Astro.props;
+
+const CHART_W = 340;
+const CHART_H = 170;
+const PAD_LEFT = 46;
+const PAD_RIGHT = 10;
+const PAD_TOP = 14;
+const PAD_BOTTOM = 26;
+const PLOT_W = CHART_W - PAD_LEFT - PAD_RIGHT;
+const PLOT_H = CHART_H - PAD_TOP - PAD_BOTTOM;
+const GRID_LINE_COUNT = 4;
+
+const monthLabelFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '2-digit', timeZone: 'UTC' });
+function formatMonth(month: string): string {
+  const parsed = new Date(`${month}-01T00:00:00Z`);
+  return Number.isNaN(parsed.getTime()) ? month : monthLabelFormatter.format(parsed);
+}
+
+/** Catmull-Rom to cubic-Bezier conversion (tension 1/6, the standard
+ * default) — an interpolating spline that passes exactly through every
+ * real data point, just smoothed between them, rather than an
+ * approximating curve that would drift off the real values. */
+function smoothPath(coords: Array<[number, number]>): string {
+  if (coords.length === 0) return '';
+  if (coords.length === 1) return `M${coords[0][0].toFixed(1)},${coords[0][1].toFixed(1)}`;
+  let d = `M${coords[0][0].toFixed(1)},${coords[0][1].toFixed(1)}`;
+  for (let i = 0; i < coords.length - 1; i++) {
+    const p0 = coords[i - 1] ?? coords[i];
+    const p1 = coords[i];
+    const p2 = coords[i + 1];
+    const p3 = coords[i + 2] ?? p2;
+    const cp1x = p1[0] + (p2[0] - p0[0]) / 6;
+    const cp1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const cp2x = p2[0] - (p3[0] - p1[0]) / 6;
+    const cp2y = p2[1] - (p3[1] - p1[1]) / 6;
+    d += ` C${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+  }
+  return d;
+}
+
+const changePercent = (() => {
+  if (points.length < 2) return null;
+  const first = points[0].value;
+  const last = points[points.length - 1].value;
+  if (first === 0) return null;
+  return Math.round(((last - first) / first) * 1000) / 10;
+})();
+
+const chart = (() => {
+  if (points.length < 2) return null;
+  const values = points.map((p) => p.value);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min || Math.max(1, max * 0.1);
+  const headroom = range * 0.15;
+  const scaleMin = min - headroom;
+  const scaleMax = max + headroom;
+  const scaleRange = scaleMax - scaleMin || 1;
+  const stepX = PLOT_W / (points.length - 1);
+  const toY = (v: number) => PAD_TOP + (1 - (v - scaleMin) / scaleRange) * PLOT_H;
+
+  const chartPoints = points.map((p, i) => ({
+    month: p.month,
+    value: p.value,
+    x: PAD_LEFT + i * stepX,
+    y: toY(p.value),
+  }));
+
+  const coords: Array<[number, number]> = chartPoints.map((p) => [p.x, p.y]);
+  const linePath = smoothPath(coords);
+  const bottomY = PAD_TOP + PLOT_H;
+  const areaPath = `${linePath} L${chartPoints[chartPoints.length - 1].x.toFixed(1)},${bottomY.toFixed(1)} L${chartPoints[0].x.toFixed(1)},${bottomY.toFixed(1)} Z`;
+
+  const gridLines = Array.from({ length: GRID_LINE_COUNT }, (_, i) => {
+    const t = i / (GRID_LINE_COUNT - 1);
+    const value = scaleMax - t * scaleRange;
+    return { y: PAD_TOP + t * PLOT_H, label: formatAxisValue(value) };
+  });
+
+  const labelEvery = Math.max(1, Math.ceil(chartPoints.length / 5));
+  const xLabels = chartPoints
+    .filter((_, i) => i === 0 || i === chartPoints.length - 1 || i % labelEvery === 0)
+    .map((p) => ({ x: p.x, label: formatMonth(p.month) }));
+
+  return { linePath, areaPath, points: chartPoints, gridLines, xLabels };
+})();
+
+const isUp = changePercent != null && changePercent >= 0;
+const badgeClass = invertColor ? (isUp ? 'is-down' : 'is-up') : isUp ? 'is-up' : 'is-down';
+---
+
+<div class={`metric-trend-card${className ? ` ${className}` : ''}`}>
+  <div class="trend-card-head">
+    <div class="section-kicker">{kicker}</div>
+    {chart && changePercent != null && (
+      <span class={`trend-change-badge ${badgeClass}`}>
+        {isUp ? '▲' : '▼'}{Math.abs(changePercent)}%
+      </span>
+    )}
+  </div>
+  {chart ? (
+    <svg class="trend-svg" viewBox={`0 0 ${CHART_W} ${CHART_H}`} role="img" aria-label={kicker}>
+      {chart.gridLines.map((g) => (
+        <>
+          <line x1={PAD_LEFT} y1={g.y} x2={CHART_W - PAD_RIGHT} y2={g.y} class="trend-grid-line" />
+          <text x={PAD_LEFT - 6} y={g.y} class="trend-grid-label" text-anchor="end" dominant-baseline="middle">{g.label}</text>
+        </>
+      ))}
+      <path d={chart.areaPath} class="trend-area" />
+      <path d={chart.linePath} class="trend-line" />
+      {chart.xLabels.map((l) => (
+        <text x={l.x} y={CHART_H - 6} class="trend-x-label" text-anchor="middle">{l.label}</text>
+      ))}
+      {chart.points.map((p) => (
+        <g class="trend-point" data-month={formatMonth(p.month)} data-value={formatLatestValue(p.value)}>
+          <circle cx={p.x} cy={p.y} r="9" class="trend-point-hit" />
+          <circle cx={p.x} cy={p.y} r="3" class="trend-point-dot" />
+        </g>
+      ))}
+    </svg>
+  ) : (
+    <p class="context-card-note">{emptyMessage}</p>
+  )}
+</div>
