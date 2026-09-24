@@ -136,12 +136,7 @@ export const POST: APIRoute = async ({ request }) => {
     longitude: geocoded.longitude,
     beds: intake.propertyBeds,
     baths: intake.propertyBaths,
-    // No longer collected in the 2026-09-22 intake redesign (see
-    // validation.ts's header comment) — comp-selection.ts's size/
-    // furnished filters already tolerate null/false gracefully, so
-    // dropping these from the form doesn't break the estimate, just
-    // loses two optional narrowing signals.
-    sqft: null,
+    sqft: intake.propertySqft,
     property_type: intake.propertyType,
     furnished: false,
     // Condo and multi-family read as "part of a complex" for decision
@@ -329,8 +324,11 @@ export const POST: APIRoute = async ({ request }) => {
     console.warn('[rental-analysis/submit] RESEND_API_KEY not configured — owner/LeadSimple emails skipped.');
   }
 
-  return new Response(JSON.stringify({ token, reportUrl: relativeReportUrl }), {
-    status: 201,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  return new Response(
+    JSON.stringify({ token, reportUrl: relativeReportUrl, redirectUrl: '/rental-analysis/thank-you' }),
+    {
+      status: 201,
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
 };

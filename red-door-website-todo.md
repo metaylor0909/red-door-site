@@ -901,19 +901,18 @@ population once the CMS import exists, not more page-building. Full list:
 
 ### Rental analysis — thank-you/tracking page
 
-- [ ] **Add a thank-you page after rental-analysis form submission, for
-      conversion tracking.** Captured in full, with the reconciliation
-      question against the existing submit-flow design, in
-      `claude/rental-analysis-tool-build.md` under "Still open." Now
-      part of a broader pre-launch analytics/tracking item (Michael,
-      2026-09-22) that also wanted a `/contact` thank-you page (✅ built,
-      see that same 🚨 PRE-LAUNCH BLOCKER entry under "Genuinely open —
-      do these next") and a GTM/GA4 audit (still open). While building
-      the contact one, found the old site's real `/thank-you` and
-      `/success` pages embed a Loom video
-      (`loom.com/embed/8975328b37a64d55bab0c7d16876cbe5`) — Michael
-      confirmed that's this rental-analysis thank-you page's content,
-      not contact's; reuse it when this gets built.
+- ✅ **Thank-you page built (Sep 24).** Reconciliation question from
+      `claude/rental-analysis-tool-build.md`'s "Still open" resolved by
+      Michael (Sep 24): fixed URL AND immediate report delivery, not
+      either/or. On submit, `submit.ts` returns both `reportUrl` (the
+      token'd report) and a fixed `redirectUrl`
+      (`/rental-analysis/thank-you`); the form's own tab navigates to the
+      thank-you page while the report opens in a second tab (opened
+      synchronously before the submit `fetch` so popup blockers don't
+      eat it — see `index.astro`'s `submitForm()`). Thank-you page reuses
+      the old site's real `/thank-you`/`/success` Loom video
+      (`loom.com/embed/8975328b37a64d55bab0c7d16876cbe5`), confirmed by
+      Michael as this flow's content, not contact's.
 
 ### Rental analysis / contact — Turnstile
 

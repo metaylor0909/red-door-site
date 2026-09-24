@@ -34,6 +34,7 @@ export interface RentalAnalysisIntake {
   propertyZipInput: string;
   propertyBeds: number;
   propertyBaths: number;
+  propertySqft: number;
   propertyType: PropertyType;
   propertyStatus: PropertyStatus;
   desiredTimeline: Timeline;
@@ -76,6 +77,12 @@ export function validateIntake(raw: Record<string, string>): ValidationResult {
   const propertyBaths = Number(bathsRaw);
   if (!bathsRaw || Number.isNaN(propertyBaths) || propertyBaths < 0 || propertyBaths > 10) {
     errors.property_baths = 'Select a valid number of bathrooms.';
+  }
+
+  const sqftRaw = readString(raw, 'property_sqft');
+  const propertySqft = Number(sqftRaw);
+  if (!sqftRaw || !Number.isFinite(propertySqft) || propertySqft <= 0 || propertySqft > 50000) {
+    errors.property_sqft = 'Enter a valid square footage.';
   }
 
   const propertyStatusRaw = readString(raw, 'property_status');
@@ -129,6 +136,7 @@ export function validateIntake(raw: Record<string, string>): ValidationResult {
       propertyZipInput,
       propertyBeds,
       propertyBaths,
+      propertySqft,
       propertyType: propertyType as PropertyType,
       propertyStatus: propertyStatus as PropertyStatus,
       desiredTimeline: desiredTimeline as Timeline,

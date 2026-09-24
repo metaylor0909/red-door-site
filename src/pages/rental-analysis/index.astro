@@ -13,14 +13,16 @@
 //     no percent text anymore, though the fill bar itself is still
 //     percent-width under the hood.
 //   - 4 steps collapsed to 3: property type moved into step 1 (with the
-//     address), and step 2 dropped square footage + the furnished
-//     checkbox (neither is a hard requirement for the estimate —
-//     comp-selection.ts already tolerates null sqft / defaults
-//     furnished false, confirmed before removing them) in favor of four
-//     new fields — property status, desired timeline, and current/
-//     expected rent — per Michael's screenshots. None of these three
-//     feed the estimate logic, only the owner/LeadSimple emails (see
-//     validation.ts's header comment).
+//     address), and step 2 dropped the furnished checkbox (not a hard
+//     requirement for the estimate — comp-selection.ts defaults
+//     furnished false) in favor of four new fields — property status,
+//     desired timeline, and current/expected rent — per Michael's
+//     screenshots. None of these three feed the estimate logic, only
+//     the owner/LeadSimple emails (see validation.ts's header comment).
+//     Square footage was also dropped in this pass, then reinstated
+//     2026-09-24 (Michael noticed the form never asked for it) — it
+//     DOES feed the estimate: comp-selection.ts narrows comps to
+//     within +/-20% of subject sqft when both are known.
 //   - Address is now three fields (street/city/zip) instead of one
 //     freeform address field + an optional unit field; unit is dropped
 //     entirely, not carried over.
@@ -34,6 +36,17 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+// Address autocomplete — reuses the same Google Cloud Maps Platform
+// project as GOOGLE_STREETVIEW_API_KEY (street-view.ts), not a new
+// vendor, but a DIFFERENT key: that one is server-side-only and proxied,
+// this one runs in the browser as the visitor types and so must be its
+// own key, restricted by HTTP referrer to this site's domains — see
+// street-view.ts's header comment for why keys here are split by
+// exposure surface, not shared. Same graceful-degrade pattern as
+// Turnstile/Resend/RentCast elsewhere in this tool: if unset, the script
+// tag below never loads and the three address fields stay plain manual
+// inputs exactly as before this was added.
+const googlePlacesApiKey = import.meta.env.PUBLIC_GOOGLE_PLACES_API_KEY;
 ---
 
 <BaseLayout
@@ -77,7 +90,13 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           <h3>Where is the rental property?</h3>
           <p class="step-subtext">The address helps us find the most relevant nearby rental comparisons.</p>
           <label>Street address
-            <input name="property_street" autocomplete="address-line1" placeholder="123 Main Street" required />
+            <input
+              name="property_street"
+              autocomplete="address-line1"
+              placeholder="123 Main Street"
+              data-address-autocomplete
+              required
+            />
           </label>
           <div class="field-grid">
             <label>City
@@ -127,6 +146,9 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
               </select>
             </label>
           </div>
+          <label>Square footage
+            <input name="property_sqft" type="number" min="1" inputmode="numeric" placeholder="1500" required />
+          </label>
           <label>Current property status
             <select name="property_status" required>
               <option value="">Choose the closest option</option>
@@ -197,6 +219,67 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
   </section>
 
   {turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer slot="head" />}
+
+  {
+    googlePlacesApiKey && (
+      <script
+        is:inline
+        src={`https://maps.googleapis.com/maps/api/js?key=${googlePlacesApiKey}&libraries=places&callback=initAddressAutocomplete&loading=async`}
+        async
+        defer
+        slot="head"
+      />
+    )
+  }
+
+  {
+    googlePlacesApiKey && (
+      <script is:inline>
+        // Registered before the Google script tag can possibly finish
+        // loading, so the callback is always defined by the time it's
+        // needed — see index.astro's header comment on why this key is
+        // separate from street-view.ts's server-side one.
+        window.initAddressAutocomplete = function () {
+          const streetInput = document.querySelector('[data-address-autocomplete]');
+          const cityInput = document.querySelector('[name="property_city_input"]');
+          const zipInput = document.querySelector('[name="property_zip_input"]');
+          if (!streetInput || !window.google?.maps?.places) return;
+
+          const autocomplete = new window.google.maps.places.Autocomplete(streetInput, {
+            types: ['address'],
+            componentRestrictions: { country: 'us' },
+            fields: ['address_components'],
+          });
+
+          autocomplete.addListener('place_changed', function () {
+            const place = autocomplete.getPlace();
+            const components = place.address_components || [];
+            const get = (type) => components.find((c) => c.types.includes(type))?.long_name || '';
+            const getShort = (type) => components.find((c) => c.types.includes(type))?.short_name || '';
+
+            const streetNumber = get('street_number');
+            const route = get('route');
+            if (streetNumber || route) streetInput.value = [streetNumber, route].filter(Boolean).join(' ');
+
+            // Falls back through sublocality/township level names — Google
+            // doesn't always populate `locality` for unincorporated areas
+            // and townships common in the Indianapolis metro.
+            const city = get('locality') || get('sublocality') || get('administrative_area_level_3');
+            if (city && cityInput) cityInput.value = city;
+
+            const zip = get('postal_code');
+            if (zip && zipInput) zipInput.value = zip;
+
+            // Autocomplete fills these programmatically, not via user
+            // keystrokes, so the 'input' event that clears validation
+            // styling/errors on typing never fires on its own — dispatch
+            // it so a field that was previously flagged invalid clears.
+            [streetInput, cityInput, zipInput].forEach((el) => el && el.dispatchEvent(new Event('input', { bubbles: true })));
+          });
+        };
+      </script>
+    )
+  }
 
   <script>
     (function () {
@@ -269,6 +352,14 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         nextButton.textContent = 'Submitting…';
         error.textContent = '';
 
+        // Opened synchronously, still inside the click handler's user-
+        // gesture window, so popup blockers allow it — its destination is
+        // filled in once the fetch below resolves. Opening only after the
+        // await (a network round trip) would lose that user-gesture
+        // standing and get silently blocked in most browsers, especially
+        // Safari.
+        const reportWindow = window.open('about:blank', '_blank');
+
         try {
           const formData = new FormData(form!);
 
@@ -279,9 +370,28 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
           const data = await response.json().catch(() => ({}));
 
           if (response.ok && data.reportUrl) {
-            window.location.href = data.reportUrl;
+            // Report opens in its own tab so the owner keeps this page
+            // (and the form's state) around; the form's own tab moves to
+            // a fixed, trackable thank-you URL — see
+            // red-door-website-todo.md's "Rental analysis — thank-you/
+            // tracking page" for why a fixed URL matters here (a GTM/GA4
+            // URL-destination conversion goal needs one, and a per-
+            // submission report URL can't serve as that goal).
+            if (reportWindow) {
+              reportWindow.location.href = data.reportUrl;
+              window.location.href = data.redirectUrl || '/rental-analysis/thank-you';
+            } else {
+              // Popup blocked despite the synchronous open above (rare,
+              // but possible with strict blocker settings) — fall back to
+              // sending the owner straight to their report so the
+              // submission still delivers value. They also get the report
+              // link by email regardless (see submit.ts's Resend step).
+              window.location.href = data.reportUrl;
+            }
             return;
           }
+
+          reportWindow?.close();
 
           if (response.status === 422 && data.fieldErrors) {
             applyServerFieldErrors(data.fieldErrors);
@@ -289,6 +399,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
             error.textContent = data.error || 'Something went wrong. Please try again.';
           }
         } catch {
+          reportWindow?.close();
           error.textContent = 'Something went wrong. Please check your connection and try again.';
         } finally {
           submitting = false;

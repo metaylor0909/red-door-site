@@ -1,0 +1,68 @@
+---
+// /rental-analysis/thank-you — fixed-URL landing page the form's own tab
+// moves to after a successful submission, so GTM/GA4 can track "rental
+// analysis submitted" as a plain URL-destination goal. The report itself
+// opens in a separate tab at the same time (see index.astro's
+// submitForm()) — decided 2026-09-24 (Michael) as the reconciliation for
+// the open question in claude/rental-analysis-tool-build.md's "Thank-you/
+// confirmation page for conversion tracking" note: a fixed tracking URL
+// AND immediate report delivery, no extra click either way.
+//
+// Loom video is the old site's real /thank-you and /success confirmation
+// page content, embedded here per Michael's Sep 22 confirmation that it
+// belongs to the rental-analysis flow (not contact's — see
+// contact-thank-you.astro's header comment, which has no video for that
+// reason).
+//
+// noindex: reached only by form redirect, no organic search value, and
+// indexing it risks it surfacing for people who never actually submitted
+// anything.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const pageTitle = 'Thanks for Requesting Your Rental Analysis | Red Door Property Management';
+const pageDescription = 'Your rental analysis request has been submitted to Red Door Property Management.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/rental-analysis/thank-you">
+  <Fragment slot="head">
+    <meta name="robots" content="noindex, nofollow" />
+  </Fragment>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-kicker">Request Received</span>
+      <h1>Thanks — Your Rental Analysis Is On Its Way</h1>
+      <p class="lead">
+        Your personalized report just opened in a new tab. We've also emailed a copy to the address
+        you provided, and a local rental specialist will follow up if there's anything worth
+        discussing further.
+      </p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="criteria-content">
+      <div class="reveal" style="max-width: 720px; margin: 0 auto 40px;">
+        <div style="position: relative; padding-top: 56.25%; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);">
+          <iframe
+            src="https://www.loom.com/embed/8975328b37a64d55bab0c7d16876cbe5"
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+          ></iframe>
+        </div>
+      </div>
+
+      <div class="criteria-cta reveal">
+        <h2>While You're Here</h2>
+        <p>Browse available homes, schedule a call, or give us a ring directly.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="/indianapolis-homes-for-rent">Browse Homes for Rent</a>
+          <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+          <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
