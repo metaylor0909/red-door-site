@@ -467,10 +467,21 @@ Judgment calls / open items carried forward from this build:
       and delete `public/_headers`' `X-Robots-Tag` block (keep the
       Cloudflare-adapter-managed `/_astro/*` Cache-Control block above
       it).
-- [ ] **🚨 PRE-LAUNCH BLOCKER: analytics/tracking audit — tagging, GTM
-      continuity, and conversion tracking, before going live.** Flagged
-      by Michael 2026-09-22; nothing here has been researched or built
-      yet. Three distinct pieces, all currently open:
+- ✅ **PRE-LAUNCH BLOCKER: analytics/tracking audit — tagging, GTM
+      continuity, and conversion tracking — all three pieces resolved
+      (Sep 22–24).** Flagged by Michael 2026-09-22. One remaining loose
+      end, not blocking: `contact_form_submit` and `rental_analysis_submit`
+      (the two new GA4 events below) still need to be starred as key
+      events in the GA4 property's Admin -> Events -> Recent events tab
+      once they show up there (new custom event names can take several
+      hours to appear in that list even though both are confirmed firing
+      live already — checked via Realtime reports in the meantime).
+      **Do NOT unstar the old site's `Contact_Form_Submit` /
+      `Free_Analysis_Form_Submit` key events before the real DNS
+      cutover** — the old PMW site is still live in production right now
+      and those are its real, currently-active conversion events; they'll
+      naturally stop generating data on their own once the old URLs stop
+      getting hit post-launch, no action needed.
       - ✅ **`/contact` and `/contact-thank-you` built for real (Sep 22).**
         `/contact` didn't exist as a real Astro page at all before this
         (confirmed via a live 404) — built from `contact.html`, wired to
