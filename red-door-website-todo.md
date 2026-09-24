@@ -504,23 +504,24 @@ Judgment calls / open items carried forward from this build:
         (`loom.com/embed/8975328b37a64d55bab0c7d16876cbe5`); Michael
         confirmed that's the rental-analysis one, not contact's — worth
         reusing when that item gets built.
-      - **Audit the old site's actual Google Tag Manager container
-        before reinstalling it — still open, and turned out NOT to be a
-        classic GTM container at all.** Checked live 2026-09-24 (Michael,
-        via the Google Tag dashboard): there is no separate `GTM-XXXXXXX`
+      - ✅ **Audit the old site's actual Google Tag Manager container —
+        resolved/closed (Sep 24), turned out NOT to be a classic GTM
+        container at all.** Checked live 2026-09-24 (Michael, via the
+        Google Tag dashboard): there is no separate `GTM-XXXXXXX`
         container here — the old site runs a direct Google tag (gtag.js),
         whose dashboard literally reads "the global site tag (gtag.js) is
         now the Google tag" (Google's newer unified product name for
         this). Its "Google tag" has two linked destination IDs:
         `G-3Q7WXVHZF6` (the GA4 property, see below — now reused on the
-        new site) and `GT-T9LQP8L7`, a second linked tag Michael couldn't
-        identify with confidence — his best guess is the "Paperclip"
-        vendor integration he flagged earlier, but this is NOT confirmed.
-        **Still need to find out what `GT-T9LQP8L7` actually is and
-        whether the new site needs it too** before launch, so nothing
-        silently stops firing — this replaces the original "audit the
-        GTM container's tags" framing, since there's no container to
-        export, just this one linked tag to identify.
+        new site) and `GT-T9LQP8L7`, a second linked tag. Change history
+        on the container shows the whole thing was configured by
+        `semsitestrategics@gmail.com` — a third-party agency, not anyone
+        at Red Door, which is why nobody recognized it. Michael's
+        decision (Sep 24): assume `GT-T9LQP8L7` is a Google Ads
+        conversion/remarketing tag (the "GT-" prefix's most common use)
+        and **do not port it to the new site** — Red Door isn't running
+        Google Ads and has no near-term plan to, so not worth chasing
+        down further. Revisit only if Google Ads usage actually starts.
       - ✅ **GA4 tracking added to the new site (Sep 24).** Reuses the old
         site's exact measurement ID (`G-3Q7WXVHZF6`, confirmed live via
         the same Google Tag dashboard) rather than a new property, for
