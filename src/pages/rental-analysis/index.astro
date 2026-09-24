@@ -89,7 +89,7 @@ const googlePlacesApiKey = import.meta.env.PUBLIC_GOOGLE_PLACES_API_KEY;
         <div class="form-step is-active" data-step="0">
           <h3>Where is the rental property?</h3>
           <p class="step-subtext">The address helps us find the most relevant nearby rental comparisons.</p>
-          <label>Street address
+          <label class="address-autocomplete-field">Street address
             <input
               name="property_street"
               autocomplete="address-line1"
@@ -239,23 +239,51 @@ const googlePlacesApiKey = import.meta.env.PUBLIC_GOOGLE_PLACES_API_KEY;
         // loading, so the callback is always defined by the time it's
         // needed — see index.astro's header comment on why this key is
         // separate from street-view.ts's server-side one.
-        window.initAddressAutocomplete = function () {
+        //
+        // Built against the headless "Places API (New)" JS library
+        // (AutocompleteSuggestion.fetchAutocompleteSuggestions), not the
+        // google.maps.places.Autocomplete widget or the newer
+        // PlaceAutocompleteElement web component — found live 2026-09-24
+        // that only "Places API (New)" is enabled on this Google Cloud
+        // project (console: "You're calling a legacy API, which is not
+        // enabled for your project"), and the widget-based options both
+        // render their own opaque UI that's hard to visually match to
+        // this form's existing custom-styled inputs. This keeps the real
+        // <input name="property_street"> exactly as it was — same
+        // FormData binding, same native `required` validation — and just
+        // adds a custom-styled suggestion dropdown under it.
+        window.initAddressAutocomplete = async function () {
+          if (!window.google?.maps?.importLibrary) return;
           const streetInput = document.querySelector('[data-address-autocomplete]');
           const cityInput = document.querySelector('[name="property_city_input"]');
           const zipInput = document.querySelector('[name="property_zip_input"]');
-          if (!streetInput || !window.google?.maps?.places) return;
+          const field = streetInput?.closest('.address-autocomplete-field');
+          if (!streetInput || !field) return;
 
-          const autocomplete = new window.google.maps.places.Autocomplete(streetInput, {
-            types: ['address'],
-            componentRestrictions: { country: 'us' },
-            fields: ['address_components'],
-          });
+          const places = await window.google.maps.importLibrary('places');
+          const { AutocompleteSessionToken, AutocompleteSuggestion } = places;
 
-          autocomplete.addListener('place_changed', function () {
-            const place = autocomplete.getPlace();
-            const components = place.address_components || [];
-            const get = (type) => components.find((c) => c.types.includes(type))?.long_name || '';
-            const getShort = (type) => components.find((c) => c.types.includes(type))?.short_name || '';
+          const list = document.createElement('div');
+          list.className = 'address-autocomplete-list';
+          field.appendChild(list);
+
+          let sessionToken = new AutocompleteSessionToken();
+          let debounceTimer;
+          let requestId = 0;
+          let suppressNextInput = false;
+
+          function hideList() {
+            list.innerHTML = '';
+            list.style.display = 'none';
+          }
+
+          async function selectSuggestion(suggestion) {
+            const place = suggestion.placePrediction.toPlace();
+            await place.fetchFields({ fields: ['addressComponents'] });
+            const components = place.addressComponents || [];
+            // Places API (New) uses longText/shortText, not the legacy
+            // API's long_name/short_name.
+            const get = (type) => components.find((c) => c.types.includes(type))?.longText || '';
 
             const streetNumber = get('street_number');
             const route = get('route');
@@ -270,11 +298,67 @@ const googlePlacesApiKey = import.meta.env.PUBLIC_GOOGLE_PLACES_API_KEY;
             const zip = get('postal_code');
             if (zip && zipInput) zipInput.value = zip;
 
-            // Autocomplete fills these programmatically, not via user
-            // keystrokes, so the 'input' event that clears validation
-            // styling/errors on typing never fires on its own — dispatch
-            // it so a field that was previously flagged invalid clears.
+            // Suppress just the next streetInput 'input' handling below —
+            // this dispatch is only to clear the shared aria-invalid/
+            // error-text listener in the outer form script, not to
+            // re-trigger a fresh suggestion search against the value we
+            // just set programmatically.
+            suppressNextInput = true;
             [streetInput, cityInput, zipInput].forEach((el) => el && el.dispatchEvent(new Event('input', { bubbles: true })));
+            hideList();
+            // A fresh session starts after a completed selection — groups
+            // the keystrokes leading up to one selection into a single
+            // billed session rather than one per keystroke, per Google's
+            // own session-token guidance.
+            sessionToken = new AutocompleteSessionToken();
+          }
+
+          streetInput.addEventListener('input', () => {
+            if (suppressNextInput) {
+              suppressNextInput = false;
+              return;
+            }
+            clearTimeout(debounceTimer);
+            const query = streetInput.value.trim();
+            if (query.length < 5) {
+              hideList();
+              return;
+            }
+            const thisRequestId = ++requestId;
+            debounceTimer = setTimeout(async () => {
+              let suggestions;
+              try {
+                ({ suggestions } = await AutocompleteSuggestion.fetchAutocompleteSuggestions({
+                  input: query,
+                  includedRegionCodes: ['us'],
+                  sessionToken,
+                }));
+              } catch (err) {
+                console.error('[rental-analysis] Address autocomplete request failed:', err);
+                return;
+              }
+              // A slower earlier request resolving after a newer one would
+              // otherwise clobber the list with stale results.
+              if (thisRequestId !== requestId) return;
+              if (!suggestions || suggestions.length === 0) {
+                hideList();
+                return;
+              }
+              list.innerHTML = '';
+              suggestions.slice(0, 5).forEach((suggestion) => {
+                const item = document.createElement('button');
+                item.type = 'button';
+                item.className = 'address-autocomplete-item';
+                item.textContent = suggestion.placePrediction.text.text;
+                item.addEventListener('click', () => selectSuggestion(suggestion));
+                list.appendChild(item);
+              });
+              list.style.display = 'block';
+            }, 250);
+          });
+
+          document.addEventListener('click', (event) => {
+            if (!field.contains(event.target)) hideList();
           });
         };
       </script>

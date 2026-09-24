@@ -1496,6 +1496,52 @@
       gap: 14px;
     }
 
+    /* Rental-analysis intake form's street-address autocomplete (Places
+       API (New) — see index.astro's header comment on the field). A
+       custom dropdown rather than Google's own widget/web-component, so
+       it can match this form's existing input styling exactly. */
+    .address-autocomplete-field {
+      position: relative;
+    }
+
+    .address-autocomplete-list {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      margin-top: 4px;
+      background: var(--white);
+      border: 1px solid #cfd3d9;
+      border-radius: 6px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .address-autocomplete-item {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 500;
+      font-size: .92rem;
+      color: var(--charcoal);
+      background: var(--white);
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+    }
+
+    .address-autocomplete-item:last-child {
+      border-bottom: 0;
+    }
+
+    .address-autocomplete-item:hover,
+    .address-autocomplete-item:focus-visible {
+      background: var(--brand-tint);
+    }
+
     .error-text {
       min-height: 22px;
       margin: 0;
