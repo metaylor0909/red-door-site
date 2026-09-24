@@ -427,6 +427,28 @@ Judgment calls / open items carried forward from this build:
 
 ## Genuinely open — do these next
 
+- [ ] **Pre-launch discussion: interlinking between the property-management/
+      homes-for-rent pages and the market-reports pages is thin to
+      nonexistent.** Flagged by Michael (2026-09-24). Confirmed by grep:
+      zero links from any `[city]-property-management.astro` /
+      `indianapolis-property-management.astro` /
+      `[city]-homes-for-rent.astro` / `indianapolis-homes-for-rent.astro`
+      page to any `-market-reports` page, in either direction except one —
+      `[market]-market-reports.astro` links back to
+      `/indianapolis-property-management` (or `market.propertyManagementHref`)
+      via a single "See How We Manage Here" CTA button, and links to
+      nothing on the homes-for-rent side at all. Matters because
+      CLAUDE.md's own writing-style section calls out that property-
+      management and market-reports pages deliberately target different
+      search intent for the same city (transactional vs. informational) —
+      without real interlinking between them, a visitor who lands on one
+      intent has no path to the other, and neither page type gets any
+      internal-link equity from the other. Needs a real decision on where
+      the links go (e.g., a "Fishers rental market data" link somewhere on
+      `/fishers-property-management` and `/fishers-homes-for-rent`, and a
+      reciprocal "Manage your Fishers rental" / "See homes for rent in
+      Fishers" link from `/fishers-market-reports`) before launch, not
+      just a single CTA button.
 - [ ] **🚨 PRE-LAUNCH BLOCKER: remove the temporary sitewide noindex
       before (or immediately at) DNS cutover to the real domain.**
       Added 2026-09-21 alongside `public/robots.txt` (`Disallow: /`) and
