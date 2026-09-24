@@ -65,4 +65,17 @@ const pageDescription = 'Your rental analysis request has been submitted to Red 
       </div>
     </div>
   </div>
+
+  <script is:inline>
+    // Fires once, on page load — this page is reached only via a real
+    // rental-analysis form submit (see RentalAnalysisForm.astro's
+    // submitForm()), never linked to directly, so "this page loaded" IS
+    // the conversion event. GA4 event, not a URL-pattern-matched one —
+    // set up 2026-09-24 alongside BaseLayout.astro's GA4 install; mark
+    // it a conversion in the GA4 property's Admin -> Events once it's
+    // shown up there at least once (see red-door-website-todo.md).
+    if (typeof gtag === 'function') {
+      gtag('event', 'rental_analysis_submit');
+    }
+  </script>
 </BaseLayout>
