@@ -29,6 +29,7 @@
 // Calendly: the widget.js script tag is placed once, directly above the
 // .calendly-section, so it loads before the inline embed div renders.
 import BaseLayout from '../layouts/BaseLayout.astro';
+import RentalAnalysisForm from '../components/RentalAnalysisForm.astro';
 
 const pageTitle = 'Property Management Pricing | Red Door Property Management';
 const pageDescription =
@@ -653,8 +654,8 @@ const pageDescription =
 
   {/* Replaces the source's old placeholder 6-step form (data-analysis-form —
       same stale pre-real-tool mockup pattern as every other page built this
-      session) with a condensed pitch pointing at /rental-analysis, keeping
-      the kicker/heading/lead-paragraph/benefit-list copy. */}
+      session) with the real form — see RentalAnalysisForm.astro's header
+      comment. Kept the kicker/heading/lead-paragraph/benefit-list copy. */}
   <section class="section-soft" id="rental-analysis">
     <div class="container analysis-grid">
       <div class="reveal">
@@ -666,10 +667,9 @@ const pageDescription =
           <li><span>2</span>Identify improvements that may strengthen rent and tenant appeal.</li>
           <li><span>3</span>See whether Red Door's management approach fits your goals.</li>
         </ul>
-        <div class="journey-cta reveal">
-          <a class="btn btn-primary" href="/rental-analysis">Get Your Free Rental Analysis</a>
-        </div>
       </div>
+
+      <RentalAnalysisForm />
     </div>
   </section>
 

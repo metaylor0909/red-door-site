@@ -19,11 +19,15 @@
 // management/market-snapshot.ts and the homes-for-rent pages' own
 // earlier build-time D1 verification).
 //
-// Same rental-analysis section fix as the homepage and the 18 simple
-// pages: the mockup's old placeholder 6-step form (same stale pre-real-
-// tool pattern) is replaced with a condensed pitch + CTA to
-// /rental-analysis. Every other same-page #rental-analysis anchor on
-// this page (hero CTA, final-cta) points there too.
+// Same rental-analysis section as the homepage and the 18 simple pages:
+// the mockup's old placeholder 6-step form (same stale pre-real-tool
+// pattern) is replaced with the real form — see
+// src/components/RentalAnalysisForm.astro's header comment. Originally
+// (this page's first build) a condensed pitch + CTA linking to
+// /rental-analysis instead; Michael asked 2026-09-24 for the real form
+// to render inline here too. Every other same-page #rental-analysis
+// anchor on this page (hero CTA, final-cta) still points to the
+// standalone /rental-analysis page.
 import { env } from 'cloudflare:workers';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProofStrip from '../components/ProofStrip.astro';
@@ -31,6 +35,7 @@ import PropertyManagementJourneyCarousel from '../components/PropertyManagementJ
 import ReviewsCarousel from '../components/ReviewsCarousel.astro';
 import AreasServedGrid from '../components/AreasServedGrid.astro';
 import LandlordLibrary from '../components/LandlordLibrary.astro';
+import RentalAnalysisForm from '../components/RentalAnalysisForm.astro';
 import { loadMarketSnapshot } from '../lib/property-management/market-snapshot';
 import { PILLAR_LANDLORD_LIBRARY_POSTS } from '../lib/property-management/pillar-landlord-library-posts';
 
@@ -345,8 +350,8 @@ const faqs = [
   <ReviewsCarousel />
 
   {/* Replaces the mockup's old placeholder 6-step form (same stale
-      pre-real-tool pattern as the homepage's — see that page's own
-      module comment) with a condensed pitch pointing at /rental-analysis. */}
+      pre-real-tool pattern as the homepage's) with the real form — see
+      RentalAnalysisForm.astro's header comment. */}
   <section class="section-soft" id="rental-analysis">
     <div class="container analysis-grid">
       <div class="reveal">
@@ -358,10 +363,9 @@ const faqs = [
           <li><span>2</span>Identify improvements that may strengthen rent and tenant appeal.</li>
           <li><span>3</span>See whether Red Door's management approach fits your goals.</li>
         </ul>
-        <div class="journey-cta reveal">
-          <a class="btn btn-primary" href="/rental-analysis">Get Your Free Rental Analysis</a>
-        </div>
       </div>
+
+      <RentalAnalysisForm />
     </div>
   </section>
 

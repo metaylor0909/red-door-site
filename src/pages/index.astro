@@ -22,14 +22,17 @@
 // copy exactly (see each component's own header comment for why nothing
 // is silently derived from a city name).
 //
-// One deliberate departure from a pixel-for-pixel port (unchanged from
-// the original build): index.html's #rental-analysis section (old lines
-// ~2675-2786) was a placeholder 6-step form mockup that predates the
-// real, already-built rental-analysis tool at /rental-analysis (src/
-// pages/rental-analysis/index.astro). Kept that section's kicker/heading/
-// lead/benefit-list copy, dropped the form, linked to /rental-analysis
-// instead. Every other same-page #rental-analysis anchor on this page
-// (hero CTA, final-cta) points to /rental-analysis too.
+// index.html's #rental-analysis section (old lines ~2675-2786) was a
+// placeholder 6-step form mockup that predates the real, already-built
+// rental-analysis tool. Kept that section's kicker/heading/lead/benefit-
+// list copy; the form itself is the real one, via <RentalAnalysisForm />
+// (src/components/RentalAnalysisForm.astro) — this section originally
+// (2026-09-21) just linked to /rental-analysis instead of embedding it,
+// to avoid duplicating the form's logic across pages, but Michael asked
+// 2026-09-24 for the real form to actually render here, so it was
+// extracted into a shared component instead of staying link-only. Every
+// other same-page #rental-analysis anchor on this page (hero CTA,
+// final-cta) still points to the standalone /rental-analysis page.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProofStrip from '../components/ProofStrip.astro';
 import JourneyProcess from '../components/JourneyProcess.astro';
@@ -38,6 +41,7 @@ import GuaranteeSection from '../components/GuaranteeSection.astro';
 import ReviewsCarousel from '../components/ReviewsCarousel.astro';
 import AreasServedGrid from '../components/AreasServedGrid.astro';
 import LandlordLibrary from '../components/LandlordLibrary.astro';
+import RentalAnalysisForm from '../components/RentalAnalysisForm.astro';
 
 const pageTitle = 'Indianapolis Property Management | Red Door Property Management';
 const pageDescription =
@@ -147,10 +151,9 @@ const jsonLd = {
           <li><span>2</span>Identify improvements that may strengthen rent and tenant appeal.</li>
           <li><span>3</span>See whether Red Door's management approach fits your goals.</li>
         </ul>
-        <div class="journey-cta reveal">
-          <a class="btn btn-primary" href="/rental-analysis">Get Your Free Rental Analysis</a>
-        </div>
       </div>
+
+      <RentalAnalysisForm />
     </div>
   </section>
 
