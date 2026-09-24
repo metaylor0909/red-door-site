@@ -505,26 +505,15 @@ Judgment calls / open items carried forward from this build:
         to Search Console (see below) is needed for tracking purposes
         specifically, vs. that property's existing SEO/crawl-data
         purpose.
-- [ ] **Confirm whether the Guaranteed Lease Program still exists.** The
-      About page (`about.html`, migrated as-is Sep 18) mentions "a very
-      unique Guaranteed Lease Program" for owners moving up without
-      selling, but there is no corresponding page on the live site
-      anymore — `/guaranteed-lease-program` and `/guaranteed-lease` both
-      404, and it doesn't appear in the live site's own `/sitemap`.
-      Confirmed stale per Michael (Sep 18); skipped rather than building
-      a page with no real source content. If the program still exists,
-      get real content and build the page; if it's been discontinued,
-      the About page's mention should be removed too.
-- [ ] **Build `tenant-verification.html` and `employment-verification.html`.**
-      The live pages just embed a single Adobe/EchoSign eSign widget iframe
-      each (`secure.echosign.com/public/widget?f=...`), tied to a specific
-      document instance rather than a generic reusable form — not something
-      to port as static mockup content. Deferred per Michael's decision
-      (Sep 18) rather than embed a possibly broken/session-specific iframe.
-      Needs a real decision on what these pages should actually do (request
-      a fresh signable document per visit? link out to AppFolio instead?)
-      before building. Not currently linked from `tenants.html` either, to
-      avoid a dead link.
+- ✅ **Guaranteed Lease Program — confirmed discontinued (Sep 24).** Michael
+      confirmed the program no longer exists. Removed the stale mention
+      from `about.html` (the sentence offering it to owners moving up
+      without selling); no page was ever built for it and none is needed.
+- ✅ **`tenant-verification.html` / `employment-verification.html` — confirmed
+      not needed (Sep 24).** Michael confirmed this is handled through the
+      application process instead (see `application-criteria.astro` /
+      Findigs). Not building these pages; the live pages' EchoSign iframe
+      embeds don't need porting.
 - [ ] **Build `self-manage-vs-pm-calculator.html`** — a standalone, fuller
       version of the "What does self-management or bad management really
       cost you?" widget now embedded on `pricing.html` (Sep 18 rebuild).
