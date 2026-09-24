@@ -505,28 +505,35 @@ Judgment calls / open items carried forward from this build:
         confirmed that's the rental-analysis one, not contact's — worth
         reusing when that item gets built.
       - **Audit the old site's actual Google Tag Manager container
-        before reinstalling it.** CLAUDE.md and the old launch
-        checklist below both already say "reuse the same GTM container
-        ID so historical data stays continuous," but that's only the
-        container shell — nobody has actually looked inside it yet at
-        what tags/triggers/variables it holds. Michael specifically
-        flagged one he half-remembers, possibly tied to a "Paperclip"
-        vendor integration (unconfirmed name, not found anywhere in
-        this repo or in `claude/` research docs — needs Michael to
-        check the GTM dashboard directly, since nobody else has access).
-        Needs a full export/review of the container's tags before
-        launch so nothing silently stops firing.
-      - **Add Google Analytics (GA4) tracking to the new site.** No GA4
-        measurement ID or gtag.js/GTM-tag wiring exists anywhere in this
-        repo yet — need to confirm whether the old site's GA4 property
-        should be reused (continuity, matching the GTM container
-        decision) or a new one created, then wire it in (likely as a
-        GTM tag, once the container audit above is done, rather than a
-        second separate snippet). Also worth confirming during the same
-        pass whether anything beyond the domain property already added
-        to Search Console (see below) is needed for tracking purposes
-        specifically, vs. that property's existing SEO/crawl-data
-        purpose.
+        before reinstalling it — still open, and turned out NOT to be a
+        classic GTM container at all.** Checked live 2026-09-24 (Michael,
+        via the Google Tag dashboard): there is no separate `GTM-XXXXXXX`
+        container here — the old site runs a direct Google tag (gtag.js),
+        whose dashboard literally reads "the global site tag (gtag.js) is
+        now the Google tag" (Google's newer unified product name for
+        this). Its "Google tag" has two linked destination IDs:
+        `G-3Q7WXVHZF6` (the GA4 property, see below — now reused on the
+        new site) and `GT-T9LQP8L7`, a second linked tag Michael couldn't
+        identify with confidence — his best guess is the "Paperclip"
+        vendor integration he flagged earlier, but this is NOT confirmed.
+        **Still need to find out what `GT-T9LQP8L7` actually is and
+        whether the new site needs it too** before launch, so nothing
+        silently stops firing — this replaces the original "audit the
+        GTM container's tags" framing, since there's no container to
+        export, just this one linked tag to identify.
+      - ✅ **GA4 tracking added to the new site (Sep 24).** Reuses the old
+        site's exact measurement ID (`G-3Q7WXVHZF6`, confirmed live via
+        the same Google Tag dashboard) rather than a new property, for
+        continuity. Installed as Google's own direct gtag.js snippet
+        (not nested in a GTM container — see above, there isn't one) in
+        `src/layouts/BaseLayout.astro`, gated behind
+        `PUBLIC_GA4_MEASUREMENT_ID` (same env-var pattern as
+        `PUBLIC_TURNSTILE_SITE_KEY`). Verified live: a real hit reached
+        `analytics.google.com/g/collect` with `tid=G-3Q7WXVHZF6`. Also
+        worth confirming, separately, whether anything beyond the domain
+        property already added to Search Console (see below) is needed
+        for tracking purposes specifically, vs. that property's existing
+        SEO/crawl-data purpose.
 - ✅ **Guaranteed Lease Program — confirmed discontinued (Sep 24).** Michael
       confirmed the program no longer exists. Removed the stale mention
       from `about.html` (the sentence offering it to owners moving up

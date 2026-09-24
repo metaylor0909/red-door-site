@@ -20,11 +20,45 @@ const {
 } = Astro.props;
 
 const canonicalUrl = `https://www.reddoorrents.com${path}`;
+
+// GA4, installed 2026-09-24 — reuses the exact measurement ID already
+// live on the old PMW site (confirmed directly from its own Google tag
+// dashboard, "Installation instructions" panel) rather than creating a
+// new property, so historical data stays continuous — same reasoning as
+// CLAUDE.md's GTM-container-reuse decision, except there turned out to
+// be no separate GTM-XXXXXXX container here to reuse: the old site's
+// setup is a direct gtag.js Google tag, not a classic GTM container (its
+// dashboard literally reads "the global site tag (gtag.js) is now the
+// Google tag" — Google's newer unified product). The GTM container audit
+// itself (tags/triggers, including a half-remembered "Paperclip" vendor
+// tag Michael flagged) is still a separate, not-yet-done open item — see
+// red-door-website-todo.md — this is just GA4 continuity, installed on
+// its own gtag.js snippet per Google's own current instructions, not
+// nested inside any GTM container.
+const ga4MeasurementId = import.meta.env.PUBLIC_GA4_MEASUREMENT_ID;
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
+    {
+      ga4MeasurementId && (
+        <Fragment>
+          <script async src={`https://www.googletagmanager.com/gtag/js?id=${ga4MeasurementId}`} />
+          {/* set:html rather than define:vars — define:vars wraps the
+              script body in an IIFE to scope the injected variable,
+              which would make `gtag` a local closure instead of the
+              global `window.gtag` Google's own snippet (and any future
+              custom-event code elsewhere on the site) expects. */}
+          <script set:html={`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', ${JSON.stringify(ga4MeasurementId)});
+          `} />
+        </Fragment>
+      )
+    }
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
