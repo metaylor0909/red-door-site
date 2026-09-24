@@ -1,0 +1,175 @@
+---
+// /blog and /blog/2, /blog/3, ... — paginated blog index, replacing the
+// original index.astro (which rendered all 309 posts on one page with no
+// pagination at all — found live 2026-09-25). Astro's built-in
+// paginate() serves page 1 at the bare /blog path and later pages at
+// /blog/{n} automatically; [...page].astro (not [page].astro) is the
+// part that makes that page-1-has-no-number behavior work, per Astro's
+// own pagination docs.
+import type { GetStaticPathsOptions } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { sanityClient } from 'sanity:client';
+
+interface PostSummary {
+  title: string;
+  slug: string;
+  publishedAt: string;
+  excerpt?: string;
+  authorName?: string;
+  mainImageUrl?: string;
+}
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  // Empty until a real Sanity project exists (see .env.example) — same
+  // graceful-empty behavior as the page previously had.
+  let posts: PostSummary[] = [];
+  try {
+    posts = await sanityClient.fetch(`
+      *[_type == "post"] | order(publishedAt desc) {
+        title,
+        "slug": slug.current,
+        publishedAt,
+        excerpt,
+        "authorName": author->name,
+        "mainImageUrl": mainImage.asset->url
+      }
+    `);
+  } catch (err) {
+    console.warn('[blog] Could not reach Sanity yet — showing an empty list. Set SANITY_PROJECT_ID once the project exists.', err);
+  }
+  // Inlined rather than an outer const — Astro's Cloudflare-adapter
+  // prerender runs getStaticPaths in an isolated context that doesn't
+  // preserve frontmatter consts as a closure (confirmed live:
+  // "ReferenceError: POSTS_PER_PAGE is not defined" with one).
+  return paginate(posts, { pageSize: 12 });
+}
+
+const { page } = Astro.props;
+const posts = page.data as PostSummary[];
+
+const pageTitle = page.currentPage === 1 ? 'Watch & Learn | Red Door Property Management' : `Watch & Learn | Page ${page.currentPage} | Red Door Property Management`;
+const pagePath = page.currentPage === 1 ? '/blog' : `/blog/${page.currentPage}`;
+---
+
+<BaseLayout
+  title={pageTitle}
+  description="Rental market reports, owner guidance, and tenant resources from Red Door Property Management."
+  path={pagePath}
+>
+  <section class="hero">
+    <div class="hero-content">
+      <h1><span>The Red Door Blog</span></h1>
+      <p class="hero-copy">Market reports, owner guidance, and tenant resources from the Red Door team.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      {posts.length === 0 && (
+        <p class="lead">No posts yet — this page is wired up but the blog content hasn't been migrated in.</p>
+      )}
+      <div class="blog-index-grid">
+        {posts.map((post) => (
+          <a class="blog-index-card" href={`/blog/${post.slug}`}>
+            {post.mainImageUrl && <img src={post.mainImageUrl} alt="" loading="lazy" />}
+            <div class="blog-index-card-body">
+              <p class="blog-index-card-date">
+                {new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+              </p>
+              <h3>{post.title}</h3>
+              {post.excerpt && <p>{post.excerpt}</p>}
+              {post.authorName && <p class="blog-index-card-author">{post.authorName}</p>}
+            </div>
+          </a>
+        ))}
+      </div>
+
+      {page.lastPage > 1 && (
+        <nav class="blog-pagination" aria-label="Blog pagination">
+          {page.url.prev ? (
+            <a class="blog-pagination-link" href={page.url.prev}>&larr; Newer Posts</a>
+          ) : (
+            <span class="blog-pagination-link is-disabled">&larr; Newer Posts</span>
+          )}
+          <span class="blog-pagination-status">Page {page.currentPage} of {page.lastPage}</span>
+          {page.url.next ? (
+            <a class="blog-pagination-link" href={page.url.next}>Older Posts &rarr;</a>
+          ) : (
+            <span class="blog-pagination-link is-disabled">Older Posts &rarr;</span>
+          )}
+        </nav>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .blog-index-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+  }
+  .blog-index-card {
+    display: block;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    color: inherit;
+  }
+  .blog-index-card img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    display: block;
+  }
+  .blog-index-card-body {
+    padding: 18px 20px 22px;
+  }
+  .blog-index-card-date {
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .blog-index-card-author {
+    color: var(--muted);
+    font-size: 0.86rem;
+    margin-top: 10px;
+    margin-bottom: 0;
+  }
+  .blog-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .blog-pagination-link {
+    font-weight: 800;
+    color: var(--brand);
+    text-decoration: none;
+  }
+  .blog-pagination-link:hover {
+    text-decoration: underline;
+  }
+  .blog-pagination-link.is-disabled {
+    color: var(--muted);
+    pointer-events: none;
+  }
+  .blog-pagination-status {
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+  @media (max-width: 900px) {
+    .blog-index-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 600px) {
+    .blog-index-grid { grid-template-columns: 1fr; }
+    .blog-pagination { flex-wrap: wrap; }
+  }
+</style>

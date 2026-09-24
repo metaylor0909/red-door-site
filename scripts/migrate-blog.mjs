@@ -420,9 +420,17 @@ async function main() {
       const rawBlocks = blocksFromBody($, bodyDiv);
       const blocks = await resolvePending(rawBlocks);
 
+      // Found live 2026-09-25: only 71/309 posts got a real mainImage out
+      // of this — the other 4 posts that DO have a body image just don't
+      // open with one (an image further down the body was never promoted).
+      // The remaining 234/309 genuinely have no image anywhere in the
+      // original content at all — nothing to promote, not a bug. Search
+      // the whole body for the first image rather than only checking
+      // position 0.
       let mainImage = null;
-      if (blocks[0] && blocks[0]._type === 'image') {
-        mainImage = blocks.shift();
+      const firstImageIndex = blocks.findIndex((b) => b._type === 'image');
+      if (firstImageIndex !== -1) {
+        mainImage = blocks.splice(firstImageIndex, 1)[0];
       }
 
       const fix = contentFixes.get(slug);
