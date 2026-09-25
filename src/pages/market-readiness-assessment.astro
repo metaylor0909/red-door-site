@@ -104,7 +104,9 @@ const pageDescription =
           wonky" reports. Renamed to .mra-glance-grid to stop colliding. */}
       <div class="mra-glance-grid">
         <ul class="plain-list">
-          <li>Free, data-driven Rental Market Analysis</li>
+          <li>
+            <button class="rd-inline-link" type="button" data-slideshow-trigger aria-haspopup="dialog">Free, data-driven Rental Market Analysis</button>
+          </li>
           <li>
             HD video walkthrough and detailed photo inspection
             <button class="inline-play-btn" type="button" data-video-trigger="gZn5_yvgypk" aria-label="Watch a sample HD video walkthrough">
@@ -124,6 +126,22 @@ const pageDescription =
     <button class="video-modal-close" type="button" data-video-modal-close aria-label="Close video">&times;</button>
     <div class="video-modal-frame">
       <iframe data-video-modal-iframe src="" title="Red Door video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </dialog>
+
+  <dialog class="rd-slideshow" data-slideshow-modal aria-label="Sample Rental Market Analysis">
+    <button class="rd-slideshow-close" type="button" data-slideshow-close aria-label="Close">&times;</button>
+    <div class="rd-slideshow-frame">
+      <img data-slideshow-image src="" alt="" />
+    </div>
+    <div class="rd-slideshow-controls">
+      <button class="rd-slideshow-nav" type="button" data-slideshow-prev aria-label="Previous slide">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+      </button>
+      <div class="rd-slideshow-dots" data-slideshow-dots></div>
+      <button class="rd-slideshow-nav" type="button" data-slideshow-next aria-label="Next slide">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+      </button>
     </div>
   </dialog>
 
@@ -154,15 +172,10 @@ const pageDescription =
           </span>
           <h3>Free Rental Market Analysis</h3>
           <p>Overpricing leads to longer vacancies; underpricing leaves money on the table. We build a comparative market analysis using current listings, recently rented comparable homes, and seasonal and economic rental trends so your home enters the market competitively.</p>
-          {/* Placeholder icon, not yet linked to anything -- Michael asked
-              for a rental-analysis sample slideshow triggered from both
-              this tile and the "At a Glance" bullet list, but the 3
-              screenshots it needs haven't come through yet. Swap this
-              for the same data-gallery-trigger pattern the video button
-              above uses once they're available. */}
-          <span class="step-card-media is-placeholder" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M4 20V11"></path><path d="M10 20V6"></path><path d="M16 20v-8"></path><path d="M4 20h16"></path></svg>
-          </span>
+          <button class="step-card-media" type="button" data-slideshow-trigger aria-label="View a sample Rental Market Analysis">
+            <img src="/images/market-readiness/rental-analysis-sample-1-estimate.webp" alt="" loading="lazy" />
+            <span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V11"></path><path d="M10 20V6"></path><path d="M16 20v-8"></path><path d="M4 20h16"></path></svg></span>
+          </button>
         </article>
         <article class="step-card" data-step="2">
           <span class="step-icon" aria-hidden="true">
@@ -345,6 +358,84 @@ const pageDescription =
         // the iframe here too rather than only in closeModal(), since
         // this path doesn't call that function.
         iframe.src = '';
+      });
+    })();
+
+    // Rental Market Analysis sample slideshow -- triggered from the "At a
+    // Glance" bullet link and the Free Rental Market Analysis step-card
+    // tile. See .rd-slideshow in global.css.
+    (function () {
+      var modal = document.querySelector('[data-slideshow-modal]');
+      if (!modal) return;
+      var image = modal.querySelector('[data-slideshow-image]');
+      var closeButton = modal.querySelector('[data-slideshow-close]');
+      var prevButton = modal.querySelector('[data-slideshow-prev]');
+      var nextButton = modal.querySelector('[data-slideshow-next]');
+      var dotsContainer = modal.querySelector('[data-slideshow-dots]');
+      var slides = [
+        {
+          src: '/images/market-readiness/rental-analysis-sample-1-estimate.webp',
+          alt: 'Sample Rental Market Analysis: estimated monthly rent and 12-month rent trend for a Plainfield property',
+        },
+        {
+          src: '/images/market-readiness/rental-analysis-sample-2-comps.webp',
+          alt: 'Sample Rental Market Analysis: the 8 comparable properties used to build the estimate',
+        },
+        {
+          src: '/images/market-readiness/rental-analysis-sample-3-trends.webp',
+          alt: 'Sample Rental Market Analysis: nearby rent trends by bedroom count',
+        },
+      ];
+      var current = 0;
+      var dots = slides.map(function (_, i) {
+        var dot = document.createElement('button');
+        dot.type = 'button';
+        dot.setAttribute('aria-label', 'Slide ' + (i + 1) + ' of ' + slides.length);
+        dot.addEventListener('click', function () {
+          showSlide(i);
+        });
+        dotsContainer.appendChild(dot);
+        return dot;
+      });
+
+      function showSlide(index) {
+        current = (index + slides.length) % slides.length;
+        image.src = slides[current].src;
+        image.alt = slides[current].alt;
+        dots.forEach(function (dot, i) {
+          if (i === current) dot.setAttribute('aria-current', 'true');
+          else dot.removeAttribute('aria-current');
+        });
+      }
+
+      function openModal() {
+        showSlide(0);
+        modal.showModal();
+      }
+
+      function closeModal() {
+        modal.close();
+      }
+
+      document.querySelectorAll('[data-slideshow-trigger]').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          openModal();
+        });
+      });
+
+      closeButton.addEventListener('click', closeModal);
+      prevButton.addEventListener('click', function () {
+        showSlide(current - 1);
+      });
+      nextButton.addEventListener('click', function () {
+        showSlide(current + 1);
+      });
+      modal.addEventListener('click', function (event) {
+        if (event.target === modal) closeModal();
+      });
+      modal.addEventListener('keydown', function (event) {
+        if (event.key === 'ArrowLeft') showSlide(current - 1);
+        if (event.key === 'ArrowRight') showSlide(current + 1);
       });
     })();
   </script>

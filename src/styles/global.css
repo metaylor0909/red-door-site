@@ -3028,6 +3028,22 @@
     .inline-play-btn svg { width: 11px; height: 11px; margin-left: 1px; fill: currentColor; }
     .inline-play-btn:hover { background: var(--red-dark); transform: scale(1.08); }
 
+    /* "At a Glance" bullet-list slideshow trigger -- styled as an inline
+       text link (Michael asked for "a hyperlink to this text"), not a
+       small appended icon like .inline-play-btn above. */
+    .rd-inline-link {
+      font: inherit;
+      color: var(--brand);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      background: none;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      text-align: left;
+    }
+    .rd-inline-link:hover { color: var(--brand-mid); }
+
     /* A gallery widget (large image + prev/next + thumbnail strip, ported
        from the reference file) lived here briefly 2026-09-25 but was
        rejected too ("still looks terrible... needs to just be one
@@ -3072,6 +3088,83 @@
       cursor: pointer;
     }
     .video-modal-close:hover { background: rgba(255, 255, 255, .22); }
+
+    /* Rental Market Analysis sample slideshow -- same native <dialog>
+       lightbox pattern as .video-modal above, swapped for a 3-image
+       slide + prev/next/dots instead of a video iframe. */
+    .rd-slideshow {
+      width: min(720px, 92vw);
+      padding: 0;
+      border: 0;
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: var(--shadow-strong);
+      overflow: hidden;
+    }
+    .rd-slideshow::backdrop { background: rgba(10, 10, 10, .78); }
+    .rd-slideshow-frame {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      background: var(--soft);
+    }
+    .rd-slideshow-frame img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: var(--white);
+    }
+    .rd-slideshow-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      background: rgba(255, 255, 255, .12);
+      border: 0;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .rd-slideshow-close:hover { background: rgba(255, 255, 255, .22); }
+    .rd-slideshow-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      border-top: 1px solid var(--line);
+    }
+    .rd-slideshow-nav {
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .rd-slideshow-nav svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+    .rd-slideshow-nav:hover { background: var(--soft); }
+    .rd-slideshow-dots { display: flex; gap: 8px; }
+    .rd-slideshow-dots button {
+      width: 8px;
+      height: 8px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: var(--line);
+      cursor: pointer;
+    }
+    .rd-slideshow-dots button[aria-current="true"] { background: var(--red); }
 
     /* .hero .eyebrow + h1 (not .hero-pillar-scoped): whenever a hero has
        an .eyebrow directly above its h1 — the 7 pillar pages AND the 20
