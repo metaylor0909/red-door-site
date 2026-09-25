@@ -582,6 +582,22 @@
       scroll-margin-top: 126px;
     }
 
+    /* Found live 2026-09-25 (Michael, on market-readiness-assessment,
+       but this is every page with 2+ consecutive <section> elements):
+       each section's own top+bottom padding is correct on its own, but
+       two adjacent sections stack their shared boundary's padding-
+       bottom + padding-top, producing a combined ~220px gap at up to
+       104px+104px — clearly excessive, not an intentional design
+       choice. Collapsing the second section's top padding to 0 leaves
+       just one section's padding worth of separation at that boundary
+       (still a real, deliberate gap, just not doubled), while the very
+       first section after the hero and the last section before the
+       footer keep their own full padding since they have no adjacent
+       sibling section on that side. */
+    section + section {
+      padding-top: 0;
+    }
+
     .section-soft {
       background: var(--soft);
     }
@@ -2911,17 +2927,117 @@
     .step-grid.is-five-across {
       grid-template-columns: repeat(5, minmax(0, 1fr));
     }
+    /* Added 2026-09-25 when market-readiness-assessment.astro's own "How
+       It Works" grid dropped from 5 steps to 4 (Preventative Maintenance
+       removed as its own tile). */
+    .step-grid.is-four-across {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
     .step-grid.is-three-across {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
     @media (max-width: 1180px) {
       .step-grid.is-five-across { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .step-grid.is-four-across { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .step-grid.is-three-across { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 720px) {
       .step-grid.is-five-across { grid-template-columns: 1fr; }
+      .step-grid.is-four-across { grid-template-columns: 1fr; }
       .step-grid.is-three-across { grid-template-columns: 1fr; }
     }
+
+    /* market-readiness-assessment.astro's "At a Glance: What You Get"
+       section, added 2026-09-25: a real sample inspection report image
+       next to the bullet list (was just empty space before), and a
+       small inline play button on the "HD video walkthrough" item that
+       opens a YouTube video in the .video-modal dialog below. */
+    .glance-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+      gap: 32px;
+      align-items: start;
+      margin-top: 8px;
+    }
+    .glance-grid .plain-list { margin-top: 0; }
+    .glance-grid .plain-list li { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .inline-play-btn {
+      width: 24px;
+      height: 24px;
+      flex: 0 0 auto;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      color: var(--white);
+      background: var(--red);
+      border: 0;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 6px 14px -4px rgba(140, 12, 3, .5);
+      transition: transform .15s ease, background .15s ease;
+    }
+    .inline-play-btn svg { width: 11px; height: 11px; margin-left: 1px; fill: currentColor; }
+    .inline-play-btn:hover { background: var(--red-dark); transform: scale(1.08); }
+    .glance-inspection-sample {
+      display: block;
+      overflow: hidden;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      color: inherit;
+      text-decoration: none;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .glance-inspection-sample:hover { transform: translateY(-2px); box-shadow: var(--shadow-strong); }
+    .glance-inspection-sample img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+    .glance-inspection-sample span {
+      display: block;
+      padding: 12px 14px;
+      color: var(--red);
+      font-size: .86rem;
+      font-weight: 800;
+      text-align: center;
+    }
+    @media (max-width: 780px) {
+      .glance-grid { grid-template-columns: 1fr; }
+      .glance-inspection-sample { max-width: 320px; margin: 0 auto; }
+    }
+
+    /* Simple native <dialog>-based video lightbox -- showModal()/close()
+       handle backdrop, focus, and Escape-to-close for free. Only used by
+       market-readiness-assessment.astro today, but generic enough
+       (data-video-trigger="<youtube-id>") to reuse elsewhere later
+       without changes. */
+    .video-modal {
+      width: min(920px, 92vw);
+      padding: 0;
+      border: 0;
+      border-radius: var(--radius);
+      background: #000;
+      box-shadow: var(--shadow-strong);
+    }
+    .video-modal::backdrop { background: rgba(10, 10, 10, .78); }
+    .video-modal-frame { position: relative; aspect-ratio: 16 / 9; }
+    .video-modal-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .video-modal-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      background: rgba(255, 255, 255, .12);
+      border: 0;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .video-modal-close:hover { background: rgba(255, 255, 255, .22); }
+
     /* .hero .eyebrow + h1 (not .hero-pillar-scoped): whenever a hero has
        an .eyebrow directly above its h1 — the 7 pillar pages AND the 20
        property-management pages, both share this markup pattern — the

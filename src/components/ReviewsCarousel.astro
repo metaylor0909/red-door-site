@@ -520,9 +520,17 @@
       // web-font swap) settles, so reviewsCanScroll() reads false and
       // autoplay never starts until the user manually advances the
       // carousel. Retry a few times so it self-corrects without input.
+      // Found live 2026-09-25: on a real page load the original 3
+      // retries (through 800ms) weren't always enough -- autoplay would
+      // silently never engage, only ever starting after a manual
+      // prev/next click (by which point layout had long since settled,
+      // so that later startReviewAuto() call succeeded). Extended the
+      // retry window further out to cover slower image/font settling.
       window.setTimeout(primeReviewAuto, 0);
       window.setTimeout(primeReviewAuto, 250);
       window.setTimeout(primeReviewAuto, 800);
+      window.setTimeout(primeReviewAuto, 1500);
+      window.setTimeout(primeReviewAuto, 3000);
 
       if (announce && reviewStatus) {
         reviewStatus.textContent = 'Showing customer reviews from multiple sources.';

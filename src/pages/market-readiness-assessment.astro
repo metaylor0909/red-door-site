@@ -77,18 +77,36 @@ const pageDescription =
   </section>
 
   <section class="section-soft">
-    <div class="container content-block reveal">
+    <div class="container reveal">
       <h2>At a Glance: What You Get</h2>
-      <ul class="plain-list">
-        <li>Free, data-driven Rental Market Analysis</li>
-        <li>HD video walkthrough and detailed photo inspection</li>
-        <li>A Market Readiness Assessment (MRA) report with clear priorities</li>
-        <li>Transparent cost estimates and ROI-minded recommendations</li>
-        <li>Preventative maintenance plan to protect your investment</li>
-        <li>Fast execution by our in-house maintenance team and trusted vendors</li>
-      </ul>
+      <div class="glance-grid">
+        <ul class="plain-list">
+          <li>Free, data-driven Rental Market Analysis</li>
+          <li>
+            HD video walkthrough and detailed photo inspection
+            <button class="inline-play-btn" type="button" data-video-trigger="gZn5_yvgypk" aria-label="Watch a sample HD video walkthrough">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+            </button>
+          </li>
+          <li>A Market Readiness Assessment (MRA) report with clear priorities</li>
+          <li>Transparent cost estimates and ROI-minded recommendations</li>
+          <li>Preventative maintenance plan to protect your investment</li>
+          <li>Fast execution by our in-house maintenance team and trusted vendors</li>
+        </ul>
+        <a class="glance-inspection-sample" href="https://www.reddoorrents.com/files/Z-Inspector%20Example%20For%20Website-7.pdf" target="_blank" rel="noopener">
+          <img src="https://www.reddoorrents.com/images/Z-Inspector%20Example%20For%20Website-7-1.webp" alt="Sample page from a Red Door Market Readiness inspection report" loading="lazy" />
+          <span>View a Sample Inspection Report</span>
+        </a>
+      </div>
     </div>
   </section>
+
+  <dialog class="video-modal" data-video-modal aria-label="Video player">
+    <button class="video-modal-close" type="button" data-video-modal-close aria-label="Close video">&times;</button>
+    <div class="video-modal-frame">
+      <iframe data-video-modal-iframe src="" title="Red Door video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </dialog>
 
   <section>
     <div class="container content-block reveal">
@@ -108,9 +126,9 @@ const pageDescription =
     <div class="container reveal">
       <div class="section-head">
         <div class="section-kicker">How It Works</div>
-        <h2>Five Steps to a Rent-Ready Home</h2>
+        <h2>Four Steps to a Rent-Ready Home</h2>
       </div>
-      <div class="step-grid is-five-across">
+      <div class="step-grid is-four-across">
         <article class="step-card" data-step="1">
           <span class="step-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M4 20V11"></path><path d="M10 20V6"></path><path d="M16 20v-8"></path><path d="M4 20h16"></path></svg>
@@ -139,13 +157,6 @@ const pageDescription =
           </ul>
         </article>
         <article class="step-card" data-step="4">
-          <span class="step-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M14.7 6.3a3.7 3.7 0 0 0-4.9 4.9l-5.1 5.1a1.6 1.6 0 0 0 2.3 2.3l5.1-5.1a3.7 3.7 0 0 0 4.9-4.9l-2.2 2.2-2-2z"></path></svg>
-          </span>
-          <h3>Preventative Maintenance Recommendations</h3>
-          <p>Not all improvements are urgent, but many are smart investments. Common proactive services include semi-annual HVAC clean &amp; check, water heater flush, dryer vent cleaning, gutter cleaning, and perimeter pest control &mdash; protecting the property long-term and reducing emergency calls.</p>
-        </article>
-        <article class="step-card" data-step="5">
           <span class="step-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 12.5l2.5 2.5 4.5-5"></path></svg>
           </span>
@@ -262,5 +273,47 @@ const pageDescription =
         });
       });
     });
+
+    // Video lightbox for the "At a Glance" section's HD video walkthrough
+    // sample -- see .video-modal in global.css.
+    (function () {
+      var modal = document.querySelector('[data-video-modal]');
+      if (!modal) return;
+      var iframe = modal.querySelector('[data-video-modal-iframe]');
+      var closeButton = modal.querySelector('[data-video-modal-close]');
+
+      function openModal(videoId) {
+        iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
+        modal.showModal();
+      }
+
+      function closeModal() {
+        modal.close();
+        // Stop playback immediately rather than relying on the dialog's
+        // own 'close' event -- confirmed live 2026-09-25 that it doesn't
+        // fire reliably even for a plain, manually-triggered
+        // modal.close() call, so a listener for it left the video
+        // silently still loaded (audio-only, hidden) after closing.
+        iframe.src = '';
+      }
+
+      document.querySelectorAll('[data-video-trigger]').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          openModal(trigger.getAttribute('data-video-trigger'));
+        });
+      });
+
+      closeButton.addEventListener('click', closeModal);
+      modal.addEventListener('click', function (event) {
+        // Click on the backdrop itself (not the dialog's own content) closes it.
+        if (event.target === modal) closeModal();
+      });
+      modal.addEventListener('cancel', function () {
+        // Fired when the dialog is dismissed via the Escape key -- clear
+        // the iframe here too rather than only in closeModal(), since
+        // this path doesn't call that function.
+        iframe.src = '';
+      });
+    })();
   </script>
 </BaseLayout>
