@@ -2996,12 +2996,22 @@
        .glance-grid -- see this page's own header comment on the real
        .glance-grid collision with pricing.astro found and fixed the same
        day. .has-image switches to the 2-column layout for the
-       .sample-report-stack card (see below). */
+       .sample-report-stack card (see below).
+
+       align-items changed start -> center 2026-09-25: the card is much
+       taller than the heading+bullets (.mra-glance-text), and with
+       start-aligned Michael flagged the heading sitting flush against
+       the section's own top edge (this section has zero top padding
+       from the sitewide `section + section { padding-top: 0 }` rule,
+       since it follows another section). Centering the text column
+       against the card's height gives it breathing room without
+       touching that sitewide rule -- the card, already close to the
+       full row height, doesn't move. */
     .mra-glance-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 32px;
-      align-items: start;
+      align-items: center;
       margin-top: 8px;
     }
     .mra-glance-grid.has-image {
@@ -3023,14 +3033,7 @@
        (peeking out bottom-right) to read as a multi-page document.
        Links out to the real sample PDF, opened in a new tab so the
        browser's own PDF viewer handles paging. */
-    /* Nudged down -- box tops (ul vs .sample-report-stack) are
-       pixel-perfect per grid align-items:start, but the bullet list's
-       text sits lower than its own line-box top (line-height leading),
-       while the photo's edge is a hard line with none, so without this
-       the two read as slightly misaligned. Michael flagged this
-       2026-09-25; first tried 6px, confirmed still too high, bumped to
-       16px. */
-    .sample-report-stack { position: relative; margin-top: 16px; }
+    .sample-report-stack { position: relative; }
     .sample-report-stack-page {
       position: absolute;
       inset: 0;

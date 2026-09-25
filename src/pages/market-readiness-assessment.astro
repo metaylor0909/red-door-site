@@ -78,7 +78,6 @@ const pageDescription =
 
   <section class="section-soft">
     <div class="container reveal">
-      <h2>At a Glance: What You Get</h2>
       {/* Two earlier image attempts here (a single cramped Z-Inspector
           thumbnail, then a full Z-Inspector gallery widget) were rejected
           as "looks terrible." Landed 2026-09-25 on a branded report-card
@@ -93,23 +92,35 @@ const pageDescription =
           every item in it is genuinely Satisfactory, so the card shows
           real section coverage rather than a fabricated flagged item.
           Publishing the real PDF (with per-photo GPS coordinates) was an
-          explicit "yes, publish as-is" from Michael. */}
+          explicit "yes, publish as-is" from Michael.
+
+          <h2> moved inside .mra-glance-grid (as part of the text column,
+          alongside the bullet list) 2026-09-25: the card is much taller
+          than the heading+bullets, and Michael flagged the heading
+          sitting flush against the section's top edge with no breathing
+          room. .mra-glance-grid uses align-items:center so this text
+          column centers vertically against the tall card instead of
+          pinning to the row's top -- the card, already close to the
+          full row height, doesn't move. */}
       <div class="mra-glance-grid has-image">
-        <ul class="plain-list">
-          <li>
-            <button class="rd-inline-link" type="button" data-slideshow-trigger aria-haspopup="dialog">Free, data-driven Rental Market Analysis</button>
-          </li>
-          <li>
-            HD video walkthrough and detailed photo inspection
-            <button class="inline-play-btn" type="button" data-video-trigger="gZn5_yvgypk" aria-label="Watch a sample HD video walkthrough">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
-            </button>
-          </li>
-          <li>A Market Readiness Assessment (MRA) report with clear priorities</li>
-          <li>Transparent cost estimates and ROI-minded recommendations</li>
-          <li>Preventative maintenance plan to protect your investment</li>
-          <li>Fast execution by our in-house maintenance team and trusted vendors</li>
-        </ul>
+        <div class="mra-glance-text">
+          <h2>At a Glance: What You Get</h2>
+          <ul class="plain-list">
+            <li>
+              <button class="rd-inline-link" type="button" data-slideshow-trigger aria-haspopup="dialog">Free, data-driven Rental Market Analysis</button>
+            </li>
+            <li>
+              HD video walkthrough and detailed photo inspection
+              <button class="inline-play-btn" type="button" data-video-trigger="gZn5_yvgypk" aria-label="Watch a sample HD video walkthrough">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+              </button>
+            </li>
+            <li>A Market Readiness Assessment (MRA) report with clear priorities</li>
+            <li>Transparent cost estimates and ROI-minded recommendations</li>
+            <li>Preventative maintenance plan to protect your investment</li>
+            <li>Fast execution by our in-house maintenance team and trusted vendors</li>
+          </ul>
+        </div>
         <div class="sample-report-stack">
           <div class="sample-report-stack-page is-back2" aria-hidden="true"></div>
           <div class="sample-report-stack-page is-back1" aria-hidden="true"></div>
