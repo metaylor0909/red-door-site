@@ -3012,7 +3012,13 @@
       grid-template-columns: 1fr;
       gap: 32px;
       align-items: center;
-      margin-top: 8px;
+      /* This section has zero top padding from the sitewide
+         `section + section { padding-top: 0 }` rule (it follows another
+         section) -- bumped 8px -> 40px 2026-09-25 so the card (the row's
+         tallest item, sitting flush at the row's own top) gets breathing
+         room from the section's top edge. Scoped to this grid rather
+         than touching the sitewide rule. */
+      margin-top: 40px;
     }
     .mra-glance-grid.has-image {
       grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
