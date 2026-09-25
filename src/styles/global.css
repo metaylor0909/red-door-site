@@ -3012,13 +3012,23 @@
       grid-template-columns: 1fr;
       gap: 32px;
       align-items: center;
-      /* This section has zero top padding from the sitewide
-         `section + section { padding-top: 0 }` rule (it follows another
-         section) -- bumped 8px -> 40px 2026-09-25 so the card (the row's
-         tallest item, sitting flush at the row's own top) gets breathing
-         room from the section's top edge. Scoped to this grid rather
-         than touching the sitewide rule. */
-      margin-top: 40px;
+      margin-top: 8px;
+    }
+    /* This section has zero top padding from the sitewide
+       `section + section { padding-top: 0 }` rule (it follows another
+       section). Tried a margin-top on .mra-glance-grid first (8px, then
+       40px) to give the card (the row's tallest item, sitting flush at
+       the row's own top) breathing room from the section's top edge --
+       Michael confirmed neither had any visible effect. Root cause: with
+       no padding/border on the section or .container to stop it, that
+       margin was collapsing straight through both and landing above the
+       section element itself (extra gap from the previous section)
+       rather than inside this section's own gray background. Padding
+       doesn't collapse, so overriding padding-top directly here (higher
+       specificity than the plain `section + section` selector) is the
+       reliable fix. */
+    .mra-glance-section {
+      padding-top: 48px;
     }
     .mra-glance-grid.has-image {
       grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
