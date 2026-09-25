@@ -2901,6 +2901,47 @@
     .step-card p { color: var(--muted); font-size: .95rem; margin-bottom: 10px; }
     .step-card ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: .92rem; }
     .step-card li { margin-bottom: 6px; }
+
+    /* Small clickable video/preview graphics at the bottom of a
+       step-card, added 2026-09-25 to the "Four Steps" grid's Free
+       Rental Market Analysis and Video Walkthrough tiles. */
+    .step-card-media {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      width: 72px;
+      height: 48px;
+      overflow: hidden;
+      margin-top: 4px;
+      padding: 0;
+      border: 0;
+      border-radius: 6px;
+      background: #111;
+      cursor: pointer;
+    }
+    .step-card-media img { width: 100%; height: 100%; object-fit: cover; opacity: .82; }
+    .step-card-media span {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: var(--white);
+    }
+    .step-card-media span svg { width: 16px; height: 16px; fill: currentColor; }
+    .step-card-media:hover img { opacity: 1; }
+    .step-card-media.is-placeholder {
+      align-items: center;
+      justify-content: center;
+      background: var(--soft);
+      cursor: default;
+    }
+    .step-card-media.is-placeholder svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--red);
+      stroke-width: 2;
+      fill: none;
+    }
     .step-icon {
       position: relative;
       z-index: 1;
@@ -2954,7 +2995,7 @@
        opens a YouTube video in the .video-modal dialog below. */
     .glance-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
       gap: 32px;
       align-items: start;
       margin-top: 8px;
@@ -2978,30 +3019,65 @@
     }
     .inline-play-btn svg { width: 11px; height: 11px; margin-left: 1px; fill: currentColor; }
     .inline-play-btn:hover { background: var(--red-dark); transform: scale(1.08); }
-    .glance-inspection-sample {
-      display: block;
+
+    /* Replaces an earlier single-cramped-thumbnail version (2026-09-25
+       first pass) that Michael called out as "looking terrible" -- these
+       Z-Inspector sample images are themselves multi-photo collage
+       pages, which read fine at real size with proper navigation but
+       illegibly cramped shrunk into a small static card. Ported from the
+       reference file's own real inspection-gallery pattern instead:
+       one large image, prev/next, and a thumbnail strip -- see the CSS
+       classes' original source (.inspection-gallery/.gallery-frame/etc)
+       for the exact match, and this page's own <script> for the ported
+       setSlide()/thumbnail/touch-swipe JS. */
+    .inspection-gallery { min-width: 0; }
+    .gallery-frame {
       overflow: hidden;
-      background: var(--white);
-      border: 1px solid var(--line);
+      background: #111;
       border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      color: inherit;
-      text-decoration: none;
-      transition: transform .18s ease, box-shadow .18s ease;
+      border: 1px solid var(--line);
+      aspect-ratio: 16 / 10;
     }
-    .glance-inspection-sample:hover { transform: translateY(-2px); box-shadow: var(--shadow-strong); }
-    .glance-inspection-sample img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
-    .glance-inspection-sample span {
-      display: block;
-      padding: 12px 14px;
-      color: var(--red);
-      font-size: .86rem;
-      font-weight: 800;
-      text-align: center;
+    .gallery-frame a,
+    .gallery-frame img { width: 100%; height: 100%; }
+    .gallery-frame img { object-fit: cover; }
+    .gallery-controls,
+    .gallery-thumbs {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
     }
+    .gallery-controls { justify-content: space-between; }
+    .gallery-controls button,
+    .gallery-thumbs button { cursor: pointer; }
+    .gallery-controls button {
+      min-width: 48px;
+      min-height: 42px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      color: var(--ink);
+      font-weight: 900;
+    }
+    .gallery-status { color: var(--muted); font-size: .9rem; font-weight: 800; }
+    .gallery-thumbs { overflow-x: auto; padding-bottom: 4px; }
+    .gallery-thumbs button {
+      width: 74px;
+      height: 52px;
+      flex: 0 0 auto;
+      overflow: hidden;
+      padding: 0;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      background: transparent;
+    }
+    .gallery-thumbs button[aria-current="true"] { border-color: var(--red); }
+    .gallery-thumbs img { width: 100%; height: 100%; object-fit: cover; }
+
     @media (max-width: 780px) {
       .glance-grid { grid-template-columns: 1fr; }
-      .glance-inspection-sample { max-width: 320px; margin: 0 auto; }
+      .inspection-gallery { max-width: 420px; margin: 0 auto; }
     }
 
     /* Simple native <dialog>-based video lightbox -- showModal()/close()
