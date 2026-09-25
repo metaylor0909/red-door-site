@@ -3023,7 +3023,13 @@
        (peeking out bottom-right) to read as a multi-page document.
        Links out to the real sample PDF, opened in a new tab so the
        browser's own PDF viewer handles paging. */
-    .sample-report-stack { position: relative; }
+    /* Nudged down 6px -- box tops (ul vs .sample-report-stack) are
+       pixel-perfect per grid align-items:start, but the bullet list's
+       text sits a few px lower than its own line-box top (line-height
+       leading), while the photo's edge is a hard line with none, so
+       without this the two read as slightly misaligned. Michael flagged
+       this 2026-09-25. */
+    .sample-report-stack { position: relative; margin-top: 6px; }
     .sample-report-stack-page {
       position: absolute;
       inset: 0;

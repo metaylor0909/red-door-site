@@ -229,6 +229,10 @@ const pageDescription =
           </span>
           <h3>Owner Approval &amp; Immediate Execution</h3>
           <p>You review and approve the suggested work. Once approved, our in-house maintenance team and trusted vendors get to work while Red Door coordinates scheduling, access, and quality control &mdash; with updates throughout, not surprises. A final punch walkthrough confirms the home is fully ready for showings.</p>
+          <button class="step-card-media" type="button" data-video-trigger="loom:f468db4b32ba49caac7d847bfba8e336" aria-label="Watch a sample owner approval walkthrough">
+            <img src="/images/market-readiness/owner-approval-loom-thumb.webp" alt="" loading="lazy" />
+            <span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>
+          </button>
         </article>
       </div>
     </div>
@@ -350,7 +354,14 @@ const pageDescription =
       var closeButton = modal.querySelector('[data-video-modal-close]');
 
       function openModal(videoId) {
-        iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
+        // "loom:<id>" prefix picks the Loom embed instead of YouTube --
+        // added 2026-09-25 for the Owner Approval step's PropertyMeld
+        // walkthrough. Bare ids (the existing two triggers) stay YouTube.
+        if (videoId.indexOf('loom:') === 0) {
+          iframe.src = 'https://www.loom.com/embed/' + videoId.slice(5) + '?autoplay=1';
+        } else {
+          iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
+        }
         modal.showModal();
       }
 
