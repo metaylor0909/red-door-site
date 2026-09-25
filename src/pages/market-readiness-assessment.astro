@@ -84,11 +84,16 @@ const pageDescription =
           as "looks terrible." Landed 2026-09-25 on a branded report-card
           mockup instead of a raw screenshot -- Michael's own call after
           seeing both attempts: a static preview card styled like this
-          page's own report UI, that opens the real 39-page sample report
-          (public/documents/sample-inspection-report.pdf, a real
-          Z-Inspector export -- publishing it with its real GPS
-          coordinates was an explicit "yes, publish as-is" from Michael)
-          in a new tab so it can be paged through natively. */}
+          page's own report UI, that opens the real sample report
+          (public/documents/sample-inspection-report.pdf) in a new tab so
+          it can be paged through natively. Swapped 2026-09-25 to the real
+          26-page "1839 Fowler Street" move-in inspection Michael
+          re-uploaded (the first PDF he'd sent turned out to be a single
+          page pulled out of a 39-page report, not the full thing) --
+          every item in it is genuinely Satisfactory, so the card shows
+          real section coverage rather than a fabricated flagged item.
+          Publishing the real PDF (with per-photo GPS coordinates) was an
+          explicit "yes, publish as-is" from Michael. */}
       <div class="mra-glance-grid has-image">
         <ul class="plain-list">
           <li>
@@ -105,21 +110,36 @@ const pageDescription =
           <li>Preventative maintenance plan to protect your investment</li>
           <li>Fast execution by our in-house maintenance team and trusted vendors</li>
         </ul>
-        <a class="sample-report-card" href="/documents/sample-inspection-report.pdf" target="_blank" rel="noopener">
-          <div class="sample-report-card-head">
-            <span class="sample-report-card-kicker">Sample Report</span>
-            <span class="sample-report-card-pages">39 pages</span>
-          </div>
-          <ul class="sample-report-card-rows">
-            <li class="is-ready"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg>Light Fixture(s)</li>
-            <li class="is-ready"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg>Smoke Detector</li>
-            <li class="is-flagged"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 21V4h11l-3 4 3 4H6"></path></svg>Walls/Ceilings &mdash; all walls need paint</li>
-          </ul>
-          <div class="sample-report-card-foot">
-            View the full sample report
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
-          </div>
-        </a>
+        <div class="sample-report-stack">
+          <div class="sample-report-stack-page is-back2" aria-hidden="true"></div>
+          <div class="sample-report-stack-page is-back1" aria-hidden="true"></div>
+          <a class="sample-report-card" href="/documents/sample-inspection-report.pdf" target="_blank" rel="noopener">
+            <div class="sample-report-card-photo">
+              <img src="/images/market-readiness/sample-report-cover.webp" alt="" loading="lazy" />
+              <span class="sample-report-card-badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+                Quality<br />Verified
+              </span>
+            </div>
+            <div class="sample-report-card-body">
+              <div class="sample-report-card-head">
+                <span class="sample-report-card-kicker">Sample Report</span>
+                <span class="sample-report-card-pages">26 pages</span>
+              </div>
+              <h3>Move-In Inspection Report</h3>
+              <dl class="sample-report-card-facts">
+                <div><dt>Property Type</dt><dd>Single Family</dd></div>
+                <div><dt>Areas Inspected</dt><dd>10+</dd></div>
+                <div><dt>Result</dt><dd>100% Satisfactory</dd></div>
+                <div><dt>Report Length</dt><dd>26 pages</dd></div>
+              </dl>
+            </div>
+            <div class="sample-report-card-foot">
+              View the full sample report
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+            </div>
+          </a>
+        </div>
       </div>
     </div>
   </section>
