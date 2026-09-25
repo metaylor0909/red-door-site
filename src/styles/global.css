@@ -3010,6 +3010,69 @@
     }
     .mra-glance-grid .plain-list { margin-top: 0; }
     .mra-glance-grid .plain-list li { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    /* Branded "sample report" preview card -- a mockup, not a raw
+       screenshot, styled to match this page's own report UI (see
+       .assessment-card / .score-ring in MarketReadinessAssessment.astro
+       for the sibling visual language). Links out to the real 39-page
+       sample PDF, opened in a new tab so the browser's own PDF viewer
+       handles paging. */
+    .sample-report-card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 20px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      color: var(--ink);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .sample-report-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-strong); }
+    .sample-report-card-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .sample-report-card-kicker {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: .78rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--brand-mid);
+    }
+    .sample-report-card-pages { font-size: .82rem; color: var(--muted); }
+    .sample-report-card-rows { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
+    .sample-report-card-rows li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: .92rem;
+      line-height: 1.35;
+    }
+    .sample-report-card-rows svg { flex: 0 0 auto; width: 16px; height: 16px; margin-top: 2px; fill: none; stroke-width: 2.2; }
+    .sample-report-card-rows li.is-ready { color: var(--ink); }
+    .sample-report-card-rows li.is-ready svg { stroke: #1a8a4a; }
+    .sample-report-card-rows li.is-flagged { color: var(--ink); }
+    .sample-report-card-rows li.is-flagged svg { stroke: var(--brand); }
+    .sample-report-card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      font-weight: 700;
+      font-size: .92rem;
+      color: var(--brand);
+    }
+    .sample-report-card-foot svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; }
     .inline-play-btn {
       width: 24px;
       height: 24px;

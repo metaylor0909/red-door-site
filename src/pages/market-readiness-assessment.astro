@@ -79,30 +79,17 @@ const pageDescription =
   <section class="section-soft">
     <div class="container reveal">
       <h2>At a Glance: What You Get</h2>
-      {/* Reverted 2026-09-25 to text-only, pending a real image file --
-          two image attempts here (a single cramped Z-Inspector thumbnail,
-          then the full Z-Inspector gallery widget) were both rejected
-          ("looks terrible" / "needs to just be one image ... formatted
-          so it doesn't look weird"). Michael pasted a cleaner
-          Move-In-Inspection-style screenshot as the model to use instead,
-          but pasted images in chat don't reach this codebase as files --
-          needs an actual file path (same as how the Z-Inspector PDF
-          reference got here) before this can be rebuilt as a real single
-          image next to this list. See .mra-glance-grid in global.css,
-          kept in place (unused for now, currently single-column with no
-          second child) for when that image is available.
-
-          Also found and fixed a real, separate bug while investigating
-          this: the class was originally named plain "glance-grid",
-          which collided with pricing.astro's own PRE-EXISTING
-          .glance-grid (a totally unrelated 4-column stat-card layout,
-          global.css ~line 3634). Same-specificity CSS means whichever
-          rule comes later in the file wins on a class-name collision --
-          pricing.astro's version was later, so it was silently
-          overriding this section's intended 2-column layout the whole
-          time, which is very likely a real contributor to the "looks
-          wonky" reports. Renamed to .mra-glance-grid to stop colliding. */}
-      <div class="mra-glance-grid">
+      {/* Two earlier image attempts here (a single cramped Z-Inspector
+          thumbnail, then a full Z-Inspector gallery widget) were rejected
+          as "looks terrible." Landed 2026-09-25 on a branded report-card
+          mockup instead of a raw screenshot -- Michael's own call after
+          seeing both attempts: a static preview card styled like this
+          page's own report UI, that opens the real 39-page sample report
+          (public/documents/sample-inspection-report.pdf, a real
+          Z-Inspector export -- publishing it with its real GPS
+          coordinates was an explicit "yes, publish as-is" from Michael)
+          in a new tab so it can be paged through natively. */}
+      <div class="mra-glance-grid has-image">
         <ul class="plain-list">
           <li>
             <button class="rd-inline-link" type="button" data-slideshow-trigger aria-haspopup="dialog">Free, data-driven Rental Market Analysis</button>
@@ -118,6 +105,21 @@ const pageDescription =
           <li>Preventative maintenance plan to protect your investment</li>
           <li>Fast execution by our in-house maintenance team and trusted vendors</li>
         </ul>
+        <a class="sample-report-card" href="/documents/sample-inspection-report.pdf" target="_blank" rel="noopener">
+          <div class="sample-report-card-head">
+            <span class="sample-report-card-kicker">Sample Report</span>
+            <span class="sample-report-card-pages">39 pages</span>
+          </div>
+          <ul class="sample-report-card-rows">
+            <li class="is-ready"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg>Light Fixture(s)</li>
+            <li class="is-ready"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg>Smoke Detector</li>
+            <li class="is-flagged"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 21V4h11l-3 4 3 4H6"></path></svg>Walls/Ceilings &mdash; all walls need paint</li>
+          </ul>
+          <div class="sample-report-card-foot">
+            View the full sample report
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+          </div>
+        </a>
       </div>
     </div>
   </section>
