@@ -2909,13 +2909,14 @@
       position: relative;
       z-index: 1;
       display: flex;
-      width: 72px;
-      height: 48px;
+      width: 100%;
+      max-width: 220px;
+      aspect-ratio: 16 / 10;
       overflow: hidden;
-      margin-top: 4px;
+      margin: 14px auto 0;
       padding: 0;
       border: 0;
-      border-radius: 6px;
+      border-radius: 8px;
       background: #111;
       cursor: pointer;
     }
@@ -2927,7 +2928,7 @@
       place-items: center;
       color: var(--white);
     }
-    .step-card-media span svg { width: 16px; height: 16px; fill: currentColor; }
+    .step-card-media span svg { width: 30px; height: 30px; fill: currentColor; }
     .step-card-media:hover img { opacity: 1; }
     .step-card-media.is-placeholder {
       align-items: center;
@@ -2936,8 +2937,8 @@
       cursor: default;
     }
     .step-card-media.is-placeholder svg {
-      width: 20px;
-      height: 20px;
+      width: 34px;
+      height: 34px;
       stroke: var(--red);
       stroke-width: 2;
       fill: none;
@@ -2989,19 +2990,26 @@
     }
 
     /* market-readiness-assessment.astro's "At a Glance: What You Get"
-       section, added 2026-09-25: a real sample inspection report image
-       next to the bullet list (was just empty space before), and a
-       small inline play button on the "HD video walkthrough" item that
-       opens a YouTube video in the .video-modal dialog below. */
-    .glance-grid {
+       section, added 2026-09-25: a small inline play button on the "HD
+       video walkthrough" item that opens a YouTube video in the
+       .video-modal dialog below. Named .mra-glance-grid, NOT
+       .glance-grid -- see this page's own header comment on the real
+       .glance-grid collision with pricing.astro found and fixed the same
+       day. Single-column for now (no sample-report image yet -- see
+       that same comment); the second, wider column only applies once
+       .has-image is added back, once a real image file is available. */
+    .mra-glance-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+      grid-template-columns: 1fr;
       gap: 32px;
       align-items: start;
       margin-top: 8px;
     }
-    .glance-grid .plain-list { margin-top: 0; }
-    .glance-grid .plain-list li { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .mra-glance-grid.has-image {
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+    }
+    .mra-glance-grid .plain-list { margin-top: 0; }
+    .mra-glance-grid .plain-list li { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .inline-play-btn {
       width: 24px;
       height: 24px;
@@ -3020,64 +3028,15 @@
     .inline-play-btn svg { width: 11px; height: 11px; margin-left: 1px; fill: currentColor; }
     .inline-play-btn:hover { background: var(--red-dark); transform: scale(1.08); }
 
-    /* Replaces an earlier single-cramped-thumbnail version (2026-09-25
-       first pass) that Michael called out as "looking terrible" -- these
-       Z-Inspector sample images are themselves multi-photo collage
-       pages, which read fine at real size with proper navigation but
-       illegibly cramped shrunk into a small static card. Ported from the
-       reference file's own real inspection-gallery pattern instead:
-       one large image, prev/next, and a thumbnail strip -- see the CSS
-       classes' original source (.inspection-gallery/.gallery-frame/etc)
-       for the exact match, and this page's own <script> for the ported
-       setSlide()/thumbnail/touch-swipe JS. */
-    .inspection-gallery { min-width: 0; }
-    .gallery-frame {
-      overflow: hidden;
-      background: #111;
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      aspect-ratio: 16 / 10;
-    }
-    .gallery-frame a,
-    .gallery-frame img { width: 100%; height: 100%; }
-    .gallery-frame img { object-fit: cover; }
-    .gallery-controls,
-    .gallery-thumbs {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 12px;
-    }
-    .gallery-controls { justify-content: space-between; }
-    .gallery-controls button,
-    .gallery-thumbs button { cursor: pointer; }
-    .gallery-controls button {
-      min-width: 48px;
-      min-height: 42px;
-      border-radius: 6px;
-      border: 1px solid var(--line);
-      background: var(--white);
-      color: var(--ink);
-      font-weight: 900;
-    }
-    .gallery-status { color: var(--muted); font-size: .9rem; font-weight: 800; }
-    .gallery-thumbs { overflow-x: auto; padding-bottom: 4px; }
-    .gallery-thumbs button {
-      width: 74px;
-      height: 52px;
-      flex: 0 0 auto;
-      overflow: hidden;
-      padding: 0;
-      border: 2px solid transparent;
-      border-radius: 6px;
-      background: transparent;
-    }
-    .gallery-thumbs button[aria-current="true"] { border-color: var(--red); }
-    .gallery-thumbs img { width: 100%; height: 100%; object-fit: cover; }
-
+    /* A gallery widget (large image + prev/next + thumbnail strip, ported
+       from the reference file) lived here briefly 2026-09-25 but was
+       rejected too ("still looks terrible... needs to just be one
+       image"). Removed rather than left as dead CSS -- if a real single
+       sample-report image comes in, style it as
+       .mra-glance-grid .glance-sample-image { width:100%; border-radius:
+       var(--radius); box-shadow:var(--shadow); } or similar, not this. */
     @media (max-width: 780px) {
-      .glance-grid { grid-template-columns: 1fr; }
-      .inspection-gallery { max-width: 420px; margin: 0 auto; }
+      .mra-glance-grid { grid-template-columns: 1fr; }
     }
 
     /* Simple native <dialog>-based video lightbox -- showModal()/close()

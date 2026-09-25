@@ -79,7 +79,30 @@ const pageDescription =
   <section class="section-soft">
     <div class="container reveal">
       <h2>At a Glance: What You Get</h2>
-      <div class="glance-grid">
+      {/* Reverted 2026-09-25 to text-only, pending a real image file --
+          two image attempts here (a single cramped Z-Inspector thumbnail,
+          then the full Z-Inspector gallery widget) were both rejected
+          ("looks terrible" / "needs to just be one image ... formatted
+          so it doesn't look weird"). Michael pasted a cleaner
+          Move-In-Inspection-style screenshot as the model to use instead,
+          but pasted images in chat don't reach this codebase as files --
+          needs an actual file path (same as how the Z-Inspector PDF
+          reference got here) before this can be rebuilt as a real single
+          image next to this list. See .mra-glance-grid in global.css,
+          kept in place (unused for now, currently single-column with no
+          second child) for when that image is available.
+
+          Also found and fixed a real, separate bug while investigating
+          this: the class was originally named plain "glance-grid",
+          which collided with pricing.astro's own PRE-EXISTING
+          .glance-grid (a totally unrelated 4-column stat-card layout,
+          global.css ~line 3634). Same-specificity CSS means whichever
+          rule comes later in the file wins on a class-name collision --
+          pricing.astro's version was later, so it was silently
+          overriding this section's intended 2-column layout the whole
+          time, which is very likely a real contributor to the "looks
+          wonky" reports. Renamed to .mra-glance-grid to stop colliding. */}
+      <div class="mra-glance-grid">
         <ul class="plain-list">
           <li>Free, data-driven Rental Market Analysis</li>
           <li>
@@ -93,19 +116,6 @@ const pageDescription =
           <li>Preventative maintenance plan to protect your investment</li>
           <li>Fast execution by our in-house maintenance team and trusted vendors</li>
         </ul>
-        <div class="inspection-gallery" data-gallery aria-label="Sample Market Readiness inspection report">
-          <div class="gallery-frame">
-            <a data-gallery-link href="https://www.reddoorrents.com/files/Z-Inspector%20Example%20For%20Website-1.pdf" target="_blank" rel="noopener">
-              <img data-gallery-image src="https://www.reddoorrents.com/images/Z-Inspector%20Example%20For%20Website-1-1.webp" alt="Inspection report sample page 1 showing property condition documentation" loading="lazy" />
-            </a>
-          </div>
-          <div class="gallery-controls">
-            <button type="button" data-gallery-prev aria-label="Previous inspection image">Prev</button>
-            <span class="gallery-status" data-gallery-status>1 of 8</span>
-            <button type="button" data-gallery-next aria-label="Next inspection image">Next</button>
-          </div>
-          <div class="gallery-thumbs" aria-label="Inspection gallery thumbnails" data-gallery-thumbs></div>
-        </div>
       </div>
     </div>
   </section>
@@ -295,88 +305,6 @@ const pageDescription =
         });
       });
     });
-
-    // Sample inspection report gallery for "At a Glance" -- ported from
-    // the reference file's own real inspection-gallery widget (same
-    // data-gallery-* attributes, same setSlide()/thumbnail/touch-swipe
-    // logic), not recreated from scratch. See .inspection-gallery in
-    // global.css for the styling this markup expects.
-    (function () {
-      var gallery = document.querySelector('[data-gallery]');
-      if (!gallery) return;
-
-      var slides = Array.from({ length: 8 }, function (_, idx) {
-        var number = idx + 1;
-        return {
-          image: 'https://www.reddoorrents.com/images/Z-Inspector%20Example%20For%20Website-' + number + '-1.webp',
-          link: 'https://www.reddoorrents.com/files/Z-Inspector%20Example%20For%20Website-' + number + '.pdf',
-          alt: 'Inspection report sample page ' + number + ' showing property condition documentation',
-        };
-      });
-      var current = 0;
-      var image = gallery.querySelector('[data-gallery-image]');
-      var link = gallery.querySelector('[data-gallery-link]');
-      var status = gallery.querySelector('[data-gallery-status]');
-      var thumbs = gallery.querySelector('[data-gallery-thumbs]');
-
-      slides.forEach(function (slide, index) {
-        var thumb = document.createElement('button');
-        var thumbImage = document.createElement('img');
-        thumb.type = 'button';
-        thumb.setAttribute('aria-label', 'Show inspection image ' + (index + 1));
-        thumbImage.src = slide.image;
-        thumbImage.alt = '';
-        thumbImage.loading = 'lazy';
-        thumb.appendChild(thumbImage);
-        thumb.addEventListener('click', function () {
-          setSlide(index);
-        });
-        thumbs.appendChild(thumb);
-      });
-
-      function setSlide(index) {
-        current = (index + slides.length) % slides.length;
-        image.src = slides[current].image;
-        image.alt = slides[current].alt;
-        link.href = slides[current].link;
-        status.textContent = (current + 1) + ' of ' + slides.length;
-        thumbs.querySelectorAll('button').forEach(function (thumb, thumbIndex) {
-          thumb.setAttribute('aria-current', String(thumbIndex === current));
-        });
-      }
-
-      gallery.querySelector('[data-gallery-prev]').addEventListener('click', function () {
-        setSlide(current - 1);
-      });
-      gallery.querySelector('[data-gallery-next]').addEventListener('click', function () {
-        setSlide(current + 1);
-      });
-      gallery.addEventListener('keydown', function (event) {
-        if (event.key === 'ArrowLeft') setSlide(current - 1);
-        if (event.key === 'ArrowRight') setSlide(current + 1);
-      });
-
-      var touchStart = null;
-      gallery.addEventListener(
-        'touchstart',
-        function (event) {
-          touchStart = event.changedTouches[0].clientX;
-        },
-        { passive: true }
-      );
-      gallery.addEventListener(
-        'touchend',
-        function (event) {
-          if (touchStart === null) return;
-          var distance = event.changedTouches[0].clientX - touchStart;
-          if (Math.abs(distance) > 40) setSlide(current + (distance < 0 ? 1 : -1));
-          touchStart = null;
-        },
-        { passive: true }
-      );
-
-      setSlide(0);
-    })();
 
     // Video lightbox for the "At a Glance" section's HD video walkthrough
     // sample -- see .video-modal in global.css.
