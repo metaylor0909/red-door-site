@@ -21,9 +21,18 @@
 //
 // Same #rental-analysis -> /rental-analysis fix as every other pillar
 // page built this session.
+//
+// #self-assessment section added 2026-09-25 -- the 24-question "How
+// Market-Ready Is Your Property?" self-check, previously missing
+// entirely from this page (a genuine gap, not a broken feature -- the
+// original build never ported it). See
+// src/components/MarketReadinessAssessment.astro's header comment for
+// the full source and the two real behavior changes from the reference
+// file (gated snapshot + real email delivery instead of a placeholder).
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PropertyManagementJourneyCarousel from '../components/PropertyManagementJourneyCarousel.astro';
 import LandlordLibrary from '../components/LandlordLibrary.astro';
+import MarketReadinessAssessment from '../components/MarketReadinessAssessment.astro';
 import { PILLAR_LANDLORD_LIBRARY_POSTS } from '../lib/property-management/pillar-landlord-library-posts';
 
 const pageTitle = 'Market Readiness Assessment | Red Door Property Management';
@@ -160,6 +169,8 @@ const pageDescription =
       <p style="margin-top:24px">A properly prepared property photographs better, shows better, attracts more applications, and gives tenants confidence that the home is well cared for &mdash; an upfront investment that can save time, money, and stress over the life of the lease and beyond.</p>
     </div>
   </section>
+
+  <MarketReadinessAssessment />
 
   <section class="section-dark guarantee-section">
     <div class="container reveal" style="text-align:center">

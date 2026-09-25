@@ -1,0 +1,880 @@
+---
+// The 24-question "How Market-Ready Is Your Property?" self-check,
+// added 2026-09-25 to market-readiness-assessment.astro. Ported from a
+// reference file Michael supplied (his own working copy of the assessment,
+// already live on the old PMW site) -- see src/lib/market-readiness/
+// questions.ts and scoring.ts for the source-of-truth question data and
+// scoring logic, copied verbatim, not recreated from memory.
+//
+// Two real changes from the reference file's behavior, both requested
+// by Michael:
+//   1. Results are gated. Answering all 24 questions and clicking
+//      "Generate My Market Readiness Report" shows only a limited
+//      snapshot (score ring, classification, 2 strengths, the single
+//      highest-priority unresolved item, a CTA) -- not the full report
+//      (every item, every recommendation) the reference file showed
+//      immediately. The reference's own "email me a copy, optional,
+//      your report stays visible either way" framing is gone; getting
+//      the complete report now REQUIRES the email form below the
+//      snapshot. See buildSnapshotHtml() vs. the emailed report built
+//      server-side in src/lib/market-readiness/emails.ts.
+//   2. The reference file's email form handler was a placeholder
+//      ("ready to connect to Red Door's email follow-up workflow") --
+//      replaced with a real POST to /api/market-readiness/submit-report,
+//      which recomputes the score server-side (never trusts the
+//      client's own numbers), stores the submission in D1, and sends
+//      both the owner's full-report email and a LeadSimple lead email
+//      via Resend -- the same integrations already used by
+//      rental-analysis and contact, not new infrastructure.
+//
+// Scoped <style> below (Astro auto-namespaces component styles), so
+// none of the reference file's CSS class names -- several of which are
+// generic enough to plausibly collide with something in global.css --
+// can leak onto the rest of the page.
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+<section id="self-assessment" class="section-soft mra-assessment">
+  <div class="container">
+    <div class="section-head center">
+      <div class="section-kicker">Owner Self-Check</div>
+      <h2>How Market-Ready Is Your Property?</h2>
+      <p>Select yes, no, or unsure for each item. This quick check does not collect sensitive information.</p>
+    </div>
+    <div class="assessment-card" data-assessment>
+      <div class="assessment-progress" aria-live="polite">
+        <div>
+          <strong data-progress-count>0 of 24 questions completed</strong>
+          <span>Your answers stay on this page until you choose a next step.</span>
+        </div>
+        <div class="assessment-progress-track" aria-hidden="true">
+          <span data-progress-bar style="width: 0%;"></span>
+        </div>
+      </div>
+      <div class="assessment-list" data-assessment-list></div>
+      <div class="assessment-validation" aria-live="polite" data-assessment-validation></div>
+      <div class="assessment-generate">
+        <button class="btn btn-primary" type="button" data-generate-report>Generate My Market Readiness Report</button>
+        <p>Your responses are used only to create this on-screen snapshot.</p>
+      </div>
+      <div class="assessment-result" id="market-readiness-report" aria-live="polite" data-assessment-result hidden>
+        <div data-report-content></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />}
+
+<script define:vars={{ turnstileSiteKeyPresent: Boolean(turnstileSiteKey), turnstileSiteKey: turnstileSiteKey || '' }}>
+  window.__mraTurnstileSiteKey = turnstileSiteKeyPresent ? turnstileSiteKey : null;
+</script>
+
+<script>
+  import { READINESS_QUESTIONS } from '../lib/market-readiness/questions';
+  import {
+    buildFullReport,
+    isComplete,
+    type Answers,
+    type FullReportData,
+    type ReportItem,
+  } from '../lib/market-readiness/scoring';
+
+  (function () {
+    const assessment = document.querySelector<HTMLElement>('[data-assessment]');
+    if (!assessment) return;
+
+    (window as any).dataLayer = (window as any).dataLayer || [];
+    function trackEvent(eventName: string, detail?: Record<string, unknown>) {
+      const payload = Object.assign({ event: eventName, page: 'market_readiness_assessment' }, detail || {});
+      (window as any).dataLayer.push(payload);
+      if (typeof (window as any).gtag === 'function') {
+        (window as any).gtag('event', eventName, payload);
+      }
+    }
+
+    const questionList = assessment.querySelector<HTMLElement>('[data-assessment-list]')!;
+    const result = assessment.querySelector<HTMLElement>('[data-assessment-result]')!;
+    const reportContent = assessment.querySelector<HTMLElement>('[data-report-content]')!;
+    const validation = assessment.querySelector<HTMLElement>('[data-assessment-validation]')!;
+    const progressCount = assessment.querySelector<HTMLElement>('[data-progress-count]')!;
+    const progressBar = assessment.querySelector<HTMLElement>('[data-progress-bar]')!;
+
+    let answers: Answers = {};
+    let started = false;
+    let firstAnswerSelected = false;
+    let completedTracked = false;
+    let currentReport: FullReportData | null = null;
+    let reportEmailSent = false;
+
+    function escapeHtml(value: string): string {
+      return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char] as string);
+    }
+
+    function buildQuestionRows() {
+      let previousCategory = '';
+      questionList.innerHTML = READINESS_QUESTIONS.map((item) => {
+        const categoryHeading = item.category !== previousCategory ? `<div class="assessment-category">${escapeHtml(item.category)}</div>` : '';
+        previousCategory = item.category;
+        return (
+          categoryHeading +
+          `<fieldset class="assessment-row" data-question="${escapeHtml(item.id)}">` +
+          `<legend>${escapeHtml(item.question)}</legend>` +
+          `<div class="assessment-options" role="group" aria-label="${escapeHtml(item.category + ': ' + item.question)}">` +
+          `<button class="assessment-option" type="button" data-value="yes" aria-pressed="false">Yes</button>` +
+          `<button class="assessment-option" type="button" data-value="no" aria-pressed="false">No</button>` +
+          `<button class="assessment-option" type="button" data-value="unsure" aria-pressed="false">Unsure</button>` +
+          `</div>` +
+          `<p class="inline-recommendation" data-inline-feedback="${escapeHtml(item.id)}" hidden></p>` +
+          `</fieldset>`
+        );
+      }).join('');
+    }
+
+    function getRows(): HTMLElement[] {
+      return Array.from(assessment.querySelectorAll<HTMLElement>('[data-question]'));
+    }
+
+    function updateProgress() {
+      const answeredCount = Object.keys(answers).length;
+      const total = READINESS_QUESTIONS.length;
+      const percent = Math.round((answeredCount / total) * 100);
+      progressCount.textContent = `${answeredCount} of ${total} questions completed`;
+      progressBar.style.width = `${percent}%`;
+      if (answeredCount === total && !completedTracked) {
+        completedTracked = true;
+        trackEvent('self_check_completed');
+      }
+    }
+
+    function showValidation(message: string) {
+      validation.textContent = message || '';
+    }
+
+    function renderInlineFeedback(items: ReportItem[]) {
+      items.forEach((item) => {
+        const feedback = assessment!.querySelector<HTMLElement>(`[data-inline-feedback="${item.id}"]`);
+        if (!feedback) return;
+        feedback.hidden = false;
+        feedback.innerHTML = `<strong>Why this matters:</strong> ${escapeHtml(item.inlineRecommendation)}`;
+      });
+    }
+
+    function buildPriorityBadge(priority: string | null): string {
+      if (!priority) return '';
+      return `<span class="priority-badge priority-${escapeHtml(priority)}">${escapeHtml(priority)}</span>`;
+    }
+
+    /** The limited on-page snapshot -- see this file's header comment for
+     * exactly what is and is not included, per Michael's spec. */
+    function buildSnapshotHtml(report: FullReportData, dateGenerated: string): string {
+      const topItem = report.unresolved[0];
+      const strengths = report.ready.slice(0, 2);
+
+      return (
+        `<article class="readiness-report">` +
+        `<section class="report-hero">` +
+        `<div class="score-ring" style="--score:${report.score}"><div><strong>${report.score}%</strong><span>Market-Ready</span></div></div>` +
+        `<div><div class="section-kicker">Preliminary Self-Check Result</div><h3>${escapeHtml(report.category.heading)}</h3><p>${escapeHtml(report.category.message)}</p></div>` +
+        `</section>` +
+        `<div class="report-actions-bar" aria-label="Report actions">` +
+        `<button class="btn btn-secondary" type="button" data-edit-answers>Edit My Answers</button>` +
+        `<button class="btn btn-secondary cta-call" type="button" data-start-over>Start Over</button>` +
+        `</div>` +
+        `<div class="report-summary-grid">` +
+        `<div class="summary-tile"><span>Items Ready</span><strong>${report.ready.length}</strong></div>` +
+        `<div class="summary-tile"><span>Need Attention or Confirmation</span><strong>${report.needsAttention.length + report.confirm.length}</strong></div>` +
+        `</div>` +
+        (strengths.length > 0
+          ? `<section class="report-group"><h3>A Couple of Strengths</h3><div class="report-group-grid">` +
+            strengths.map((item) => `<div class="snapshot-strength">${escapeHtml(item.question)}</div>`).join('') +
+            `</div></section>`
+          : '') +
+        (topItem
+          ? `<section class="report-group"><h3>Your Top Priority Right Now</h3><div class="priority-summary-grid"><article class="priority-summary-card">${buildPriorityBadge(topItem.priority)}<h4>${escapeHtml(topItem.question)}</h4><p>${escapeHtml(topItem.recommendation)}</p></article></div></section>`
+          : '') +
+        `<section class="report-cta"><div class="section-kicker">Next Step</div><h3>${escapeHtml(report.category.cta)}</h3><p>Get your complete personalized report, including every readiness finding, your highest-priority improvements, and detailed next steps &mdash; delivered to your inbox.</p><div class="pricing-cta-row"><a class="btn btn-primary" href="/rental-analysis" data-track="market_readiness_assessment_cta_click" data-cta="snapshot-result">${escapeHtml(report.category.cta)}</a></div><p>This self-check provides a preliminary readiness estimate based on your answers. Property condition, pricing, location, and current rental demand should still be evaluated by a local professional.</p></section>` +
+        buildEmailCardHtml() +
+        `</article>`
+      );
+    }
+
+    function buildEmailCardHtml(): string {
+      const turnstileKey = (window as any).__mraTurnstileSiteKey as string | null;
+      return (
+        `<section class="email-report-card">` +
+        `<h3>Get Your Complete Market Readiness Report</h3>` +
+        `<p>Enter your email to receive your complete personalized report, including every readiness finding, your highest-priority improvements, detailed recommendations, and the next steps for preparing your property for the rental market.</p>` +
+        `<form data-email-report-form novalidate>` +
+        `<label class="full">Email address<input type="email" name="email" autocomplete="email" required></label>` +
+        `<label>First name, optional<input name="first_name" autocomplete="given-name"></label>` +
+        `<label>Phone, optional<input type="tel" name="phone" autocomplete="tel"></label>` +
+        `<label class="full">Property address, optional<input name="property_address" autocomplete="street-address"></label>` +
+        (turnstileKey ? `<div class="full cf-turnstile" data-sitekey="${escapeHtml(turnstileKey)}"></div>` : '') +
+        `<p class="full">We'll use your email to send your assessment results and relevant information about preparing your rental property. We do not sell your information.</p>` +
+        `<button class="full btn btn-primary" type="submit">Email My Full Report</button>` +
+        `<p class="full" data-email-status aria-live="polite" role="status"></p>` +
+        `</form>` +
+        `</section>`
+      );
+    }
+
+    function bindSnapshotActions() {
+      reportContent.querySelectorAll<HTMLElement>('[data-track]').forEach((el) => {
+        el.addEventListener('click', () => {
+          trackEvent(el.getAttribute('data-track')!, {
+            cta_label: el.getAttribute('data-cta') || el.textContent?.trim(),
+            destination: el.getAttribute('href') || undefined,
+          });
+        });
+      });
+
+      const editButton = reportContent.querySelector<HTMLButtonElement>('[data-edit-answers]');
+      const startOverButton = reportContent.querySelector<HTMLButtonElement>('[data-start-over]');
+
+      if (editButton) {
+        editButton.addEventListener('click', () => {
+          assessment!.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+
+      if (startOverButton) {
+        startOverButton.addEventListener('click', () => {
+          answers = {};
+          result.hidden = true;
+          reportContent.innerHTML = '';
+          currentReport = null;
+          reportEmailSent = false;
+          validation.textContent = '';
+          completedTracked = false;
+          getRows().forEach((row) => {
+            row.classList.remove('is-unanswered');
+            row.querySelectorAll<HTMLButtonElement>('.assessment-option').forEach((option) => option.setAttribute('aria-pressed', 'false'));
+            const feedback = row.querySelector<HTMLElement>('.inline-recommendation');
+            if (feedback) {
+              feedback.hidden = true;
+              feedback.innerHTML = '';
+            }
+          });
+          updateProgress();
+          assessment!.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      }
+
+      const emailForm = reportContent.querySelector<HTMLFormElement>('[data-email-report-form]');
+      if (!emailForm) return;
+      let submitting = false;
+
+      emailForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (submitting || !currentReport) return;
+        submitting = true;
+
+        const submitButton = emailForm.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+        const status = emailForm.querySelector<HTMLElement>('[data-email-status]')!;
+        const previousLabel = submitButton.textContent;
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending…';
+        status.textContent = '';
+        status.style.color = '';
+
+        trackEvent('email_report_requested');
+
+        const formData = new FormData(emailForm);
+        const payload = {
+          email: String(formData.get('email') || ''),
+          first_name: String(formData.get('first_name') || ''),
+          phone: String(formData.get('phone') || ''),
+          property_address: String(formData.get('property_address') || ''),
+          answers,
+          'cf-turnstile-response': String(formData.get('cf-turnstile-response') || ''),
+        };
+
+        try {
+          const response = await fetch('/api/market-readiness/submit-report', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          const data = (await response.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+
+          if (response.ok && data.ok) {
+            reportEmailSent = true;
+            status.style.color = '#1d7a48';
+            status.textContent = 'Your complete Market Readiness Report is on its way. Please check your inbox, including your spam or promotions folder.';
+            trackEvent('email_report_sent');
+            emailForm.querySelectorAll('input').forEach((input) => ((input as HTMLInputElement).disabled = true));
+            submitButton.disabled = true;
+            submitButton.textContent = 'Report Sent';
+          } else {
+            status.textContent = data.error || "We couldn't send your report yet. Your answers have been preserved. Please check your email address and try again.";
+            trackEvent('email_report_failed');
+            submitButton.disabled = false;
+            submitButton.textContent = previousLabel;
+          }
+        } catch {
+          status.textContent = "We couldn't send your report yet. Your answers have been preserved. Please check your email address and try again.";
+          trackEvent('email_report_failed');
+          submitButton.disabled = false;
+          submitButton.textContent = previousLabel;
+        } finally {
+          submitting = false;
+        }
+      });
+    }
+
+    function renderSnapshot() {
+      const report = buildFullReport(answers);
+      currentReport = report;
+      reportEmailSent = false;
+      const dateGenerated = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+      reportContent.innerHTML = buildSnapshotHtml(report, dateGenerated);
+      result.hidden = false;
+      renderInlineFeedback(report.items);
+      bindSnapshotActions();
+
+      trackEvent('snapshot_displayed', {
+        result_category: report.category.key,
+        market_readiness_score: report.score,
+      });
+
+      result.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    }
+
+    function invalidateReportIfNeeded() {
+      // Edited an answer after a report was already shown -- per spec,
+      // the emailed report can never conflict with the current answers,
+      // so hide the stale snapshot/email-sent state and require a fresh
+      // "Generate" click before another email can be requested.
+      if (!result.hidden) {
+        result.hidden = true;
+        reportContent.innerHTML = '';
+        currentReport = null;
+        reportEmailSent = false;
+      }
+    }
+
+    buildQuestionRows();
+    updateProgress();
+
+    assessment.addEventListener('click', (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>('.assessment-option');
+      if (!button) return;
+
+      if (!started) {
+        started = true;
+        trackEvent('self_check_started');
+      }
+      if (!firstAnswerSelected) {
+        firstAnswerSelected = true;
+        trackEvent('first_answer_selected');
+      }
+
+      const row = button.closest<HTMLElement>('[data-question]')!;
+      const id = row.getAttribute('data-question')!;
+      const value = button.getAttribute('data-value') as Answers[string];
+      answers[id] = value;
+      row.classList.remove('is-unanswered');
+      row.querySelectorAll<HTMLButtonElement>('.assessment-option').forEach((option) => {
+        option.setAttribute('aria-pressed', String(option === button));
+      });
+      showValidation('');
+      updateProgress();
+      invalidateReportIfNeeded();
+    });
+
+    assessment.querySelector<HTMLButtonElement>('[data-generate-report]')!.addEventListener('click', () => {
+      if (!isComplete(answers)) {
+        const unanswered = getRows().filter((row) => !answers[row.getAttribute('data-question')!]);
+        getRows().forEach((row) => row.classList.toggle('is-unanswered', unanswered.includes(row)));
+        showValidation('Please answer all questions before viewing your Market Readiness Report.');
+        unanswered[0]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      showValidation('');
+      renderSnapshot();
+    });
+  })();
+</script>
+
+<style is:global>
+  /* is:global, not Astro's default auto-scoped style -- most of this
+     component's markup (question rows, the whole result/snapshot
+     section) is injected client-side via innerHTML, which never passes
+     through Astro's compiler and so can never carry the
+     data-astro-cid-* attribute scoped styles rely on (confirmed live:
+     .assessment-card, rendered by Astro directly, had it; .assessment-
+     row, injected by the script, did not, and was completely
+     unstyled). Every selector below is manually prefixed with
+     .mra-assessment instead, which is what actually keeps this CSS from
+     touching the rest of the page. */
+  .mra-assessment .assessment-card {
+    padding: 28px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+
+  .mra-assessment .assessment-progress {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding: 18px;
+    background: #fbfbfc;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .mra-assessment .assessment-progress strong {
+    display: block;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+
+  .mra-assessment .assessment-progress span {
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+
+  .mra-assessment .assessment-progress-track {
+    height: 10px;
+    overflow: hidden;
+    background: #eceff3;
+    border-radius: 999px;
+  }
+
+  .mra-assessment .assessment-progress-track span {
+    width: 0;
+    height: 100%;
+    display: block;
+    background: linear-gradient(90deg, var(--brand), var(--brand-mid));
+    transition: width 0.22s ease;
+  }
+
+  .mra-assessment .assessment-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .mra-assessment .assessment-category {
+    margin: 10px 0 0;
+    color: var(--brand);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .mra-assessment .assessment-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: start;
+    min-width: 0;
+    margin: 0;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: #fbfbfc;
+  }
+
+  .mra-assessment .assessment-row.is-unanswered {
+    border-color: rgba(139, 14, 4, 0.42);
+    box-shadow: 0 0 0 3px rgba(139, 14, 4, 0.07);
+  }
+
+  .mra-assessment .assessment-row legend {
+    margin: 0;
+    color: #424850;
+    font-weight: 800;
+    padding: 0;
+  }
+
+  .mra-assessment .assessment-options {
+    display: flex;
+    gap: 8px;
+  }
+
+  .mra-assessment .assessment-option {
+    min-width: 74px;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 8px 10px;
+    color: #40464e;
+    background: var(--white);
+    border: 1px solid #ccd1d8;
+    border-radius: 6px;
+    font-weight: 900;
+    cursor: pointer;
+    font: inherit;
+  }
+
+  .mra-assessment .assessment-option::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    opacity: 0.55;
+  }
+
+  .mra-assessment .assessment-option[aria-pressed='true']::before {
+    content: '\2713';
+    color: inherit;
+    font-size: 0.7rem;
+    line-height: 1;
+    opacity: 1;
+  }
+
+  .mra-assessment .assessment-option[data-value='yes'][aria-pressed='true'] {
+    color: #0f5132;
+    background: #eaf6ef;
+    border-color: #1d7a48;
+    box-shadow: inset 0 0 0 1px #1d7a48;
+  }
+
+  .mra-assessment .assessment-option[data-value='no'][aria-pressed='true'] {
+    color: var(--white);
+    background: var(--brand);
+    border-color: var(--brand);
+    box-shadow: inset 0 0 0 1px var(--brand-mid);
+  }
+
+  .mra-assessment .assessment-option[data-value='unsure'][aria-pressed='true'] {
+    color: #2f4858;
+    background: #eef4f8;
+    border-color: #557489;
+    box-shadow: inset 0 0 0 1px #557489;
+  }
+
+  .mra-assessment .inline-recommendation {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 13px 14px;
+    color: #4a5058;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--brand);
+    border-radius: 6px;
+    font-size: 0.93rem;
+  }
+
+  .mra-assessment .assessment-validation {
+    min-height: 24px;
+    margin-top: 16px;
+    color: var(--brand-mid);
+    font-weight: 900;
+  }
+
+  .mra-assessment .assessment-generate {
+    display: grid;
+    justify-items: start;
+    gap: 9px;
+    margin-top: 18px;
+  }
+
+  .mra-assessment .assessment-generate p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+
+  .mra-assessment .assessment-result {
+    margin-top: 34px;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--white);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .mra-assessment .readiness-report {
+    display: grid;
+    gap: 26px;
+    padding: clamp(22px, 4vw, 34px);
+  }
+
+  .mra-assessment .report-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 0.78fr) minmax(260px, 1fr);
+    gap: 26px;
+    align-items: center;
+    padding: 24px;
+    background: #171717;
+    color: var(--white);
+    border-radius: var(--radius);
+  }
+
+  .mra-assessment .report-hero h3,
+  .mra-assessment .report-hero p {
+    color: var(--white);
+  }
+
+  .mra-assessment .score-ring {
+    --score: 0;
+    width: 190px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    justify-self: center;
+    color: var(--white);
+    background: radial-gradient(circle at center, #171717 0 58%, transparent 59%), conic-gradient(var(--brand) calc(var(--score) * 1%), rgba(255, 255, 255, 0.2) 0);
+    border-radius: 50%;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+  }
+
+  .mra-assessment .score-ring strong {
+    font-size: 2.9rem;
+    line-height: 1;
+    display: block;
+  }
+
+  .mra-assessment .score-ring span {
+    font-weight: 900;
+    color: #f3f3f3;
+  }
+
+  .mra-assessment .report-actions-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .mra-assessment .report-actions-bar .btn {
+    min-height: 42px;
+    padding: 10px 14px;
+    font-size: 0.92rem;
+  }
+
+  .mra-assessment .report-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .mra-assessment .summary-tile {
+    padding: 18px;
+    background: #fbfbfc;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .mra-assessment .summary-tile span {
+    color: var(--brand);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .mra-assessment .summary-tile strong {
+    display: block;
+    color: var(--ink);
+    font-size: 1.7rem;
+    line-height: 1.1;
+    margin-top: 4px;
+  }
+
+  .mra-assessment .report-group {
+    display: grid;
+    gap: 12px;
+  }
+
+  .mra-assessment .report-group h3 {
+    margin-bottom: 0;
+  }
+
+  .mra-assessment .report-group-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .mra-assessment .snapshot-strength {
+    padding: 14px 16px;
+    background: #eaf6ef;
+    border: 1px solid #cfe8d9;
+    border-radius: 6px;
+    color: #0f5132;
+    font-weight: 700;
+    font-size: 0.94rem;
+  }
+
+  .mra-assessment .priority-summary-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .mra-assessment .priority-summary-card {
+    padding: 18px;
+    background: #fbfbfc;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .mra-assessment .priority-summary-card h4 {
+    margin: 8px 0 6px;
+    color: var(--ink);
+  }
+
+  .mra-assessment .priority-summary-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .mra-assessment .priority-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 25px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .mra-assessment .priority-critical {
+    color: #fff;
+    background: var(--brand);
+  }
+
+  .mra-assessment .priority-high {
+    color: #fff;
+    background: var(--brand-mid);
+  }
+
+  .mra-assessment .priority-medium {
+    color: #243f53;
+    background: #dbe9f1;
+  }
+
+  .mra-assessment .priority-low {
+    color: #41502b;
+    background: #e8efdb;
+  }
+
+  .mra-assessment .report-cta {
+    padding: 22px;
+    background: #171717;
+    color: var(--white);
+    border-radius: var(--radius);
+  }
+
+  .mra-assessment .report-cta h3,
+  .mra-assessment .report-cta p {
+    color: var(--white);
+  }
+
+  .mra-assessment .email-report-card {
+    padding: 22px;
+    background: var(--brand-tint);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .mra-assessment .email-report-card form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .mra-assessment .email-report-card label {
+    display: grid;
+    gap: 5px;
+    color: var(--ink);
+    font-weight: 900;
+  }
+
+  .mra-assessment .email-report-card input {
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid #cfd3d9;
+    border-radius: 6px;
+    font: inherit;
+  }
+
+  .mra-assessment .email-report-card .full {
+    grid-column: 1 / -1;
+  }
+
+  .mra-assessment .email-report-card [data-email-status] {
+    color: var(--brand-mid);
+    font-weight: 700;
+    min-height: 1.2em;
+  }
+
+  @media (max-width: 900px) {
+    .mra-assessment .report-hero {
+      grid-template-columns: 1fr;
+    }
+    .mra-assessment .report-summary-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .mra-assessment .assessment-row {
+      grid-template-columns: 1fr;
+    }
+    .mra-assessment .assessment-options {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .mra-assessment .assessment-generate .btn {
+      width: 100%;
+    }
+    .mra-assessment .score-ring {
+      width: 160px;
+    }
+    .mra-assessment .email-report-card form {
+      grid-template-columns: 1fr;
+    }
+    .mra-assessment .report-actions-bar {
+      display: grid;
+    }
+  }
+
+  @media print {
+    .mra-assessment .assessment-progress,
+    .mra-assessment .assessment-list,
+    .mra-assessment .assessment-validation,
+    .mra-assessment .assessment-generate,
+    .mra-assessment .email-report-card {
+      display: none !important;
+    }
+    .mra-assessment .assessment-result {
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+    .mra-assessment .report-hero,
+    .mra-assessment .report-cta {
+      color: #111 !important;
+      background: #fff !important;
+      border: 1px solid #d8d8d8;
+    }
+    .mra-assessment .report-hero h3,
+    .mra-assessment .report-hero p,
+    .mra-assessment .report-cta h3,
+    .mra-assessment .report-cta p {
+      color: #111 !important;
+    }
+    .mra-assessment .score-ring {
+      width: auto;
+      aspect-ratio: auto;
+      display: block;
+      color: #111;
+      background: none;
+      box-shadow: none;
+    }
+  }
+</style>
