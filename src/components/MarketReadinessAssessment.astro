@@ -64,7 +64,12 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
   </div>
 </section>
 
-{turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />}
+{/* render=explicit -- the widget lives in a container injected long
+    after page load (only once all 24 questions are answered), so it's
+    rendered manually via turnstile.render() rather than relying on
+    Turnstile's own auto-scan-on-load behavior, which would never find
+    it. See the render call in this component's own <script> below. */}
+{turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer />}
 
 <script define:vars={{ turnstileSiteKeyPresent: Boolean(turnstileSiteKey), turnstileSiteKey: turnstileSiteKey || '' }}>
   window.__mraTurnstileSiteKey = turnstileSiteKeyPresent ? turnstileSiteKey : null;
@@ -210,7 +215,7 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         `<label>First name, optional<input name="first_name" autocomplete="given-name"></label>` +
         `<label>Phone, optional<input type="tel" name="phone" autocomplete="tel"></label>` +
         `<label class="full">Property address, optional<input name="property_address" autocomplete="street-address"></label>` +
-        (turnstileKey ? `<div class="full cf-turnstile" data-sitekey="${escapeHtml(turnstileKey)}"></div>` : '') +
+        (turnstileKey ? `<div class="full" id="mra-turnstile-container"></div>` : '') +
         `<p class="full">We'll use your email to send your assessment results and relevant information about preparing your rental property. We do not sell your information.</p>` +
         `<button class="full btn btn-primary" type="submit">Email My Full Report</button>` +
         `<p class="full" data-email-status aria-live="polite" role="status"></p>` +
@@ -261,6 +266,33 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         });
       }
 
+      // Turnstile only auto-renders widgets present in the DOM at page-
+      // load/script-load time -- this container is injected long after
+      // that (only once all 24 questions are answered), so it needs an
+      // EXPLICIT render call, and the token has to be read back via
+      // turnstile.getResponse() rather than trusted to appear as a
+      // FormData field the way a statically-rendered widget's auto-
+      // injected hidden input would. Confirmed live: without this,
+      // "Spam check failed" fired on every real, correctly-solved
+      // attempt, because no actual solvable widget was ever rendered.
+      const turnstileContainer = reportContent.querySelector<HTMLElement>('#mra-turnstile-container');
+      let turnstileWidgetId: string | null = null;
+      if (turnstileContainer) {
+        const turnstileKey = (window as any).__mraTurnstileSiteKey as string | null;
+        const renderWidget = () => {
+          if ((window as any).turnstile?.render && turnstileKey) {
+            turnstileWidgetId = (window as any).turnstile.render(turnstileContainer, { sitekey: turnstileKey });
+          } else {
+            // The api.js script (async defer) may not have finished
+            // loading yet by the time the 24th question is answered --
+            // rare, but retry briefly rather than leave the widget
+            // permanently unrendered.
+            setTimeout(renderWidget, 200);
+          }
+        };
+        renderWidget();
+      }
+
       const emailForm = reportContent.querySelector<HTMLFormElement>('[data-email-report-form]');
       if (!emailForm) return;
       let submitting = false;
@@ -281,13 +313,17 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
         trackEvent('email_report_requested');
 
         const formData = new FormData(emailForm);
+        const turnstileToken =
+          turnstileWidgetId !== null && (window as any).turnstile?.getResponse
+            ? (window as any).turnstile.getResponse(turnstileWidgetId)
+            : '';
         const payload = {
           email: String(formData.get('email') || ''),
           first_name: String(formData.get('first_name') || ''),
           phone: String(formData.get('phone') || ''),
           property_address: String(formData.get('property_address') || ''),
           answers,
-          'cf-turnstile-response': String(formData.get('cf-turnstile-response') || ''),
+          'cf-turnstile-response': turnstileToken || '',
         };
 
         try {
@@ -311,12 +347,15 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
             trackEvent('email_report_failed');
             submitButton.disabled = false;
             submitButton.textContent = previousLabel;
+            // Turnstile tokens are single-use -- a retry needs a fresh one.
+            if (turnstileWidgetId !== null) (window as any).turnstile?.reset(turnstileWidgetId);
           }
         } catch {
           status.textContent = "We couldn't send your report yet. Your answers have been preserved. Please check your email address and try again.";
           trackEvent('email_report_failed');
           submitButton.disabled = false;
           submitButton.textContent = previousLabel;
+          if (turnstileWidgetId !== null) (window as any).turnstile?.reset(turnstileWidgetId);
         } finally {
           submitting = false;
         }
