@@ -467,6 +467,33 @@ Judgment calls / open items carried forward from this build:
       and delete `public/_headers`' `X-Robots-Tag` block (keep the
       Cloudflare-adapter-managed `/_astro/*` Cache-Control block above
       it).
+- [ ] **🚨 GO-LIVE CHECKLIST: verify Turnstile actually works on the real
+      domain once DNS cuts over.** Found 2026-09-25 while building the
+      Market Readiness self-check's "email my report" form: Turnstile
+      could not be made to work on the dev preview domain
+      (`red-door-site.mtaylor-0d7.workers.dev`) at all, even after
+      confirming the site key was correct (byte-for-byte, via copy-paste
+      from the dashboard) and adding that hostname to the widget's
+      allowed-hostnames list. Root cause traced to the widget itself —
+      it's named "reddoorrents.com (Spin)," meaning it was created
+      through Cloudflare's Spin product, which ties bot protection
+      tightly to the specific zone it was set up for (reddoorrents.com,
+      a real Cloudflare-proxied domain) rather than behaving like a
+      portable, general-purpose Turnstile widget. A `*.workers.dev`
+      preview URL was never going to be validated by a Spin-managed
+      widget regardless of the hostname allowlist. **This should resolve
+      itself once real traffic hits reddoorrents.com** (the domain the
+      widget was actually built for), but that needs to be CONFIRMED at
+      launch, not assumed — test a real submission on all three
+      Turnstile-gated forms (`/rental-analysis`, `/contact`, and the
+      Market Readiness self-check's email-report form) on the real
+      domain before considering launch complete. Separately, Cloudflare's
+      own Spin monitoring flagged "Siteverify isn't being called for
+      reddoorrents.com" — that warning is about the *old* PMW site's
+      current (unprotected) behavior, not this codebase, which already
+      calls `siteverify` server-side on every one of these forms; it
+      should stop firing once the new site is live, but worth confirming
+      that too rather than assuming.
 - ✅ **PRE-LAUNCH BLOCKER: analytics/tracking audit — tagging, GTM
       continuity, and conversion tracking — all three pieces resolved
       (Sep 22–24).** Flagged by Michael 2026-09-22. One remaining loose
