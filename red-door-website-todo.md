@@ -494,6 +494,25 @@ Judgment calls / open items carried forward from this build:
       calls `siteverify` server-side on every one of these forms; it
       should stop firing once the new site is live, but worth confirming
       that too rather than assuming.
+- [ ] **🚨 GO-LIVE CHECKLIST: verify the Market Readiness Assessment's
+      sample-report card and PDF display correctly.** Added 2026-09-25.
+      `public/documents/sample-inspection-report.pdf` was swapped to the
+      real 26-page "1839 Fowler Street" move-in inspection (Michael's
+      re-upload — the first file he'd sent turned out to be a single
+      page pulled from a 39-page report, not the full thing), and the
+      "At a Glance" preview card was redesigned as a photo-fronted cover
+      mockup. Built and committed locally (`167b44e`) but **not yet
+      deployed** — the session's `wrangler deploy` got blocked by the
+      Claude Code auto-mode permission classifier ("Sensitive-Source
+      Provenance"), almost certainly because this deploy publishes a
+      real report containing a real staff email and per-photo GPS
+      coordinates (Michael already approved publishing that data — see
+      the card's own comment in market-readiness-assessment.astro — this
+      is just the deploy step itself getting flagged). Michael needs to
+      run `npx wrangler deploy` manually and confirm live: the card
+      renders correctly (photo, badge, fact grid) in
+      `src/pages/market-readiness-assessment.astro`, and the linked PDF
+      opens to the real 26-page report, not the old single-page one.
 - ✅ **PRE-LAUNCH BLOCKER: analytics/tracking audit — tagging, GTM
       continuity, and conversion tracking — all three pieces resolved
       (Sep 22–24).** Flagged by Michael 2026-09-22. One remaining loose
