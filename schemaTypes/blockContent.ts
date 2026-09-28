@@ -90,6 +90,31 @@ export default defineType({
     }),
     defineArrayMember({
       type: 'object',
+      name: 'accordionSection',
+      title: 'Collapsible Section (FAQ / Transcript)',
+      description:
+        'A titled, collapsed-by-default section — used for the FAQ and video Transcript blocks the original site rendered as an accordion.',
+      fields: [
+        defineField({
+          name: 'title',
+          title: 'Title',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'content',
+          title: 'Content',
+          type: 'array',
+          of: [{type: 'block'}],
+        }),
+      ],
+      preview: {
+        select: {title: 'title'},
+        prepare: ({title}) => ({title: title || 'Collapsible section'}),
+      },
+    }),
+    defineArrayMember({
+      type: 'object',
       name: 'table',
       title: 'Table',
       fields: [

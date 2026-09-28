@@ -275,10 +275,22 @@ function cellText($, $td) {
 export function blocksFromBody($, bodyEl) {
   const blocks = [];
 
+  // Found live 2026-09-28 on a post whose transcript was loose text
+  // directly inside a <div> (<br>-separated, no <p> wrapping) instead of
+  // the usual .speaker-block>p structure: the text-node branch below calls
+  // blocksFromParagraphLike on the *whole parent* every time it sees a
+  // direct text-node child, and a parent with N such children re-parses
+  // and re-pushes all of its own content N times (quadratic -- this one
+  // had ~122 paragraphs and ended up with 14,884 blocks, a 5MB document
+  // that failed to write). Tracked per parent so each container like this
+  // is only ever parsed once, however many loose text nodes it has.
+  const processedTextParents = new Set();
+
   function walk($container) {
     $container.contents().each((_, node) => {
       if (node.type !== 'tag') {
-        if (node.type === 'text' && node.data.trim()) {
+        if (node.type === 'text' && node.data.trim() && !processedTextParents.has(node.parent)) {
+          processedTextParents.add(node.parent);
           blocks.push(...blocksFromParagraphLike($, $(node.parent), 'normal'));
         }
         return;
@@ -306,6 +318,37 @@ export function blocksFromBody($, bodyEl) {
           break;
         case 'ul':
         case 'ol': {
+          // Launch (the old CMS)'s own FAQ/Transcript accordion widget --
+          // <ul class="launch-accordion" data-provide="accordion"><li><h4>
+          // title</h4><div>...content...</div></li></ul>. Found live
+          // 2026-09-28 on "Is My Rent Too High?": the generic bullet-list
+          // handling below flattened this into plain bullet blocks with no
+          // paragraph breaks (all of a transcript's <p> tags concatenated
+          // into a handful of giant list items) and no title/collapse
+          // behavior at all -- confirmed present in 122/309 archived posts,
+          // not a one-off. Handled here as its own block type instead so
+          // AccordionSection.astro can render each <li> as a real
+          // collapsible section, one per FAQ/Transcript.
+          if (tag === 'ul' && $node.hasClass('launch-accordion')) {
+            $node.children('li').each((_, li) => {
+              const $li = $(li);
+              // Title is almost always a plain <h4>, but one file
+              // (noblesville-market-report--december-2025.html) uses a
+              // bare <span style="font-size:18px"> instead -- rather than
+              // special-case that one file, take everything in the <li>
+              // except its content <div> (always the last child) as the
+              // title, however it's marked up.
+              const $content = $li.children('div').last();
+              const title = $li.contents().not($content).text().trim();
+              blocks.push({
+                _type: 'accordionSection',
+                _key: randKey(),
+                title,
+                content: $content.length ? blocksFromBody($, $content) : [],
+              });
+            });
+            break;
+          }
           const listItem = tag === 'ul' ? 'bullet' : 'number';
           $node.children('li').each((_, li) => {
             const liBlocks = blocksFromParagraphLike($, $(li), 'normal');
@@ -419,6 +462,14 @@ async function main() {
       const bodyDiv = $('div.post-body').first();
       const rawBlocks = blocksFromBody($, bodyDiv);
       const blocks = await resolvePending(rawBlocks);
+      // accordionSection.content is its own nested block array (built by a
+      // separate blocksFromBody call above) that never went through
+      // resolvePending -- do that now for each one, same as the top level.
+      for (const block of blocks) {
+        if (block._type === 'accordionSection') {
+          block.content = await resolvePending(block.content);
+        }
+      }
 
       // Found live 2026-09-25: only 71/309 posts got a real mainImage out
       // of this — the other 4 posts that DO have a body image just don't

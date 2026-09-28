@@ -1,0 +1,71 @@
+---
+// Renders a launch-accordion <li> (FAQ / video Transcript, historically)
+// as a real collapsed-by-default disclosure -- see blockContent.ts's
+// accordionSection type and migrate-blog.mjs's own note on why this
+// exists. Uses native <details>/<summary> rather than this site's other
+// .accordion/.accordion-trigger/data-accordion JS pattern (used for
+// pillar-page FAQs): an unknown, per-post number of these can appear, and
+// <details> gives free keyboard/accessible collapse behavior with no
+// script to wire up per instance.
+import { PortableText } from 'astro-portabletext';
+
+const { node } = Astro.props;
+const title = node.title || 'Details';
+const content = node.content || [];
+---
+
+<details class="pt-accordion">
+  <summary class="pt-accordion-trigger">
+    <span>{title}</span>
+    <span class="pt-accordion-icon" aria-hidden="true"></span>
+  </summary>
+  <div class="pt-accordion-panel">
+    <PortableText value={content} />
+  </div>
+</details>
+
+<style>
+  .pt-accordion {
+    margin: 24px 0;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 30px rgba(23, 23, 23, .05);
+    overflow: hidden;
+  }
+  .pt-accordion-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 60px;
+    padding: 16px 20px;
+    color: var(--ink);
+    font-weight: 800;
+    font-size: 1.02rem;
+    cursor: pointer;
+    list-style: none;
+  }
+  .pt-accordion-trigger::-webkit-details-marker { display: none; }
+  .pt-accordion-icon {
+    flex: 0 0 auto;
+    position: relative;
+    width: 20px;
+    height: 20px;
+  }
+  .pt-accordion-icon::before,
+  .pt-accordion-icon::after {
+    content: '';
+    position: absolute;
+    background: var(--brand);
+    border-radius: 2px;
+  }
+  .pt-accordion-icon::before { top: 9px; left: 2px; width: 16px; height: 2px; }
+  .pt-accordion-icon::after { top: 2px; left: 9px; width: 2px; height: 16px; transition: transform .15s ease; }
+  details[open] .pt-accordion-icon::after { transform: scaleY(0); }
+  .pt-accordion-panel {
+    padding: 0 20px 20px;
+  }
+  .pt-accordion-panel :global(p) { margin: 0 0 14px; }
+  .pt-accordion-panel :global(p:last-child) { margin-bottom: 0; }
+</style>
