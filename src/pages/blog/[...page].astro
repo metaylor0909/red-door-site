@@ -17,6 +17,7 @@ interface PostSummary {
   excerpt?: string;
   authorName?: string;
   mainImageUrl?: string;
+  youtubeUrl?: string;
 }
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
@@ -31,7 +32,8 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
         publishedAt,
         excerpt,
         "authorName": author->name,
-        "mainImageUrl": mainImage.asset->url
+        "mainImageUrl": mainImage.asset->url,
+        "youtubeUrl": body[_type == "youtubeEmbed"][0].url
       }
     `);
   } catch (err) {
@@ -46,6 +48,20 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 
 const { page } = Astro.props;
 const posts = page.data as PostSummary[];
+
+// 214 of the 234 posts with no mainImage (found live 2026-09-28 —
+// "none of the thumbnails came through," which turned out to be true for
+// page 1 specifically: it's sorted newest-first, and recent posts skew
+// heavily toward video-transcript market reports that never had a body
+// image to promote to mainImage in the first place — see
+// scripts/migrate-blog.mjs's own note on that) do have a YouTube video,
+// so fall back to its thumbnail rather than showing nothing. Same regex
+// as YoutubeEmbed.astro. The remaining ~20 posts genuinely have neither
+// and show no image, same as before.
+function youtubeThumb(url?: string): string | null {
+  const match = url?.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  return match ? `https://img.youtube.com/vi/${match[1]}/mqdefault.jpg` : null;
+}
 
 const pageTitle = page.currentPage === 1 ? 'Watch & Learn | Red Door Property Management' : `Watch & Learn | Page ${page.currentPage} | Red Door Property Management`;
 const pagePath = page.currentPage === 1 ? '/blog' : `/blog/${page.currentPage}`;
@@ -69,9 +85,11 @@ const pagePath = page.currentPage === 1 ? '/blog' : `/blog/${page.currentPage}`;
         <p class="lead">No posts yet — this page is wired up but the blog content hasn't been migrated in.</p>
       )}
       <div class="blog-index-grid">
-        {posts.map((post) => (
+        {posts.map((post) => {
+          const thumb = post.mainImageUrl || youtubeThumb(post.youtubeUrl);
+          return (
           <a class="blog-index-card" href={`/blog/${post.slug}`}>
-            {post.mainImageUrl && <img src={post.mainImageUrl} alt="" loading="lazy" />}
+            {thumb && <img src={thumb} alt="" loading="lazy" />}
             <div class="blog-index-card-body">
               <p class="blog-index-card-date">
                 {new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
@@ -81,7 +99,8 @@ const pagePath = page.currentPage === 1 ? '/blog' : `/blog/${page.currentPage}`;
               {post.authorName && <p class="blog-index-card-author">{post.authorName}</p>}
             </div>
           </a>
-        ))}
+          );
+        })}
       </div>
 
       {page.lastPage > 1 && (

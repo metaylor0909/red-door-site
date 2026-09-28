@@ -99,7 +99,15 @@ const jsonLd = {
 </BaseLayout>
 
 <style>
-  .blog-post-page { padding: 44px 0 80px; }
+  /* padding-top must clear the fixed .site-header -- this page never had
+     any (44px, nowhere near enough), so the H1 rendered partly behind the
+     header on load, found live 2026-09-28. Reusing the same measured
+     values as .listing-breadcrumb-bar (global.css) rather than
+     re-deriving them. */
+  .blog-post-page { padding: 116px 0 80px; }
+  @media (max-width: 980px) {
+    .blog-post-page { padding-top: 74px; }
+  }
   .blog-post-meta {
     display: flex;
     gap: 16px;
