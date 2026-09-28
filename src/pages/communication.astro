@@ -67,27 +67,45 @@ const pageDescription =
         <div class="section-kicker">What Makes Our Communication Different</div>
         <h2>Five Standards We Hold Ourselves To</h2>
       </div>
+      {/* First three tiles replaced 2026-09-28 (Transparent and Proactive /
+          Multi-Channel Communication / Regular Updates With Visuals ->
+          Proactive Updates / Centralized Documentation / Photo and Video
+          Proof), per Michael's own copy. Kept the existing icon+title+
+          description card style rather than the kicker-badge style from
+          his reference screenshot, to stay consistent with the two
+          untouched tiles alongside them. Three of the five tiles also got
+          a step-card-media video-trigger button, same pattern as
+          market-readiness-assessment.astro -- see this page's own
+          video-modal dialog and script below. */}
       <div class="step-grid is-five-across">
         <article class="step-card">
           <span class="step-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
           </span>
-          <h3>Transparent and Proactive</h3>
-          <p>We never wait for you to ask what&rsquo;s going on &mdash; we tell you before you need to ask.</p>
+          <h3>Proactive Updates</h3>
+          <p>Owners receive updates before small questions become big concerns, including leasing activity, maintenance status, renewal timing, and next-step recommendations.</p>
+          <button class="step-card-media" type="button" data-video-trigger="loom:e551d104a8ee40928483e274eee1a7bd" aria-label="Watch a sample proactive owner update">
+            <img src="/images/communication/proactive-updates-loom-thumb.webp" alt="" loading="lazy" />
+            <span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>
+          </button>
         </article>
         <article class="step-card">
           <span class="step-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M4 5h16v10H9l-4 4z"></path><path d="M8.5 10h7M8.5 7.5h7"></path></svg>
+            <svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"></path><path d="M15 2v5h5"></path><path d="M9 13h6M9 17h6"></path></svg>
           </span>
-          <h3>Multi-Channel Communication</h3>
-          <p>Email, text, phone, or video &mdash; whatever works best for you.</p>
+          <h3>Centralized Documentation</h3>
+          <p>Statements, invoices, work orders, messages, photos, and approvals stay organized through the owner portal so the history is easy to review.</p>
+          <button class="step-card-media" type="button" data-video-trigger="loom:9e84db265b484364bd21fddb2b80c7da" aria-label="Watch an owner portal walkthrough">
+            <img src="/images/communication/centralized-documentation-loom-thumb.webp" alt="" loading="lazy" />
+            <span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>
+          </button>
         </article>
         <article class="step-card">
           <span class="step-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M3 9h3l2.5-2.5h7L17 9h4v9H3z"></path><circle cx="12" cy="13.5" r="3.4"></circle></svg>
           </span>
-          <h3>Regular Updates With Visuals</h3>
-          <p>Move-in/move-out videos, inspection footage, and photo documentation come standard.</p>
+          <h3>Photo and Video Proof</h3>
+          <p>Move-in, move-out, inspection, and maintenance updates can include visuals so remote owners are not forced to make decisions from vague notes.</p>
         </article>
         <article class="step-card">
           <span class="step-icon" aria-hidden="true">
@@ -95,6 +113,10 @@ const pageDescription =
           </span>
           <h3>Fast Response Times</h3>
           <p>Our internal systems and automation ensure no message slips through the cracks.</p>
+          <button class="step-card-media" type="button" data-video-trigger="loom:f468db4b32ba49caac7d847bfba8e336" aria-label="Watch a sample owner approval walkthrough">
+            <img src="/images/market-readiness/owner-approval-loom-thumb.webp" alt="" loading="lazy" />
+            <span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>
+          </button>
         </article>
         <article class="step-card">
           <span class="step-icon" aria-hidden="true">
@@ -120,6 +142,44 @@ const pageDescription =
         <li><strong>Move-Out &amp; Turn:</strong> a move-out inspection video, an itemized damage-vs-wear report, photos, and a pre-approved repair estimate and timeline.</li>
         <li><strong>Ongoing Owner Education:</strong> monthly Indianapolis rental market podcasts, video reports on trends and pricing, and neighborhood-level forecasts.</li>
       </ul>
+    </div>
+  </section>
+
+  <dialog class="video-modal" data-video-modal aria-label="Video player">
+    <button class="video-modal-close" type="button" data-video-modal-close aria-label="Close video">&times;</button>
+    <div class="video-modal-frame">
+      <iframe data-video-modal-iframe src="" title="Red Door video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </dialog>
+
+  {/* Added 2026-09-28, per Michael's reference screenshot. That screenshot's
+      second paragraph ("This overview video can sit in its own section so
+      prospective owners can see...") read as a note to me about placement,
+      not copy to publish -- left out. The three-callout row under the
+      paragraph (Financials/Documents/Visibility, each with a kicker label
+      and a full sentence) was cut down to just the three headlines per
+      Michael's explicit instruction ("just use the bullet points"). Video
+      is a direct persistent Loom embed, not a step-card-media/video-modal
+      trigger like the Five Standards tiles above -- the screenshot showed
+      it playing inline in its own section, not behind a click-to-open
+      thumbnail. */}
+  <section class="section-soft">
+    <div class="container reveal">
+      <div class="comm-portal-grid">
+        <div>
+          <div class="section-kicker">Owner Portal Experience</div>
+          <h2>See How Your Portal Keeps Everything Organized</h2>
+          <p>The owner portal gives you a single place to review statements, documents, maintenance activity, owner contributions, distributions, and property-level communication. It supports the kind of transparency owners need when they want visibility without managing every detail themselves.</p>
+          <ul class="plain-list">
+            <li>Statements and Payments</li>
+            <li>Lease and File Access</li>
+            <li>Maintenance History</li>
+          </ul>
+        </div>
+        <div class="comm-portal-video-frame">
+          <iframe src="https://www.loom.com/embed/9e84db265b484364bd21fddb2b80c7da" title="Owner portal walkthrough" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -210,5 +270,48 @@ const pageDescription =
         });
       });
     });
+
+    // Video lightbox for the Five Standards tiles' sample-video buttons --
+    // see .video-modal in global.css. Ported from
+    // market-readiness-assessment.astro, including its "loom:<id>" trigger
+    // prefix for the Loom embeds used here (vs. that page's YouTube ones).
+    (function () {
+      var modal = document.querySelector('[data-video-modal]');
+      if (!modal) return;
+      var iframe = modal.querySelector('[data-video-modal-iframe]');
+      var closeButton = modal.querySelector('[data-video-modal-close]');
+
+      function openModal(videoId) {
+        if (videoId.indexOf('loom:') === 0) {
+          iframe.src = 'https://www.loom.com/embed/' + videoId.slice(5) + '?autoplay=1';
+        } else {
+          iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
+        }
+        modal.showModal();
+      }
+
+      function closeModal() {
+        modal.close();
+        // Stop playback immediately rather than relying on the dialog's
+        // own 'close' event -- confirmed on market-readiness-assessment
+        // 2026-09-25 that it doesn't fire reliably even for a plain,
+        // manually-triggered modal.close() call.
+        iframe.src = '';
+      }
+
+      document.querySelectorAll('[data-video-trigger]').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          openModal(trigger.getAttribute('data-video-trigger'));
+        });
+      });
+
+      closeButton.addEventListener('click', closeModal);
+      modal.addEventListener('click', function (event) {
+        if (event.target === modal) closeModal();
+      });
+      modal.addEventListener('cancel', function () {
+        iframe.src = '';
+      });
+    })();
   </script>
 </BaseLayout>

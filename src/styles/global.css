@@ -959,7 +959,19 @@
       color: var(--red);
     }
 
-    .guarantee-section .section-head p {
+    /* Was `.guarantee-section .section-head p`, which only fixed pages
+       whose CTA paragraph happens to be wrapped in .section-head.
+       .guarantee-section swaps .section-dark's dark background for a
+       light gradient but never overrode .section-dark's plain `p` rule
+       (color: #dedede, meant for dark backgrounds) -- so any
+       .section-dark.guarantee-section page with a bare <p> (not inside
+       .section-head) got near-invisible light-gray-on-near-white text.
+       Found 2026-09-28 on communication.astro's CTA paragraph; also
+       silently broken on leasing-process.astro and
+       market-readiness-assessment.astro's matching CTA sections. Broadened
+       to plain `p` -- still beats .section-dark p on source order at
+       equal specificity, and covers both the wrapped and bare cases. */
+    .guarantee-section p {
       color: var(--muted);
     }
 
@@ -3241,6 +3253,30 @@
       cursor: pointer;
     }
     .video-modal-close:hover { background: rgba(255, 255, 255, .22); }
+
+    /* communication.astro's "See How Your Portal Keeps Everything
+       Organized" section, added 2026-09-28: text + bullet list on the
+       left, a persistent (not modal-triggered) Loom embed on the right. */
+    .comm-portal-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      align-items: center;
+      margin-top: 8px;
+    }
+    .comm-portal-grid .plain-list { margin-top: 20px; }
+    .comm-portal-video-frame {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-strong);
+      background: #000;
+    }
+    .comm-portal-video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    @media (min-width: 900px) {
+      .comm-portal-grid { grid-template-columns: minmax(0, 1fr) minmax(360px, 460px); }
+    }
 
     /* Rental Market Analysis sample slideshow -- same native <dialog>
        lightbox pattern as .video-modal above, swapped for a 3-image
