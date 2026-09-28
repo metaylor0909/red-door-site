@@ -10,27 +10,41 @@
 // `current` hides whichever link would point back at the page this panel
 // is rendered on. `cities` is an array (not a single city) so the same
 // component works on a market-reports page whose market covers more than
-// one city with real pages -- none currently do (getCitiesForMarket
-// already filters out cities like Brownsburg/Plainfield that have
-// market-reports coverage but no dedicated pages of their own), but the
-// shape shouldn't need to change if one ever does. Renders nothing if
-// `cities` is empty (e.g. a property-management/homes-for-rent page
-// whose city has no market-reports coverage at all -- still valid, just
-// nothing to show).
+// one city with real pages -- westside (Avon + Brownsburg) already does.
+// Renders nothing if `cities` is empty (e.g. a property-management/
+// homes-for-rent page whose city has no market-reports coverage at all).
+//
+// Each link kind (property-management/homes-for-rent/market-reports) gets
+// one fixed thumbnail, reused across every city -- these are generic
+// "what this page type is" previews, not per-city images (there's no
+// per-city visual asset to draw from, and a replicable module needs a
+// treatment that works unchanged for all 19 cities). Property management
+// and homes for rent are drawn as inline icon tiles (brand-colored,
+// nothing to source/maintain as an image file); market reports uses a
+// real sample report graphic Michael provided
+// (public/images/interlinking/market-report-sample.webp, the same
+// generic-illustrative-example pattern already used for the Market
+// Readiness page's own sample-report card).
 import type { CityPageLinks } from '../lib/interlinking/city-links';
 
 interface Props {
   current: 'property-management' | 'homes-for-rent' | 'market-reports';
   cities: CityPageLinks[];
+  /** This panel's own background is soft/gray by default (its usual spot
+   * is between two plain sections on the property-management/market-
+   * reports pages). Pass "white" when the section before or after it is
+   * also fixed-soft (e.g. .snapshot on the homes-for-rent page) to keep
+   * the sitewide alternating rhythm intact. */
+  background?: 'soft' | 'white';
 }
 
-const { current, cities } = Astro.props;
+const { current, cities, background = 'soft' } = Astro.props;
 
 const heading = cities.length === 1 ? `More About ${cities[0].name}` : 'Explore These Communities';
 ---
 
 {cities.length > 0 && (
-  <section class="city-interlink-panel">
+  <section class:list={['city-interlink-panel', background === 'white' && 'is-white']}>
     <div class="container reveal">
       <div class="section-head">
         <div class="section-kicker">Explore More</div>
@@ -43,20 +57,35 @@ const heading = cities.length === 1 ? `More About ${cities[0].name}` : 'Explore 
             <div class="city-interlink-links">
               {current !== 'property-management' && (
                 <a class="city-interlink-link" href={city.propertyManagementHref}>
-                  <span class="city-interlink-link-label">Property Management</span>
-                  {city.name} Property Management &rarr;
+                  <span class="city-interlink-thumb is-pm" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M9 3h6l1 3h3v2H5V6h3z"></path><path d="M6 8h12l-1 12H7z"></path><path d="M9.5 12.5l2 2 3.5-3.5"></path></svg>
+                  </span>
+                  <span class="city-interlink-link-body">
+                    <span class="city-interlink-link-label">Property Management</span>
+                    {city.name} Property Management &rarr;
+                  </span>
                 </a>
               )}
               {current !== 'homes-for-rent' && (
                 <a class="city-interlink-link" href={city.homesForRentHref}>
-                  <span class="city-interlink-link-label">Available Rentals</span>
-                  Homes for Rent in {city.name} &rarr;
+                  <span class="city-interlink-thumb is-hfr" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"></circle><path d="M11 12L20.5 2.5"></path><path d="M16 7l3 3"></path><path d="M13.5 9.5l2.5 2.5"></path></svg>
+                  </span>
+                  <span class="city-interlink-link-body">
+                    <span class="city-interlink-link-label">Available Rentals</span>
+                    Homes for Rent in {city.name} &rarr;
+                  </span>
                 </a>
               )}
               {current !== 'market-reports' && city.marketReportHref && (
                 <a class="city-interlink-link" href={city.marketReportHref}>
-                  <span class="city-interlink-link-label">Market Data</span>
-                  {city.marketReportLabel} Market Report &rarr;
+                  <span class="city-interlink-thumb is-mr">
+                    <img src="/images/interlinking/market-report-sample.webp" alt="" loading="lazy" />
+                  </span>
+                  <span class="city-interlink-link-body">
+                    <span class="city-interlink-link-label">Market Data</span>
+                    {city.marketReportLabel} Market Report &rarr;
+                  </span>
                 </a>
               )}
             </div>
@@ -72,15 +101,18 @@ const heading = cities.length === 1 ? `More About ${cities[0].name}` : 'Explore 
     padding: clamp(48px, 7vw, 72px) 0;
     background: var(--soft);
   }
+  .city-interlink-panel.is-white {
+    background: var(--white);
+  }
   .city-interlink-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 28px;
   }
   .city-interlink-card {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 14px;
   }
   .city-interlink-card h3 {
     font-size: 1.15rem;
@@ -88,26 +120,42 @@ const heading = cities.length === 1 ? `More About ${cities[0].name}` : 'Explore 
   .city-interlink-links {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 16px;
   }
   .city-interlink-link {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 16px 20px;
+    overflow: hidden;
     background: var(--white);
     border: 1px solid var(--line);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     color: var(--ink);
-    font-weight: 800;
     text-decoration: none;
     transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
   }
   .city-interlink-link:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     box-shadow: var(--shadow-strong);
     border-color: var(--brand-tint);
+  }
+  .city-interlink-thumb {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+  .city-interlink-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .city-interlink-thumb svg { width: 30%; height: 30%; fill: none; stroke: var(--white); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .city-interlink-thumb.is-pm { background: linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 100%); }
+  .city-interlink-thumb.is-hfr { background: linear-gradient(135deg, var(--charcoal) 0%, #3a3a3a 100%); }
+  .city-interlink-thumb.is-mr { background: var(--soft); }
+  .city-interlink-link-body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 20px;
+    font-weight: 800;
   }
   .city-interlink-link-label {
     color: var(--brand);
@@ -117,9 +165,9 @@ const heading = cities.length === 1 ? `More About ${cities[0].name}` : 'Explore 
     text-transform: uppercase;
   }
   @media (min-width: 640px) {
-    .city-interlink-links { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .city-interlink-links { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
   }
   @media (min-width: 900px) {
-    .city-interlink-grid { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+    .city-interlink-grid { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
   }
 </style>

@@ -129,52 +129,18 @@ const SMALL_SAMPLE_THRESHOLD = 5;
     </div>
   </section>
 
-  <section class="snapshot">
-    <div class="container">
-      <p class="data-asof">{content.dataAsOf}</p>
-      <div class="snapshot-grid">
-        {
-          content.statTiles.map((tile) => (
-            <div class="stat-tile">
-              <p class="stat-label">{tile.label}</p>
-              <p class="stat-value">{tile.value}</p>
-              <p class="stat-sub">{tile.sub}</p>
-            </div>
-          ))
-        }
-      </div>
-      {content.snapshotDetail.map((paragraph) => <p class="snapshot-detail">{paragraph}</p>)}
-      {
-        bedroomLadder.length > 0 && (
-          <>
-            <p class="snapshot-note">Rent by bedroom count, this month&rsquo;s RentCast pull:</p>
-            <div class="bedroom-ladder">
-              {bedroomLadder.map((b) => (
-                <div class="bedroom-ladder-row">
-                  <span class="bedroom-ladder-beds">{b.beds === 0 ? 'Studio' : `${b.beds}-Bedroom`}</span>
-                  <span class="bedroom-ladder-rent">${Math.round(b.avgRent).toLocaleString()}/mo</span>
-                  {b.newListings < SMALL_SAMPLE_THRESHOLD && (
-                    <span class="bedroom-ladder-note">
-                      {b.newListings} new {b.newListings === 1 ? 'listing' : 'listings'} this pull &mdash; small sample
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </>
-        )
-      }
-    </div>
-  </section>
-
+  {/* Reordered 2026-09-28 per Michael: Currently Available and Homes
+      Available Nearby move up right after the hero (previously the last
+      two sections before "How Renting Works"), then the new
+      CityInterlinkPanel, then the rest of the page (rent-range/stat-tile
+      snapshot, What to Expect, How Renting Works) continues in its
+      original relative order. is-soft placement rebalanced across the
+      move to keep the sitewide alternating light/white rhythm intact --
+      .snapshot below and CityInterlinkPanel are both fixed-soft
+      (background: var(--soft) in their own styles, not the is-soft
+      modifier), so CityInterlinkPanel takes background="white" here
+      specifically to avoid sitting soft-on-soft next to .snapshot. */}
   <section class="content-section">
-    <div class="container">
-      <h2>{content.whatToExpectHeading}</h2>
-      <ul>{content.whatToExpectItemsHtml.map((item) => <li set:html={item} />)}</ul>
-    </div>
-  </section>
-
-  <section class="content-section is-soft">
     <div class="container">
       <h2>{content.currentlyAvailableHeading}</h2>
       <p class="section-dek">Live listings pull directly from Red Door's RentEngine feed.</p>
@@ -222,7 +188,7 @@ const SMALL_SAMPLE_THRESHOLD = 5;
     </div>
   </section>
 
-  <section class="content-section">
+  <section class="content-section is-soft">
     <div class="container">
       <h2>Homes Available Nearby</h2>
       <p class="section-dek">{content.nearbyDek}</p>
@@ -239,6 +205,53 @@ const SMALL_SAMPLE_THRESHOLD = 5;
           )
         }
       </div>
+    </div>
+  </section>
+
+  <CityInterlinkPanel current="homes-for-rent" cities={cityLinks ? [cityLinks] : []} background="white" />
+
+  <section class="snapshot">
+    <div class="container">
+      <p class="data-asof">{content.dataAsOf}</p>
+      <div class="snapshot-grid">
+        {
+          content.statTiles.map((tile) => (
+            <div class="stat-tile">
+              <p class="stat-label">{tile.label}</p>
+              <p class="stat-value">{tile.value}</p>
+              <p class="stat-sub">{tile.sub}</p>
+            </div>
+          ))
+        }
+      </div>
+      {content.snapshotDetail.map((paragraph) => <p class="snapshot-detail">{paragraph}</p>)}
+      {
+        bedroomLadder.length > 0 && (
+          <>
+            <p class="snapshot-note">Rent by bedroom count, this month&rsquo;s RentCast pull:</p>
+            <div class="bedroom-ladder">
+              {bedroomLadder.map((b) => (
+                <div class="bedroom-ladder-row">
+                  <span class="bedroom-ladder-beds">{b.beds === 0 ? 'Studio' : `${b.beds}-Bedroom`}</span>
+                  <span class="bedroom-ladder-rent">${Math.round(b.avgRent).toLocaleString()}/mo</span>
+                  {b.newListings < SMALL_SAMPLE_THRESHOLD && (
+                    <span class="bedroom-ladder-note">
+                      {b.newListings} new {b.newListings === 1 ? 'listing' : 'listings'} this pull &mdash; small sample
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <h2>{content.whatToExpectHeading}</h2>
+      <ul>{content.whatToExpectItemsHtml.map((item) => <li set:html={item} />)}</ul>
     </div>
   </section>
 
@@ -265,8 +278,6 @@ const SMALL_SAMPLE_THRESHOLD = 5;
       </ul>
     </div>
   </section>
-
-  <CityInterlinkPanel current="homes-for-rent" cities={cityLinks ? [cityLinks] : []} />
 
   <section class="cta-band">
     <div class="container cta-inner">
