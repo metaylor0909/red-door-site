@@ -105,7 +105,7 @@ const pageDescription =
     </div>
   </section>
 
-  <section>
+  <section class="section-soft">
     <div class="container content-block reveal">
       <h2>Turnovers Done Right</h2>
       <p>When a tenant moves out, we act fast to minimize vacancy time. Within 24&ndash;48 hours we perform a detailed move-out inspection and send an estimate to the owner. Once approved, our team gets to work immediately on cleaning, painting, repairs, lock changes, and a final inspection &mdash; so your property is re-rented quickly and always in top condition.</p>
@@ -115,19 +115,18 @@ const pageDescription =
     </div>
   </section>
 
-  <section class="section-soft">
+  <section>
     <div class="container content-block reveal">
       <h2>Emergency Maintenance: We&rsquo;re On It</h2>
       <p>True emergencies &mdash; loss of heat, active leaks, drain blockages &mdash; require rapid action. <strong>Our 24/7 emergency line</strong> is active after hours and weekends. Tenants are trained on proper use, and our on-call technicians respond quickly to prevent damage and restore habitability, across Indianapolis and surrounding suburbs.</p>
     </div>
   </section>
 
-  {/* Moved below Emergency Maintenance 2026-09-28, per Michael. Kept its
-      own section-soft class rather than rebalancing the light/dark
-      alternation across the sections around it (Turnovers, Emergency,
-      Home Warranties) -- that would mean touching sections beyond what
-      was actually asked for. Net effect: Emergency and this section now
-      sit back to back both on the soft/gray background. */}
+  {/* Moved below Emergency Maintenance 2026-09-28, per Michael. Rebalanced
+      the light/dark alternation across Turnovers/Emergency/Preventative/
+      Home Warranties (below) to restore the sitewide alternating rhythm
+      this reorder had broken at two seams -- Owner Transparency/Turnovers
+      (both plain) and Emergency/Preventative (both soft). */}
   <section class="section-soft">
     <div class="container content-block reveal">
       <h2>Preventative Maintenance: Saving You Thousands</h2>
