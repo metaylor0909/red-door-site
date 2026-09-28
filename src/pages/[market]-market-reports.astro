@@ -34,6 +34,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { MARKETS, type MarketConfig } from '../lib/market-reports/markets';
 import { loadMarketReportSnapshot, type MarketSnapshotStat } from '../lib/market-reports/snapshot';
 import { loadMarketReportPosts, type MarketReportPost } from '../lib/market-reports/posts';
+import CityInterlinkPanel from '../components/CityInterlinkPanel.astro';
+import { getCitiesForMarket } from '../lib/interlinking/city-links';
 
 export async function getStaticPaths() {
   return Promise.all(
@@ -58,6 +60,7 @@ interface Props {
 }
 
 const { market, snapshot, posts } = Astro.props;
+const marketCities = getCitiesForMarket(market.slug);
 const pageTitle = `${market.h1} | Red Door Property Management`;
 const pageDescription = `Rental market data and recent reports for ${market.serviceAreaChips.join(', ')} — tracked by Red Door Property Management.`;
 const pagePath = `/${market.slug}-market-reports`;
@@ -138,6 +141,8 @@ function formatCurrency(value: number | null): string {
       )}
     </div>
   </section>
+
+  <CityInterlinkPanel current="market-reports" cities={marketCities} />
 
   <section class="content-section is-soft">
     <div class="container">

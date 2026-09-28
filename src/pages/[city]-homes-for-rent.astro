@@ -45,6 +45,8 @@ import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID } 
 import type { RentEngineUnit } from '../lib/listings/types';
 import { loadCityContentMap, loadCityMarketData } from '../lib/listings/homes-for-rent-content';
 import type { CityContent, BedroomLadderEntry } from '../lib/listings/homes-for-rent-content';
+import CityInterlinkPanel from '../components/CityInterlinkPanel.astro';
+import { getCityLinks } from '../lib/interlinking/city-links';
 
 export async function getStaticPaths() {
   const apiKey = import.meta.env.RENTENGINE_LISTINGS_KEY;
@@ -110,6 +112,7 @@ interface Props {
 
 const { content, bedroomLadder, cityUnits } = Astro.props;
 const pagePath = `/${content.citySlug}-homes-for-rent`;
+const cityLinks = getCityLinks(content.citySlug);
 // The reference pages' empty-state copy and CTA headings use the bare city
 // name ("Zionsville"), not the ", IN"-suffixed display form used in the H1
 // ("Zionsville, IN Homes for Rent") — matching the approved reference text.
@@ -262,6 +265,8 @@ const SMALL_SAMPLE_THRESHOLD = 5;
       </ul>
     </div>
   </section>
+
+  <CityInterlinkPanel current="homes-for-rent" cities={cityLinks ? [cityLinks] : []} />
 
   <section class="cta-band">
     <div class="container cta-inner">

@@ -39,6 +39,8 @@ import LandlordLibrary from '../components/LandlordLibrary.astro';
 import RentalAnalysisForm from '../components/RentalAnalysisForm.astro';
 import { loadMarketSnapshot } from '../lib/property-management/market-snapshot';
 import { CITIES, type CityEntry } from '../lib/property-management/cities';
+import CityInterlinkPanel from '../components/CityInterlinkPanel.astro';
+import { getCityLinks } from '../lib/interlinking/city-links';
 
 export async function getStaticPaths() {
   return Promise.all(
@@ -59,6 +61,7 @@ interface Props {
 
 const { city, snapshot } = Astro.props;
 const { slug, name } = city;
+const cityLinks = getCityLinks(slug);
 
 const pageTitle = `${name} Property Management | Red Door Property Management`;
 const pageDescription = `Full-service ${name} property management from Red Door — marketing, tenant screening, leasing, maintenance, and communication for rental owners.`;
@@ -227,6 +230,8 @@ const jsonLd = {
       </div>
     </div>
   </section>
+
+  <CityInterlinkPanel current="property-management" cities={cityLinks ? [cityLinks] : []} />
 
   <section class="section-dark final-cta">
     <div class="container reveal">

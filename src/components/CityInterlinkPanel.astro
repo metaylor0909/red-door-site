@@ -1,0 +1,125 @@
+---
+// Replicable cross-link panel between a city's -property-management,
+// -homes-for-rent, and -market-reports pages -- built 2026-09-28 per
+// Michael's request, addressing red-door-website-todo.md's "interlinking
+// is thin to nonexistent" item (flagged 2026-09-24). Data comes from
+// src/lib/interlinking/city-links.ts, which cross-references the
+// existing property-management/cities.ts and market-reports/markets.ts
+// rather than duplicating either list.
+//
+// `current` hides whichever link would point back at the page this panel
+// is rendered on. `cities` is an array (not a single city) so the same
+// component works on a market-reports page whose market covers more than
+// one city with real pages -- none currently do (getCitiesForMarket
+// already filters out cities like Brownsburg/Plainfield that have
+// market-reports coverage but no dedicated pages of their own), but the
+// shape shouldn't need to change if one ever does. Renders nothing if
+// `cities` is empty (e.g. a property-management/homes-for-rent page
+// whose city has no market-reports coverage at all -- still valid, just
+// nothing to show).
+import type { CityPageLinks } from '../lib/interlinking/city-links';
+
+interface Props {
+  current: 'property-management' | 'homes-for-rent' | 'market-reports';
+  cities: CityPageLinks[];
+}
+
+const { current, cities } = Astro.props;
+
+const heading = cities.length === 1 ? `More About ${cities[0].name}` : 'Explore These Communities';
+---
+
+{cities.length > 0 && (
+  <section class="city-interlink-panel">
+    <div class="container reveal">
+      <div class="section-head">
+        <div class="section-kicker">Explore More</div>
+        <h2>{heading}</h2>
+      </div>
+      <div class="city-interlink-grid">
+        {cities.map((city: CityPageLinks) => (
+          <div class="city-interlink-card">
+            {cities.length > 1 && <h3>{city.name}</h3>}
+            <div class="city-interlink-links">
+              {current !== 'property-management' && (
+                <a class="city-interlink-link" href={city.propertyManagementHref}>
+                  <span class="city-interlink-link-label">Property Management</span>
+                  {city.name} Property Management &rarr;
+                </a>
+              )}
+              {current !== 'homes-for-rent' && (
+                <a class="city-interlink-link" href={city.homesForRentHref}>
+                  <span class="city-interlink-link-label">Available Rentals</span>
+                  Homes for Rent in {city.name} &rarr;
+                </a>
+              )}
+              {current !== 'market-reports' && city.marketReportHref && (
+                <a class="city-interlink-link" href={city.marketReportHref}>
+                  <span class="city-interlink-link-label">Market Data</span>
+                  {city.marketReportLabel} Market Report &rarr;
+                </a>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .city-interlink-panel {
+    padding: clamp(48px, 7vw, 72px) 0;
+    background: var(--soft);
+  }
+  .city-interlink-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .city-interlink-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .city-interlink-card h3 {
+    font-size: 1.15rem;
+  }
+  .city-interlink-links {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .city-interlink-link {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 20px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    color: var(--ink);
+    font-weight: 800;
+    text-decoration: none;
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .city-interlink-link:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-strong);
+    border-color: var(--brand-tint);
+  }
+  .city-interlink-link-label {
+    color: var(--brand);
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+  }
+  @media (min-width: 640px) {
+    .city-interlink-links { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  }
+  @media (min-width: 900px) {
+    .city-interlink-grid { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+  }
+</style>
