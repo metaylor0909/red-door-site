@@ -68,6 +68,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID } from '../lib/listings/rentengine';
 import { loadCityContentMap } from '../lib/listings/homes-for-rent-content';
 import type { RentEngineUnit } from '../lib/listings/types';
+import AreasServedGrid from '../components/AreasServedGrid.astro';
 
 // Mapbox public token (`pk.` prefix, publishable, not a secret) — the same
 // value already embedded in the approved static reference HTML and in the
@@ -949,6 +950,14 @@ const pageDescription =
       </ul>
     </div>
   </section>
+
+  <AreasServedGrid
+    headingLine1="Indianapolis Homes for Rent,"
+    headingLine2="Plus Every Community Nearby"
+    leadText="Red Door lists and manages rental homes in Indianapolis and across the surrounding Central Indiana communities."
+    currentSlug="indianapolis"
+    pageType="homes-for-rent"
+  />
 
   <section class="cta-band">
     <div class="container cta-inner">

@@ -1,10 +1,12 @@
 ---
-// County/city grid — fully shared across the homepage and every
-// -property-management page; the ENTIRE grid (every county, every city,
-// every link) is byte-identical between pages (confirmed via diff), the
-// only per-page differences are the heading/lead text and which single
-// city (if any) is the current page and should render as
-// <span class="area-link is-current"> instead of a link to itself.
+// County/city grid — fully shared across the homepage, every
+// -property-management page, and (added 2026-09-28) every
+// -homes-for-rent page; the grid's counties/cities/neighborhoods are
+// identical everywhere, the only per-page differences are the heading/
+// lead text, which single city (if any) is "current" and should render
+// as <span class="area-link is-current"> instead of a link to itself,
+// and now pageType, which switches every city link between
+// /{slug}-property-management and /{slug}-homes-for-rent.
 interface Props {
   headingLine1: string;
   headingLine2: string;
@@ -13,8 +15,18 @@ interface Props {
    * one entry renders as non-linked "is-current" text instead of an <a>.
    * Omit on the homepage, where every city links out normally. */
   currentSlug?: string;
+  /** Defaults to "property-management" so the two existing call sites
+   * (homepage, -property-management pages) don't need to change. */
+  pageType?: 'property-management' | 'homes-for-rent';
 }
-const { headingLine1, headingLine2, leadText, currentSlug } = Astro.props;
+const { headingLine1, headingLine2, leadText, currentSlug, pageType = 'property-management' } = Astro.props;
+// "Downtown Indianapolis" is plain text everywhere except homes-for-rent
+// -- [city]-homes-for-rent.astro's own city list (src/data/homes-for-
+// rent-content.json) has a real "downtown-indianapolis" entry alongside
+// its 18 other cities (a page distinct from the bespoke
+// indianapolis-homes-for-rent.astro), but no equivalent
+// downtown-indianapolis-property-management page exists.
+const hasDowntownIndianapolisPage = pageType === 'homes-for-rent';
 
 interface CityEntry {
   slug: string;
@@ -33,7 +45,7 @@ const cities: CityEntry[] = [
   { slug: 'broad-ripple', label: 'Broad Ripple' },
 ];
 function hrefFor(slug: string) {
-  return `/${slug}-property-management`;
+  return `/${slug}-${pageType}`;
 }
 ---
 <section id="areas-served">
@@ -194,7 +206,17 @@ function hrefFor(slug: string) {
             <li><span class="area-text">Fountain Square</span></li>
             <li><span class="area-text">Fletcher Place</span></li>
             <li><span class="area-text">Irvington</span></li>
-            <li><span class="area-text">Downtown Indianapolis</span></li>
+            <li>
+              {hasDowntownIndianapolisPage ? (
+                currentSlug === 'downtown-indianapolis' ? (
+                  <span class="area-link is-current">Downtown Indianapolis</span>
+                ) : (
+                  <a class="area-link" href={hrefFor('downtown-indianapolis')}>Downtown Indianapolis</a>
+                )
+              ) : (
+                <span class="area-text">Downtown Indianapolis</span>
+              )}
+            </li>
             <li><span class="area-text">Mass Ave</span></li>
             <li><span class="area-text">Wholesale District</span></li>
             <li><span class="area-text">Indiana Avenue</span></li>

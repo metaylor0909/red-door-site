@@ -47,6 +47,7 @@ import { loadCityContentMap, loadCityMarketData } from '../lib/listings/homes-fo
 import type { CityContent, BedroomLadderEntry } from '../lib/listings/homes-for-rent-content';
 import CityInterlinkPanel from '../components/CityInterlinkPanel.astro';
 import { getCityLinks } from '../lib/interlinking/city-links';
+import AreasServedGrid from '../components/AreasServedGrid.astro';
 
 export async function getStaticPaths() {
   const apiKey = import.meta.env.RENTENGINE_LISTINGS_KEY;
@@ -333,6 +334,14 @@ const SMALL_SAMPLE_THRESHOLD = 5;
       </ul>
     </div>
   </section>
+
+  <AreasServedGrid
+    headingLine1={`${shortCityName} Homes for Rent,`}
+    headingLine2="Plus Every Community Nearby"
+    leadText={`Red Door lists and manages rental homes in ${shortCityName} and across the surrounding Central Indiana communities.`}
+    currentSlug={content.citySlug}
+    pageType="homes-for-rent"
+  />
 
   <section class="cta-band">
     <div class="container cta-inner">
