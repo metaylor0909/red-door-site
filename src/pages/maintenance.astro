@@ -105,22 +105,6 @@ const pageDescription =
     </div>
   </section>
 
-  <section class="section-soft">
-    <div class="container content-block reveal">
-      <h2>Preventative Maintenance: Saving You Thousands</h2>
-      <p>Proactive care reduces emergencies, minimizes costs, and extends the lifespan of your home&rsquo;s systems. Our preventative services include:</p>
-      <ul class="two-col-list">
-        <li>HVAC tune-ups (semi-annual)</li>
-        <li>Dryer vent cleaning</li>
-        <li>Gutter cleaning</li>
-        <li>Pest control</li>
-        <li>Sump pump checks</li>
-        <li>Water heater flushing</li>
-      </ul>
-      <p style="margin-top:20px">These services are offered at discounted rates through our preferred Indianapolis vendors.</p>
-    </div>
-  </section>
-
   <section>
     <div class="container content-block reveal">
       <h2>Turnovers Done Right</h2>
@@ -134,7 +118,29 @@ const pageDescription =
   <section class="section-soft">
     <div class="container content-block reveal">
       <h2>Emergency Maintenance: We&rsquo;re On It</h2>
-      <p>True emergencies &mdash; loss of heat, active leaks, drain blockages &mdash; require rapid action. Our 24/7 emergency line is active after hours and weekends. Tenants are trained on proper use, and our on-call technicians respond quickly to prevent damage and restore habitability, across Indianapolis and surrounding suburbs.</p>
+      <p>True emergencies &mdash; loss of heat, active leaks, drain blockages &mdash; require rapid action. <strong>Our 24/7 emergency line</strong> is active after hours and weekends. Tenants are trained on proper use, and our on-call technicians respond quickly to prevent damage and restore habitability, across Indianapolis and surrounding suburbs.</p>
+    </div>
+  </section>
+
+  {/* Moved below Emergency Maintenance 2026-09-28, per Michael. Kept its
+      own section-soft class rather than rebalancing the light/dark
+      alternation across the sections around it (Turnovers, Emergency,
+      Home Warranties) -- that would mean touching sections beyond what
+      was actually asked for. Net effect: Emergency and this section now
+      sit back to back both on the soft/gray background. */}
+  <section class="section-soft">
+    <div class="container content-block reveal">
+      <h2>Preventative Maintenance: Saving You Thousands</h2>
+      <p>Proactive care reduces emergencies, minimizes costs, and extends the lifespan of your home&rsquo;s systems. Our preventative services include:</p>
+      <ul class="two-col-list">
+        <li>HVAC tune-ups (semi-annual)</li>
+        <li>Dryer vent cleaning</li>
+        <li>Gutter cleaning</li>
+        <li>Pest control</li>
+        <li>Sump pump checks</li>
+        <li>Water heater flushing</li>
+      </ul>
+      <p style="margin-top:20px">These services are offered at discounted rates through our preferred Indianapolis vendors.</p>
     </div>
   </section>
 
