@@ -14,17 +14,22 @@
 // Renders nothing if `cities` is empty (e.g. a property-management/
 // homes-for-rent page whose city has no market-reports coverage at all).
 //
-// Each link kind (property-management/homes-for-rent/market-reports) gets
-// one fixed thumbnail, reused across every city -- these are generic
-// "what this page type is" previews, not per-city images (there's no
-// per-city visual asset to draw from, and a replicable module needs a
-// treatment that works unchanged for all 19 cities). Property management
-// and homes for rent are drawn as inline icon tiles (brand-colored,
-// nothing to source/maintain as an image file); market reports uses a
-// real sample report graphic Michael provided
-// (public/images/interlinking/market-report-sample.webp, the same
-// generic-illustrative-example pattern already used for the Market
-// Readiness page's own sample-report card).
+// Each link kind gets one fixed thumbnail, reused across every city --
+// generic "what this page type is" previews, not per-city images (a
+// replicable module needs a treatment that works unchanged for all 19
+// cities, and there's no per-city visual asset for property-management
+// or homes-for-rent anyway). Redesigned 2026-09-28 as a compact
+// icon-left row (was a tall card with a big 16:9 banner up top) after
+// Michael called the banner version too big and the icon tiles too
+// plain -- property-management and homes-for-rent are still inline SVG
+// icon badges (nothing to source/maintain as an image file) but smaller
+// and with more visual depth (radial highlight + ring); market-reports
+// uses a real sample-report graphic Michael provided, cropped down to
+// just one of its trend-chart panels ("AVG RENT PRICE TREND," a generic
+// red line chart with no city name or date on it) rather than the full
+// infographic, which had "Indianapolis | August 2026" baked into its
+// header and so wasn't safe to reuse as a generic example for every
+// other city's market-report link.
 import type { CityPageLinks } from '../lib/interlinking/city-links';
 
 interface Props {
@@ -58,23 +63,25 @@ const heading = cities.length === 1 ? `More About ${cities[0].name}` : 'Explore 
               {current !== 'property-management' && (
                 <a class="city-interlink-link" href={city.propertyManagementHref}>
                   <span class="city-interlink-thumb is-pm" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><path d="M9 3h6l1 3h3v2H5V6h3z"></path><path d="M6 8h12l-1 12H7z"></path><path d="M9.5 12.5l2 2 3.5-3.5"></path></svg>
+                    <svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2"></rect><path d="M9 4V3a1 1 0 011-1h4a1 1 0 011 1v1"></path><path d="M9 12.5l2 2 4-4.5"></path></svg>
                   </span>
                   <span class="city-interlink-link-body">
                     <span class="city-interlink-link-label">Property Management</span>
-                    {city.name} Property Management &rarr;
+                    <span class="city-interlink-link-title">{city.name} Property Management</span>
                   </span>
+                  <svg class="city-interlink-link-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
                 </a>
               )}
               {current !== 'homes-for-rent' && (
                 <a class="city-interlink-link" href={city.homesForRentHref}>
                   <span class="city-interlink-thumb is-hfr" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"></circle><path d="M11 12L20.5 2.5"></path><path d="M16 7l3 3"></path><path d="M13.5 9.5l2.5 2.5"></path></svg>
+                    <svg viewBox="0 0 24 24"><circle cx="8.5" cy="15.5" r="3.5"></circle><path d="M11 13l8-8"></path><path d="M16 8l2.5 2.5"></path><path d="M13.5 10.5L16 13"></path></svg>
                   </span>
                   <span class="city-interlink-link-body">
                     <span class="city-interlink-link-label">Available Rentals</span>
-                    Homes for Rent in {city.name} &rarr;
+                    <span class="city-interlink-link-title">Homes for Rent in {city.name}</span>
                   </span>
+                  <svg class="city-interlink-link-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
                 </a>
               )}
               {current !== 'market-reports' && city.marketReportHref && (
@@ -84,8 +91,9 @@ const heading = cities.length === 1 ? `More About ${cities[0].name}` : 'Explore 
                   </span>
                   <span class="city-interlink-link-body">
                     <span class="city-interlink-link-label">Market Data</span>
-                    {city.marketReportLabel} Market Report &rarr;
+                    <span class="city-interlink-link-title">{city.marketReportLabel} Market Report</span>
                   </span>
+                  <svg class="city-interlink-link-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
                 </a>
               )}
             </div>
@@ -120,12 +128,13 @@ const heading = cities.length === 1 ? `More About ${cities[0].name}` : 'Explore 
   .city-interlink-links {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 10px;
   }
   .city-interlink-link {
     display: flex;
-    flex-direction: column;
-    overflow: hidden;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 14px 10px 10px;
     background: var(--white);
     border: 1px solid var(--line);
     border-radius: var(--radius);
@@ -135,34 +144,70 @@ const heading = cities.length === 1 ? `More About ${cities[0].name}` : 'Explore 
     transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
   }
   .city-interlink-link:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-strong);
     border-color: var(--brand-tint);
   }
   .city-interlink-thumb {
+    flex: 0 0 auto;
     display: grid;
     place-items: center;
-    aspect-ratio: 16 / 9;
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
     overflow: hidden;
+    position: relative;
   }
-  .city-interlink-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-  .city-interlink-thumb svg { width: 30%; height: 30%; fill: none; stroke: var(--white); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-  .city-interlink-thumb.is-pm { background: linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 100%); }
-  .city-interlink-thumb.is-hfr { background: linear-gradient(135deg, var(--charcoal) 0%, #3a3a3a 100%); }
-  .city-interlink-thumb.is-mr { background: var(--soft); }
+  .city-interlink-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+  .city-interlink-thumb svg { position: relative; width: 46%; height: 46%; fill: none; stroke: var(--white); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .city-interlink-thumb.is-pm {
+    background:
+      radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .35), transparent 55%),
+      linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 100%);
+  }
+  .city-interlink-thumb.is-hfr {
+    background:
+      radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .22), transparent 55%),
+      linear-gradient(135deg, var(--charcoal) 0%, #45403f 100%);
+  }
+  .city-interlink-thumb.is-mr {
+    background: var(--soft);
+  }
   .city-interlink-link-body {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 16px 20px;
-    font-weight: 800;
+    gap: 2px;
+    min-width: 0;
   }
   .city-interlink-link-label {
     color: var(--brand);
-    font-size: .72rem;
+    font-size: .68rem;
     font-weight: 800;
     letter-spacing: .05em;
     text-transform: uppercase;
+  }
+  .city-interlink-link-title {
+    font-weight: 800;
+    font-size: .95rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .city-interlink-link-arrow {
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    margin-left: auto;
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform .15s ease, stroke .15s ease;
+  }
+  .city-interlink-link:hover .city-interlink-link-arrow {
+    transform: translateX(3px);
+    stroke: var(--brand);
   }
   @media (min-width: 640px) {
     .city-interlink-links { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }

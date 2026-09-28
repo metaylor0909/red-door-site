@@ -72,10 +72,25 @@ export async function getStaticPaths() {
   const cityContentMap = loadCityContentMap();
   const citySlugs = Object.keys(cityContentMap);
 
+  // Shared across every city's own getStaticPaths call below — several
+  // cities list each other as "nearby" (e.g. Avon and Brownsburg both
+  // point at each other), so without this every such pair would re-fetch
+  // the same city's D1 row twice per build, and every city referenced by
+  // 3+ neighbors would get fetched 3+ times over.
+  const marketDataCache = new Map<string, ReturnType<typeof loadCityMarketData>>();
+  function loadCityMarketDataCached(slug: string) {
+    if (!marketDataCache.has(slug)) {
+      marketDataCache.set(slug, loadCityMarketData(env.DB, slug));
+    }
+    return marketDataCache.get(slug)!;
+  }
+
+  const NEARBY_LISTINGS_LIMIT = 6;
+
   return Promise.all(
     citySlugs.map(async (slug) => {
       const staticContent = cityContentMap[slug];
-      const marketData = await loadCityMarketData(env.DB, slug);
+      const marketData = await loadCityMarketDataCached(slug);
 
       // Fresh stat tiles/dataAsOf override the static extraction's frozen
       // ones when available; fall back to the static values if the D1/
@@ -96,9 +111,25 @@ export async function getStaticPaths() {
       const zipSet = new Set(marketData.zipsUsed);
       const cityUnits = units.filter((u) => zipSet.has(u.address.zip_code));
 
+      // "Homes Available Nearby" used to just be links to other cities'
+      // own hub pages -- Michael asked 2026-09-28 for it to actually show
+      // nearby listings instead. Pulled from this city's own curated
+      // `nearby` list (staticContent.nearby), restricted to entries that
+      // have a real page of their own (a null href, like Plainfield for
+      // Avon, means no dedicated page and so no guaranteed D1/static row
+      // to read a ZIP list from -- safer to just skip it than risk a
+      // build-time throw from loadCityMarketData's fallback path).
+      const nearbySlugs = staticContent.nearby
+        .filter((n) => n.href)
+        .map((n) => n.href!.replace(/^\//, '').replace(/-homes-for-rent$/, ''));
+      const nearbyMarketData = await Promise.all(nearbySlugs.map((s) => loadCityMarketDataCached(s)));
+      const nearbyZips = new Set(nearbyMarketData.flatMap((d) => d.zipsUsed));
+      zipSet.forEach((z) => nearbyZips.delete(z));
+      const nearbyUnits = units.filter((u) => nearbyZips.has(u.address.zip_code)).slice(0, NEARBY_LISTINGS_LIMIT);
+
       return {
         params: { city: slug },
-        props: { content, bedroomLadder: marketData.bedroomLadder, cityUnits },
+        props: { content, bedroomLadder: marketData.bedroomLadder, cityUnits, nearbyUnits },
       };
     })
   );
@@ -108,9 +139,10 @@ interface Props {
   content: CityContent;
   bedroomLadder: BedroomLadderEntry[];
   cityUnits: RentEngineUnit[];
+  nearbyUnits: RentEngineUnit[];
 }
 
-const { content, bedroomLadder, cityUnits } = Astro.props;
+const { content, bedroomLadder, cityUnits, nearbyUnits } = Astro.props;
 const pagePath = `/${content.citySlug}-homes-for-rent`;
 const cityLinks = getCityLinks(content.citySlug);
 // The reference pages' empty-state copy and CTA headings use the bare city
@@ -188,25 +220,48 @@ const SMALL_SAMPLE_THRESHOLD = 5;
     </div>
   </section>
 
-  <section class="content-section is-soft">
-    <div class="container">
-      <h2>Homes Available Nearby</h2>
-      <p class="section-dek">{content.nearbyDek}</p>
-      <div class="nearby-grid">
-        {
-          content.nearby.map((item) =>
-            item.href ? (
-              <a class="nearby-link" href={item.href}>
-                {item.label}
+  {/* Was a list of links to other cities' own hub pages -- Michael asked
+      2026-09-28 for this to show actual nearby listings instead, same
+      .listing-card grid as "Currently Available" above. nearbyUnits is
+      built in getStaticPaths from this city's curated `nearby` cities'
+      real ZIP lists (RentEngine units, not link targets) -- see that
+      function's own comment for why href-less nearby entries (e.g.
+      Plainfield for Avon, no dedicated page) are skipped. Hidden
+      entirely when there's nothing to show, same as any other
+      empty-data section on this page. */}
+  {nearbyUnits.length > 0 && (
+    <section class="content-section is-soft">
+      <div class="container">
+        <h2>Homes Available Nearby</h2>
+        <p class="section-dek">{content.nearbyDek}</p>
+        <div class="hub-listing-grid">
+          {nearbyUnits.map((unit) => {
+            const photo = unit.marketing_photos.find((p) => !p.hidden)?.original;
+            const href = `/homes-for-rent/${citySlug(unit.address.city)}/${addressSlug(unit)}`;
+            const rent = unit.target_rental_rate != null ? `$${unit.target_rental_rate.toLocaleString()}` : 'Contact for pricing';
+            return (
+              <a class="listing-card" href={href}>
+                <div class="listing-card-photo">
+                  {photo && <img src={photo} alt={unit.address.formatted_address} loading="lazy" />}
+                </div>
+                <div class="listing-card-body">
+                  <p class="listing-card-rent">
+                    {rent}
+                    <span>/mo</span>
+                  </p>
+                  <p class="listing-card-address">{unit.address.formatted_address}</p>
+                  <p class="listing-card-specs">
+                    {unit.bedrooms} bd &middot; {unit.bathrooms} ba
+                    {unit.sqft ? ` · ${unit.sqft.toLocaleString()} sq ft` : ''}
+                  </p>
+                </div>
               </a>
-            ) : (
-              <span class="nearby-link is-text">{item.label}</span>
-            )
-          )
-        }
+            );
+          })}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   <CityInterlinkPanel current="homes-for-rent" cities={cityLinks ? [cityLinks] : []} background="white" />
 
