@@ -227,11 +227,68 @@ const pagePath = '/indianapolis-homes-for-rent';
 const pageTitle = 'Indianapolis Homes for Rent | Red Door Property Management';
 const pageDescription =
   "See available rental homes across Indianapolis and Marion County, managed by Red Door. Homes updated as availability changes.";
+const canonicalUrl = `https://www.reddoorrents.com${pagePath}`;
+
+// Same Organization block as [city]-property-management.astro and
+// [city]-homes-for-rent.astro, kept in sync by hand. ItemList only lists
+// the server-rendered Indianapolis-proper cards (indyListingsData) — the
+// "other areas" units are client-JS-injected only, per this page's own
+// SEO-architecture comment above, so they're not indexable content and
+// don't belong in the structured data either.
+const jsonLdGraph: object[] = [
+  {
+    '@type': 'Organization',
+    '@id': 'https://www.reddoorrents.com/#organization',
+    name: 'Red Door Property Management',
+    url: 'https://www.reddoorrents.com/',
+    telephone: '+1-317-660-1626',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: '3815 River Crossing Pkwy, Suite 100',
+      addressLocality: 'Indianapolis',
+      addressRegion: 'IN',
+      postalCode: '46240',
+      addressCountry: 'US',
+    },
+    sameAs: [
+      'https://www.youtube.com/@reddoorrents',
+      'https://www.facebook.com/RedDoorPropertyManagement/',
+      'https://www.linkedin.com/company/red-door-property-management/',
+      'https://www.instagram.com/reddoorrents/',
+      'https://www.tiktok.com/@reddoorrents',
+    ],
+  },
+];
+
+if (indyListingsData.length > 0) {
+  jsonLdGraph.push({
+    '@type': 'ItemList',
+    '@id': `${canonicalUrl}#listings`,
+    name: 'Indianapolis Homes for Rent',
+    itemListElement: indyListingsData.map((listing, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url: `https://www.reddoorrents.com${listing.detailPath}`,
+    })),
+  });
+}
+
+jsonLdGraph.push({
+  '@type': 'BreadcrumbList',
+  '@id': `${canonicalUrl}#breadcrumbs`,
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.reddoorrents.com/' },
+    { '@type': 'ListItem', position: 2, name: 'Indianapolis Homes for Rent', item: canonicalUrl },
+  ],
+});
+
+const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription} path={pagePath}>
   <Fragment slot="head">
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </Fragment>
 
   <section class="page-hero">

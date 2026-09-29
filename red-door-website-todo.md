@@ -1725,7 +1725,23 @@ one.
 ### SEO and technical
 - [ ] Every old URL exists at the identical path, or has a 301
 - [ ] Port all title tags and meta descriptions
-- [ ] Add LocalBusiness and FAQ schema markup (LocalBusiness is the priority)
+- [x] **LocalBusiness schema (homepage) and Organization/Service/BreadcrumbList
+      schema (property-management, homes-for-rent, market-reports pages)
+      built and deployed (Sep 29).** FAQ schema not added — Google
+      deprecated FAQ rich results May 2026, so it's no longer a priority
+      (still parsed by Bing/AI crawlers, harmless if added later, just not
+      urgent). Still missing structured data: the 7 pillar pages, `/contact`,
+      `/application-criteria`, `/residents-benefits-package`, blog index —
+      lower priority, revisit after launch-blocking work.
+- [ ] **Improve LLM/answer-engine citability with 1-2 more sentence-form
+      facts per homes-for-rent and property-management page (Sep 29).**
+      JSON-LD is a weak signal for this — LLMs mostly parse rendered text,
+      not schema. The `marketNote` paragraph on homes-for-rent pages
+      (`buildMarketNote()` in `src/lib/listings/homes-for-rent-content.ts`)
+      is the model: a full declarative sentence with the city name and a
+      real number in the same clause, not an isolated stat-tile number.
+      Extend that pattern — stat tiles read well for humans scanning but
+      are weak for LLM extraction on their own.
 - [ ] Rebuild `sitemap.xml` and `robots.txt`
 - [ ] Reinstall Google Tag Manager with the same container ID
 - [ ] Accessibility pass — footer publicly commits to WCAG 2.0 Level A
