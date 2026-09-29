@@ -51,6 +51,11 @@ export interface CityContent {
   heroDek: string;
   dataAsOf: string;
   statTiles: CityStatTile[];
+  /** Dynamic, regenerated every build -- see buildMarketNote. Optional
+   * because the static JSON this interface also describes predates the
+   * field; always populated once merged with a fresh CityMarketData in
+   * getStaticPaths. */
+  marketNote?: string | null;
   snapshotDetail: string[];
   whatToExpectHeading: string;
   whatToExpectItemsHtml: string[];
@@ -87,7 +92,13 @@ interface RentalDataBlock {
   medianRent?: number | null;
   minRent?: number | null;
   maxRent?: number | null;
+  averageRentPerSquareFoot?: number | null;
+  medianRentPerSquareFoot?: number | null;
+  averageSquareFootage?: number | null;
+  medianSquareFootage?: number | null;
   averageDaysOnMarket?: number | null;
+  medianDaysOnMarket?: number | null;
+  newListings?: number;
   totalListings?: number;
   dataByBedrooms?: RentCastBedroomEntry[];
   dataByPropertyType?: RentCastPropertyTypeEntry[];
@@ -110,6 +121,13 @@ export interface CityMarketData {
    * "Single-Family Average" tile for this instead. See that page's own
    * stat-tile assembly. */
   averageDaysOnMarket: number | null;
+  /** Mechanically templated from newListings + dataByPropertyType, not
+   * hand-written prose -- see buildMarketNote's own comment for why this
+   * is a deliberately different approach from CityContent.snapshotDetail
+   * (frozen static text from the original Sep 17 extraction). Null when
+   * there isn't enough data to say anything (e.g. no dataByPropertyType,
+   * or a single-property-type market with nothing to compare against). */
+  marketNote: string | null;
 }
 
 // Eagerly globbed at build time — becomes real bundled data, not a runtime
@@ -143,11 +161,29 @@ function deriveBedroomLadder(dataByBedrooms: RentCastBedroomEntry[] | undefined)
     .map((b) => ({ beds: b.bedrooms, avgRent: b.averageRent, newListings: b.newListings, totalListings: b.totalListings }));
 }
 
+/** "avon" -> "Avon", "broad-ripple" -> "Broad Ripple", "center-township" ->
+ * "Center Township". Good enough for tile sub-text and buildMarketNote's
+ * sentences -- the page's own H1/metadata use the real curated cityName
+ * from homes-for-rent-content.json, this is only for text generated here
+ * from raw D1 data, which only ever has the bare citySlug to work with. */
+function titleCaseSlug(slug: string): string {
+  return slug
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 /** Regenerates the 3 headline stat tiles from fresh rentalData, using the
  * exact same simple templates the original static extraction's tiles
  * followed (confirmed by inspecting the real Avon data this was built
  * against: "Average Rent" / "Median Rent" / "Single-Family Average", the
- * sub-text patterns are plain string templates, not free-form prose). */
+ * sub-text patterns are plain string templates, not free-form prose).
+ * `cityName` should be a real display name, not a bare slug -- found live
+ * 2026-09-29 that the one existing caller passed raw.citySlug directly,
+ * rendering "currently listed avon rental" (lowercase) on the real page;
+ * fixed at the call site with titleCaseSlug() above rather than here, so
+ * a future caller that already has the real curated name can pass it
+ * straight through instead of double-title-casing. */
 function buildStatTiles(cityName: string, rentalData: RentalDataBlock | undefined): CityStatTile[] {
   if (!rentalData || rentalData.averageRent == null) return [];
 
@@ -181,7 +217,93 @@ function buildStatTiles(cityName: string, rentalData: RentalDataBlock | undefine
     });
   }
 
+  // 3 more tiles added 2026-09-29, per Michael -- all 3 fields were
+  // already being pulled and stored in rentcast_city_cache by the
+  // refresh Worker (see workers/rentcast-refresh/src/aggregate.ts's
+  // RentCastDataBlock), just never surfaced on this page. Same
+  // regenerate-every-build approach as the first 3 tiles, not frozen text.
+  if (rentalData.averageRentPerSquareFoot != null) {
+    tiles.push({
+      label: 'Rent per Sq Ft',
+      value: `$${rentalData.averageRentPerSquareFoot.toFixed(2)}`,
+      sub:
+        rentalData.medianRentPerSquareFoot != null
+          ? `Median: $${rentalData.medianRentPerSquareFoot.toFixed(2)}/sq ft`
+          : '',
+    });
+  }
+
+  if (rentalData.averageSquareFootage != null) {
+    tiles.push({
+      label: 'Typical Home Size',
+      value: `${Math.round(rentalData.averageSquareFootage).toLocaleString()} sq ft`,
+      sub:
+        rentalData.medianSquareFootage != null
+          ? `Median: ${Math.round(rentalData.medianSquareFootage).toLocaleString()} sq ft`
+          : '',
+    });
+  }
+
+  if (rentalData.medianDaysOnMarket != null) {
+    tiles.push({
+      label: 'Days on Market',
+      value: `${Math.round(rentalData.medianDaysOnMarket)}`,
+      sub:
+        rentalData.averageDaysOnMarket != null
+          ? `Average: ${Math.round(rentalData.averageDaysOnMarket)} days`
+          : '',
+    });
+  }
+
   return tiles;
+}
+
+/** A single mechanically-templated sentence covering the two RentCast
+ * fields that weren't narrated anywhere on this page at all before
+ * 2026-09-29 (Michael's request) -- market velocity (newListings) and a
+ * property-type rent comparison. Deliberately NOT added to
+ * CityContent.snapshotDetail: that array is frozen prose from the
+ * original Sep 17 extraction (see this file's own header comment on why
+ * regenerating natural-language prose from raw numbers wasn't attempted
+ * there), and a second per-city hand-maintained prose field would just
+ * recreate that same staleness problem for 18 more cities. This instead
+ * regenerates every build from live data, the same as the stat tiles.
+ * Returns null rather than a half-formed sentence when there isn't
+ * enough data to say anything real (no dataByPropertyType, or nothing to
+ * meaningfully compare against Single Family). */
+function buildMarketNote(cityName: string, rentalData: RentalDataBlock | undefined): string | null {
+  if (!rentalData) return null;
+  const totalListings = rentalData.totalListings ?? 0;
+  const types = rentalData.dataByPropertyType ?? [];
+  const singleFamily = types.find((t) => t.propertyType === 'Single Family');
+
+  // Compare Single Family (Red Door's own stated focus, already the
+  // reference point for the tile above) against whichever OTHER type has
+  // the most listings -- the most representative comparison for
+  // whatever this city's actual rental mix looks like, rather than
+  // hardcoding "Apartment" for every city regardless of what's really
+  // there.
+  const otherTypes = types.filter((t) => t.propertyType !== 'Single Family' && t.averageRent != null && t.totalListings > 0);
+  const otherTypesSorted = otherTypes.slice().sort((a, b) => b.totalListings - a.totalListings);
+  const comparisonType = otherTypesSorted[0];
+
+  const sentences: string[] = [];
+
+  if (rentalData.newListings != null && totalListings > 0) {
+    sentences.push(
+      `${rentalData.newListings} of ${cityName}'s ${totalListings} active rental listing${totalListings === 1 ? '' : 's'} ${rentalData.newListings === 1 ? 'is' : 'are'} new since the last pull.`
+    );
+  }
+
+  if (singleFamily?.averageRent != null && comparisonType?.averageRent != null) {
+    const typeLabel = comparisonType.propertyType.toLowerCase();
+    const direction = comparisonType.averageRent < singleFamily.averageRent ? 'less' : 'more';
+    sentences.push(
+      `${cityName}'s ${typeLabel}s (${comparisonType.totalListings} of ${totalListings} listings) average $${Math.round(comparisonType.averageRent).toLocaleString()}/mo, ${direction} than the $${Math.round(singleFamily.averageRent).toLocaleString()} single-family homes typically rent for here.`
+    );
+  }
+
+  return sentences.length > 0 ? sentences.join(' ') : null;
 }
 
 /** Both the Worker (index.ts's `new Date().toISOString().slice(0, 10)`) and
@@ -200,12 +322,14 @@ function formatDataAsOf(isoDate: string): string {
 }
 
 function marketDataFromRaw(raw: CityMarketDataRaw): CityMarketData {
+  const displayName = titleCaseSlug(raw.citySlug);
   return {
     zipsUsed: raw.zipsUsed ?? [],
     bedroomLadder: deriveBedroomLadder(raw.rentalData?.dataByBedrooms),
-    statTiles: buildStatTiles(raw.citySlug, raw.rentalData),
+    statTiles: buildStatTiles(displayName, raw.rentalData),
     dataAsOf: raw.dataAsOf ? formatDataAsOf(raw.dataAsOf) : '',
     averageDaysOnMarket: raw.rentalData?.averageDaysOnMarket ?? null,
+    marketNote: buildMarketNote(displayName, raw.rentalData),
   };
 }
 

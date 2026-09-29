@@ -110,6 +110,7 @@ export async function getStaticPaths() {
         ...staticContent,
         statTiles: marketData.statTiles.length > 0 ? marketData.statTiles : staticContent.statTiles,
         dataAsOf: marketData.dataAsOf || staticContent.dataAsOf,
+        marketNote: marketData.marketNote,
       };
 
       // City-to-listing matching is by ZIP, not RentEngine's own address.city
@@ -344,6 +345,7 @@ const SMALL_SAMPLE_THRESHOLD = 5;
         }
       </div>
       {content.snapshotDetail.map((paragraph) => <p class="snapshot-detail">{paragraph}</p>)}
+      {content.marketNote && <p class="snapshot-detail">{content.marketNote}</p>}
       {
         bedroomLadder.length > 0 && (
           <>
