@@ -1742,6 +1742,19 @@ one.
       real number in the same clause, not an isolated stat-tile number.
       Extend that pattern — stat tiles read well for humans scanning but
       are weak for LLM extraction on their own.
+- [ ] **Audit the 309 blog posts for SEO and LLM citability (Sep 29).** Not
+      yet started — the SEO/LLM review so far only covered the
+      property-management and homes-for-rent city pages. The blog is the
+      largest asset in the migration (see CLAUDE.md's inventory table) and
+      hasn't had this pass. Known related issues already on this list to
+      fold in rather than duplicate: 143 titles over 60 characters (17
+      clickbait-phrased), 3 posts with no `<title>`. Worth checking:
+      heading structure within posts (single H1, real H2/H3 hierarchy vs.
+      the transcript/FAQ accordion dumping everything under one heading),
+      whether the accordion content (122 posts, see `AccordionSection.astro`)
+      is still crawlable text when collapsed by default, meta description
+      coverage post-migration, and whether posts state facts in citable
+      declarative sentences vs. video-transcript filler.
 - [ ] Rebuild `sitemap.xml` and `robots.txt`
 - [ ] Reinstall Google Tag Manager with the same container ID
 - [ ] Accessibility pass — footer publicly commits to WCAG 2.0 Level A
