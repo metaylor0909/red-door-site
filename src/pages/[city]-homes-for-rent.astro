@@ -48,6 +48,15 @@ import type { CityContent, BedroomLadderEntry } from '../lib/listings/homes-for-
 import CityInterlinkPanel from '../components/CityInterlinkPanel.astro';
 import { getCityLinks } from '../lib/interlinking/city-links';
 import AreasServedGrid from '../components/AreasServedGrid.astro';
+import { CITY_CENTER } from '../lib/listings/city-coordinates';
+
+// Mapbox public token (`pk.` prefix, publishable, not a secret) -- same
+// value already hardcoded in indianapolis-homes-for-rent.astro,
+// rental-analysis/[token].astro, and homes-for-rent/[city]/[slug].astro;
+// see any of those files' own comment for why it's safe here (this page
+// is prerendered, no request-time Worker env to read from).
+const MAPBOX_TOKEN =
+  'pk.eyJ1IjoibWV0YXlsb3IwOTA5IiwiYSI6ImNtdTdmZXJ5MzBpM3cyenB1eXMwNWdwaXkifQ.0sGI21TcAeEe9v_Pa91a9A';
 
 export async function getStaticPaths() {
   const apiKey = import.meta.env.RENTENGINE_LISTINGS_KEY;
@@ -86,7 +95,7 @@ export async function getStaticPaths() {
     return marketDataCache.get(slug)!;
   }
 
-  const NEARBY_LISTINGS_LIMIT = 6;
+  const NEARBY_LISTINGS_LIMIT = 8;
 
   return Promise.all(
     citySlugs.map(async (slug) => {
@@ -146,6 +155,7 @@ interface Props {
 const { content, bedroomLadder, cityUnits, nearbyUnits } = Astro.props;
 const pagePath = `/${content.citySlug}-homes-for-rent`;
 const cityLinks = getCityLinks(content.citySlug);
+const cityCenter = CITY_CENTER[content.citySlug];
 // The reference pages' empty-state copy and CTA headings use the bare city
 // name ("Zionsville"), not the ", IN"-suffixed display form used in the H1
 // ("Zionsville, IN Homes for Rent") — matching the approved reference text.
@@ -154,6 +164,15 @@ const SMALL_SAMPLE_THRESHOLD = 5;
 ---
 
 <BaseLayout title={content.metaTitle} description={content.metaDescription} path={pagePath}>
+  <Fragment slot="head">
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" />
+  </Fragment>
+
+  {/* Must load, unblocked by async/defer, before the module script below
+      that reads `mapboxgl` -- same script-load-order requirement as
+      rental-analysis/[token].astro and indianapolis-homes-for-rent.astro. */}
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js" is:inline></script>
+
   <section class="page-hero">
     <div class="container">
       <span class="section-kicker">Homes for Rent</span>
@@ -172,8 +191,14 @@ const SMALL_SAMPLE_THRESHOLD = 5;
       .snapshot below and CityInterlinkPanel are both fixed-soft
       (background: var(--soft) in their own styles, not the is-soft
       modifier), so CityInterlinkPanel takes background="white" here
-      specifically to avoid sitting soft-on-soft next to .snapshot. */}
-  <section class="content-section">
+      specifically to avoid sitting soft-on-soft next to .snapshot.
+      "Currently Available" flipped plain -> is-soft 2026-09-29 when the
+      new map section (plain, between it and Homes Available Nearby) was
+      added, to keep the whole chain alternating -- matches how
+      .snapshot (fixed-soft) used to sit directly after the hero here
+      before the 2026-09-28 reorder, so dark-hero-into-soft isn't a new
+      pattern on this page. */}
+  <section class="content-section is-soft">
     <div class="container">
       <h2>{content.currentlyAvailableHeading}</h2>
       <p class="section-dek">Live listings pull directly from Red Door's RentEngine feed.</p>
@@ -220,6 +245,41 @@ const SMALL_SAMPLE_THRESHOLD = 5;
       }
     </div>
   </section>
+
+  {/* Map view, added 2026-09-29 per Michael, between Currently Available
+      and Homes Available Nearby -- same .map-pin-price/.map-popup-card
+      pattern already used by the comps map (rental-analysis/[token].astro)
+      and the Indianapolis homes-for-rent search page, reused as-is for
+      visual consistency. Centered on cityCenter (src/lib/listings/
+      city-coordinates.ts) rather than fit-to-pins, since this city's own
+      inventory is frequently thin or empty (CLAUDE.md) and the map still
+      needs somewhere sensible to point at in that case. */}
+  {cityCenter && (
+    <section class="content-section">
+      <div class="container">
+        <h2>{shortCityName} Rentals on the Map</h2>
+        <p class="section-dek">Every home listed above, plotted around {shortCityName}.</p>
+        <div
+          class="city-listings-map"
+          id="city-listings-map"
+          data-lat={cityCenter[1]}
+          data-lng={cityCenter[0]}
+          data-units={JSON.stringify(
+            cityUnits
+              .filter((u) => Array.isArray(u.address.coordinates))
+              .map((u) => ({
+                lat: u.address.coordinates![1],
+                lng: u.address.coordinates![0],
+                rent: u.target_rental_rate,
+                address: u.address.formatted_address,
+                photo: u.marketing_photos.find((p) => !p.hidden)?.original,
+                href: `/homes-for-rent/${citySlug(u.address.city)}/${addressSlug(u)}`,
+              }))
+          )}
+        />
+      </div>
+    </section>
+  )}
 
   {/* Was a list of links to other cities' own hub pages -- Michael asked
       2026-09-28 for this to show actual nearby listings instead, same
@@ -355,4 +415,72 @@ const SMALL_SAMPLE_THRESHOLD = 5;
       </div>
     </div>
   </section>
+
+  <script define:vars={{ mapboxToken: MAPBOX_TOKEN }}>
+    (function () {
+      if (typeof mapboxgl === 'undefined') return;
+      mapboxgl.accessToken = mapboxToken;
+
+      // Same "don't construct until the whole page has loaded" fix as
+      // rental-analysis/[token].astro and indianapolis-homes-for-rent.astro
+      // -- constructing a Mapbox map before images/fonts/layout have
+      // settled is the confirmed (real-phone-tested) cause of a
+      // mis-positioned canvas on mobile.
+      function initMap() {
+        var el = document.getElementById('city-listings-map');
+        if (!el) return;
+        var lat = parseFloat(el.dataset.lat);
+        var lng = parseFloat(el.dataset.lng);
+        if (isNaN(lat) || isNaN(lng)) return;
+
+        var units;
+        try {
+          units = JSON.parse(el.dataset.units || '[]');
+        } catch (e) {
+          units = [];
+        }
+
+        var map = new mapboxgl.Map({
+          container: 'city-listings-map',
+          style: 'mapbox://styles/mapbox/light-v11',
+          center: [lng, lat],
+          zoom: 12,
+        });
+        if (typeof ResizeObserver !== 'undefined') {
+          new ResizeObserver(function () {
+            map.resize();
+          }).observe(el);
+        }
+        map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+        map.on('load', function () {
+          if (units.length === 0) return;
+          var bounds = new mapboxgl.LngLatBounds();
+          units.forEach(function (u) {
+            var pin = document.createElement('div');
+            pin.className = 'map-pin-price';
+            pin.textContent = u.rent ? '$' + Math.round(u.rent).toLocaleString() : 'Contact';
+            var popupHtml =
+              '<div class="map-popup-card">' +
+              (u.photo ? '<img src="' + u.photo + '" alt="">' : '') +
+              '<span class="rent">' + (u.rent ? '$' + Math.round(u.rent).toLocaleString() + '/mo' : 'Contact for pricing') + '</span>' +
+              '<span class="addr">' + (u.address || '') + '</span>' +
+              '<a href="' + u.href + '">View details &rarr;</a></div>';
+            new mapboxgl.Marker({ element: pin, anchor: 'bottom' })
+              .setLngLat([u.lng, u.lat])
+              .setPopup(new mapboxgl.Popup({ offset: 14 }).setHTML(popupHtml))
+              .addTo(map);
+            bounds.extend([u.lng, u.lat]);
+          });
+          if (!bounds.isEmpty()) map.fitBounds(bounds, { padding: 60, maxZoom: 14, duration: 0 });
+        });
+      }
+
+      if (document.readyState === 'complete') {
+        initMap();
+      } else {
+        window.addEventListener('load', initMap);
+      }
+    })();
+  </script>
 </BaseLayout>

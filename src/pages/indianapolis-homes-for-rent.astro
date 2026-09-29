@@ -69,6 +69,10 @@ import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID } 
 import { loadCityContentMap } from '../lib/listings/homes-for-rent-content';
 import type { RentEngineUnit } from '../lib/listings/types';
 import AreasServedGrid from '../components/AreasServedGrid.astro';
+import CityInterlinkPanel from '../components/CityInterlinkPanel.astro';
+import { getCityLinks } from '../lib/interlinking/city-links';
+
+const cityLinks = getCityLinks('indianapolis');
 
 // Mapbox public token (`pk.` prefix, publishable, not a secret) — the same
 // value already embedded in the approved static reference HTML and in the
@@ -882,6 +886,8 @@ const pageDescription =
     </div>
   </section>
 
+  <CityInterlinkPanel current="homes-for-rent" cities={cityLinks ? [cityLinks] : []} background="white" />
+
   <section class="content-section">
     <div class="container">
       <h2>What to Expect Renting in Indianapolis</h2>
@@ -899,36 +905,10 @@ const pageDescription =
     </div>
   </section>
 
-  <section class="content-section">
-    <div class="container">
-      <h2>Explore Homes for Rent by Area</h2>
-      <p class="section-dek">
-        Indianapolis is the hub other city and township pages fall back to. Browse current listings across every
-        market Red Door serves.
-      </p>
-      <div class="nearby-grid">
-        <a class="nearby-link" href="/center-township-homes-for-rent">Center Township</a>
-        <a class="nearby-link" href="/washington-township-homes-for-rent">Washington Township</a>
-        <a class="nearby-link" href="/pike-township-homes-for-rent">Pike Township</a>
-        <a class="nearby-link" href="/wayne-township-homes-for-rent">Wayne Township</a>
-        <a class="nearby-link" href="/decatur-township-homes-for-rent">Decatur Township</a>
-        <a class="nearby-link" href="/perry-township-homes-for-rent">Perry Township</a>
-        <a class="nearby-link" href="/franklin-township-homes-for-rent">Franklin Township</a>
-        <a class="nearby-link" href="/warren-township-homes-for-rent">Warren Township</a>
-        <a class="nearby-link" href="/lawrence-township-homes-for-rent">Lawrence Township</a>
-        <a class="nearby-link" href="/downtown-indianapolis-homes-for-rent">Downtown Indianapolis</a>
-        <a class="nearby-link" href="/broad-ripple-homes-for-rent">Broad Ripple</a>
-        <a class="nearby-link" href="/avon-homes-for-rent">Avon</a>
-        <a class="nearby-link" href="/brownsburg-homes-for-rent">Brownsburg</a>
-        <a class="nearby-link" href="/carmel-homes-for-rent">Carmel</a>
-        <a class="nearby-link" href="/fishers-homes-for-rent">Fishers</a>
-        <a class="nearby-link" href="/greenwood-homes-for-rent">Greenwood</a>
-        <a class="nearby-link" href="/noblesville-homes-for-rent">Noblesville</a>
-        <a class="nearby-link" href="/westfield-homes-for-rent">Westfield</a>
-        <a class="nearby-link" href="/zionsville-homes-for-rent">Zionsville</a>
-      </div>
-    </div>
-  </section>
+  {/* Removed 2026-09-29 per Michael: this flat, ungrouped city-link grid
+      duplicated AreasServedGrid (added 2026-09-28), which appears later
+      on this same page with county grouping and current-page
+      highlighting -- redundant now that it exists. */}
 
   <section class="content-section is-soft">
     <div class="container">

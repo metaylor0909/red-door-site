@@ -2758,6 +2758,12 @@
        homes-for-rent listing detail page. */
     .comps-split-grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 24px; align-items: start; margin-top: 20px; }
     .comps-map { width: 100%; height: 520px; margin: 0; position: sticky; top: 100px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+    /* [city]-homes-for-rent.astro's map section, added 2026-09-29 --
+       not sticky (nothing beside it to scroll past, unlike .comps-map's
+       table-plus-map split), otherwise the same treatment. position:
+       relative for the same real-phone-confirmed reason documented on
+       .comps-split-grid's own mobile override just below. */
+    .city-listings-map { width: 100%; height: 460px; margin: 0; position: relative; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
     @media (max-width: 900px) {
       .comps-split-grid { grid-template-columns: 1fr; }
       /* position: relative, NOT static — found live on a real phone
