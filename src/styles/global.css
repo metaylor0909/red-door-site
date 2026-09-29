@@ -3644,6 +3644,9 @@
        uses. .listing-card/.listing-card-photo/etc. are still shared. */
     .hub-listing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
 
+    /* [city]-homes-for-rent.astro's "View All Red Door Listings" CTA
+       under the (capped) Homes Available Nearby grid, added 2026-09-29. */
+    .hub-listing-grid-cta { margin: 28px 0 0; text-align: center; }
     .listing-empty { padding: 32px; text-align: center; background: var(--white); border: 1px dashed var(--line); border-radius: var(--radius); }
     .listing-empty p { max-width: 56ch; margin: 0 auto 16px; color: var(--muted); }
     .listing-empty p:last-child { margin-bottom: 0; }

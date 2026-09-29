@@ -140,7 +140,7 @@ export async function getStaticPaths() {
 
       return {
         params: { city: slug },
-        props: { content, bedroomLadder: marketData.bedroomLadder, cityUnits, nearbyUnits },
+        props: { content, bedroomLadder: marketData.bedroomLadder, cityUnits, nearbyUnits, allUnits: units },
       };
     })
   );
@@ -151,9 +151,17 @@ interface Props {
   bedroomLadder: BedroomLadderEntry[];
   cityUnits: RentEngineUnit[];
   nearbyUnits: RentEngineUnit[];
+  /** Every currently-available unit across the whole account, unfiltered
+   * by city -- only used by the map (Michael's 2026-09-29 follow-up: the
+   * map had silently inherited the same 8-listing cap as the "Homes
+   * Available Nearby" cards, when the two are meant to be different --
+   * a capped curated preview list vs. "show everything, we're just
+   * anchored on this city"). The card grids above still use cityUnits/
+   * nearbyUnits, capped, unchanged. */
+  allUnits: RentEngineUnit[];
 }
 
-const { content, bedroomLadder, cityUnits, nearbyUnits } = Astro.props;
+const { content, bedroomLadder, cityUnits, nearbyUnits, allUnits } = Astro.props;
 const pagePath = `/${content.citySlug}-homes-for-rent`;
 const cityLinks = getCityLinks(content.citySlug);
 const cityCenter = CITY_CENTER[content.citySlug];
@@ -251,25 +259,34 @@ const SMALL_SAMPLE_THRESHOLD = 5;
       and Homes Available Nearby -- same .map-pin-price/.map-popup-card
       pattern already used by the comps map (rental-analysis/[token].astro)
       and the Indianapolis homes-for-rent search page, reused as-is for
-      visual consistency. Plots cityUnits AND nearbyUnits together (not
-      just this city's own units) -- Michael's own follow-up feedback:
-      the first version only showed this city's units and defaulted to a
-      tight zoom-12 when that was empty (the common case, CLAUDE.md),
-      which read as "just Avon" instead of "homes near Avon." Falls back
-      to cityCenter (src/lib/listings/city-coordinates.ts) at a wider
-      zoom-9 only when there are truly zero pins anywhere nearby either. */}
+      visual consistency.
+
+      Plots allUnits (every currently-available unit, whole account) --
+      NOT cityUnits+nearbyUnits. Michael's second follow-up: the map had
+      inherited nearbyUnits' 8-listing cap, when the two are meant to
+      behave differently -- "Homes Available Nearby" below is a
+      deliberately capped curated preview, but the map should show
+      everything, since it's just a map (small portfolio, ~20-30 units
+      account-wide per CLAUDE.md -- plotting all of them isn't a
+      performance concern). Centered on cityCenter (src/lib/listings/
+      city-coordinates.ts) at a fixed zoom rather than fitBounds to
+      every pin's extent -- fitting bounds to the *whole account* would
+      zoom out to the whole metro on every city's page, which is the
+      opposite of what "anchored on this city" means. Pins outside the
+      initial view are still there and reachable by panning/zooming out,
+      same "local view first" pattern as most listing-search maps. */}
   {cityCenter && (
     <section class="content-section">
       <div class="container">
         <h2>{shortCityName} Rentals on the Map</h2>
-        <p class="section-dek">{shortCityName} listings plus what's available nearby, so you can see the wider picture.</p>
+        <p class="section-dek">Every Red Door listing, mapped around {shortCityName}.</p>
         <div
           class="city-listings-map"
           id="city-listings-map"
           data-lat={cityCenter[1]}
           data-lng={cityCenter[0]}
           data-units={JSON.stringify(
-            [...cityUnits, ...nearbyUnits]
+            allUnits
               .filter((u) => Array.isArray(u.address.coordinates))
               .map((u) => ({
                 lat: u.address.coordinates![1],
@@ -324,6 +341,9 @@ const SMALL_SAMPLE_THRESHOLD = 5;
             );
           })}
         </div>
+        <p class="hub-listing-grid-cta">
+          <a class="btn btn-secondary" href="/indianapolis-homes-for-rent">View All Red Door Listings</a>
+        </p>
       </div>
     </section>
   )}
@@ -449,7 +469,7 @@ const SMALL_SAMPLE_THRESHOLD = 5;
           container: 'city-listings-map',
           style: 'mapbox://styles/mapbox/light-v11',
           center: [lng, lat],
-          zoom: 9,
+          zoom: 10,
         });
         if (typeof ResizeObserver !== 'undefined') {
           new ResizeObserver(function () {
@@ -459,8 +479,10 @@ const SMALL_SAMPLE_THRESHOLD = 5;
         map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
         map.on('load', function () {
-          if (units.length === 0) return;
-          var bounds = new mapboxgl.LngLatBounds();
+          // No fitBounds here on purpose -- see this section's own header
+          // comment. Stays centered on the city at the fixed zoom set
+          // above; every unit still gets a pin, whether or not it's in
+          // the initial viewport.
           units.forEach(function (u) {
             var pin = document.createElement('div');
             pin.className = 'map-pin-price';
@@ -475,9 +497,7 @@ const SMALL_SAMPLE_THRESHOLD = 5;
               .setLngLat([u.lng, u.lat])
               .setPopup(new mapboxgl.Popup({ offset: 14 }).setHTML(popupHtml))
               .addTo(map);
-            bounds.extend([u.lng, u.lat]);
           });
-          if (!bounds.isEmpty()) map.fitBounds(bounds, { padding: 60, maxZoom: 11, duration: 0 });
         });
       }
 
