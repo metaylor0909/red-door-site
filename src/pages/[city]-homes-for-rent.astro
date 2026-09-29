@@ -250,22 +250,25 @@ const SMALL_SAMPLE_THRESHOLD = 5;
       and Homes Available Nearby -- same .map-pin-price/.map-popup-card
       pattern already used by the comps map (rental-analysis/[token].astro)
       and the Indianapolis homes-for-rent search page, reused as-is for
-      visual consistency. Centered on cityCenter (src/lib/listings/
-      city-coordinates.ts) rather than fit-to-pins, since this city's own
-      inventory is frequently thin or empty (CLAUDE.md) and the map still
-      needs somewhere sensible to point at in that case. */}
+      visual consistency. Plots cityUnits AND nearbyUnits together (not
+      just this city's own units) -- Michael's own follow-up feedback:
+      the first version only showed this city's units and defaulted to a
+      tight zoom-12 when that was empty (the common case, CLAUDE.md),
+      which read as "just Avon" instead of "homes near Avon." Falls back
+      to cityCenter (src/lib/listings/city-coordinates.ts) at a wider
+      zoom-9 only when there are truly zero pins anywhere nearby either. */}
   {cityCenter && (
     <section class="content-section">
       <div class="container">
         <h2>{shortCityName} Rentals on the Map</h2>
-        <p class="section-dek">Every home listed above, plotted around {shortCityName}.</p>
+        <p class="section-dek">{shortCityName} listings plus what's available nearby, so you can see the wider picture.</p>
         <div
           class="city-listings-map"
           id="city-listings-map"
           data-lat={cityCenter[1]}
           data-lng={cityCenter[0]}
           data-units={JSON.stringify(
-            cityUnits
+            [...cityUnits, ...nearbyUnits]
               .filter((u) => Array.isArray(u.address.coordinates))
               .map((u) => ({
                 lat: u.address.coordinates![1],
@@ -444,7 +447,7 @@ const SMALL_SAMPLE_THRESHOLD = 5;
           container: 'city-listings-map',
           style: 'mapbox://styles/mapbox/light-v11',
           center: [lng, lat],
-          zoom: 12,
+          zoom: 9,
         });
         if (typeof ResizeObserver !== 'undefined') {
           new ResizeObserver(function () {
@@ -472,7 +475,7 @@ const SMALL_SAMPLE_THRESHOLD = 5;
               .addTo(map);
             bounds.extend([u.lng, u.lat]);
           });
-          if (!bounds.isEmpty()) map.fitBounds(bounds, { padding: 60, maxZoom: 14, duration: 0 });
+          if (!bounds.isEmpty()) map.fitBounds(bounds, { padding: 60, maxZoom: 11, duration: 0 });
         });
       }
 
