@@ -58,7 +58,7 @@ const jsonLd = {
     </div>
   </section>
 
-  <section class="section-soft">
+  <section class="section-soft rvs-section">
     <div class="container">
       <Wizard client:load />
     </div>
@@ -109,6 +109,11 @@ const jsonLd = {
 </BaseLayout>
 
 <style>
+  /* global.css zeroes padding-top on any section that follows another
+     section; this one sits right under the page hero and needs the gap. */
+  .rvs-section {
+    padding-top: clamp(40px, 6vw, 64px);
+  }
   .rvs-assumptions {
     display: grid;
     gap: 12px;
