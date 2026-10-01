@@ -1,0 +1,287 @@
+---
+// /eviction-protection-program — ported from the eviction-protection-program.html
+// mockup. Body copy is the live reddoorrents.com page's, migrated as-is
+// (verified against archive/pages/eviction-protection-program.html). The
+// mockup's form only faked a confirmation; this one submits to the contact
+// form's real pipeline (/api/contact/submit: Turnstile, D1, staff email +
+// LeadSimple CC) with the property details folded into the comment.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ORGANIZATION_ID, ORGANIZATION_JSONLD } from '../lib/schema/organization';
+
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+
+const pagePath = '/eviction-protection-program';
+const canonicalUrl = `https://www.reddoorrents.com${pagePath}`;
+const pageTitle = 'Eviction Protection Program | Red Door Property Management';
+const pageDescription =
+  "Red Door's Eviction Protection Program covers attorney fees, court costs, and filing fees for covered evictions, so owners don't pay them up front.";
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    ORGANIZATION_JSONLD,
+    {
+      '@type': 'Service',
+      '@id': `${canonicalUrl}#service`,
+      name: 'Eviction Protection Program',
+      serviceType: 'Eviction cost coverage for managed rental properties',
+      description:
+        'For enrolled owners, Red Door Property Management pays the up-front cost of covered evictions: attorney fees, eviction filing fees, process server fees, court costs, broker representation fees, writ of possession fees, and copy charges.',
+      provider: { '@id': ORGANIZATION_ID },
+      areaServed: 'Indianapolis, IN metro area',
+      url: canonicalUrl,
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumbs`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.reddoorrents.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Eviction Protection Program', item: canonicalUrl },
+      ],
+    },
+  ],
+};
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path={pagePath}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    {turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />}
+  </Fragment>
+
+  <section class="hero" aria-labelledby="page-title">
+    <div class="hero-content">
+      <div class="eyebrow">Owner Protection</div>
+      <h1 id="page-title"><span>Eviction Protection Program</span></h1>
+      <p class="hero-copy">Court costs and eviction fees are usually an up-front owner expense &mdash; our Eviction Protection Program changes that.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#epp-inquiry">Inquire About Our Services</a>
+        <a class="btn btn-secondary" href="/contact">Contact Us</a>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#epp-main" aria-label="Scroll to content">
+      <span aria-hidden="true"></span>
+      Scroll
+    </a>
+  </section>
+
+  <section id="epp-main">
+    <div class="container">
+      <div class="content-block reveal">
+        <p>While Red Door makes every effort possible to screen our tenants and go the extra mile to avoid potential problems, it is inevitable that some renters will just have to be evicted for one reason or another. Sometimes families that are well-qualified when they move experience life altering circumstances that will result in them no longer being able to meet the obligations of the lease. It may be a job loss, death in the family, reduction in work hours, divorce or a number of any other unfortunate situations that might cause an eviction to take place. When a tenant fails to pay rent, the only legal action we can take is take the tenant through the eviction process.</p>
+        <p>Typical evictions cost between $800.00 &ndash; $1,500 and are borne up-front by the owner as an expense. In a usual case, owners pay for the eviction up-front and are later compensated by the refund of the tenant security deposit. However, in most cases, if the tenants are behind on rent prior to filing the eviction, the security deposit is unlikely to fully cover all of the unpaid rents plus expenses not to mention any repairs that will be needed to get the property rent-ready again.</p>
+        <p class="callout-note">If you are enrolled in the Eviction Protection Program, Red Door Property Management will assume the up-front financial burden of the eviction as a company expense, not to be charged to the owner like all other property management companies.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container">
+      <div class="content-block reveal">
+        <div class="section-kicker">How It Works</div>
+        <h2>Our Eviction Protection Program Changes That</h2>
+        <p>Court costs and eviction fees that are usually borne as an up-front owner expense are no longer of concern for you. Our Eviction Protection Plan (EPP) will cover the cost of almost all evictions. This could save you more than a few hours of worry or lost nights of sleep wondering about how to pay for an unexpected eviction while your tenant is not paying rent. Red Door Property Management will file for eviction on your behalf, as usual, but RDPM will also assume the up-front financial burden of the eviction as a company expense, not to be charged to the owner. That means in most cases you will end up paying nothing out of pocket for the eviction!</p>
+        <p>By enrolling in the EPP, security deposits can be preserved and applied directly to your lost rent and damages as you would expect. Red Door Property Management pays for your eviction in full, and as a result, the security deposit is available to be applied towards your unpaid rent, property damages, or any other fees you are entitled to recover from the tenant.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container reveal">
+      <div class="section-head">
+        <div class="section-kicker">Covered vs. Not Covered</div>
+        <h2>What&rsquo;s Included in the EPP</h2>
+      </div>
+      <div class="management-pricing epp-coverage">
+        <div class="fee-block epp-covered">
+          <span class="badge">We Cover</span>
+          <ul class="plain-list">
+            <li>Attorney Fees</li>
+            <li>Eviction Filing Fees</li>
+            <li>Process Server Fees</li>
+            <li>Court Costs</li>
+            <li>Broker Representation Fees</li>
+            <li>Writ of Possession Fees</li>
+            <li>All Copy Charges</li>
+          </ul>
+          <p class="callout-note epp-note">Evictions must be for cause (i.e. non-payment of rent), and cannot be owner caused.</p>
+        </div>
+        <div class="fee-block epp-not-covered">
+          <span class="badge">Not Covered</span>
+          <ul class="plain-list">
+            <li>Cost of a jury trial (very rare)</li>
+            <li>Lost rents</li>
+            <li>Damage to the property</li>
+            <li>Cost to physically &ldquo;remove&rdquo; the tenant</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-soft" id="epp-inquiry">
+    <div class="container reveal">
+      <div class="section-head center">
+        <div class="section-kicker">Get Started</div>
+        <h2>Inquire About Our Services</h2>
+      </div>
+      <form class="form-card epp-form" data-epp-form>
+        <div class="field-grid">
+          <label>Your Name
+            <input name="name" autocomplete="name" required />
+          </label>
+          <label>Email
+            <input type="email" name="email" autocomplete="email" required />
+          </label>
+        </div>
+        <label>Phone
+          <input type="tel" name="phone" autocomplete="tel" />
+        </label>
+        <div class="field-grid">
+          <label>Property Type
+            <select name="property_type" required>
+              <option value="">Select One...</option>
+              <option>Single Family Home</option>
+              <option>Condo</option>
+              <option>Townhome</option>
+              <option>Multi Family 1&ndash;4</option>
+              <option>Multi Family 4+</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label>Your Role
+            <select name="role" required>
+              <option value="">Select One...</option>
+              <option>Owner</option>
+              <option>Renter</option>
+            </select>
+          </label>
+        </div>
+        <div class="field-grid">
+          <label>Status
+            <select name="status">
+              <option value="">Select One...</option>
+              <option>Vacant</option>
+              <option>Occupied by Tenant</option>
+              <option>Occupied by Owner</option>
+            </select>
+          </label>
+          <label>Best Time to Contact
+            <select name="best_time">
+              <option value="">Select One...</option>
+              <option>Morning</option>
+              <option>Afternoon</option>
+              <option>Evening</option>
+              <option>Anytime</option>
+            </select>
+          </label>
+        </div>
+        <label>Property Address
+          <input name="address" autocomplete="street-address" />
+        </label>
+        <div class="field-grid">
+          <label>City
+            <input name="city" autocomplete="address-level2" />
+          </label>
+          <label>Zip Code
+            <input name="zip" autocomplete="postal-code" inputmode="numeric" />
+          </label>
+        </div>
+        <label>Comments
+          <textarea name="comments"></textarea>
+        </label>
+        <label class="epp-consent">
+          <input type="checkbox" name="sms_consent" />
+          <span class="consent">By providing your mobile number you consent to receiving text messages from Red Door Property Management. Reply STOP to opt out. Msg &amp; data rates may apply.</span>
+        </label>
+
+        {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey} />}
+
+        <p class="error-text" aria-live="polite" data-form-error></p>
+        <div class="form-actions epp-actions">
+          <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Protect Your Investment</h2>
+      <p>Ask about enrolling in the Eviction Protection Program on your managed property.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#epp-inquiry">Inquire About Our Services</a>
+        <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const form = document.querySelector<HTMLFormElement>('[data-epp-form]');
+      if (!form) return;
+      const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      const error = form.querySelector<HTMLElement>('[data-form-error]');
+
+      form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        if (submitButton) submitButton.disabled = true;
+        if (error) error.textContent = '';
+
+        const fields = new FormData(form);
+        const get = (name: string) => String(fields.get(name) ?? '').trim();
+        const location = [get('address'), get('city'), get('zip')].filter(Boolean).join(', ');
+        const details = [
+          `Property type: ${get('property_type')}`,
+          `Role: ${get('role')}`,
+          get('status') && `Status: ${get('status')}`,
+          get('best_time') && `Best time to contact: ${get('best_time')}`,
+          location && `Property: ${location}`,
+          get('comments') && `\nComments:\n${get('comments')}`,
+        ].filter(Boolean);
+
+        const payload = new FormData();
+        payload.set('name', get('name'));
+        payload.set('email', get('email'));
+        payload.set('phone', get('phone'));
+        payload.set('inquiry_type', 'Eviction Protection Program');
+        payload.set('referral_source', 'Eviction Protection Program page');
+        payload.set('comment', details.join('\n'));
+        if (fields.get('sms_consent')) payload.set('sms_consent', 'on');
+        const token = fields.get('cf-turnstile-response');
+        if (token) payload.set('cf-turnstile-response', String(token));
+
+        try {
+          const response = await fetch('/api/contact/submit', { method: 'POST', body: payload });
+          const data = await response.json().catch(() => ({}));
+          if (response.ok && data.redirectUrl) {
+            window.location.href = data.redirectUrl;
+            return;
+          }
+          if (error) error.textContent = data.error || 'Something went wrong. Please try again.';
+        } catch {
+          if (error) error.textContent = 'Something went wrong. Please check your connection and try again.';
+        } finally {
+          if (submitButton) submitButton.disabled = false;
+        }
+      });
+    })();
+  </script>
+</BaseLayout>
+
+<style>
+  .epp-coverage { grid-template-columns: 1fr 1fr; }
+  .epp-covered { border-top-color: var(--brand); }
+  .epp-not-covered { border-top-color: var(--line); }
+  .epp-not-covered .badge { background: var(--soft); color: var(--muted); }
+  .epp-note { margin-top: 20px; }
+  .epp-form { max-width: 640px; margin-inline: auto; }
+  .epp-consent { display: flex; flex-direction: row; align-items: flex-start; gap: 10px; margin-top: 2px; }
+  .epp-consent input { width: auto; min-height: 0; margin-top: 3px; }
+  .epp-consent .consent { font-weight: 400; }
+  .epp-actions { justify-content: flex-end; }
+  @media (max-width: 720px) {
+    .epp-coverage { grid-template-columns: 1fr; }
+  }
+</style>

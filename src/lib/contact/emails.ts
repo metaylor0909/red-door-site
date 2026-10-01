@@ -25,9 +25,28 @@ export interface ContactNotificationParams {
   smsConsent: boolean;
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export function buildContactNotificationEmail(
-  params: ContactNotificationParams
+  raw: ContactNotificationParams
 ): { from: string; to: string; cc: string; subject: string; html: string; replyTo: string } {
+  // Every field is visitor-typed; escape before it goes into the HTML body.
+  const params = {
+    ...raw,
+    name: escapeHtml(raw.name),
+    email: escapeHtml(raw.email),
+    phone: escapeHtml(raw.phone),
+    inquiryType: escapeHtml(raw.inquiryType),
+    referralSource: escapeHtml(raw.referralSource),
+    comment: escapeHtml(raw.comment),
+  };
   const html = `
 <!doctype html>
 <html>
@@ -70,8 +89,8 @@ export function buildContactNotificationEmail(
     from: SENDER,
     to: STAFF_RECIPIENT,
     cc: LEADSIMPLE_CONTACT_FORM_CC,
-    subject: `New Contact Form Submission — ${params.name}`,
+    subject: `New Contact Form Submission — ${raw.name}`,
     html,
-    replyTo: params.email,
+    replyTo: raw.email,
   };
 }
