@@ -1,0 +1,138 @@
+/* Rent vs. Sell calculator — Tailwind utilities scoped to this island only.
+   No preflight (it would restyle the whole page), and class detection is
+   limited to this folder so only the calculator's own utilities exist.
+   Utilities are unlayered on purpose: global.css is unlayered too, and
+   layered rules would lose to it regardless of specificity. */
+@import "tailwindcss/theme.css" layer(theme);
+@source "./";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-brand: var(--brand);
+  --color-accent: var(--accent);
+  --color-gain: var(--gain);
+  --color-loss: var(--loss);
+  --color-pillar-cashflow: var(--pillar-cashflow);
+  --color-pillar-appreciation: var(--pillar-appreciation);
+  --color-pillar-principal: var(--pillar-principal);
+  --color-pillar-tax: var(--pillar-tax);
+  --color-stock: var(--stock);
+}
+
+/* --brand and --muted are inherited from the site's own tokens. */
+.rvs-app {
+  --background: var(--soft);
+  --foreground: var(--ink);
+  --surface: #ffffff;
+  --surface-muted: var(--soft);
+  --border: var(--line);
+  --accent: var(--brand-mid);
+  --gain: #15803d;
+  --loss: #7f1d1d;
+  --pillar-cashflow: #0d9488;
+  --pillar-appreciation: #2563eb;
+  --pillar-principal: #7c3aed;
+  --pillar-tax: #d97706;
+  --stock: #94a3b8;
+  color: var(--foreground);
+}
+
+/* Neutralize global.css element rules (section padding, label grid, label
+   inputs, heading sizes/margins) and browser button chrome. Same
+   specificity as a utility and placed before them, so utilities still win. */
+.rvs-app :where(section, article) {
+  padding: 0;
+  scroll-margin-top: 0;
+}
+.rvs-app :where(h1, h2, h3, h4, p, dl, dd, dt, ul, ol) {
+  margin: 0;
+}
+.rvs-app :where(ul, ol) {
+  list-style: none;
+  padding: 0;
+}
+.rvs-app :where(h2, h3, h4) {
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+.rvs-app :where(label) {
+  display: inline;
+  gap: normal;
+  font-weight: inherit;
+  color: inherit;
+}
+.rvs-app :where(label) :where(input, select, textarea) {
+  width: auto;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+}
+.rvs-app :where(button) {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.rvs-app :where(button:disabled) {
+  cursor: not-allowed;
+}
+.rvs-app :where(svg) {
+  display: block;
+  flex-shrink: 0;
+}
+
+@tailwind utilities source(none);
+
+.rvs-app input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--line);
+  outline: none;
+}
+.rvs-app input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--brand);
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(15, 27, 45, 0.25);
+  cursor: pointer;
+}
+.rvs-app input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--brand);
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(15, 27, 45, 0.25);
+  cursor: pointer;
+}
+.rvs-app input[type="range"]:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--brand-mid);
+  outline-offset: 2px;
+}
+.rvs-app input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  min-height: 0;
+  accent-color: var(--brand);
+}

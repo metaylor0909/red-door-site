@@ -1,0 +1,120 @@
+---
+// /rent-vs-sell — the Wealth Architect sell-vs-keep calculator, moved here
+// from the separate investor-calulator Next.js repo. The calculator is a
+// React island (src/components/rent-vs-sell/) styled with Tailwind scoped
+// to that folder; the page around it is plain Astro so the H1, intro, and
+// assumptions are server-rendered for search engines.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Wizard from '../components/rent-vs-sell/Wizard';
+import { ORGANIZATION_ID, ORGANIZATION_JSONLD } from '../lib/schema/organization';
+
+const pagePath = '/rent-vs-sell';
+const canonicalUrl = `https://www.reddoorrents.com${pagePath}`;
+const pageTitle = 'Rent vs. Sell Calculator | Red Door Property Management';
+const pageDescription =
+  'Should you sell your rental or keep it? Compare 15 years of after-tax wealth from selling, keeping, or refinancing, using real management costs.';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    ORGANIZATION_JSONLD,
+    {
+      '@type': 'WebApplication',
+      '@id': `${canonicalUrl}#calculator`,
+      name: 'Rent vs. Sell Calculator',
+      url: canonicalUrl,
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Any',
+      description: pageDescription,
+      offers: { '@type': 'Offer', price: 0, priceCurrency: 'USD' },
+      provider: { '@id': ORGANIZATION_ID },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumbs`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.reddoorrents.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Rent vs. Sell Calculator', item: canonicalUrl },
+      ],
+    },
+  ],
+};
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path={pagePath}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-kicker">Owner Tools</span>
+      <h1>Rent vs. Sell Calculator</h1>
+      <p class="lead">
+        Should you sell your rental or keep it? Enter a few numbers about the property and compare 15 years of
+        after-tax wealth from selling and reinvesting, keeping it as a managed rental, or refinancing to buy a second
+        rental.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-soft">
+    <div class="container">
+      <Wizard client:load />
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="content-block reveal">
+        <div class="section-kicker">Assumptions</div>
+        <h2>How the Numbers Work</h2>
+        <ul class="rvs-assumptions">
+          <li>
+            Net worth on every path is what you would keep if you cashed out that year, after 7% selling costs and
+            15% long-term capital gains tax.
+          </li>
+          <li>
+            Keeping the property includes Red Door&rsquo;s 9% management fee, the $995 new-lease fee and $350 renewal
+            fee at a 75% renewal rate (about a 4-year average tenancy), 5% vacancy, 10% of rent for maintenance,
+            property tax, and insurance.
+          </li>
+          <li>
+            Rent and home values grow 5% a year by default. Every assumption can be changed under Expert Overrides.
+          </li>
+          <li>
+            Depreciation is based on your purchase price over 27.5 years. Depreciation recapture is left out by
+            default because most investors sell through a 1031 exchange; you can turn it on.
+          </li>
+          <li>
+            The refinance path appears when you own at least 25% equity: a cash-out refinance to 75% loan-to-value
+            funds a 20% down payment on a second rental.
+          </li>
+          <li>This is an educational estimate, not tax, legal, or investment advice.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Want Real Numbers for Your Property?</h2>
+      <p>Get a free rental analysis based on comparable rentals near you, or talk it through with our team.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .rvs-assumptions {
+    display: grid;
+    gap: 12px;
+    margin: 18px 0 0;
+    padding-left: 20px;
+    color: var(--charcoal);
+    line-height: 1.6;
+  }
+</style>

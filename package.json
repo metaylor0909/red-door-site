@@ -21,8 +21,11 @@
     "@sanity/vision": "^6.15.0",
     "astro": "^7.3.3",
     "astro-portabletext": "^1.0.1",
+    "framer-motion": "^12.43.0",
+    "lucide-react": "^1.49.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "recharts": "^3.10.1",
     "sanity": "^6.15.0",
     "styled-components": "^6.5.3"
   },
@@ -30,8 +33,10 @@
     "esbuild": true
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
     "cheerio": "^1.2.0",
     "dotenv": "^18.0.1",
+    "tailwindcss": "^4.3.3",
     "wrangler": "4.124.0"
   },
   "overrides": {

@@ -4,6 +4,7 @@ import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 import react from '@astrojs/react';
 import sanity from '@sanity/astro';
+import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
@@ -22,6 +23,9 @@ export default defineConfig({
     }),
   ],
   vite: {
+    // Only the rent-vs-sell calculator island uses Tailwind; its stylesheet
+    // limits class scanning to its own folder and skips preflight.
+    plugins: [tailwindcss()],
     // The embedded Studio (sanity + @sanity/vision) trips up Vite's dev-mode
     // dependency pre-bundler — it works fine in a real production build,
     // but `astro dev`'s optimizer throws hundreds of false MISSING_EXPORT
