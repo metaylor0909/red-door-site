@@ -107,6 +107,9 @@ const h1Text = `${unit.address.formatted_address}, ${unit.address.city}, ${unit.
 
 const scheduleShowingUrl = `https://app.rentengine.io/public/schedule-showing/${unit.id}?accounts=${RENTENGINE_ACCOUNT_ID}`;
 
+const videoId = unit.video_url?.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([a-zA-Z0-9_-]{11})/)?.[1];
+const videoThumb = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
+
 const detailRows: Array<[string, string]> = [
   ['Bedrooms', unit.bedrooms === 0 ? 'Studio' : String(unit.bedrooms)],
   ['Bathrooms', String(unit.bathrooms)],
@@ -310,6 +313,21 @@ const jsonLd = {
               logic. */}
           <p class="listing-description">{unit.marketing_description}</p>
         </div>
+
+        {
+          videoThumb && (
+            <div class="content-block">
+              <h2>Video Walkthrough</h2>
+              <a class="listing-video-link" href={unit.video_url!} target="_blank" rel="noopener">
+                <span class="listing-video-thumb">
+                  <img src={videoThumb} alt={`Video walkthrough of ${unit.address.formatted_address}`} loading="lazy" />
+                  <span class="listing-video-play" aria-hidden="true" />
+                </span>
+                <span class="listing-video-label">Watch the walkthrough on YouTube &rarr;</span>
+              </a>
+            </div>
+          )
+        }
 
         <div class="content-block">
           <h2>Details</h2>

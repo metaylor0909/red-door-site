@@ -81,6 +81,9 @@ export interface RentEngineUnit {
 
   marketing_description: string;
   marketing_photos: UnitPhoto[];
+  /** YouTube watch URL when the unit has a walkthrough video; no separate
+   * thumbnail field exists, so the thumbnail is derived from the video ID. */
+  video_url?: string | null;
   custom_application_url: string | null;
 
   /** A descriptive string ("Yes", "Dogs only", presumably "No"/"Cats
