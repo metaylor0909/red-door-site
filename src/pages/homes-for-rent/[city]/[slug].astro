@@ -78,9 +78,33 @@ const cityHubHref = `/${citySlugForUnit}-homes-for-rent`;
 const detailPath = `/homes-for-rent/${citySlugForUnit}/${addressSlug(unit)}`;
 const canonicalPhotos = unit.marketing_photos.filter((p) => !p.hidden).map((p) => p.original);
 const mainPhoto = canonicalPhotos[0] as string | undefined;
-const thumbCount = Math.min(canonicalPhotos.length - 1, 4);
+let videoId = unit.video_url?.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([a-zA-Z0-9_-]{11})/)?.[1];
+// A private or deleted video still sits in RentEngine's video_url; oEmbed
+// refuses it (401/403/404), so drop it rather than link to an unwatchable
+// video. A network failure here keeps the video.
+if (videoId) {
+  try {
+    const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
+    if ([401, 403, 404].includes(res.status)) {
+      console.warn(`[listing detail] ${unit.address.formatted_address}: video ${videoId} is not publicly available (oEmbed ${res.status}); hiding it.`);
+      videoId = undefined;
+    }
+  } catch {}
+}
+const videoThumb = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
+// maxresdefault is 16:9 with no letterbox bars, so it fills a gallery tile
+// cleanly. When a video lacks one, YouTube returns a 120x90 gray placeholder
+// (not a load error), so the tile's onload swaps to hqdefault on that size.
+const videoTileThumb = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
+
+// With a video, it takes the bottom-left tile of the 2x2 grid and one fewer
+// photo shows, so the "+N photos" count on the last tile stays accurate.
+const thumbCount = Math.max(0, Math.min(canonicalPhotos.length - 1, videoId ? 3 : 4));
 const thumbPhotos = thumbCount > 0 ? canonicalPhotos.slice(1, 1 + thumbCount) : [];
 const remainingPhotoCount = canonicalPhotos.length - (1 + thumbPhotos.length);
+type GalleryTile = { kind: 'photo'; src: string; photoIndex: number } | { kind: 'video' };
+const galleryTiles: GalleryTile[] = thumbPhotos.map((src, i) => ({ kind: 'photo', src, photoIndex: i + 1 }));
+if (videoId) galleryTiles.splice(Math.min(2, galleryTiles.length), 0, { kind: 'video' });
 
 const propertyTypeLabel = (unit.property_type || 'Home').toUpperCase();
 const bedsLabel = unit.bedrooms === 0 ? 'Studio' : `${unit.bedrooms}BR`;
@@ -106,9 +130,6 @@ const pageDescription = `${unit.bedrooms}-bedroom, ${unit.bathrooms}-bathroom ${
 const h1Text = `${unit.address.formatted_address}, ${unit.address.city}, ${unit.address.state}`;
 
 const scheduleShowingUrl = `https://app.rentengine.io/public/schedule-showing/${unit.id}?accounts=${RENTENGINE_ACCOUNT_ID}`;
-
-const videoId = unit.video_url?.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([a-zA-Z0-9_-]{11})/)?.[1];
-const videoThumb = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
 
 const detailRows: Array<[string, string]> = [
   ['Bedrooms', unit.bedrooms === 0 ? 'Studio' : String(unit.bedrooms)],
@@ -244,16 +265,31 @@ const jsonLd = {
             <button type="button" class="gallery-main" data-photo-index="0">
               <img src={mainPhoto} alt={unit.address.formatted_address} loading="eager" />
             </button>
-            {thumbPhotos.length > 0 && (
-              <div class={`gallery-thumbs gallery-thumbs-${thumbPhotos.length}`}>
-                {thumbPhotos.map((photo, i) => (
-                  <button type="button" class="gallery-thumb" data-photo-index={i + 1}>
-                    <img src={photo} alt="" loading="lazy" />
-                    {i === thumbPhotos.length - 1 && remainingPhotoCount > 0 && (
-                      <span class="gallery-more-overlay">+{remainingPhotoCount} photos</span>
-                    )}
-                  </button>
-                ))}
+            {galleryTiles.length > 0 && (
+              <div class={`gallery-thumbs gallery-thumbs-${galleryTiles.length}`}>
+                {galleryTiles.map((tile, i) =>
+                  tile.kind === 'video' ? (
+                    <a class="gallery-thumb gallery-video-tile" href={unit.video_url!} target="_blank" rel="noopener">
+                      <img
+                        src={videoTileThumb!}
+                        alt={`Video walkthrough of ${unit.address.formatted_address}`}
+                        loading="lazy"
+                        onload={`if(this.naturalWidth<=120&&!this.dataset.fallback){this.dataset.fallback='1';this.classList.add('is-letterboxed');this.src='${videoThumb}'}`}
+                      />
+                      <span class="gallery-video-overlay">
+                        <span class="listing-video-play" aria-hidden="true" />
+                        <span class="gallery-video-label">Video Walkthrough</span>
+                      </span>
+                    </a>
+                  ) : (
+                    <button type="button" class="gallery-thumb" data-photo-index={tile.photoIndex}>
+                      <img src={tile.src} alt="" loading="lazy" />
+                      {i === galleryTiles.length - 1 && remainingPhotoCount > 0 && (
+                        <span class="gallery-more-overlay">+{remainingPhotoCount} photos</span>
+                      )}
+                    </button>
+                  )
+                )}
               </div>
             )}
           </div>
