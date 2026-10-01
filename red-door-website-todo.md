@@ -1789,12 +1789,17 @@ one.
       their city's property-management / homes-for-rent / market-reports
       pages — metro roundups with 4+ city tags are skipped. New optional
       `summary` field on posts renders as a box under the byline and as
-      BlogPosting `abstract`. **Piloted on 9 posts** (latest report per
-      market, numbers taken only from each post's own text, Fair-Housing
-      checked). **Open: Michael to review the pilot wording before
-      summaries are written for the remaining ~170 market reports** (and
-      decide whether guidance posts get them too). 22% of posts still have
-      no number-bearing sentence outside the transcript.
+      BlogPosting `abstract`. **130 of 172 market reports now have a
+      summary (Oct 1)** — every number verbatim from the post, Fair Housing
+      checked, 12-post manual spot-check. Source of truth:
+      `scripts/data/blog-summaries.json`, re-applied with
+      `node scripts/apply-blog-summaries.mjs --write`. The other 42 have no
+      usable figures (or only one). Problems found in the posts themselves
+      (written section vs. transcript contradictions, garbled figures, a
+      leftover "[Insert YouTube video link here]", a drafting note, Airbnb
+      promo, a Lebanon-titled post containing the Indianapolis report) are
+      in `claude/blog-summary-source-notes.md`. Still open: whether guidance
+      (non-market-report) posts get summaries too.
 - [ ] Rebuild `sitemap.xml` and `robots.txt`
 - [ ] Reinstall Google Tag Manager with the same container ID
 - [ ] Accessibility pass — footer publicly commits to WCAG 2.0 Level A
