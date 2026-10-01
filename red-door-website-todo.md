@@ -1742,19 +1742,53 @@ one.
       real number in the same clause, not an isolated stat-tile number.
       Extend that pattern — stat tiles read well for humans scanning but
       are weak for LLM extraction on their own.
-- [ ] **Audit the 309 blog posts for SEO and LLM citability (Sep 29).** Not
-      yet started — the SEO/LLM review so far only covered the
-      property-management and homes-for-rent city pages. The blog is the
-      largest asset in the migration (see CLAUDE.md's inventory table) and
-      hasn't had this pass. Known related issues already on this list to
-      fold in rather than duplicate: 143 titles over 60 characters (17
-      clickbait-phrased), 3 posts with no `<title>`. Worth checking:
-      heading structure within posts (single H1, real H2/H3 hierarchy vs.
-      the transcript/FAQ accordion dumping everything under one heading),
-      whether the accordion content (122 posts, see `AccordionSection.astro`)
-      is still crawlable text when collapsed by default, meta description
-      coverage post-migration, and whether posts state facts in citable
-      declarative sentences vs. video-transcript filler.
+- [x] **Audit the 309 blog posts for SEO and LLM citability — done Oct 1.**
+      Per-post worklist: `claude/blog-seo-llm-audit.csv` (built HTML, what
+      crawlers see). Fixed during the audit: the Sep 28 accordion
+      re-migration's `createOrReplace` had silently wiped all 141 Sep 19
+      `seo.title` fixes and every post's categories — both restored from
+      their scripts and redeployed, and `migrate-blog.mjs` now patches only
+      its own fields so a re-run can't wipe them again. Open items below.
+- [ ] **Blog: Fair Housing cleanup (launch blocker).** 78 posts have
+      prohibited patterns in their own written text — mostly "schools" /
+      "for families" / "children" in city market write-ups (e.g. "top-rated
+      school system attracts families seeking a quality education for their
+      children"), plus "Safe & Secure" in one title and a Crooked Creek
+      "diversity and inclusion" pitch. 12 more only in video transcripts
+      (staff speech — still Red Door's own copy, not testimonials). Column
+      `fair_housing_terms_*` in the audit CSV. Some hits are benign (e.g.
+      "diversity of sectors") — needs a human pass. Conflicts with Hard Rule 1
+      (no content rewrites during migration), but the precedent is set:
+      "strong schools" was already removed in content-fixes.csv.
+- [ ] **Blog: schema + images.** 234 posts have no hero image, so no
+      `og:image` (blank social previews) and no `image` in BlogPosting; 216
+      of them have a YouTube video whose thumbnail could fill both. 220
+      video posts have no `VideoObject` schema. BlogPosting's `publisher` is
+      an `@id` pointing at an Organization that isn't on the blog page —
+      inline the name/logo instead.
+- [ ] **Blog: dead links.** 5 posts → `/airbnb-management-indianapolis`
+      (fine once `_redirects` exists — 301 to `/` is locked). 9 links →
+      `/anderson|lebanon|whitestown|plainfield|downtown-indianapolis-property-management`;
+      only downtown-indianapolis was a real old-site page (MIGRATE in the
+      migration plan) and **isn't built on the new site** — needs a page or
+      a 301 regardless of the blog. 2 posts have placeholder links
+      (`[Insert Contact Us Page URL]`) from the source.
+- [ ] **Blog: titles/headings.** 62 `<title>` tags still exceed 60 only
+      because the template appends " | Red Door Property Management" — only
+      append it when it fits. 60 on-page H1s keep clickbait phrasing (seo.title
+      only changes the `<title>` tag). 26 posts have no H2, 20 skip heading
+      levels. 132 metas over 160 chars (CLAUDE.md accepted 25 at 162–199 —
+      this is more than that).
+- [ ] **Blog: LLM citability.** 122 accordions are labeled "Transcript Here"
+      (generic); 22% of posts have no number-bearing sentence outside the
+      transcript, and 35% have no internal links. Transcript text is in the
+      HTML (crawlable inside `<details>`), but a 2–3 sentence written summary
+      with the month's real numbers above each video post would be the
+      biggest citability win. Market reports (~179 posts) are the priority.
+      None of them link to the new `-market-reports` pages (86 link to a
+      property-management page, 31 to homes-for-rent) — a template-level
+      "More {City} market reports" link driven by the city categories would
+      fix all of them without touching post content.
 - [ ] Rebuild `sitemap.xml` and `robots.txt`
 - [ ] Reinstall Google Tag Manager with the same container ID
 - [ ] Accessibility pass — footer publicly commits to WCAG 2.0 Level A

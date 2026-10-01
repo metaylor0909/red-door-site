@@ -509,7 +509,21 @@ async function main() {
       if (!publishedAt) results.noDate.push(slug);
 
       if (!DRY_RUN) {
-        await client.createOrReplace(doc);
+        // Patch only the migrated fields instead of createOrReplace: a full
+        // replace on 2026-09-28 wiped fields set by later scripts (141
+        // seo.title fixes from apply-seo-titles.mjs, every post's categories
+        // from categorize-blog.mjs). seo.title is only set when this script
+        // has its own fix, so a later hand-written one survives a re-run.
+        const { _id, _type, seo, ...fields } = doc;
+        const set = Object.fromEntries(Object.entries(fields).filter(([, v]) => v !== undefined));
+        if (seo.description) set['seo.description'] = seo.description;
+        if (seo.title) set['seo.title'] = seo.title;
+        const unset = Object.entries(fields).filter(([, v]) => v === undefined).map(([k]) => k);
+        await client
+          .transaction()
+          .createIfNotExists({ _id, _type })
+          .patch(_id, (p) => p.set(set).unset(unset))
+          .commit();
       }
       results.created.push({
         slug,
