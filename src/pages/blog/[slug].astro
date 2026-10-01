@@ -6,6 +6,9 @@ import YoutubeEmbed from '../../components/portabletext/YoutubeEmbed.astro';
 import TableBlock from '../../components/portabletext/TableBlock.astro';
 import ImageBlock from '../../components/portabletext/ImageBlock.astro';
 import AccordionSection from '../../components/portabletext/AccordionSection.astro';
+import CityInterlinkPanel from '../../components/CityInterlinkPanel.astro';
+import { getBlogCityLinks } from '../../lib/interlinking/city-links';
+import { ORGANIZATION_ID, ORGANIZATION_JSONLD } from '../../lib/schema/organization';
 
 const portableTextComponents = {
   type: {
@@ -41,6 +44,9 @@ const post = await sanityClient.fetch(
     "authorName": author->name,
     "mainImageUrl": mainImage.asset->url,
     "mainImageAlt": mainImage.alt,
+    summary,
+    "categories": categories[]->title,
+    "youtubeUrl": body[_type == "youtubeEmbed"][0].url,
     seo
   }`,
   { slug }
@@ -50,26 +56,90 @@ if (!post) {
   return Astro.redirect('/blog', 404);
 }
 
-const pageTitle = post.seo?.title || `${post.title} | Red Door Property Management`;
+const BRAND_SUFFIX = ' | Red Door Property Management';
+const pageTitle =
+  post.seo?.title || ((post.title + BRAND_SUFFIX).length <= 60 ? post.title + BRAND_SUFFIX : post.title);
 const pageDescription = post.seo?.description || post.excerpt || '';
 const canonicalPath = `/blog/${post.slug}`;
+const postUrl = `https://www.reddoorrents.com${canonicalPath}`;
 
-// BlogPosting schema, tied to the same Organization already published on
-// the homepage (see index.html's JSON-LD) rather than a disconnected one.
+// A private or deleted video can still sit in the post body; oEmbed refuses
+// it (401/403/404), so it's never used as the share image or VideoObject.
+// maxresdefault (16:9, no letterbox bars) 404s for some videos, so fall back
+// to hqdefault. Network failures keep the video with the safe hqdefault.
+const youtubeId = post.youtubeUrl?.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([a-zA-Z0-9_-]{11})/)?.[1];
+let video: { id: string; thumbnailUrl: string } | null = null;
+if (youtubeId) {
+  const hq = `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
+  try {
+    const watchUrl = `https://www.youtube.com/watch?v=${youtubeId}`;
+    const [oembed, maxres] = await Promise.all([
+      fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(watchUrl)}&format=json`),
+      fetch(`https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`, { method: 'HEAD' }),
+    ]);
+    await Promise.all([oembed.body?.cancel(), maxres.body?.cancel()]);
+    if ([401, 403, 404].includes(oembed.status)) {
+      console.warn(`[blog] ${post.slug}: video ${youtubeId} is not publicly available (oEmbed ${oembed.status}).`);
+    } else {
+      video = { id: youtubeId, thumbnailUrl: maxres.ok ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg` : hq };
+    }
+  } catch {
+    video = { id: youtubeId, thumbnailUrl: hq };
+  }
+}
+const shareImage: string | undefined = post.mainImageUrl || video?.thumbnailUrl || undefined;
+
+const TOPIC_CATEGORIES = new Set([
+  'Market Reports',
+  'Landlord Tips',
+  'Tenant Resources',
+  'Investment Strategy',
+  'Property Maintenance',
+  'Client Stories',
+]);
+const categories: string[] = post.categories ?? [];
+const topic = categories.find((c) => TOPIC_CATEGORIES.has(c));
+const cityTags = categories.filter((c) => !TOPIC_CATEGORIES.has(c));
+// Metro-wide roundups carry 10+ city tags; a panel of every city adds noise.
+const cityLinks = cityTags.length <= 3 ? getBlogCityLinks(cityTags) : [];
+
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'BlogPosting',
-  headline: post.title,
-  datePublished: post.publishedAt,
-  dateModified: post.publishedAt,
-  ...(post.authorName ? { author: { '@type': 'Person', name: post.authorName } } : {}),
-  publisher: { '@id': 'https://www.reddoorrents.com/#organization' },
-  mainEntityOfPage: `https://www.reddoorrents.com${canonicalPath}`,
-  ...(post.mainImageUrl ? { image: post.mainImageUrl } : {}),
+  '@graph': [
+    {
+      '@type': 'BlogPosting',
+      '@id': `${postUrl}#article`,
+      headline: post.title,
+      ...(pageDescription ? { description: pageDescription } : {}),
+      ...(post.summary ? { abstract: post.summary } : {}),
+      datePublished: post.publishedAt,
+      dateModified: post.publishedAt,
+      ...(post.authorName ? { author: { '@type': 'Person', name: post.authorName } } : {}),
+      publisher: { '@id': ORGANIZATION_ID },
+      mainEntityOfPage: postUrl,
+      ...(shareImage ? { image: shareImage } : {}),
+      ...(topic ? { articleSection: topic } : {}),
+      ...(video ? { video: { '@id': `${postUrl}#video` } } : {}),
+    },
+    ORGANIZATION_JSONLD,
+    ...(video
+      ? [
+          {
+            '@type': 'VideoObject',
+            '@id': `${postUrl}#video`,
+            name: post.title,
+            description: pageDescription || post.title,
+            thumbnailUrl: video.thumbnailUrl,
+            uploadDate: post.publishedAt,
+            embedUrl: `https://www.youtube.com/embed/${video.id}`,
+          },
+        ]
+      : []),
+  ],
 };
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription} path={canonicalPath} ogImage={post.mainImageUrl}>
+<BaseLayout title={pageTitle} description={pageDescription} path={canonicalPath} ogImage={shareImage}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </Fragment>
@@ -92,12 +162,20 @@ const jsonLd = {
           <span>{new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
         </p>
         {post.mainImageUrl && <img class="blog-post-hero-image" src={post.mainImageUrl} alt={post.mainImageAlt || ''} />}
+        {post.summary && (
+          <aside class="blog-post-summary" aria-label="Summary">
+            <p class="blog-post-summary-label">Summary</p>
+            <p>{post.summary}</p>
+          </aside>
+        )}
         <div class="blog-post-body">
           <PortableText value={post.body} components={portableTextComponents} />
         </div>
       </div>
     </div>
   </article>
+
+  <CityInterlinkPanel cities={cityLinks} />
 </BaseLayout>
 
 <style>
@@ -123,6 +201,22 @@ const jsonLd = {
     border-radius: var(--radius);
     margin-bottom: 32px;
   }
+  .blog-post-summary {
+    margin: 0 0 32px;
+    padding: 18px 22px;
+    background: var(--brand-tint);
+    border-left: 4px solid var(--brand);
+    border-radius: var(--radius);
+  }
+  .blog-post-summary-label {
+    margin: 0 0 6px;
+    color: var(--brand);
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .blog-post-summary p:last-child { margin: 0; color: var(--ink); font-size: 1.05rem; line-height: 1.6; }
   .blog-post-body :global(h2) { margin-top: 36px; }
   .blog-post-body :global(h3) { margin-top: 28px; }
   .blog-post-body :global(p) { color: var(--charcoal); font-size: 1.05rem; margin-bottom: 18px; }

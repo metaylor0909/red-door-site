@@ -74,6 +74,16 @@ export default defineType({
       description: 'Short summary used on index/card views. Falls back to the meta description if left blank.',
     }),
     defineField({
+      name: 'summary',
+      title: 'Summary',
+      type: 'text',
+      rows: 4,
+      group: 'content',
+      description:
+        'Optional. 2–3 plain sentences shown in a box at the top of the post — the main takeaways with the real numbers (rent, days on market, inventory). Search engines and AI tools quote this. Fair Housing applies: never describe an area by who lives there, and never mention schools.',
+      validation: (Rule) => Rule.max(600),
+    }),
+    defineField({
       name: 'body',
       title: 'Body',
       type: 'blockContent',

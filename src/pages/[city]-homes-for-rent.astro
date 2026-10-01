@@ -41,6 +41,7 @@
 //     nest them, or the block centers instead of sitting flush-left.
 import { env } from 'cloudflare:workers';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { ORGANIZATION_JSONLD } from '../lib/schema/organization';
 import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID } from '../lib/listings/rentengine';
 import type { RentEngineUnit } from '../lib/listings/types';
 import { loadCityContentMap, loadCityMarketData } from '../lib/listings/homes-for-rent-content';
@@ -172,34 +173,10 @@ const shortCityName = content.cityName.replace(/,\s*IN$/, '');
 const SMALL_SAMPLE_THRESHOLD = 5;
 const canonicalUrl = `https://www.reddoorrents.com${pagePath}`;
 
-// Same Organization block as [city]-property-management.astro, kept in
-// sync by hand -- duplicated rather than shared so each page's <script>
-// stays self-contained (matches that page's own pattern). ItemList is
-// only added when there's real inventory to list; an empty itemListElement
+// ItemList is only added when there's real inventory to list; an empty itemListElement
 // array would be valid schema but pointless on a thin-inventory city.
 const jsonLdGraph: object[] = [
-  {
-    '@type': 'Organization',
-    '@id': 'https://www.reddoorrents.com/#organization',
-    name: 'Red Door Property Management',
-    url: 'https://www.reddoorrents.com/',
-    telephone: '+1-317-660-1626',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: '3815 River Crossing Pkwy, Suite 100',
-      addressLocality: 'Indianapolis',
-      addressRegion: 'IN',
-      postalCode: '46240',
-      addressCountry: 'US',
-    },
-    sameAs: [
-      'https://www.youtube.com/@reddoorrents',
-      'https://www.facebook.com/RedDoorPropertyManagement/',
-      'https://www.linkedin.com/company/red-door-property-management/',
-      'https://www.instagram.com/reddoorrents/',
-      'https://www.tiktok.com/@reddoorrents',
-    ],
-  },
+  ORGANIZATION_JSONLD,
 ];
 
 if (cityUnits.length > 0) {

@@ -21,8 +21,10 @@ import { MARKETS } from '../market-reports/markets';
 export interface CityPageLinks {
   slug: string;
   name: string;
-  propertyManagementHref: string;
-  homesForRentHref: string;
+  /** null only from getBlogCityLinks, for a market-only area (e.g. Anderson)
+   * with no property-management/homes-for-rent pages of its own. */
+  propertyManagementHref: string | null;
+  homesForRentHref: string | null;
   /** null when this city has no -market-reports coverage at all (most of
    * the 19 property-management/homes-for-rent cities don't -- only 6 of
    * the 9 market-report clusters map to a city that also has its own
@@ -79,6 +81,30 @@ export function getCityLinks(citySlug: string): CityPageLinks | null {
     marketReportHref: market ? `/${market.slug}-market-reports` : null,
     marketReportLabel: market ? market.h1.replace(' Market Report', '') : null,
   };
+}
+
+/** For a blog post: its city category titles (e.g. ["Avon", "Brownsburg"])
+ * mapped to whichever city pages exist. Areas with only market-report
+ * coverage (Anderson, Westside, ...) get a market-report-only entry; each
+ * market report is linked once even when several tagged cities share it.
+ * Tags with no page of any kind are dropped. */
+export function getBlogCityLinks(cityTags: string[]): CityPageLinks[] {
+  const seenMarkets = new Set<string>();
+  const links: CityPageLinks[] = [];
+  for (const tag of cityTags) {
+    const slug = slugifyChip(tag);
+    const cityLinks = getCityLinks(slug);
+    const market = MARKETS.find((m) => m.slug === slug) ?? MARKETS.find((m) => m.slug === marketSlugByCitySlug.get(slug));
+    const marketHref = market && !seenMarkets.has(market.slug) ? `/${market.slug}-market-reports` : null;
+    if (market) seenMarkets.add(market.slug);
+    if (cityLinks) {
+      links.push({ ...cityLinks, marketReportHref: marketHref, marketReportLabel: marketHref ? cityLinks.marketReportLabel : null });
+    } else if (marketHref && market) {
+      const label = market.h1.replace(' Market Report', '');
+      links.push({ slug, name: label, propertyManagementHref: null, homesForRentHref: null, marketReportHref: marketHref, marketReportLabel: label });
+    }
+  }
+  return links;
 }
 
 /** For a market-reports page: the cities within this market cluster that

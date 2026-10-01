@@ -10,7 +10,10 @@
 import { PortableText } from 'astro-portabletext';
 
 const { node } = Astro.props;
-const title = node.title || 'Details';
+// The source's generic transcript labels ("Transcript Here", "See
+// Transcript") are normalized at render time, leaving the stored content as-is.
+const rawTitle = (node.title || 'Details').trim();
+const title = /^(transcript here|see transcript)$/i.test(rawTitle) ? 'Video Transcript' : rawTitle;
 const content = node.content || [];
 ---
 

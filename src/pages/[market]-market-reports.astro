@@ -31,6 +31,7 @@
 // the 9 markets has multiple real, recent posts this way.
 import { env } from 'cloudflare:workers';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { ORGANIZATION_JSONLD } from '../lib/schema/organization';
 import { MARKETS, type MarketConfig } from '../lib/market-reports/markets';
 import { loadMarketReportSnapshot, type MarketSnapshotStat } from '../lib/market-reports/snapshot';
 import { loadMarketReportPosts, type MarketReportPost } from '../lib/market-reports/posts';
@@ -72,35 +73,13 @@ function formatCurrency(value: number | null): string {
 
 const canonicalUrl = `https://www.reddoorrents.com${pagePath}`;
 
-// Same Organization block as the property-management and homes-for-rent
-// templates, kept in sync by hand. ItemList links out to this market's
+// ItemList links out to this market's
 // real recent report posts (from loadMarketReportPosts) when there are
 // any — omitted for the 3 markets with no RentCast coverage AND no
 // matched posts yet, same "don't emit an empty list" rule as the sibling
 // templates.
 const jsonLdGraph: object[] = [
-  {
-    '@type': 'Organization',
-    '@id': 'https://www.reddoorrents.com/#organization',
-    name: 'Red Door Property Management',
-    url: 'https://www.reddoorrents.com/',
-    telephone: '+1-317-660-1626',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: '3815 River Crossing Pkwy, Suite 100',
-      addressLocality: 'Indianapolis',
-      addressRegion: 'IN',
-      postalCode: '46240',
-      addressCountry: 'US',
-    },
-    sameAs: [
-      'https://www.youtube.com/@reddoorrents',
-      'https://www.facebook.com/RedDoorPropertyManagement/',
-      'https://www.linkedin.com/company/red-door-property-management/',
-      'https://www.instagram.com/reddoorrents/',
-      'https://www.tiktok.com/@reddoorrents',
-    ],
-  },
+  ORGANIZATION_JSONLD,
 ];
 
 if (posts.length > 0) {

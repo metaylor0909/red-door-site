@@ -1760,12 +1760,15 @@ one.
       "diversity of sectors") — needs a human pass. Conflicts with Hard Rule 1
       (no content rewrites during migration), but the precedent is set:
       "strong schools" was already removed in content-fixes.csv.
-- [ ] **Blog: schema + images.** 234 posts have no hero image, so no
-      `og:image` (blank social previews) and no `image` in BlogPosting; 216
-      of them have a YouTube video whose thumbnail could fill both. 220
-      video posts have no `VideoObject` schema. BlogPosting's `publisher` is
-      an `@id` pointing at an Organization that isn't on the blog page —
-      inline the name/logo instead.
+- [x] **Blog: schema + images — done Oct 1.** Posts without a featured image
+      use their YouTube thumbnail for `og:image` and BlogPosting `image`
+      (287/309 now have one; 22 with neither fall back to the site default).
+      216 video posts get `VideoObject`. The build checks each video via
+      oEmbed and skips private ones — 2 are private now:
+      `indianapolis-property-management-lease-renewals-are-not-just-paperwork`
+      (`_62z4ngbO0k`) and `real-estate-investing-why-reserves-matter-before-you-buy`
+      (`G6_G98x3tng`). The Organization node (now with logo) lives in
+      `src/lib/schema/organization.ts`, shared by every page that emits it.
 - [ ] **Blog: dead links.** 5 posts → `/airbnb-management-indianapolis`
       (fine once `_redirects` exists — 301 to `/` is locked). 9 links →
       `/anderson|lebanon|whitestown|plainfield|downtown-indianapolis-property-management`;
@@ -1773,22 +1776,25 @@ one.
       migration plan) and **isn't built on the new site** — needs a page or
       a 301 regardless of the blog. 2 posts have placeholder links
       (`[Insert Contact Us Page URL]`) from the source.
-- [ ] **Blog: titles/headings.** 62 `<title>` tags still exceed 60 only
-      because the template appends " | Red Door Property Management" — only
-      append it when it fits. 60 on-page H1s keep clickbait phrasing (seo.title
+- [ ] **Blog: titles/headings.** ~~62 `<title>` tags over 60 from the brand
+      suffix~~ — fixed Oct 1, suffix only appended when it fits (0 over 60).
+      Still open: 60 on-page H1s keep clickbait phrasing (seo.title
       only changes the `<title>` tag). 26 posts have no H2, 20 skip heading
       levels. 132 metas over 160 chars (CLAUDE.md accepted 25 at 162–199 —
       this is more than that).
-- [ ] **Blog: LLM citability.** 122 accordions are labeled "Transcript Here"
-      (generic); 22% of posts have no number-bearing sentence outside the
-      transcript, and 35% have no internal links. Transcript text is in the
-      HTML (crawlable inside `<details>`), but a 2–3 sentence written summary
-      with the month's real numbers above each video post would be the
-      biggest citability win. Market reports (~179 posts) are the priority.
-      None of them link to the new `-market-reports` pages (86 link to a
-      property-management page, 31 to homes-for-rent) — a template-level
-      "More {City} market reports" link driven by the city categories would
-      fix all of them without touching post content.
+- [ ] **Blog: LLM citability — template work done Oct 1, summaries piloted.**
+      Done: transcript accordions render as "Video Transcript" (was "Transcript
+      Here"); a "More About {City}" panel (CityInterlinkPanel, fed by the
+      post's city categories via `getBlogCityLinks`) now links 254 posts to
+      their city's property-management / homes-for-rent / market-reports
+      pages — metro roundups with 4+ city tags are skipped. New optional
+      `summary` field on posts renders as a box under the byline and as
+      BlogPosting `abstract`. **Piloted on 9 posts** (latest report per
+      market, numbers taken only from each post's own text, Fair-Housing
+      checked). **Open: Michael to review the pilot wording before
+      summaries are written for the remaining ~170 market reports** (and
+      decide whether guidance posts get them too). 22% of posts still have
+      no number-bearing sentence outside the transcript.
 - [ ] Rebuild `sitemap.xml` and `robots.txt`
 - [ ] Reinstall Google Tag Manager with the same container ID
 - [ ] Accessibility pass — footer publicly commits to WCAG 2.0 Level A
