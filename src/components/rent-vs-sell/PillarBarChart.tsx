@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { formatCompact, formatCurrency } from "../../lib/rent-vs-sell/format";
 import type { WealthProjection, YearSnapshot } from "../../lib/rent-vs-sell/wealthArchitect";
+import HorizonSelect from "./HorizonSelect";
 
 interface PillarBarChartProps {
   projection: WealthProjection;
@@ -174,20 +175,7 @@ export default function PillarBarChart({
             and tax savings — all at the same time.
           </p>
         </div>
-        <label className="flex items-center gap-2 text-sm font-semibold text-foreground">
-          <span className="text-muted">Show year</span>
-          <select
-            value={horizon}
-            onChange={(e) => onHorizonChange(Number(e.target.value))}
-            className="cursor-pointer rounded-lg border border-border bg-surface px-3 py-2 text-sm font-semibold text-foreground outline-none focus-visible:border-accent"
-          >
-            {horizonOptions.map((y) => (
-              <option key={y} value={y}>
-                {y} years
-              </option>
-            ))}
-          </select>
-        </label>
+        <HorizonSelect value={horizon} options={horizonOptions} onChange={onHorizonChange} />
       </div>
 
       <div className="mt-6 h-80 w-full sm:h-96">

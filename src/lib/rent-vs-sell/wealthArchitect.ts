@@ -154,6 +154,7 @@ export interface LeverageBreakdown {
   currentLtv: number;
   currentEquity: number;
   yearsToTwentyFiveEquity: number;
+  appreciationRate: number;
   appreciationOnEquityYear1: number;
 }
 
@@ -551,6 +552,7 @@ export function computeWealthProjection(
       currentLtv: ltv,
       currentEquity,
       yearsToTwentyFiveEquity: yearsToEquity,
+      appreciationRate: inputs.appreciationRate,
       appreciationOnEquityYear1:
         currentEquity > 0
           ? (inputs.appreciationRate * inputs.homeValue) / currentEquity

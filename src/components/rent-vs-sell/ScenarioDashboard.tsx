@@ -22,6 +22,7 @@ import type { WealthProjection } from "../../lib/rent-vs-sell/wealthArchitect";
 import SummaryTiles from "./SummaryTiles";
 import PillarBarChart from "./PillarBarChart";
 import NetWorthTimeline from "./NetWorthTimeline";
+import HorizonSelect from "./HorizonSelect";
 
 interface ScenarioDashboardProps {
   projection: WealthProjection;
@@ -41,8 +42,10 @@ export default function ScenarioDashboard({
   projection,
   homeValue,
 }: ScenarioDashboardProps) {
+  // One year selection drives every section (cards, pillars chart, milestones,
+  // timeline marker), whichever control the user changes.
   const [horizon, setHorizon] = useState<Horizon>(10);
-  const [chartHorizon, setChartHorizon] = useState<Horizon>(10);
+  const changeHorizon = (y: number) => setHorizon(y as Horizon);
 
   const snapshot = useMemo(() => {
     return (
@@ -50,13 +53,6 @@ export default function ScenarioDashboard({
       projection.snapshots[projection.snapshots.length - 1]
     );
   }, [projection.snapshots, horizon]);
-
-  const chartSnapshot = useMemo(() => {
-    return (
-      projection.snapshots.find((s) => s.year === chartHorizon) ??
-      projection.snapshots[projection.snapshots.length - 1]
-    );
-  }, [projection.snapshots, chartHorizon]);
 
   const {
     scenarioMode,
@@ -100,10 +96,10 @@ export default function ScenarioDashboard({
       {/* Stacked pillar bar chart */}
       <PillarBarChart
         projection={projection}
-        snapshot={chartSnapshot}
-        horizon={chartHorizon}
+        snapshot={snapshot}
+        horizon={horizon}
         horizonOptions={HORIZONS}
-        onHorizonChange={(y) => setChartHorizon(y as Horizon)}
+        onHorizonChange={changeHorizon}
       />
 
       {/* LTV banner */}
@@ -146,11 +142,14 @@ export default function ScenarioDashboard({
       </div>
 
       {/* Three-column comparison */}
-      <p className="text-xs leading-relaxed text-muted">
-        Net worth on every path is what you&rsquo;d walk away with if you
-        cashed out that year &mdash; after selling costs and capital gains tax
-        {sale.depreciationRecaptureTax > 0 ? ", including depreciation recapture" : ""}.
-      </p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="max-w-2xl text-xs leading-relaxed text-muted">
+          Net worth on every path is what you&rsquo;d walk away with if you
+          cashed out that year &mdash; after selling costs and capital gains tax
+          {sale.depreciationRecaptureTax > 0 ? ", including depreciation recapture" : ""}.
+        </p>
+        <HorizonSelect value={horizon} options={HORIZONS} onChange={changeHorizon} />
+      </div>
       <div className="grid gap-5 pt-1 lg:grid-cols-3 [&>*]:min-w-0">
         <ScenarioColumn
           variant="sell"
@@ -604,9 +603,10 @@ function LeverageColumn({
 }) {
   const multiplier = leverage.appreciationOnEquityYear1;
   return (
-    <article className="relative flex h-full flex-col overflow-hidden rounded-3xl border-2 border-brand bg-gradient-to-br from-brand to-[#8b0000] p-6 text-white shadow-xl">
-      <span className="absolute -top-3 left-6 inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-brand shadow-md">
-        <Crown className="h-3.5 w-3.5" /> PRO TIP · LEVERAGE MULTIPLIER ACTIVE
+    <article className="relative flex h-full min-w-0 flex-col rounded-3xl border-2 border-brand bg-gradient-to-br from-brand to-[#8b0000] p-6 text-white shadow-xl">
+      <span className="absolute -top-3 left-6 right-6 inline-flex w-fit max-w-[calc(100%-3rem)] items-center gap-1.5 rounded-full bg-white px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-brand shadow-md">
+        <Crown className="h-3.5 w-3.5" />
+        <span className="truncate">Pro Tip · Leverage Multiplier Active</span>
       </span>
       <div className="flex items-center gap-3 pt-2">
         <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 text-white">
@@ -622,7 +622,9 @@ function LeverageColumn({
         </div>
       </div>
       <p className="mt-3 text-xs text-white/85">
-        Your high leverage is your superpower. A 5% appreciating asset returns{" "}
+        Your high leverage is your superpower. A{" "}
+        {+(leverage.appreciationRate * 100).toFixed(2)}% appreciating asset
+        returns{" "}
         <span className="font-bold text-white">
           {formatPercent(multiplier, 1)}
         </span>{" "}
