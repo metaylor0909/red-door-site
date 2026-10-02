@@ -1,6 +1,6 @@
 
 import { Crown, Home, Rocket, Sparkles, TrendingUp } from "lucide-react";
-import { formatCurrency } from "../../lib/rent-vs-sell/format";
+import { formatCurrency } from "../../lib/calculators/format";
 import type { WealthProjection, YearSnapshot } from "../../lib/rent-vs-sell/wealthArchitect";
 
 interface SummaryTilesProps {

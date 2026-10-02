@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import StepProgress, {
   type SubProgress,
   type WizardStep,
-} from "./StepProgress";
+} from "../calculator-ui/StepProgress";
 import {
   computeWealthProjection,
   WEALTH_DEFAULTS,
@@ -13,7 +13,7 @@ import {
 import IntakeStep, { type IntakeData } from "./IntakeStep";
 import ScenarioDashboard from "./ScenarioDashboard";
 import ExpertOverrides, { type OverrideValues } from "./ExpertOverrides";
-import "./rent-vs-sell.css";
+import "../calculator-ui/calculator.css";
 
 const STEPS: WizardStep[] = [
   { number: 1, label: "Tell Us About the Property" },
@@ -105,7 +105,7 @@ export default function Wizard() {
   }, []);
 
   return (
-    <div className="rvs-app">
+    <div className="calc-app">
       <div className="mx-auto max-w-6xl">
         <div>
           <StepProgress

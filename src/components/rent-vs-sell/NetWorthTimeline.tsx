@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { formatCompact, formatCurrency } from "../../lib/rent-vs-sell/format";
+import { formatCompact, formatCurrency } from "../../lib/calculators/format";
 import type { WealthProjection } from "../../lib/rent-vs-sell/wealthArchitect";
 
 interface NetWorthTimelineProps {

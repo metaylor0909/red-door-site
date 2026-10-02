@@ -1,10 +1,13 @@
-/* Rent vs. Sell calculator — Tailwind utilities scoped to this island only.
+/* Owner calculators (rent vs. sell, rent reduction) — Tailwind utilities
+   scoped to the calculator islands only, inside a .calc-app wrapper.
    No preflight (it would restyle the whole page), and class detection is
-   limited to this folder so only the calculator's own utilities exist.
+   limited to the calculator folders so only their own utilities exist.
    Utilities are unlayered on purpose: global.css is unlayered too, and
    layered rules would lose to it regardless of specificity. */
 @import "tailwindcss/theme.css" layer(theme);
 @source "./";
+@source "../rent-vs-sell";
+@source "../rent-reduction";
 
 @theme inline {
   --color-background: var(--background);
@@ -25,7 +28,7 @@
 }
 
 /* --brand and --muted are inherited from the site's own tokens. */
-.rvs-app {
+.calc-app {
   --background: var(--soft);
   --foreground: var(--ink);
   --surface: #ffffff;
@@ -45,34 +48,34 @@
 /* Neutralize global.css element rules (section padding, label grid, label
    inputs, heading sizes/margins) and browser button chrome. Same
    specificity as a utility and placed before them, so utilities still win. */
-.rvs-app :where(section, article) {
+.calc-app :where(section, article) {
   padding: 0;
   scroll-margin-top: 0;
 }
 /* Skips non-last children of space-y-* parents: Tailwind's space-y rule has
    zero specificity, so this reset would otherwise erase that spacing. */
-.rvs-app
+.calc-app
   :where(h1, h2, h3, h4, p, dl, dd, dt, ul, ol):where(
     :not([class*="space-y-"] > :not(:last-child))
   ) {
   margin: 0;
 }
-.rvs-app :where(ul, ol) {
+.calc-app :where(ul, ol) {
   list-style: none;
   padding: 0;
 }
-.rvs-app :where(h2, h3, h4) {
+.calc-app :where(h2, h3, h4) {
   font-size: inherit;
   line-height: inherit;
   color: inherit;
 }
-.rvs-app :where(label) {
+.calc-app :where(label) {
   display: inline;
   gap: normal;
   font-weight: inherit;
   color: inherit;
 }
-.rvs-app :where(label) :where(input, select, textarea) {
+.calc-app :where(label) :where(input, select, textarea) {
   width: auto;
   min-height: 0;
   padding: 0;
@@ -81,7 +84,7 @@
   background: transparent;
   color: inherit;
 }
-.rvs-app :where(button) {
+.calc-app :where(button) {
   background: none;
   border: 0;
   padding: 0;
@@ -89,17 +92,17 @@
   font: inherit;
   cursor: pointer;
 }
-.rvs-app :where(button:disabled) {
+.calc-app :where(button:disabled) {
   cursor: not-allowed;
 }
-.rvs-app :where(svg) {
+.calc-app :where(svg) {
   display: block;
   flex-shrink: 0;
 }
 
 @tailwind utilities source(none);
 
-.rvs-app input[type="range"] {
+.calc-app input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
@@ -111,7 +114,7 @@
   background: var(--line);
   outline: none;
 }
-.rvs-app input[type="range"]::-webkit-slider-thumb {
+.calc-app input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 18px;
@@ -122,7 +125,7 @@
   box-shadow: 0 1px 3px rgba(15, 27, 45, 0.25);
   cursor: pointer;
 }
-.rvs-app input[type="range"]::-moz-range-thumb {
+.calc-app input[type="range"]::-moz-range-thumb {
   width: 18px;
   height: 18px;
   border-radius: 9999px;
@@ -131,11 +134,11 @@
   box-shadow: 0 1px 3px rgba(15, 27, 45, 0.25);
   cursor: pointer;
 }
-.rvs-app input[type="range"]:focus-visible::-webkit-slider-thumb {
+.calc-app input[type="range"]:focus-visible::-webkit-slider-thumb {
   outline: 2px solid var(--brand-mid);
   outline-offset: 2px;
 }
-.rvs-app input[type="checkbox"] {
+.calc-app input[type="checkbox"] {
   width: 20px;
   height: 20px;
   min-height: 0;

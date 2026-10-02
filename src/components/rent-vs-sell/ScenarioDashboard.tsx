@@ -17,7 +17,7 @@ import {
   Sparkles,
   TrendingUp,
 } from "lucide-react";
-import { formatCurrency, formatPercent } from "../../lib/rent-vs-sell/format";
+import { formatCurrency, formatPercent } from "../../lib/calculators/format";
 import type { WealthProjection } from "../../lib/rent-vs-sell/wealthArchitect";
 import SummaryTiles from "./SummaryTiles";
 import PillarBarChart from "./PillarBarChart";

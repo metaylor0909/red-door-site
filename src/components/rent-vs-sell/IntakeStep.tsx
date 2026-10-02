@@ -10,16 +10,16 @@ import {
   Sparkles,
   TrendingUp,
 } from "lucide-react";
-import SlideShell from "./SlideShell";
-import ChoiceCard from "./ChoiceCard";
-import type { SubProgress } from "./StepProgress";
+import SlideShell from "../calculator-ui/SlideShell";
+import ChoiceCard from "../calculator-ui/ChoiceCard";
+import type { SubProgress } from "../calculator-ui/StepProgress";
 import {
   DEBT_TYPE_RATES,
   estimateNetProceeds,
   type AltChoice,
   type DebtType,
 } from "../../lib/rent-vs-sell/wealthArchitect";
-import { formatCurrency } from "../../lib/rent-vs-sell/format";
+import { formatCurrency } from "../../lib/calculators/format";
 
 export interface IntakeData {
   homeValue: number;

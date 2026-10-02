@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { ChevronDown, SlidersHorizontal } from "lucide-react";
 import type { WealthInputs } from "../../lib/rent-vs-sell/wealthArchitect";
-import { formatCurrency } from "../../lib/rent-vs-sell/format";
+import { formatCurrency } from "../../lib/calculators/format";
 
 export type OverrideValues = Pick<
   WealthInputs,

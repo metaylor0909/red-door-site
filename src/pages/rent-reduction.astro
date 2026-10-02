@@ -1,0 +1,123 @@
+---
+// /rent-reduction — "should I lower the rent?" calculator, moved from the
+// investor-calulator repo's Vacancy Break-Even Wizard and rebuilt on real
+// local lease times (src/lib/rent-reduction/model.ts,
+// src/pages/api/rent-reduction/market.ts). React island styled by the
+// shared calculator stylesheet (src/components/calculator-ui/).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Wizard from '../components/rent-reduction/Wizard';
+import { ORGANIZATION_ID, ORGANIZATION_JSONLD } from '../lib/schema/organization';
+
+const pagePath = '/rent-reduction';
+const canonicalUrl = `https://www.reddoorrents.com${pagePath}`;
+const pageTitle = 'Rent Reduction Calculator | Red Door Property Management';
+const pageDescription =
+  'Is lowering the rent worth it? See how many days sooner a lower rent must lease to break even, using real lease times for your area.';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    ORGANIZATION_JSONLD,
+    {
+      '@type': 'WebApplication',
+      '@id': `${canonicalUrl}#calculator`,
+      name: 'Rent Reduction Calculator',
+      url: canonicalUrl,
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Any',
+      description: pageDescription,
+      offers: { '@type': 'Offer', price: 0, priceCurrency: 'USD' },
+      provider: { '@id': ORGANIZATION_ID },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumbs`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.reddoorrents.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Rent Reduction Calculator', item: canonicalUrl },
+      ],
+    },
+  ],
+};
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path={pagePath}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-kicker">Owner Tools</span>
+      <h1>Rent Reduction Calculator</h1>
+      <p class="lead">
+        Is your rental sitting empty? Before you lower the rent, see how much sooner it would need to lease to make
+        the cut worth it, using how long similar homes in your area actually took to rent.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-soft calc-section">
+    <div class="container">
+      <Wizard client:load />
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="content-block reveal">
+        <div class="section-kicker">Assumptions</div>
+        <h2>How the Numbers Work</h2>
+        <ul class="calc-assumptions">
+          <li>Each vacant day costs your monthly rent divided by 30.</li>
+          <li>
+            Typical time to lease is the median for similar homes (single-family and townhomes, same bedroom count) in
+            your area that rented in the last 12 months, from RentCast listing data. Listings up 3 days or less or over
+            180 days are left out as unreliable.
+          </li>
+          <li>
+            Market rent is the median final asking rent of recently rented homes near you with the same bedrooms and
+            about the same bathrooms.
+          </li>
+          <li>
+            Break-even days are exact: how many days sooner a lower rent must lease to collect the same total rent over
+            the first year or a typical 4-year tenancy (a 75% annual renewal rate).
+          </li>
+          <li>
+            The days-to-lease forecast is an estimate. It starts from the local median and assumes each 1% above market
+            rent adds 4% to days on market, and each 1% below removes 2%, never below half the median. You can change
+            these under Forecast assumptions.
+          </li>
+          <li>This is an educational estimate, not financial or investment advice.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Want Us to Price It for You?</h2>
+      <p>Get a free rental analysis based on comparable rentals near you, or talk it through with our team.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* global.css zeroes padding-top on any section that follows another
+     section; this one sits right under the page hero and needs the gap. */
+  .calc-section {
+    padding-top: clamp(40px, 6vw, 64px);
+  }
+  .calc-assumptions {
+    display: grid;
+    gap: 12px;
+    margin: 18px 0 0;
+    padding-left: 20px;
+    color: var(--charcoal);
+    line-height: 1.6;
+  }
+</style>
