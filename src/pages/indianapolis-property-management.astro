@@ -6,7 +6,7 @@
 // carousel, see src/components/PropertyManagementJourneyCarousel.astro), plus
 // a "What Makes Red Door Different" list, six detailed process-detail
 // sections (one per pillar-page stage), a "What's Included" list, an
-// "Owner Standards" list, and a 10-question FAQ accordion — none of
+// "Owner Standards" list (removed 2026-10-06), and a 10-question FAQ accordion — none of
 // which exist on the 18 simple pages.
 //
 // Redesigned 2026-10-06 (Michael): shorter hero; new "Who We Work With"
@@ -352,9 +352,9 @@ const CHAIN_STEPS = [
         </div>
         <p>Before choosing a property manager, owners should understand pricing, tenant screening, and maintenance standards. These short videos answer the questions that reveal how a management company really operates.</p>
       </div>
-      <div class="pm-video-grid">
+      <div class="pm-video-grid" data-video-grid data-active="0">
         {OWNER_VIDEOS.map((v, i) => (
-          <article class={`pm-video-card${i === 0 ? ' is-featured' : ''}`}>
+          <article class={`pm-video-card${i === 0 ? ' is-featured' : ''}`} data-video-index={i}>
             <a
               class="pm-video-thumb"
               href={`https://www.youtube.com/watch?v=${v.id}`}
@@ -363,7 +363,8 @@ const CHAIN_STEPS = [
               data-video-id={v.id}
               aria-label={`Play video: ${v.title}`}
             >
-              <img src={`https://i.ytimg.com/vi/${v.id}/${i === 0 ? 'maxresdefault' : 'hqdefault'}.jpg`} alt="" loading="lazy" width="1280" height="720" />
+              {/* maxres for all three: any card can become the large one. */}
+              <img src={`https://i.ytimg.com/vi/${v.id}/maxresdefault.jpg`} alt="" loading="lazy" width="1280" height="720" />
               <span class="pm-video-play" aria-hidden="true"></span>
             </a>
             <div class="pm-video-body">
@@ -428,7 +429,7 @@ const CHAIN_STEPS = [
     </div>
   </section>
 
-  <section class="section-soft pm-pad">
+  <section class="section-soft pm-pad pm-included">
     <div class="container content-block reveal">
       <h2>What's Included (No Nickel-and-Diming)</h2>
       <p>We provide a large array of services at no additional cost:</p>
@@ -446,20 +447,6 @@ const CHAIN_STEPS = [
         <li>Trust accounting (no added accounting fees)</li>
       </ul>
       <p class="callout-note">Full pricing detail &mdash; management fees, the New Lease Fee, and every separately billed service &mdash; is published on our <a href="/pricing">Pricing</a> page.</p>
-    </div>
-  </section>
-
-  <section class="pm-pad">
-    <div class="container content-block reveal">
-      <h2>Owner Standards That Protect Performance</h2>
-      <p>To hold tenants to high standards, it's important for homes to be delivered in great condition:</p>
-      <ul class="plain-list">
-        <li>Cleanliness is essential and one of the first things noted during tenant showings</li>
-        <li>Neutral paint tones recommended but not required, to appeal to the highest number of potential applicants</li>
-        <li>Keys to all doors (adequate copies)</li>
-        <li>Two garage door openers when applicable</li>
-        <li>Locks re-keyed between occupants for safety and liability protection</li>
-      </ul>
     </div>
   </section>
 
@@ -589,6 +576,26 @@ const CHAIN_STEPS = [
     // Owner FAQ videos: the thumbnail is a plain YouTube link (works with
     // no JS); on click it's swapped for a youtube-nocookie embed so the
     // page loads no YouTube player code until someone actually plays one.
+    // Hovering (or tabbing into) a smaller video makes it the large one.
+    // It stays large after the pointer leaves, so the row doesn't jump
+    // back and forth. Desktop layout with a real pointer only: on narrower
+    // screens the first video stays full-width above the other two.
+    var videoGrid = document.querySelector('[data-video-grid]');
+    var canGrowVideos = window.matchMedia('(hover: hover) and (min-width: 1001px)');
+    if (videoGrid) {
+      videoGrid.querySelectorAll('[data-video-index]').forEach(function (card) {
+        function feature() {
+          if (!canGrowVideos.matches || card.classList.contains('is-featured')) return;
+          videoGrid.querySelectorAll('.pm-video-card').forEach(function (c) {
+            c.classList.toggle('is-featured', c === card);
+          });
+          videoGrid.setAttribute('data-active', card.getAttribute('data-video-index'));
+        }
+        card.addEventListener('mouseenter', feature);
+        card.addEventListener('focusin', feature);
+      });
+    }
+
     document.querySelectorAll('[data-video-id]').forEach(function (link) {
       link.addEventListener('click', function (e) {
         e.preventDefault();

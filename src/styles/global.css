@@ -2959,6 +2959,12 @@
       cursor: pointer;
     }
     .step-card-media img { width: 100%; height: 100%; object-fit: cover; opacity: .82; }
+    /* Pin the media to the bottom of its card so videos in the same row
+       line up even when the text above them runs different lengths
+       (Michael, communication page, 2026-10-06). */
+    .step-card:has(> .step-card-media) { display: flex; flex-direction: column; }
+    .step-card:has(> .step-card-media) > .step-icon { align-self: flex-start; }
+    .step-card:has(> .step-card-media) > .step-card-media { margin-top: auto; }
     .step-card-media span {
       position: absolute;
       inset: 0;
@@ -4156,6 +4162,8 @@
        one (the sitewide `section + section` rule zeroes it). Class beats
        that rule's element-only specificity. */
     section.pm-pad { padding-top: clamp(68px, 8vw, 104px); }
+    /* Reviews (a shared component) follow the gray What's Included band here. */
+    .pm-included ~ .google-reviews { padding-top: clamp(68px, 8vw, 104px); }
 
     /* Check-mark bullets, shared by the owner-type cards and the
        What's Included list (.two-col-list.check-list). */
@@ -4201,29 +4209,32 @@
         linear-gradient(180deg, rgba(14, 14, 14, .9), rgba(14, 14, 14, .84)),
         url("/red-door-hero.webp") center right / cover no-repeat;
     }
-    .pm-video-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+    .pm-video-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; transition: grid-template-columns .45s ease; }
+    /* Whichever video is hovered takes the wide column (script on the page). */
+    .pm-video-grid[data-active="1"] { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) minmax(0, 1fr); }
+    .pm-video-grid[data-active="2"] { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.6fr); }
     .pm-video-card { overflow: hidden; background: rgba(37, 37, 37, .78); border: 1px solid rgba(255, 255, 255, .12); border-radius: var(--radius); }
     .pm-video-thumb, .pm-video-frame { position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; background: #000; }
     .pm-video-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease, opacity .3s ease; opacity: .92; }
     .pm-video-thumb:hover img, .pm-video-thumb:focus-visible img { transform: scale(1.03); opacity: 1; }
-    .pm-video-play { position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; background: var(--brand-mid); border-radius: 50%; box-shadow: 0 8px 24px rgba(0, 0, 0, .35); transition: transform .2s ease, background-color .2s ease; }
+    .pm-video-play { position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px 0 0 -32px; background: var(--brand-mid); border-radius: 50%; box-shadow: 0 8px 24px rgba(0, 0, 0, .35); transition: transform .3s ease, background-color .2s ease; }
     .pm-video-play::after { content: ""; position: absolute; left: 26px; top: 20px; border-style: solid; border-width: 12px 0 12px 19px; border-color: transparent transparent transparent var(--white); }
-    .is-featured .pm-video-play { width: 76px; height: 76px; margin: -38px 0 0 -38px; }
-    .is-featured .pm-video-play::after { left: 31px; top: 24px; border-width: 14px 0 14px 22px; }
+    .is-featured .pm-video-play { transform: scale(1.18); }
     .pm-video-thumb:hover .pm-video-play, .pm-video-thumb:focus-visible .pm-video-play { transform: scale(1.08); background: var(--brand); }
+    .is-featured .pm-video-thumb:hover .pm-video-play, .is-featured .pm-video-thumb:focus-visible .pm-video-play { transform: scale(1.26); }
     .pm-video-body { padding: 22px 24px 26px; }
     .pm-video-kicker { color: var(--brand-light); font-size: .76rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
-    .pm-video-card h3 { margin: 10px 0 10px; font-size: 1.3rem; }
+    .pm-video-card h3 { margin: 10px 0 10px; font-size: 1.3rem; transition: font-size .3s ease; }
     .is-featured h3 { font-size: 1.55rem; }
     .pm-video-card p { margin: 0; color: #d0d0d0; font-size: .96rem; }
 
     @media (max-width: 1000px) {
       .pm-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .pm-video-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .pm-video-grid, .pm-video-grid[data-active] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .pm-video-card.is-featured { grid-column: 1 / -1; }
     }
     @media (max-width: 720px) {
       .pm-split-head { grid-template-columns: 1fr; align-items: start; margin-bottom: 28px; }
-      .pm-card-grid, .pm-video-grid { grid-template-columns: 1fr; }
+      .pm-card-grid, .pm-video-grid, .pm-video-grid[data-active] { grid-template-columns: 1fr; }
       .is-featured h3 { font-size: 1.3rem; }
     }

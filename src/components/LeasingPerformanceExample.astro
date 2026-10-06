@@ -1,0 +1,159 @@
+---
+// Example leasing-performance report (funnel + prospect sources) for the
+// marketing page's "Price Adjustment Strategy" section. Rebuilt in
+// HTML/SVG from a screenshot Michael shared 2026-10-06 (a real listing's
+// report, no address) rather than embedded as an image, so it stays sharp
+// and the numbers are real text. Static example data — not live.
+
+const FUNNEL = [
+  { label: 'Total Prospects', count: 19 },
+  { label: 'Showing Scheduled', count: 8 },
+  { label: 'Showings Completed', count: 7 },
+  { label: 'Applications Requested', count: 6 },
+  { label: 'Applications Submitted', count: 1 },
+  { label: 'Applications Approved', count: null },
+];
+const FUNNEL_COLORS = ['#a1003f', '#d43d51', '#f46d43', '#fdae61', '#fee08b'];
+// Segment widths (share of the drawing width) at each row's top edge; each
+// row tapers to the next row's width, like the source chart.
+const EDGES = [1, 0.41, 0.36, 0.31, 0.05, 0.03];
+const total = FUNNEL[0].count as number;
+
+const SOURCES = [
+  { name: 'Realtor.com', count: 7, color: '#a1003f' },
+  { name: 'Zillow', count: 5, color: '#d43d51' },
+  { name: 'Apartments.com', count: 5, color: '#f46d43' },
+  { name: 'Rent.com', count: 1, color: '#fdae61' },
+  { name: 'Website Widget', count: 1, color: '#fee08b' },
+];
+
+// Donut arcs, clockwise from upper left (matches the source chart).
+const R_OUT = 92;
+const R_IN = 54;
+const START = -128;
+const point = (r: number, deg: number) => {
+  const a = (deg * Math.PI) / 180;
+  return `${(r * Math.cos(a)).toFixed(2)} ${(r * Math.sin(a)).toFixed(2)}`;
+};
+let angle = START;
+const arcs = SOURCES.map((s) => {
+  const sweep = (s.count / total) * 360;
+  const a0 = angle;
+  const a1 = angle + sweep;
+  angle = a1;
+  const large = sweep > 180 ? 1 : 0;
+  const mid = (a0 + a1) / 2;
+  return {
+    ...s,
+    d: `M ${point(R_OUT, a0)} A ${R_OUT} ${R_OUT} 0 ${large} 1 ${point(R_OUT, a1)} L ${point(R_IN, a1)} A ${R_IN} ${R_IN} 0 ${large} 0 ${point(R_IN, a0)} Z`,
+    labelAt: point((R_OUT + R_IN) / 2, mid).split(' '),
+  };
+});
+---
+<figure class="leasing-report" aria-labelledby="leasing-report-title">
+  <div class="leasing-report-head">
+    <h3 id="leasing-report-title">Leasing Performance</h3>
+    <span class="leasing-report-badge">At-risk</span>
+  </div>
+
+  <div class="leasing-report-body">
+    <div>
+      <h4 class="leasing-report-sub">Leasing Funnel</h4>
+      <ol class="leasing-funnel">
+        {FUNNEL.map((row, i) => {
+          const top = EDGES[i];
+          const bottom = EDGES[i + 1] ?? top;
+          const pct = row.count == null ? null : Math.round((row.count / total) * 100);
+          const x = (w: number) => ((1 - w) / 2) * 100;
+          return (
+            <li>
+              <span class="leasing-funnel-label">
+                <strong>{row.count == null ? '—' : `${row.count} · ${pct}%`}</strong>
+                {row.label}
+              </span>
+              <span class="leasing-funnel-bar" aria-hidden="true">
+                {row.count == null ? (
+                  <span class="leasing-funnel-lock">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+                  </span>
+                ) : (
+                  <svg viewBox="0 0 100 10" preserveAspectRatio="none">
+                    <polygon
+                      points={`${x(top)},0 ${100 - x(top)},0 ${100 - x(bottom)},10 ${x(bottom)},10`}
+                      fill={FUNNEL_COLORS[i]}
+                    />
+                  </svg>
+                )}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+
+    <div>
+      <h4 class="leasing-report-sub">Prospect Source</h4>
+      <div class="prospect-source">
+        <svg class="prospect-donut" viewBox="-100 -100 200 200" aria-hidden="true">
+          {arcs.map((a) => (
+            <>
+              <path d={a.d} fill={a.color} stroke="#fff" stroke-width="2" stroke-linejoin="round" />
+              <text x={a.labelAt[0]} y={a.labelAt[1]} dy="0.35em" text-anchor="middle" class="prospect-donut-value">{a.count}</text>
+            </>
+          ))}
+          <text y="-2" text-anchor="middle" class="prospect-donut-total">{total}</text>
+          <text y="16" text-anchor="middle" class="prospect-donut-caption">prospects total</text>
+        </svg>
+        <ul class="prospect-legend">
+          {SOURCES.map((s) => (
+            <li><span class="prospect-swatch" style={`background:${s.color}`}></span>{s.name}<span class="prospect-count">{s.count}</span></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <figcaption>
+    Example leasing report for one listing. Only 1 of 19 prospects reached a submitted application, so the listing is
+    flagged at-risk &mdash; the kind of drop-off that prompts a price or presentation recommendation.
+  </figcaption>
+</figure>
+
+<style>
+  .leasing-report { margin: 32px 0 0; padding: clamp(20px, 3vw, 32px); background: var(--white); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
+  .leasing-report-head { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+  .leasing-report-head h3 { margin: 0; font-size: 1.25rem; }
+  .leasing-report-badge { padding: 3px 11px; color: var(--white); background: #d32f2f; border-radius: 999px; font-size: .8rem; font-weight: 700; }
+  .leasing-report-body { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 32px 48px; }
+  .leasing-report-sub { margin: 0 0 14px; font-family: inherit; font-size: 1rem; font-weight: 700; color: var(--ink); }
+
+  .leasing-funnel { margin: 0; padding: 0; list-style: none; }
+  .leasing-funnel li { display: grid; grid-template-columns: 170px minmax(0, 1fr); align-items: stretch; min-height: 58px; border-bottom: 1px solid var(--line); }
+  .leasing-funnel-label { display: flex; flex-direction: column; justify-content: center; padding: 6px 0; color: var(--charcoal); font-size: .88rem; line-height: 1.35; }
+  .leasing-funnel-label strong { color: var(--ink); font-weight: 600; }
+  .leasing-funnel-bar { position: relative; display: flex; align-items: center; justify-content: center; }
+  .leasing-funnel-bar svg { display: block; width: 100%; height: 100%; }
+  .leasing-funnel-lock { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; color: var(--ink); background: var(--soft); border: 1px solid var(--line); border-radius: 50%; }
+  .leasing-funnel-lock svg { width: 18px; height: 18px; }
+
+  .prospect-source { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 24px; }
+  .prospect-donut { width: 100%; max-width: 300px; justify-self: center; overflow: visible; }
+  .prospect-donut-value { font-size: 11px; fill: #2b2b2b; font-family: inherit; }
+  .prospect-donut-total { font-size: 26px; font-weight: 700; fill: var(--ink); font-family: inherit; }
+  .prospect-donut-caption { font-size: 10.5px; fill: var(--muted); font-family: inherit; }
+  .prospect-legend { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+  .prospect-legend li { display: flex; align-items: center; gap: 9px; color: var(--charcoal); font-size: .9rem; white-space: nowrap; }
+  .prospect-swatch { flex: none; width: 12px; height: 12px; border-radius: 3px; }
+  .prospect-count { margin-left: auto; padding-left: 14px; color: var(--ink); font-weight: 700; }
+
+  .leasing-report figcaption { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+
+  @media (max-width: 860px) {
+    .leasing-report-body { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    .leasing-funnel li { grid-template-columns: 132px minmax(0, 1fr); }
+    .prospect-source { grid-template-columns: 1fr; }
+    .prospect-legend { justify-self: center; }
+  }
+</style>
