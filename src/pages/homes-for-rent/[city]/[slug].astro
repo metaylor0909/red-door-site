@@ -27,6 +27,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID } from '../../../lib/listings/rentengine';
 import { haversineMiles } from '../../../lib/rental-analysis/geo';
 import type { RentEngineUnit } from '../../../lib/listings/types';
+import { petPolicy, petBadgeHtml } from '../../../lib/listings/pets';
 
 // Mapbox public token (`pk.` prefix — a publishable client-side key, not a
 // secret) already embedded directly in the approved static reference HTML
@@ -512,6 +513,10 @@ const jsonLd = {
                       {nearby.bedrooms} bd &middot; {nearby.bathrooms} ba
                       {nearby.sqft ? ` · ${nearby.sqft.toLocaleString()} sq ft` : ''}
                     </p>
+                    <div class="listing-card-foot">
+                      <Fragment set:html={petBadgeHtml(petPolicy(nearby))} />
+                      <span class="listing-card-viewlink">View details &rarr;</span>
+                    </div>
                   </div>
                 </a>
               );
