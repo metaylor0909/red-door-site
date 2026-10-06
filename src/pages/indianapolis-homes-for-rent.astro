@@ -69,6 +69,7 @@ import { ORGANIZATION_JSONLD } from '../lib/schema/organization';
 import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID } from '../lib/listings/rentengine';
 import { loadCityContentMap } from '../lib/listings/homes-for-rent-content';
 import type { RentEngineUnit } from '../lib/listings/types';
+import { petPolicy, petBadgeHtml, PET_BADGES, PET_DRAWER_HTML, type PetPolicy } from '../lib/listings/pets';
 import AreasServedGrid from '../components/AreasServedGrid.astro';
 import CityInterlinkPanel from '../components/CityInterlinkPanel.astro';
 import { getCityLinks } from '../lib/interlinking/city-links';
@@ -142,7 +143,7 @@ interface ListingRecord {
   baths: number;
   sqft: number;
   propertyType: string;
-  pets: string;
+  petPolicy: PetPolicy;
   photoCount: number;
   photo: string;
   detailPath: string;
@@ -168,7 +169,7 @@ function toListingRecord(unit: RentEngineUnit): ListingRecord {
     baths: unit.bathrooms,
     sqft: unit.sqft ?? 0,
     propertyType: (unit.property_type || '').toUpperCase(),
-    pets: unit.pets_allowed ?? 'Ask',
+    petPolicy: petPolicy(unit),
     photoCount: visiblePhotos.length,
     photo: visiblePhotos[0]?.original ?? '',
     detailPath: `/homes-for-rent/${citySlug(unit.address.city)}/${addressSlug(unit)}`,
@@ -384,7 +385,6 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
         <div class="listing-grid-real" id="listing-grid" data-default-count={indyUnits.length}>
           {indyUnits.map((unit) => {
             const record = toListingRecord(unit);
-            const isNoPets = /no pets|^no$/i.test(record.pets);
             return (
               <a
                 class="listing-card"
@@ -394,7 +394,7 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
                 data-beds={record.beds}
                 data-rent={record.rent}
                 data-sqft={record.sqft}
-                data-pets={record.pets}
+                data-pets={record.petPolicy}
               >
                 <div class="listing-card-photo">
                   {record.photo && <img src={record.photo} alt={record.address} loading="lazy" />}
@@ -408,7 +408,7 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
                     {record.beds} bd &middot; {record.baths} ba{record.sqft ? ` · ${record.sqft.toLocaleString('en-US')} sq ft` : ''}
                   </p>
                   <div class="listing-card-foot">
-                    <span class={`listing-card-pets ${isNoPets ? 'is-no-pets' : ''}`}>{record.pets}</span>
+                    <Fragment set:html={petBadgeHtml(record.petPolicy)} />
                     <span class="listing-card-viewlink">View details &rarr;</span>
                   </div>
                 </div>
@@ -442,6 +442,8 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
       sqftMin: sqftBounds.min,
       sqftMax: sqftBounds.max,
       sqftBins,
+      petBadges: PET_BADGES,
+      petDrawerHtml: PET_DRAWER_HTML,
     }}
   >
     (function () {
@@ -476,17 +478,16 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
       }
 
       function cardHtml(d) {
-        var petsClass = /no pets|^no$/i.test(d.pets) ? 'is-no-pets' : '';
         var photoBadge = d.photoCount ? '<span class="listing-card-photocount">📷 ' + d.photoCount + '</span>' : '';
         return (
-          '<a class="listing-card" href="' + escapeHtml(d.detailPath) + '" data-listing-id="' + d.id + '" data-city="' + escapeHtml(d.citySlug) + '" data-beds="' + d.beds + '" data-rent="' + d.rent + '" data-sqft="' + (d.sqft || 0) + '" data-pets="' + escapeHtml(d.pets) + '">' +
+          '<a class="listing-card" href="' + escapeHtml(d.detailPath) + '" data-listing-id="' + d.id + '" data-city="' + escapeHtml(d.citySlug) + '" data-beds="' + d.beds + '" data-rent="' + d.rent + '" data-sqft="' + (d.sqft || 0) + '" data-pets="' + escapeHtml(d.petPolicy) + '">' +
           '<div class="listing-card-photo"><img src="' + escapeHtml(d.photo) + '" alt="' + escapeHtml(d.address) + '" loading="lazy">' + photoBadge + '</div>' +
           '<div class="listing-card-body">' +
           '<p class="listing-card-rent">' + (d.rentDisplay || money(d.rent)) + '<span>/mo</span></p>' +
           '<p class="listing-card-address">' + escapeHtml(d.address) + '</p>' +
           '<p class="listing-card-city">' + escapeHtml(d.city) + ', ' + escapeHtml(d.state || 'IN') + '</p>' +
           '<p class="listing-card-specs">' + d.beds + ' bd &middot; ' + d.baths + ' ba' + (d.sqft ? ' &middot; ' + d.sqft.toLocaleString('en-US') + ' sq ft' : '') + '</p>' +
-          '<div class="listing-card-foot"><span class="listing-card-pets ' + petsClass + '">' + escapeHtml(d.pets) + '</span><span class="listing-card-viewlink">View details &rarr;</span></div>' +
+          '<div class="listing-card-foot">' + (petBadges[d.petPolicy] || petBadges.ask) + '<span class="listing-card-viewlink">View details &rarr;</span></div>' +
           '</div></a>'
         );
       }
@@ -513,12 +514,11 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
         });
       }
 
-      function matchesPetFilter(petsValue, filterValue) {
+      function matchesPetFilter(policy, filterValue) {
         if (!filterValue) return true;
-        var p = (petsValue || '').toLowerCase();
-        if (filterValue === 'dogs') return p.indexOf('dog') !== -1 || p === 'yes';
-        if (filterValue === 'cats') return p.indexOf('cat') !== -1 || p === 'yes';
-        if (filterValue === 'no') return p.indexOf('no pets') !== -1 || p === 'no';
+        if (filterValue === 'dogs') return policy === 'dogs-cats' || policy === 'dogs';
+        if (filterValue === 'cats') return policy === 'dogs-cats' || policy === 'cats';
+        if (filterValue === 'no') return policy === 'none';
         return true;
       }
 
@@ -663,7 +663,7 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
         if (bedsMin && d.beds < bedsMin) return false;
         if (priceRange && (d.rent < priceRange.min || (priceRange.max < priceRange.fullMax && d.rent > priceRange.max))) return false;
         if (sqftRange && ((d.sqft || 0) < sqftRange.min || (sqftRange.max < sqftRange.fullMax && (d.sqft || 0) > sqftRange.max))) return false;
-        if (!matchesPetFilter(d.pets, petsValue)) return false;
+        if (!matchesPetFilter(d.petPolicy, petsValue)) return false;
         return true;
       }
 
@@ -785,7 +785,7 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
         document.getElementById('map-detail-address').textContent = d.address;
         document.getElementById('map-detail-city').textContent = d.city + ', ' + (d.state || 'IN');
         document.getElementById('map-detail-specs').textContent = d.beds + ' bd · ' + d.baths + ' ba' + (d.sqft ? ' · ' + d.sqft.toLocaleString('en-US') + ' sq ft' : '');
-        document.getElementById('map-detail-pets').textContent = d.pets;
+        document.getElementById('map-detail-pets').innerHTML = petDrawerHtml[d.petPolicy] || petDrawerHtml.ask;
         document.getElementById('map-detail-view-link').href = d.detailPath;
         mapDetailDrawer.classList.add('is-open');
       }

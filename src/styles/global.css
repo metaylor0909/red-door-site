@@ -2533,6 +2533,13 @@
     .section-dark a:not([class*="btn"]) { color: var(--brand-light); }
     .site-footer a:hover { color: var(--brand-light); }
 
+    /* Social icons in the footer brand column. Overrides the block-link
+       defaults from .site-footer a above. */
+    .footer-social { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 4px; padding: 0; list-style: none; }
+    .site-footer .footer-social a { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; margin: 0; color: #dcdcdc; border: 1px solid rgba(255, 255, 255, .18); border-radius: 50%; transition: color .15s ease, background-color .15s ease, border-color .15s ease; }
+    .site-footer .footer-social a:hover, .site-footer .footer-social a:focus-visible { color: var(--white); background: var(--brand); border-color: var(--brand); text-decoration: none; }
+    .footer-social svg { width: 17px; height: 17px; display: block; }
+
     @media (max-width: 900px) {
       .brand-logo { height: 44px; }
       .footer-brand .brand-logo { height: 52px; }
@@ -3780,7 +3787,8 @@
     .map-detail-address { color: var(--ink); font-weight: 800; font-size: 1.05rem; margin-bottom: 2px; }
     .map-detail-city { color: var(--muted); font-size: .88rem; font-weight: 700; margin-bottom: 12px; }
     .map-detail-specs { display: flex; flex-wrap: wrap; gap: 8px 18px; color: var(--charcoal); font-size: .92rem; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--soft); }
-    .map-detail-pets { color: var(--red-dark); font-weight: 800; font-size: .88rem; margin-bottom: 18px; }
+    .map-detail-pets { display: flex; align-items: center; gap: 8px; color: var(--red-dark); font-weight: 800; font-size: .88rem; margin-bottom: 18px; }
+    .map-detail-pets .pet-paw { flex: none; }
     .map-detail-actions { display: grid; gap: 10px; }
 
     /* New sub-parts of the shared .listing-card component, specific to this
@@ -3791,8 +3799,19 @@
     #listing-grid .listing-card-photo { position: relative; }
     .listing-card-photocount { position: absolute; left: 8px; bottom: 8px; padding: 3px 9px; color: var(--white); background: rgba(23, 23, 23, .68); border-radius: 999px; font-size: .74rem; font-weight: 800; }
     .listing-card-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--soft); }
-    .listing-card-pets { color: var(--red-dark); font-size: .78rem; font-weight: 800; }
-    .listing-card-pets.is-no-pets { color: var(--muted); }
+    /* Pet policy paw (src/lib/listings/pets.ts). The policy shows as a
+       tooltip on hover; the same text is in an .sr-only span for screen
+       readers. Sits in the card foot, so the bubble opens upward into the
+       card body and isn't clipped by .listing-card's overflow: hidden. */
+    .pet-badge { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; margin: -5px 0 -5px -5px; color: var(--red-dark); border-radius: 50%; cursor: help; }
+    .pet-badge.is-none, .pet-badge.is-ask { color: var(--muted); }
+    .pet-badge:hover { background: var(--brand-tint, #fcecea); }
+    .pet-badge.is-none:hover, .pet-badge.is-ask:hover { background: var(--soft); }
+    .pet-paw { width: 20px; height: 20px; display: block; }
+    .pet-badge::after { content: attr(data-tip); position: absolute; left: -2px; bottom: calc(100% + 8px); padding: 6px 10px; color: var(--white); background: var(--charcoal); border-radius: 6px; font-size: .78rem; font-weight: 700; line-height: 1.2; white-space: nowrap; box-shadow: 0 6px 16px rgba(23, 23, 23, .2); opacity: 0; transform: translateY(4px); transition: opacity .15s ease, transform .15s ease; pointer-events: none; z-index: 2; }
+    .pet-badge::before { content: ""; position: absolute; left: 10px; bottom: calc(100% + 3px); border: 5px solid transparent; border-bottom: 0; border-top-color: var(--charcoal); opacity: 0; transition: opacity .15s ease; pointer-events: none; z-index: 2; }
+    .pet-badge:hover::after { opacity: 1; transform: translateY(0); }
+    .pet-badge:hover::before { opacity: 1; }
     .listing-card-viewlink { color: var(--red-dark); font-size: .8rem; font-weight: 800; white-space: nowrap; }
     .listing-card.is-hidden { display: none; }
     .listing-card.is-map-hovered { box-shadow: 0 0 0 3px var(--red), 0 16px 34px rgba(23, 23, 23, .18); }
