@@ -58,6 +58,7 @@
     var nextReviews = document.querySelector('[data-review-next]');
     var reviewAutoFrame = null;
     var reviewLastFrame = null;
+    var reviewPosition = null;
     var reviewLoopWidth = 0;
     var reviewSpeed = 0.024;
     var reviewsPaused = false;
@@ -587,7 +588,15 @@
       reviewLastFrame = timestamp;
 
       if (reviewViewport && !reviewsPaused && !reduceReviewMotion.matches && reviewsCanScroll()) {
-        reviewViewport.scrollLeft += elapsed * reviewSpeed;
+        // Track position as a float: at ~0.4px per frame, adding straight
+        // to scrollLeft gets rounded back to the same whole pixel on many
+        // screens and the carousel never moves. Resync whenever something
+        // else (an arrow click, a loop wrap, a swipe) moved the viewport.
+        if (reviewPosition == null || Math.abs(reviewPosition - reviewViewport.scrollLeft) > 2) {
+          reviewPosition = reviewViewport.scrollLeft;
+        }
+        reviewPosition += Math.min(elapsed, 100) * reviewSpeed;
+        reviewViewport.scrollLeft = reviewPosition;
         normalizeReviewPosition();
       }
 

@@ -7,7 +7,17 @@
 // a "What Makes Red Door Different" list, six detailed process-detail
 // sections (one per pillar-page stage), a "What's Included" list, an
 // "Owner Standards" list, and a 10-question FAQ accordion — none of
-// which exist on the 18 simple pages. Confirmed via a class-name diff
+// which exist on the 18 simple pages.
+//
+// Redesigned 2026-10-06 (Michael): shorter hero; new "Who We Work With"
+// owner-type cards and owner FAQ video band; "What Makes Red Door
+// Different" and "A Chain, Not a Checklist" became card grids (the chain
+// cards replace the six long process-detail sections, linking to the
+// same pillar pages); the market snapshot moved below the reviews.
+//
+// Sections here mostly alternate backgrounds, so each one that follows a
+// differently colored section carries .pm-pad to undo the sitewide
+// `section + section { padding-top: 0 }` rule. Confirmed via a class-name diff
 // against avon-property-management.html before starting (see that
 // page's own commit message). Same "build the flagship page separately"
 // precedent already used for indianapolis-homes-for-rent.astro.
@@ -112,12 +122,153 @@ const faqs = [
     a: 'If a tenant placed by Red Door voids their lease within the first six months, our 6-Month Tenant Guarantee applies — your next New Lease Fee is waived.',
   },
   {
-    q: 'Can I cancel property management if I&rsquo;m not satisfied?',
+    q: 'Can I cancel property management if I’m not satisfied?',
     a: 'Yes. We don&rsquo;t require long-term cancellation contracts, and our 90-Day Money-Back Guarantee refunds management fees if you change your mind within the first 90 days.',
   },
   {
     q: 'How do I get started with Red Door Property Management?',
     a: 'The first step is a free Rental Market Analysis, which lets us evaluate your property, review market rent data, and determine how our Market Readiness process can position your home for the strongest performance. From there, we guide you through onboarding, market readiness preparation, and the full leasing process.',
+  },
+];
+
+const OWNER_TYPES = [
+  {
+    title: 'Accidental landlords',
+    text: 'If you are renting out a home for the first time, Red Door gives you structure, guidance, and protection from the common mistakes new landlords face.',
+    points: [
+      'Rental pricing guidance before the home hits the market',
+      'Market readiness recommendations to reduce showing objections',
+      'Lease, move-in, maintenance, and renewal systems already in place',
+      'Clear communication so you know what is happening and why',
+    ],
+  },
+  {
+    title: 'Out-of-state owners',
+    text: 'Distance should not mean uncertainty. We provide local eyes, documented updates, and vendor coordination when you cannot be at the property yourself.',
+    points: [
+      'Photo and video documentation for inspections, repairs, and turnovers',
+      'Owner portal access to statements, documents, and property activity',
+      'Local maintenance coordination with vetted resources',
+      'Proactive updates by phone, email, text, and video when needed',
+    ],
+  },
+  {
+    title: 'Growing investors',
+    text: 'For owners looking to expand, Red Door can support smarter acquisition decisions and help new properties become rent-ready faster.',
+    points: [
+      'Rental projections for prospective investment properties',
+      'Local guidance on areas, rent demand, and property positioning',
+      'Connections to local resources that help build your investing team',
+      'Market readiness rehab coordination for BRRRR-style strategies',
+    ],
+  },
+];
+
+const DIFFERENTIATORS = [
+  {
+    title: 'Transparent, high-touch customer service',
+    text: 'Owners are not routed into silence. Red Door emphasizes practical communication, clear next steps, and a team that answers questions before small issues become bigger frustrations.',
+  },
+  {
+    title: '24-hour availability',
+    text: 'Property issues do not always happen during office hours. Red Door maintains around-the-clock availability for urgent situations, and we answer our phones when owners and residents need help.',
+  },
+  {
+    title: 'Communication and maintenance platforms',
+    text: 'Continued investment in modern platforms helps organize maintenance requests, documentation, owner updates, statements, photos, videos, and important property documents.',
+  },
+  {
+    title: 'Professional marketing with anti-scam protection',
+    text: 'Professional photos, strong listing copy, broad online exposure, and anti-scam watermarking help your property stand out while protecting the listing from misuse.',
+  },
+  {
+    title: 'Strong online presence to minimize vacancy',
+    text: 'Red Door&rsquo;s marketing process is built to get rental homes in front of qualified renters quickly through high-visibility listing channels and a polished digital presentation.',
+  },
+  {
+    title: 'Owner portal visibility',
+    text: 'Owners can access monthly statements, documents, photos, videos, leases, and property information without digging through disconnected email threads.',
+  },
+  {
+    title: 'Yearly rental analysis',
+    text: 'Rental values change. Red Door reviews rent positioning so owners can make informed renewal and pricing decisions instead of relying on stale assumptions.',
+  },
+  {
+    title: 'Competitive, published fees',
+    text: 'Management fees, the New Lease Fee, and every separately billed service are listed on our <a href="/pricing">Pricing</a> page, so there are no surprises on your statement.',
+  },
+  {
+    title: 'No long-term lock-in',
+    text: 'There is no 12-month cancellation requirement. Clear expectations and flexible terms make it easier for owners to choose Red Door with confidence.',
+  },
+];
+
+// Owner FAQ videos on the Red Door YouTube channel. Titles match the
+// videos' own YouTube titles (checked via oEmbed 2026-10-06).
+const OWNER_VIDEOS = [
+  {
+    id: 'r9jl7CdIkYw',
+    kicker: 'Pricing Clarity',
+    title: 'What do you charge?',
+    text: 'Understand how Red Door approaches management fees, transparency, and value so you can compare the service with confidence.',
+  },
+  {
+    id: 'ETOin2lklx0',
+    kicker: 'Tenant Quality',
+    title: 'How do you screen tenants?',
+    text: 'Learn how applicant review helps reduce missed payments, property damage, evictions, fraud, and early turnover.',
+  },
+  {
+    id: 'QZcX-UV0G_c',
+    kicker: 'Repair Confidence',
+    title: 'How do you handle maintenance?',
+    text: 'See how maintenance requests are coordinated with documentation, vetted resources, emergency coverage, and owner visibility.',
+  },
+];
+
+// Owner Roadmap order (Maintenance = 5, Communication = 6 — see CLAUDE.md).
+const CHAIN_STEPS = [
+  {
+    label: 'Market Readiness',
+    title: "Start with the property's condition and rent position.",
+    text: 'Red Door identifies repairs, pricing issues, and presentation details before the home is marketed, helping owners avoid avoidable vacancy and weak first impressions.',
+    href: '/market-readiness-assessment',
+    linkLabel: 'Market Readiness',
+  },
+  {
+    label: 'Marketing',
+    title: 'Make the home easy to find, trust, and tour.',
+    text: 'Professional photos, virtual walkthroughs, search-friendly listings, syndication, and showing tools help qualified renters move from interest to application.',
+    href: '/marketing-process',
+    linkLabel: 'Marketing',
+  },
+  {
+    label: 'Tenant Screening',
+    title: 'Place the right resident, not just the fastest applicant.',
+    text: 'Screening includes credit, background, eviction, income, rental history, identity, fraud, and pet review so decisions are documented and consistent.',
+    href: '/tenant-screening',
+    linkLabel: 'Screening',
+  },
+  {
+    label: 'Leasing',
+    title: 'Protect the tenancy from day one.',
+    text: 'Lease execution, move-in condition records, tenant portal setup, renewal planning, and move-out documentation create accountability through the full lease cycle.',
+    href: '/leasing-process',
+    linkLabel: 'Leasing',
+  },
+  {
+    label: 'Maintenance',
+    title: 'Keep small problems from becoming expensive surprises.',
+    text: 'Requests are coordinated with troubleshooting, documentation, in-house support, vetted vendors, and emergency coverage for true habitability concerns.',
+    href: '/maintenance',
+    linkLabel: 'Maintenance',
+  },
+  {
+    label: 'Communication',
+    title: 'Make owner visibility part of the service.',
+    text: 'Owners get updates through the portal, phone, email, text, photos, and video so they know what is happening and what decisions need approval.',
+    href: '/communication',
+    linkLabel: 'Communication',
   },
 ];
 
@@ -131,8 +282,11 @@ const faqs = [
   <section class="hero" aria-labelledby="page-title">
     <div class="hero-content">
       <div class="eyebrow">Full-Service Property Management</div>
-      <h1 id="page-title"><span>Indianapolis Property Management Services That Protect Your Investment</span></h1>
-      <p class="hero-copy">Red Door Property Management provides full-service residential property management in Indianapolis built around one goal: protecting your asset while maximizing long-term ROI. From market readiness and marketing to tenant screening, leasing, maintenance, and proactive communication, we don't just manage rentals — we operate a documented system owners can trust.</p>
+      <h1 id="page-title">
+        <span>Indianapolis Property Management</span>
+        <span>That Protects Your Investment</span>
+      </h1>
+      <p class="hero-copy">Full-service management for Indianapolis rental owners &mdash; one documented system from market readiness to move-out.</p>
       <div class="cta-row">
         <a class="btn btn-primary" href="/rental-analysis" data-track="hero-rental-analysis">Get a Free Rental Analysis</a>
         <a class="btn btn-secondary" href="/contact" data-track="hero-contact">Talk to Our Team</a>
@@ -148,7 +302,170 @@ const faqs = [
 
   <PropertyManagementJourneyCarousel />
 
-  <section class="section-soft">
+  <section class="pm-owners">
+    <div class="container reveal">
+      <div class="section-head">
+        <div class="section-kicker">Who We Work With</div>
+        <h2>Local Property Management With a Documented, Owner-First Process</h2>
+        <p>Red Door manages the full rental lifecycle for Indianapolis owners &mdash; pricing and preparation, tenant placement, leases, maintenance, accounting, and ongoing communication &mdash; so small problems get handled before they become expensive ones.</p>
+      </div>
+      <div class="pm-card-grid">
+        {OWNER_TYPES.map((t) => (
+          <article class="pm-owner-card">
+            <h3>{t.title}</h3>
+            <p>{t.text}</p>
+            <ul class="check-list">
+              {t.points.map((p) => <li>{p}</li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-soft pm-pad">
+    <div class="container reveal">
+      <div class="pm-split-head">
+        <div>
+          <div class="section-kicker">What Makes Red Door Different</div>
+          <h2>What Makes Red Door Property Management Different</h2>
+        </div>
+        <p>Red Door combines high-touch customer service, strong communication systems, modern property management technology, and competitive owner protections, so owners are not left guessing what is happening with their rental.</p>
+      </div>
+      <div class="pm-card-grid">
+        {DIFFERENTIATORS.map((d) => (
+          <article class="pm-feature-card">
+            <h3>{d.title}</h3>
+            <p set:html={d.text} />
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-dark pm-videos pm-pad" aria-labelledby="pm-videos-title">
+    <div class="container reveal">
+      <div class="pm-split-head">
+        <div>
+          <div class="section-kicker">Question of the Week</div>
+          <h2 id="pm-videos-title">Questions You Should Be Asking</h2>
+        </div>
+        <p>Before choosing a property manager, owners should understand pricing, tenant screening, and maintenance standards. These short videos answer the questions that reveal how a management company really operates.</p>
+      </div>
+      <div class="pm-video-grid">
+        {OWNER_VIDEOS.map((v, i) => (
+          <article class={`pm-video-card${i === 0 ? ' is-featured' : ''}`}>
+            <a
+              class="pm-video-thumb"
+              href={`https://www.youtube.com/watch?v=${v.id}`}
+              target="_blank"
+              rel="noopener"
+              data-video-id={v.id}
+              aria-label={`Play video: ${v.title}`}
+            >
+              <img src={`https://i.ytimg.com/vi/${v.id}/${i === 0 ? 'maxresdefault' : 'hqdefault'}.jpg`} alt="" loading="lazy" width="1280" height="720" />
+              <span class="pm-video-play" aria-hidden="true"></span>
+            </a>
+            <div class="pm-video-body">
+              <span class="pm-video-kicker">{v.kicker}</span>
+              <h3>{v.title}</h3>
+              <p>{v.text}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+
+
+  <section class="section-dark guarantee-section pm-pad">
+    <div class="container">
+      <div class="section-head center reveal">
+        <div class="section-kicker">A Process We Are Willing to Stand Behind</div>
+        <h2>Red Door Guarantees</h2>
+        <p>We stand behind our system with real guarantees:</p>
+      </div>
+      <div class="guarantee-grid reveal">
+        <article class="guarantee-card">
+          <span>Leasing</span>
+          <h3>2-Week Leasing Guarantee</h3>
+          <p>Secure a viable tenant within two weeks of marketing or your first month's management fee is waived.</p>
+        </article>
+        <article class="guarantee-card">
+          <span>Tenant Placement</span>
+          <h3>6-Month Tenant Guarantee</h3>
+          <p>If a tenant placed by Red Door voids the lease within the first six months, your next New Lease Fee is waived.</p>
+        </article>
+        <article class="guarantee-card">
+          <span>Owner Confidence</span>
+          <h3>90-Day Money-Back Guarantee</h3>
+          <p>If you change your mind during the first 90 days, Red Door will refund the management fees paid.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="pm-pad">
+    <div class="container reveal">
+      <div class="pm-split-head">
+        <div>
+          <div class="section-kicker">Our Proven Property Management System</div>
+          <h2>A Chain, Not a Checklist</h2>
+        </div>
+        <p>Great property management is a chain. If any link breaks, owners pay for it. Red Door's system covers the full rental lifecycle, with each phase reinforcing the next.</p>
+      </div>
+      <div class="pm-card-grid">
+        {CHAIN_STEPS.map((step, i) => (
+          <article class="pm-chain-card">
+            <span class="pm-chain-num">{String(i + 1).padStart(2, '0')} {step.label}</span>
+            <h3>{step.title}</h3>
+            <p>{step.text}</p>
+            <a class="pm-chain-link" href={step.href}>Explore {step.linkLabel}</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-soft pm-pad">
+    <div class="container content-block reveal">
+      <h2>What's Included (No Nickel-and-Diming)</h2>
+      <p>We provide a large array of services at no additional cost:</p>
+      <ul class="two-col-list check-list">
+        <li>Property advertising across major platforms</li>
+        <li>Showing coordination and lockbox access</li>
+        <li>Tenant screening and placement</li>
+        <li>Lease execution and renewals</li>
+        <li>Video-documented move-in and move-out</li>
+        <li>Rent collection via ACH</li>
+        <li>Maintenance coordination and vendor management</li>
+        <li>Tenant mediation</li>
+        <li>Monthly accounting statements</li>
+        <li>Year-end tax reporting</li>
+        <li>Trust accounting (no added accounting fees)</li>
+      </ul>
+      <p class="callout-note">Full pricing detail &mdash; management fees, the New Lease Fee, and every separately billed service &mdash; is published on our <a href="/pricing">Pricing</a> page.</p>
+    </div>
+  </section>
+
+  <section class="pm-pad">
+    <div class="container content-block reveal">
+      <h2>Owner Standards That Protect Performance</h2>
+      <p>To hold tenants to high standards, it's important for homes to be delivered in great condition:</p>
+      <ul class="plain-list">
+        <li>Cleanliness is essential and one of the first things noted during tenant showings</li>
+        <li>Neutral paint tones recommended but not required, to appeal to the highest number of potential applicants</li>
+        <li>Keys to all doors (adequate copies)</li>
+        <li>Two garage door openers when applicable</li>
+        <li>Locks re-keyed between occupants for safety and liability protection</li>
+      </ul>
+    </div>
+  </section>
+
+  <ReviewsCarousel />
+
+  <section class="section-soft pm-pad">
     <div class="container">
       <div class="section-head center reveal">
         <div class="section-kicker">Where the Indianapolis Market Stands Right Now</div>
@@ -180,154 +497,6 @@ const faqs = [
       </div>
     </div>
   </section>
-
-  <section class="section-soft">
-    <div class="container reveal">
-      <div class="section-head center">
-        <div class="section-kicker">What Makes Red Door Different</div>
-        <h2>What Makes Red Door Property Management Different</h2>
-        <p>We pride ourselves on being one of the most customer-oriented property management companies in Indianapolis. We treat every property as if it were our own and use every available resource to protect your investment while continuing to invest in the main pillars of a quality property management company.</p>
-      </div>
-      <ul class="two-col-list" style="max-width:900px;margin-inline:auto">
-        <li>Significant continued investment in proper communication and maintenance platforms</li>
-        <li>Transparent, high-touch customer service</li>
-        <li>24-hour availability &mdash; we answer our phones</li>
-        <li>Professional marketing photos with anti-scam watermarking</li>
-        <li>Strong online presence that minimizes vacancy</li>
-        <li>Modern owner portal with access to statements, photos, videos, and documents</li>
-        <li>Extremely competitive fee structure</li>
-        <li>Yearly rental analysis</li>
-        <li>No long-term lock-in &mdash; no 12-month cancellation requirement</li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="section-dark guarantee-section">
-    <div class="container">
-      <div class="section-head center reveal">
-        <div class="section-kicker">A Process We Are Willing to Stand Behind</div>
-        <h2>Red Door Guarantees</h2>
-        <p>We stand behind our system with real guarantees:</p>
-      </div>
-      <div class="guarantee-grid reveal">
-        <article class="guarantee-card">
-          <span>Leasing</span>
-          <h3>2-Week Leasing Guarantee</h3>
-          <p>Secure a viable tenant within two weeks of marketing or your first month's management fee is waived.</p>
-        </article>
-        <article class="guarantee-card">
-          <span>Tenant Placement</span>
-          <h3>6-Month Tenant Guarantee</h3>
-          <p>If a tenant placed by Red Door voids the lease within the first six months, your next New Lease Fee is waived.</p>
-        </article>
-        <article class="guarantee-card">
-          <span>Owner Confidence</span>
-          <h3>90-Day Money-Back Guarantee</h3>
-          <p>If you change your mind during the first 90 days, Red Door will refund the management fees paid.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="container content-block is-centered reveal">
-      <div class="section-kicker">Our Proven Property Management System</div>
-      <h2>A Chain, Not a Checklist</h2>
-      <p>Great property management is a chain. If any link breaks, owners pay for it. Red Door's system covers the entire rental lifecycle &mdash; each phase reinforcing the next.</p>
-    </div>
-  </section>
-
-  <section class="process-detail">
-    <div class="container content-block reveal">
-      <p class="step-num">1 &middot; Market Readiness</p>
-      <h2>The Foundation of Better Rental Performance</h2>
-      <p>Before a listing goes live, before photos are taken, and before tenants tour the home, your property must be positioned correctly. First impressions directly impact rent price, tenant quality, and long-term maintenance costs. Market Readiness is the first step in our entire management system &mdash; we don't just list homes, we prepare them to perform.</p>
-      <p>Every property we manage goes through a structured, repeatable readiness system before marketing begins, including a free data-driven Rental Market Analysis, an HD video walkthrough and photo inspection, a Market Readiness Assessment (MRA) outlining clear priorities, ROI-minded recommendations with transparent cost estimates, and preventative maintenance guidance. Once recommendations are reviewed and approved, Red Door coordinates everything &mdash; scheduling, access, vendors, and quality control &mdash; while keeping you informed every step of the way.</p>
-      <p><a class="area-link" href="/market-readiness-assessment">Explore the full Market Readiness Assessment process &rarr;</a></p>
-    </div>
-  </section>
-
-  <section class="process-detail section-soft">
-    <div class="container content-block reveal">
-      <p class="step-num">2 &middot; Marketing</p>
-      <h2>Maximum Exposure, Minimal Vacancy</h2>
-      <p>Effective marketing goes far beyond a yard sign. Every Red Door listing includes professional photography, an immersive virtual walkthrough video, and syndication across all major rental platforms &mdash; optimized with search-friendly language, amenities, and neighborhood highlights. Our modern self-showing and scheduling tools let pre-qualified renters book showings safely and conveniently, seven days a week.</p>
-      <p><a class="area-link" href="/marketing-process">Explore our full Marketing Process &rarr;</a></p>
-    </div>
-  </section>
-
-  <section class="process-detail">
-    <div class="container content-block reveal">
-      <p class="step-num">3 &middot; Tenant Screening</p>
-      <h2>Placing the Right Tenant, Not Just Any Tenant</h2>
-      <p>A qualified tenant is more than someone who can pay rent &mdash; they're financially stable, respectful of the property, and likely to renew. Every applicant is evaluated using a consistent, documented system: full credit report review, nationwide criminal background and eviction search, rental history verification, employment and income verification (typically 3&times; monthly rent), identity verification and fraud detection, and pet screening through a dedicated third-party platform. Each application is evaluated holistically, and results are presented with a professional recommendation.</p>
-      <p><a class="area-link" href="/tenant-screening">Explore our full Tenant Screening process &rarr;</a></p>
-    </div>
-  </section>
-
-  <section class="process-detail section-soft">
-    <div class="container content-block reveal">
-      <p class="step-num">4 &middot; Leasing</p>
-      <h2>Protecting Your Property, Simplifying the Experience</h2>
-      <p>Leasing at Red Door isn't just paperwork &mdash; it's a system built around documentation, accountability, and long-term performance. Every lease includes detailed move-in inspections with photo and video documentation, a legally robust Indiana-compliant lease agreement, secure digital signing and online payments, tenant portal access, a proactive 110-day lease renewal strategy, and transparent move-out inspections with photo and video comparison for deposit reconciliation.</p>
-      <p><a class="area-link" href="/leasing-process">Explore our full Leasing Process &rarr;</a></p>
-    </div>
-  </section>
-
-  <section class="process-detail">
-    <div class="container content-block reveal">
-      <p class="step-num">5 &middot; Property Maintenance</p>
-      <h2>Protecting Your Investment and Strengthening Long-Term ROI</h2>
-      <p>We approach maintenance with both a technician's precision and an investor's mindset. Every property is supported by Market Readiness&ndash;driven evaluations, real-time maintenance tracking and documentation, in-house technicians for common and time-sensitive repairs, vetted and insured local vendors for specialty work, preventative maintenance planning, and 24/7 emergency response coverage for true habitability issues.</p>
-      <p><a class="area-link" href="/maintenance">Explore our full Property Maintenance process &rarr;</a></p>
-    </div>
-  </section>
-
-  <section class="process-detail section-soft">
-    <div class="container content-block reveal">
-      <p class="step-num">6 &middot; Communication</p>
-      <h2>Clear, Proactive Updates &mdash; Without Guesswork</h2>
-      <p>Communication isn't an add-on at Red Door &mdash; it's the foundation of everything we do. Owners receive proactive, transparent updates through email, phone, text, and video, backed by photo and video documentation for inspections, maintenance, and turnovers, and regular updates during market readiness, marketing, leasing, maintenance, renewals, and move-outs. You'll always know what's happening, what decisions are needed, and why recommendations are being made.</p>
-      <p><a class="area-link" href="/communication">Explore our full Communication standards &rarr;</a></p>
-    </div>
-  </section>
-
-  <section>
-    <div class="container content-block reveal">
-      <h2>What's Included (No Nickel-and-Diming)</h2>
-      <p>We provide a large array of services at no additional cost:</p>
-      <ul class="two-col-list">
-        <li>Property advertising across major platforms</li>
-        <li>Showing coordination and lockbox access</li>
-        <li>Tenant screening and placement</li>
-        <li>Lease execution and renewals</li>
-        <li>Video-documented move-in and move-out</li>
-        <li>Rent collection via ACH</li>
-        <li>Maintenance coordination and vendor management</li>
-        <li>Tenant mediation</li>
-        <li>Monthly accounting statements</li>
-        <li>Year-end tax reporting</li>
-        <li>Trust accounting (no added accounting fees)</li>
-      </ul>
-      <p class="callout-note">Full pricing detail &mdash; management fees, the New Lease Fee, and every separately billed service &mdash; is published on our <a href="/pricing">Pricing</a> page.</p>
-    </div>
-  </section>
-
-  <section class="section-soft">
-    <div class="container content-block reveal">
-      <h2>Owner Standards That Protect Performance</h2>
-      <p>To hold tenants to high standards, it's important for homes to be delivered in great condition:</p>
-      <ul class="plain-list">
-        <li>Cleanliness is essential and one of the first things noted during tenant showings</li>
-        <li>Neutral paint tones recommended but not required, to appeal to the highest number of potential applicants</li>
-        <li>Keys to all doors (adequate copies)</li>
-        <li>Two garage door openers when applicable</li>
-        <li>Locks re-keyed between occupants for safety and liability protection</li>
-      </ul>
-    </div>
-  </section>
-
-  <ReviewsCarousel />
 
   {/* Replaces the mockup's old placeholder 6-step form (same stale
       pre-real-tool pattern as the homepage's) with the real form — see
@@ -417,6 +586,23 @@ const faqs = [
       instead) and Astro components don't export plain functions to
       import into a page's own script block. */}
   <script>
+    // Owner FAQ videos: the thumbnail is a plain YouTube link (works with
+    // no JS); on click it's swapped for a youtube-nocookie embed so the
+    // page loads no YouTube player code until someone actually plays one.
+    document.querySelectorAll('[data-video-id]').forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        var id = link.getAttribute('data-video-id');
+        var iframe = document.createElement('iframe');
+        iframe.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0';
+        iframe.title = link.getAttribute('aria-label').replace(/^Play video: /, '');
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        iframe.className = 'pm-video-frame';
+        link.replaceWith(iframe);
+      });
+    });
+
     document.querySelectorAll('[data-accordion]').forEach(function (accordion) {
       accordion.querySelectorAll('.accordion-trigger').forEach(function (trigger) {
         trigger.addEventListener('click', function () {
