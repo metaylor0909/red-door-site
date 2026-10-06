@@ -44,6 +44,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { ORGANIZATION_JSONLD } from '../lib/schema/organization';
 import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID } from '../lib/listings/rentengine';
 import type { RentEngineUnit } from '../lib/listings/types';
+import { petPolicy, petBadgeHtml } from '../lib/listings/pets';
 import { loadCityContentMap, loadCityMarketData } from '../lib/listings/homes-for-rent-content';
 import type { CityContent, BedroomLadderEntry } from '../lib/listings/homes-for-rent-content';
 import CityInterlinkPanel from '../components/CityInterlinkPanel.astro';
@@ -266,6 +267,10 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
                       {unit.bedrooms} bd &middot; {unit.bathrooms} ba
                       {unit.sqft ? ` · ${unit.sqft.toLocaleString()} sq ft` : ''}
                     </p>
+                    <div class="listing-card-foot">
+                      <Fragment set:html={petBadgeHtml(petPolicy(unit))} />
+                      <span class="listing-card-viewlink">View details &rarr;</span>
+                    </div>
                   </div>
                 </a>
               );
@@ -369,6 +374,10 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
                     {unit.bedrooms} bd &middot; {unit.bathrooms} ba
                     {unit.sqft ? ` · ${unit.sqft.toLocaleString()} sq ft` : ''}
                   </p>
+                  <div class="listing-card-foot">
+                    <Fragment set:html={petBadgeHtml(petPolicy(unit))} />
+                    <span class="listing-card-viewlink">View details &rarr;</span>
+                  </div>
                 </div>
               </a>
             );
