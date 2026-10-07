@@ -28,6 +28,7 @@ import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID } 
 import { haversineMiles } from '../../../lib/rental-analysis/geo';
 import type { RentEngineUnit } from '../../../lib/listings/types';
 import { petPolicy, petBadgeHtml } from '../../../lib/listings/pets';
+import { homesForRentHub } from '../../../lib/listings/hub';
 
 // Mapbox public token (`pk.` prefix — a publishable client-side key, not a
 // secret) already embedded directly in the approved static reference HTML
@@ -75,7 +76,11 @@ interface Props {
 const { unit, allUnits } = Astro.props;
 
 const citySlugForUnit = citySlug(unit.address.city);
-const cityHubHref = `/${citySlugForUnit}-homes-for-rent`;
+// The city's own homes-for-rent page, or the Indianapolis page when the
+// city doesn't have one (Anderson, Pendleton, ...) — see lib/listings/hub.ts.
+const hub = homesForRentHub(citySlugForUnit, unit.address.city);
+const cityHubHref = hub.href;
+const seeAllText = hub.isFallback ? 'See all homes for rent in the Indianapolis area' : `See all homes for rent in ${unit.address.city}`;
 const detailPath = `/homes-for-rent/${citySlugForUnit}/${addressSlug(unit)}`;
 const canonicalPhotos = unit.marketing_photos.filter((p) => !p.hidden).map((p) => p.original);
 const mainPhoto = canonicalPhotos[0] as string | undefined;
@@ -224,8 +229,8 @@ const jsonLd = {
         {
           '@type': 'ListItem',
           position: 2,
-          name: `${unit.address.city} Homes for Rent`,
-          item: `https://www.reddoorrents.com${cityHubHref}`,
+          name: hub.label,
+          item: `https://www.reddoorrents.com${cityHubHref.split('?')[0]}`,
         },
         {
           '@type': 'ListItem',
@@ -253,7 +258,7 @@ const jsonLd = {
       <div class="listing-breadcrumb-inner">
         <div class="container">
           <p class="listing-breadcrumb">
-            <a href={cityHubHref}>{unit.address.city} Homes for Rent</a> &rsaquo; {unit.address.formatted_address}
+            <a href={cityHubHref}>{hub.label}</a> &rsaquo; {unit.address.formatted_address}
           </p>
         </div>
       </div>
@@ -403,7 +408,7 @@ const jsonLd = {
           </div>
         </div>
         <p style="text-align:center;margin-top:14px">
-          <a class="area-link" href={cityHubHref}>&larr; See all homes for rent in {unit.address.city}</a>
+          <a class="area-link" href={cityHubHref}>&larr; {seeAllText}</a>
         </p>
       </aside>
     </div>
@@ -523,7 +528,7 @@ const jsonLd = {
             })}
           </div>
           <p style="text-align:center;margin-top:24px">
-            <a class="area-link" href={cityHubHref}>See all homes for rent in {unit.address.city} &rarr;</a>
+            <a class="area-link" href={cityHubHref}>{seeAllText} &rarr;</a>
           </p>
         </div>
       </section>
