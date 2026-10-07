@@ -427,6 +427,48 @@ Judgment calls / open items carried forward from this build:
 
 ## Genuinely open — do these next
 
+- [ ] **PRE-LAUNCH: write genuinely distinct content for every city
+      `-property-management` page.** Added 2026-10-07 (Michael), when
+      `/downtown-indianapolis-property-management` was built as the 19th
+      page on the shared template. **Current state:** all 19
+      `[city]-property-management` pages (`src/pages/[city]-property-management.astro`,
+      cities in `src/lib/property-management/cities.ts`) are generated
+      from just the city's name plus its RentCast rental/sales snapshot —
+      every sentence of prose is the same template with the name swapped
+      in. The snapshot numbers are the only thing that genuinely differs
+      city to city. That's the doorway-page pattern CLAUDE.md Hard Rule 4
+      warns about, on the page type CLAUDE.md calls the site's highest
+      priority. (The `-homes-for-rent` pages are better off: each has
+      its own hand-written "What to Expect" prose in
+      `src/data/homes-for-rent-content.json`. Indianapolis's bespoke
+      page is also distinct.)
+      **What each page needs:** a short local section (a few paragraphs)
+      that would only make sense for that city:
+      - Sourced public facts (geography, major roads and commutes,
+        landmarks, development history).
+      - Team-confirmed leasing observations: typical housing stock and
+        age, what renters in that area ask about, seasonality, HOA
+        prevalence, common turnover or maintenance issues there.
+      - One or two full sentences stating a real local number. This is
+        the LLM-citability pattern from the Sep 29 item below.
+      **Inputs that already exist:**
+      - `claude/red-door-city-facts-research.md`: drafted, sourced facts
+        for 17 areas (no Downtown Indianapolis, no Avon).
+      - Avon's own research and pilot write-up in
+        `claude/avon-property-management-pilot-notes.md`.
+      - The `whatToExpectItemsHtml` prose already written for each
+        city's homes-for-rent page (reuse the facts, not the sentences:
+        the two page types target different intent).
+      **Needs from the Red Door team:** the leasing observations above,
+      per city. They can't be researched from outside.
+      **Rules:**
+      - Fair Housing: describe places and properties, never the people
+        who live there. No schools, crime, demographics, or "families"
+        (CLAUDE.md's Fair Housing section).
+      - Keep owner/"hire us" intent, distinct from the
+        `-market-reports` pages' data intent.
+      **Mechanism:** a per-city content data file read by the template,
+      like the homes-for-rent pages, rather than 19 hand-built pages.
 - [ ] **Pre-launch discussion: interlinking between the property-management/
       homes-for-rent pages and the market-reports pages is thin to
       nonexistent.** Flagged by Michael (2026-09-24). Confirmed by grep:
