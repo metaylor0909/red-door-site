@@ -74,6 +74,25 @@ const client = createClient({
   useCdn: false,
 });
 
+// Unfilled template placeholders left in the source posts' own text
+// (fixed in Sanity 2026-10-07 by scripts/fix-blog-placeholders.mjs).
+// Applied here too so a re-run of this migration can't bring them back.
+function cleanPlaceholders(blocks) {
+  for (const block of blocks) {
+    if (block._type === 'accordionSection') cleanPlaceholders(block.content ?? []);
+    if (block._type !== 'block') continue;
+    for (const def of block.markDefs ?? []) {
+      if (def._type === 'link' && /\[Insert Contact Us Page URL\]|Insert%20Contact/i.test(def.href ?? '')) def.href = '/contact';
+    }
+    for (const child of block.children ?? []) {
+      if (typeof child.text === 'string') {
+        child.text = child.text.replace(/\s*\(\[Insert YouTube video link here\]\)/, '').replace(/\s*\[Insert YouTube video link here\]/, '');
+      }
+    }
+  }
+  return blocks;
+}
+
 function randKey() {
   return crypto.randomBytes(6).toString('hex');
 }
@@ -470,6 +489,7 @@ async function main() {
           block.content = await resolvePending(block.content);
         }
       }
+      cleanPlaceholders(blocks);
 
       // Found live 2026-09-25: only 71/309 posts got a real mainImage out
       // of this — the other 4 posts that DO have a body image just don't
