@@ -1,0 +1,109 @@
+---
+// /blog/topic/[topic] and /blog/topic/[topic]/2, ... — one paginated
+// archive per blog topic (see src/lib/blog/topics.ts). Added 2026-10-06 so
+// readers can browse by subject and older posts sit a few clicks from the
+// blog instead of 25 pages deep in the newest-first index.
+import type { GetStaticPathsOptions } from 'astro';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import BlogListing from '../../../../components/blog/BlogListing.astro';
+import TopicNav from '../../../../components/blog/TopicNav.astro';
+import { sanityClient } from 'sanity:client';
+import { BLOG_TOPICS, POST_CARD_PROJECTION, topicFor, topicPath, type PostCardData } from '../../../../lib/blog/topics';
+import { MARKETS } from '../../../../lib/market-reports/markets';
+import { ORGANIZATION_ID, ORGANIZATION_JSONLD } from '../../../../lib/schema/organization';
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  let posts: PostCardData[] = [];
+  try {
+    posts = await sanityClient.fetch(`*[_type == "post"] | order(publishedAt desc) ${POST_CARD_PROJECTION}`);
+  } catch (err) {
+    console.warn('[blog] Could not reach Sanity — no topic pages will build.', err);
+  }
+  const byTopic: Record<string, PostCardData[]> = {};
+  for (const p of posts) {
+    const t = topicFor(p.categories)?.title;
+    if (t) (byTopic[t] ??= []).push(p);
+  }
+  const counts = Object.fromEntries(Object.entries(byTopic).map(([t, list]) => [t, list.length]));
+  return BLOG_TOPICS.filter((t) => byTopic[t.title]?.length).flatMap((topic) =>
+    paginate(byTopic[topic.title], { params: { topic: topic.slug }, pageSize: 12, props: { topic, counts } })
+  );
+}
+
+const { page, topic, counts } = Astro.props;
+
+const basePath = topicPath(topic);
+const pagePath = page.currentPage === 1 ? basePath : `${basePath}/${page.currentPage}`;
+const pageTitle =
+  page.currentPage === 1 ? `${topic.heading} | Red Door Blog` : `${topic.heading} | Page ${page.currentPage} | Red Door Blog`;
+const canonicalUrl = `https://www.reddoorrents.com${pagePath}`;
+
+// Market report archives point readers to each market's own page, which
+// carries that market's current data alongside its reports.
+const marketLinks =
+  topic.slug === 'market-reports'
+    ? MARKETS.map((m) => ({
+        href: `/${m.slug}-market-reports`,
+        label: m.slug === 'westside' ? 'West Side' : m.slug.charAt(0).toUpperCase() + m.slug.slice(1),
+      }))
+    : [];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      '@id': `${canonicalUrl}#page`,
+      name: topic.heading,
+      description: topic.description,
+      url: canonicalUrl,
+      isPartOf: { '@type': 'Blog', name: 'The Red Door Blog', url: 'https://www.reddoorrents.com/blog' },
+      publisher: { '@id': ORGANIZATION_ID },
+      breadcrumb: { '@id': `${canonicalUrl}#breadcrumbs` },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumbs`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Blog', item: 'https://www.reddoorrents.com/blog' },
+        { '@type': 'ListItem', position: 2, name: topic.heading, item: `https://www.reddoorrents.com${basePath}` },
+      ],
+    },
+    ORGANIZATION_JSONLD,
+  ],
+};
+---
+
+<BaseLayout title={pageTitle} description={topic.description} path={pagePath}>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
+
+  <section class="page-hero">
+    <div class="container">
+      <p class="listing-breadcrumb"><a href="/blog">Blog</a> &rsaquo; {topic.heading}</p>
+      <h1>{topic.heading}</h1>
+      <p class="lead">{topic.intro}</p>
+      {marketLinks.length > 0 && (
+        <nav class="topic-market-links" aria-label="Market report pages">
+          <span>Reports by market:</span>
+          {marketLinks.map((m) => <a href={m.href}>{m.label}</a>)}
+        </nav>
+      )}
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <TopicNav current={topic.slug} counts={counts} />
+      <BlogListing page={page} showTopic={false} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .topic-market-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; margin-top: 18px; font-size: .95rem; }
+  .topic-market-links span { color: var(--muted); font-weight: 700; }
+  .topic-market-links a { color: var(--red-dark); font-weight: 700; }
+  .topic-market-links a:hover { color: var(--red); text-decoration: underline; }
+</style>

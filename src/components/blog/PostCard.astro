@@ -1,0 +1,72 @@
+---
+// One blog post card: the blog index, topic pages, and related posts.
+import { cardThumbnail, safeExcerpt, topicFor, type PostCardData } from '../../lib/blog/topics';
+
+interface Props {
+  post: PostCardData;
+  /** Hide the topic label where every card shares it (a topic page). */
+  showTopic?: boolean;
+}
+
+const { post, showTopic = true } = Astro.props;
+const thumb = cardThumbnail(post);
+const excerpt = safeExcerpt(post.excerpt);
+const topic = showTopic ? topicFor(post.categories) : undefined;
+const date = new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+---
+<a class="blog-index-card" href={`/blog/${post.slug}`}>
+  {thumb && <img src={thumb} alt="" loading="lazy" />}
+  <div class="blog-index-card-body">
+    <p class="blog-index-card-date">
+      {topic && <span class="blog-index-card-topic">{topic.title}</span>}
+      <time datetime={post.publishedAt}>{date}</time>
+    </p>
+    <h3>{post.title}</h3>
+    {excerpt && <p>{excerpt}</p>}
+    {post.authorName && <p class="blog-index-card-author">{post.authorName}</p>}
+  </div>
+</a>
+
+<style>
+  .blog-index-card {
+    display: block;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    color: inherit;
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .blog-index-card:hover { transform: translateY(-2px); }
+  .blog-index-card img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    display: block;
+  }
+  .blog-index-card-body { padding: 18px 20px 22px; }
+  .blog-index-card-date {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .blog-index-card-topic {
+    color: var(--red-dark);
+    font-size: .72rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .blog-index-card h3 { font-size: 1.15rem; }
+  .blog-index-card-author {
+    color: var(--muted);
+    font-size: 0.86rem;
+    margin-top: 10px;
+    margin-bottom: 0;
+  }
+</style>

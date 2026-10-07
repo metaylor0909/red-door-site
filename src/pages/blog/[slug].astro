@@ -9,6 +9,8 @@ import AccordionSection from '../../components/portabletext/AccordionSection.ast
 import CityInterlinkPanel from '../../components/CityInterlinkPanel.astro';
 import { getBlogCityLinks } from '../../lib/interlinking/city-links';
 import { ORGANIZATION_ID, ORGANIZATION_JSONLD } from '../../lib/schema/organization';
+import PostCard from '../../components/blog/PostCard.astro';
+import { POST_CARD_PROJECTION, cityTagsFor, relatedPosts, topicFor, topicPath, type PostCardData } from '../../lib/blog/topics';
 
 const portableTextComponents = {
   type: {
@@ -21,8 +23,10 @@ const portableTextComponents = {
 
 export async function getStaticPaths() {
   try {
-    const posts = await sanityClient.fetch(`*[_type == "post"]{ "slug": slug.current }`);
-    return posts.map((post: { slug: string }) => ({ params: { slug: post.slug } }));
+    // Card data for every post, fetched once, so each page's related
+    // posts are picked at build time without another query per post.
+    const posts: PostCardData[] = await sanityClient.fetch(`*[_type == "post"] ${POST_CARD_PROJECTION}`);
+    return posts.map((post) => ({ params: { slug: post.slug }, props: { related: relatedPosts(post, posts, 3) } }));
   } catch (err) {
     console.warn('[blog] Could not reach Sanity yet — no post pages will build. Set SANITY_PROJECT_ID once the project exists.', err);
     return [];
@@ -30,6 +34,7 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
+const related: PostCardData[] = Astro.props.related ?? [];
 
 const post = await sanityClient.fetch(
   `*[_type == "post" && slug.current == $slug][0]{
@@ -89,17 +94,8 @@ if (youtubeId) {
 }
 const shareImage: string | undefined = post.mainImageUrl || video?.thumbnailUrl || undefined;
 
-const TOPIC_CATEGORIES = new Set([
-  'Market Reports',
-  'Landlord Tips',
-  'Tenant Resources',
-  'Investment Strategy',
-  'Property Maintenance',
-  'Client Stories',
-]);
-const categories: string[] = post.categories ?? [];
-const topic = categories.find((c) => TOPIC_CATEGORIES.has(c));
-const cityTags = categories.filter((c) => !TOPIC_CATEGORIES.has(c));
+const topic = topicFor(post.categories);
+const cityTags = cityTagsFor(post.categories);
 // Metro-wide roundups carry 10+ city tags; a panel of every city adds noise.
 const cityLinks = cityTags.length <= 3 ? getBlogCityLinks(cityTags) : [];
 
@@ -118,8 +114,19 @@ const jsonLd = {
       publisher: { '@id': ORGANIZATION_ID },
       mainEntityOfPage: postUrl,
       ...(shareImage ? { image: shareImage } : {}),
-      ...(topic ? { articleSection: topic } : {}),
+      ...(topic ? { articleSection: topic.title } : {}),
       ...(video ? { video: { '@id': `${postUrl}#video` } } : {}),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${postUrl}#breadcrumbs`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Blog', item: 'https://www.reddoorrents.com/blog' },
+        ...(topic
+          ? [{ '@type': 'ListItem', position: 2, name: topic.heading, item: `https://www.reddoorrents.com${topicPath(topic)}` }]
+          : []),
+        { '@type': 'ListItem', position: topic ? 3 : 2, name: post.title, item: postUrl },
+      ],
     },
     ORGANIZATION_JSONLD,
     ...(video
@@ -155,9 +162,14 @@ const jsonLd = {
           pass gave it one, which is what would have activated this bug
           here too if left combined. */}
       <div class="content-block">
-        <p class="listing-breadcrumb"><a href="/blog">Blog</a> &rsaquo; {post.title}</p>
+        <p class="listing-breadcrumb">
+          <a href="/blog">Blog</a> &rsaquo;{' '}
+          {topic && <><a href={topicPath(topic)}>{topic.heading}</a> &rsaquo;{' '}</>}
+          {post.title}
+        </p>
         <h1>{post.title}</h1>
         <p class="blog-post-meta">
+          {topic && <a class="blog-post-topic" href={topicPath(topic)}>{topic.title}</a>}
           {post.authorName && <span>{post.authorName}</span>}
           <span>{new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
         </p>
@@ -175,7 +187,20 @@ const jsonLd = {
     </div>
   </article>
 
-  <CityInterlinkPanel cities={cityLinks} />
+  {related.length > 0 && (
+    <section class="blog-related" aria-labelledby="blog-related-title">
+      <div class="container">
+        <h2 id="blog-related-title">Keep Reading</h2>
+        <div class="blog-related-grid">
+          {related.map((p) => <PostCard post={p} />)}
+        </div>
+        {topic && <p class="blog-related-more"><a href={topicPath(topic)}>More {topic.title.toLowerCase()} &rarr;</a></p>}
+      </div>
+    </section>
+  )}
+
+  {/* White when the gray related-posts band sits right above it. */}
+  <CityInterlinkPanel cities={cityLinks} background={related.length > 0 ? 'white' : 'soft'} />
 </BaseLayout>
 
 <style>
@@ -195,6 +220,16 @@ const jsonLd = {
     font-weight: 800;
     font-size: 0.9rem;
     margin-bottom: 24px;
+  }
+  .blog-post-topic { color: var(--red-dark); text-decoration: none; }
+  .blog-post-topic:hover { text-decoration: underline; }
+  .blog-related { padding: 64px 0; background: var(--soft); }
+  .blog-related h2 { margin-bottom: 24px; font-size: clamp(1.6rem, 3vw, 2.2rem); }
+  .blog-related-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .blog-related-more { margin: 24px 0 0; font-weight: 800; }
+  .blog-related-more a { color: var(--red-dark); }
+  @media (max-width: 900px) {
+    .blog-related-grid { grid-template-columns: 1fr; }
   }
   .blog-post-hero-image {
     width: 100%;

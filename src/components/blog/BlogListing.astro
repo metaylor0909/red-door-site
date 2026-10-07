@@ -1,0 +1,72 @@
+---
+// Post grid + pagination, shared by /blog and /blog/topic/[topic].
+import type { Page } from 'astro';
+import PostCard from './PostCard.astro';
+import type { PostCardData } from '../../lib/blog/topics';
+
+interface Props {
+  page: Page<PostCardData>;
+  showTopic?: boolean;
+}
+
+const { page, showTopic = true } = Astro.props;
+---
+{page.data.length === 0 && <p class="lead">No posts yet.</p>}
+<div class="blog-index-grid">
+  {page.data.map((post) => <PostCard post={post} showTopic={showTopic} />)}
+</div>
+
+{page.lastPage > 1 && (
+  <nav class="blog-pagination" aria-label="Blog pagination">
+    {page.url.prev ? (
+      <a class="blog-pagination-link" href={page.url.prev}>&larr; Newer Posts</a>
+    ) : (
+      <span class="blog-pagination-link is-disabled">&larr; Newer Posts</span>
+    )}
+    <span class="blog-pagination-status">Page {page.currentPage} of {page.lastPage}</span>
+    {page.url.next ? (
+      <a class="blog-pagination-link" href={page.url.next}>Older Posts &rarr;</a>
+    ) : (
+      <span class="blog-pagination-link is-disabled">Older Posts &rarr;</span>
+    )}
+  </nav>
+)}
+
+<style>
+  .blog-index-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+  }
+  .blog-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .blog-pagination-link {
+    font-weight: 800;
+    color: var(--brand);
+    text-decoration: none;
+  }
+  .blog-pagination-link:hover { text-decoration: underline; }
+  .blog-pagination-link.is-disabled {
+    color: var(--muted);
+    pointer-events: none;
+  }
+  .blog-pagination-status {
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+  @media (max-width: 900px) {
+    .blog-index-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 600px) {
+    .blog-index-grid { grid-template-columns: 1fr; }
+    .blog-pagination { flex-wrap: wrap; }
+  }
+</style>

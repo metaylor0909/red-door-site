@@ -1,4 +1,5 @@
 import {defineType, defineField} from 'sanity'
+import {BLOG_TOPIC_TITLES} from '../src/lib/blog/topics'
 
 export default defineType({
   name: 'post',
@@ -49,6 +50,22 @@ export default defineType({
       type: 'array',
       of: [{type: 'reference', to: [{type: 'category'}]}],
       group: 'content',
+      description:
+        'Pick exactly one topic (Market Reports, Landlord Tips, Tenant Resources, Investment Strategy, Property Maintenance, or Client Stories) — it decides which blog section the post appears in. Then add the city for any post about a specific city (e.g. Fishers for a Fishers market report).',
+      // One topic per post (src/lib/blog/topics.ts reads exactly one). Every
+      // migrated post already has one, so this only affects new posts.
+      validation: (Rule) =>
+        Rule.custom(async (refs, context) => {
+          const ids = (refs ?? []).map((r) => (r as {_ref?: string})._ref).filter(Boolean)
+          if (ids.length === 0) return 'Add a topic category.'
+          const titles: string[] = await context
+            .getClient({apiVersion: '2024-01-01'})
+            .fetch('*[_id in $ids].title', {ids})
+          const topics = titles.filter((t) => BLOG_TOPIC_TITLES.includes(t))
+          if (topics.length === 0) return `Add one topic: ${BLOG_TOPIC_TITLES.join(', ')}.`
+          if (topics.length > 1) return `Only one topic per post (this post has ${topics.join(' and ')}).`
+          return true
+        }),
     }),
     defineField({
       name: 'mainImage',

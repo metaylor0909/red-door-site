@@ -1,0 +1,57 @@
+---
+// Topic filter row above the blog index and every topic page. Plain links
+// (not client-side filtering), so every topic page is a real, crawlable URL.
+import { BLOG_TOPICS, topicPath } from '../../lib/blog/topics';
+
+interface Props {
+  /** Current topic slug, or undefined on the main blog index. */
+  current?: string;
+  /** Post count per topic title. */
+  counts: Record<string, number>;
+}
+
+const { current, counts } = Astro.props;
+const total = Object.values(counts).reduce((a, b) => a + b, 0);
+---
+<nav class="blog-topic-nav" aria-label="Blog topics">
+  <a href="/blog" class:list={['blog-topic-chip', { 'is-active': !current }]} aria-current={!current ? 'page' : undefined}>
+    All posts <span>{total}</span>
+  </a>
+  {BLOG_TOPICS.filter((t) => counts[t.title]).map((t) => (
+    <a
+      href={topicPath(t)}
+      class:list={['blog-topic-chip', { 'is-active': current === t.slug }]}
+      aria-current={current === t.slug ? 'page' : undefined}
+    >
+      {t.title} <span>{counts[t.title]}</span>
+    </a>
+  ))}
+</nav>
+
+<style>
+  .blog-topic-nav { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 32px; }
+  .blog-topic-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    color: var(--charcoal);
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: .9rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: border-color .15s ease, color .15s ease, background-color .15s ease;
+  }
+  .blog-topic-chip span { color: var(--muted); font-size: .8rem; font-weight: 700; }
+  .blog-topic-chip:hover { border-color: var(--brand-mid); color: var(--brand); }
+  .blog-topic-chip.is-active { color: var(--white); background: var(--brand); border-color: var(--brand); }
+  .blog-topic-chip.is-active span { color: rgba(255, 255, 255, .78); }
+  @media (max-width: 600px) {
+    /* One scrollable row instead of several wrapped lines on phones. */
+    .blog-topic-nav { flex-wrap: nowrap; overflow-x: auto; margin-inline: -16px; padding: 2px 16px 6px; scrollbar-width: none; }
+    .blog-topic-nav::-webkit-scrollbar { display: none; }
+    .blog-topic-chip { flex: none; }
+  }
+</style>
