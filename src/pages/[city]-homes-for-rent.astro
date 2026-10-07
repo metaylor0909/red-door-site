@@ -478,7 +478,10 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
       </div>
       <div class="cta-buttons">
         <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
-        <a class="btn btn-ghost" href={content.propertyManagementHref}>See How We Manage Here</a>
+        {/* The shared city-link module knows which cities have their own
+            property-management page; the content JSON's href predates
+            Downtown Indianapolis getting one. */}
+        <a class="btn btn-ghost" href={cityLinks?.propertyManagementHref ?? content.propertyManagementHref}>See How We Manage Here</a>
       </div>
     </div>
   </section>

@@ -75,7 +75,8 @@ const groups: Array<{ heading: string; links: Array<{ href: string; label: strin
 // Every served city: Indianapolis first (its pages are bespoke, not in
 // CITIES), then the rest alphabetically. Homes-for-rent cities come from
 // that page type's own content map, since it can include a city with no
-// property-management page (Downtown Indianapolis, as of Oct 2026).
+// property-management page (none currently; Downtown Indianapolis was one
+// until 2026-10-07).
 const pmRows = ['indianapolis', ...CITIES.map((c) => c.slug)]
   .map((slug) => getCityLinks(slug))
   .filter((c): c is NonNullable<typeof c> => c !== null);

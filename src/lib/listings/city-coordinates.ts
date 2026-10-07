@@ -1,5 +1,6 @@
 // Approximate city/township center points for the 19 -homes-for-rent
-// cities (18 from property-management/cities.ts + downtown-indianapolis)
+// cities (all 19 in property-management/cities.ts, including
+// downtown-indianapolis since 2026-10-07)
 // plus Indianapolis itself -- added 2026-09-29 so each city's new listings
 // map has somewhere to center on even when that city currently has zero
 // live units (the common case per CLAUDE.md/listings-build-notes.md).

@@ -20,13 +20,10 @@ interface Props {
   pageType?: 'property-management' | 'homes-for-rent';
 }
 const { headingLine1, headingLine2, leadText, currentSlug, pageType = 'property-management' } = Astro.props;
-// "Downtown Indianapolis" is plain text everywhere except homes-for-rent
-// -- [city]-homes-for-rent.astro's own city list (src/data/homes-for-
-// rent-content.json) has a real "downtown-indianapolis" entry alongside
-// its 18 other cities (a page distinct from the bespoke
-// indianapolis-homes-for-rent.astro), but no equivalent
-// downtown-indianapolis-property-management page exists.
-const hasDowntownIndianapolisPage = pageType === 'homes-for-rent';
+// Downtown Indianapolis has both page types (property-management added
+// 2026-10-07), so it links like every other served city. Before that it
+// was plain text on property-management pages.
+const hasDowntownIndianapolisPage = true;
 
 interface CityEntry {
   slug: string;

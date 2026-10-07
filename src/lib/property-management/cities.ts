@@ -11,9 +11,11 @@ export interface CityEntry {
   name: string;
 }
 
-// The 18 simple cities (Indianapolis excluded — its own mockup uses a
+// The 19 simple cities (Indianapolis excluded — its own mockup uses a
 // meaningfully different design, see the .astro file's header comment).
-// Same slug set as the -homes-for-rent pages minus downtown-indianapolis.
+// Same slug set as the -homes-for-rent pages. Downtown Indianapolis added
+// 2026-10-07: it was a real old-site page (/downtown-indianapolis-property-
+// management, MIGRATE in the migration plan) that 9 blog posts link to.
 export const CITIES: CityEntry[] = [
   { slug: 'avon', name: 'Avon' },
   { slug: 'broad-ripple', name: 'Broad Ripple' },
@@ -21,6 +23,7 @@ export const CITIES: CityEntry[] = [
   { slug: 'carmel', name: 'Carmel' },
   { slug: 'center-township', name: 'Center Township' },
   { slug: 'decatur-township', name: 'Decatur Township' },
+  { slug: 'downtown-indianapolis', name: 'Downtown Indianapolis' },
   { slug: 'fishers', name: 'Fishers' },
   { slug: 'franklin-township', name: 'Franklin Township' },
   { slug: 'greenwood', name: 'Greenwood' },
