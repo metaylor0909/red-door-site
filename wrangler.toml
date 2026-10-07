@@ -20,6 +20,12 @@ compatibility_date = "2026-08-22"
 [assets]
 directory = "./dist"
 binding = "ASSETS"
+# Serve /contact/index.html at /contact (and 301 /contact/ -> /contact).
+# The default, auto-trailing-slash, did the reverse: every page answered
+# at /contact/ and redirected /contact there, while every canonical URL,
+# sitemap.xml entry, internal link, and old-site URL has no trailing
+# slash. Found 2026-10-07.
+html_handling = "drop-trailing-slash"
 
 # See claude/rental-analysis-tool-build.md, decision #8, "Storage" — three
 # tables: rental_analyses (one row per submission + snapshot + view
