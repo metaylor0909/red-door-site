@@ -1,0 +1,50 @@
+---
+// "How the {City} Market Is Moving": the most recent market reports for a
+// city (up to three), shown on its property-management page under the
+// market snapshot. Framed for owners deciding whether to hire Red Door
+// (proof we track their market), with the full report archive behind one
+// button, so this never becomes a second archive competing with the
+// -market-reports page. Renders nothing when there are no recent reports
+// (see loadRecentCityReports' recency rule).
+import PostCard from './blog/PostCard.astro';
+import type { PostCardData } from '../lib/blog/topics';
+
+interface Props {
+  cityName: string;
+  reports: PostCardData[];
+  /** The city's -market-reports page, if it has one. */
+  archiveHref?: string | null;
+  /** e.g. "Westside" when the city is covered by a cluster report. */
+  archiveLabel?: string | null;
+}
+
+const { cityName, reports, archiveHref, archiveLabel } = Astro.props;
+const buttonHref = archiveHref ?? '/blog/topic/market-reports';
+const buttonLabel = archiveHref ? `Explore the ${archiveLabel ?? cityName} Market Reports` : 'Explore All Market Reports';
+---
+{reports.length > 0 && (
+  <div class="market-report-strip reveal">
+    <div class="market-report-strip-head">
+      <h3>How the {cityName} Market Is Moving</h3>
+      <p>Our latest reports on {cityName} rents, inventory, and days on market.</p>
+    </div>
+    <div class="market-report-strip-grid">
+      {reports.map((post) => <PostCard post={post} showTopic={false} preferSummary />)}
+    </div>
+    {/* Same centered button treatment as the Landlord Library section. */}
+    <div class="journey-cta">
+      <a class="btn btn-primary" href={buttonHref}>{buttonLabel}</a>
+    </div>
+  </div>
+)}
+
+<style>
+  .market-report-strip { margin-top: 48px; }
+  .market-report-strip-head { margin-bottom: 22px; }
+  .market-report-strip-head h3 { margin: 0 0 6px; font-size: clamp(1.35rem, 2.4vw, 1.7rem); }
+  .market-report-strip-head p { margin: 0; color: var(--muted); }
+  .market-report-strip-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  @media (max-width: 900px) {
+    .market-report-strip-grid { grid-template-columns: 1fr; }
+  }
+</style>

@@ -49,8 +49,11 @@ import LandlordLibrary from '../components/LandlordLibrary.astro';
 import RentalAnalysisForm from '../components/RentalAnalysisForm.astro';
 import { loadMarketSnapshot } from '../lib/property-management/market-snapshot';
 import { PILLAR_LANDLORD_LIBRARY_POSTS } from '../lib/property-management/pillar-landlord-library-posts';
+import MarketReportStrip from '../components/MarketReportStrip.astro';
+import { loadRecentCityReports } from '../lib/blog/city-reports';
 
 const snapshot = await loadMarketSnapshot(env.DB, 'indianapolis');
+const recentReports = await loadRecentCityReports('indianapolis', 'Indianapolis');
 
 const pageTitle = 'Indianapolis Property Management | Red Door Property Management';
 const pageDescription =
@@ -482,6 +485,7 @@ const CHAIN_STEPS = [
           </p>
         </div>
       </div>
+      <MarketReportStrip cityName="Indianapolis" reports={recentReports} archiveHref="/indianapolis-market-reports" archiveLabel="Indianapolis" />
     </div>
   </section>
 

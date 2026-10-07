@@ -92,9 +92,11 @@ export function topicPath(topic: BlogTopic): string {
 /** GROQ projection for anything that renders a post card. */
 export const POST_CARD_PROJECTION = `{
   title,
+  "seoTitle": seo.title,
   "slug": slug.current,
   publishedAt,
   excerpt,
+  summary,
   "authorName": author->name,
   "mainImageUrl": mainImage.asset->url,
   "youtubeUrl": body[_type == "youtubeEmbed"][0].url,
@@ -103,9 +105,13 @@ export const POST_CARD_PROJECTION = `{
 
 export interface PostCardData {
   title: string;
+  /** The cleaned-up SEO title (247 posts): no clickbait, under 60 chars. */
+  seoTitle?: string;
   slug: string;
   publishedAt: string;
   excerpt?: string;
+  /** Market-report summary (130 posts, numbers verbatim from the post). */
+  summary?: string;
   authorName?: string;
   mainImageUrl?: string;
   youtubeUrl?: string;

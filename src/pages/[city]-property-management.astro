@@ -42,6 +42,8 @@ import { loadMarketSnapshot } from '../lib/property-management/market-snapshot';
 import { CITIES, type CityEntry } from '../lib/property-management/cities';
 import CityInterlinkPanel from '../components/CityInterlinkPanel.astro';
 import { getCityLinks } from '../lib/interlinking/city-links';
+import MarketReportStrip from '../components/MarketReportStrip.astro';
+import { loadRecentCityReports } from '../lib/blog/city-reports';
 
 export async function getStaticPaths() {
   return Promise.all(
@@ -63,6 +65,10 @@ interface Props {
 const { city, snapshot } = Astro.props;
 const { slug, name } = city;
 const cityLinks = getCityLinks(slug);
+
+// Recent market reports under the snapshot. Cities without recent
+// reports of their own render nothing (see loadRecentCityReports).
+const recentReports = await loadRecentCityReports(slug, name);
 
 const pageTitle = `${name} Property Management | Red Door Property Management`;
 const pageDescription = `Full-service ${name} property management from Red Door — marketing, tenant screening, leasing, maintenance, and communication for rental owners.`;
@@ -153,6 +159,12 @@ const jsonLd = {
           </p>
         </div>
       </div>
+      <MarketReportStrip
+        cityName={name}
+        reports={recentReports}
+        archiveHref={cityLinks?.marketReportHref}
+        archiveLabel={cityLinks?.marketReportLabel}
+      />
     </div>
   </section>
 

@@ -6,12 +6,20 @@ interface Props {
   post: PostCardData;
   /** Hide the topic label where every card shares it (a topic page). */
   showTopic?: boolean;
+  /** Show the post's summary (real figures) instead of its excerpt when
+   * it has one. Either way the text is clamped to four lines, so cards in
+   * a strip line up. Used for market-report strips. */
+  preferSummary?: boolean;
 }
 
-const { post, showTopic = true } = Astro.props;
+const { post, showTopic = true, preferSummary = false } = Astro.props;
 const thumb = cardThumbnail(post);
-const excerpt = safeExcerpt(post.excerpt);
+const summary = preferSummary ? safeExcerpt(post.summary) : '';
+const excerpt = summary || safeExcerpt(post.excerpt);
 const topic = showTopic ? topicFor(post.categories) : undefined;
+// Cards use the cleaned SEO title when there is one (Michael, 2026-10-07):
+// many original headlines are clickbait ("Housing Market EXPOSED").
+const cardTitle = post.seoTitle || post.title;
 const date = new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 ---
 <a class="blog-index-card" href={`/blog/${post.slug}`}>
@@ -21,8 +29,8 @@ const date = new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'lo
       {topic && <span class="blog-index-card-topic">{topic.title}</span>}
       <time datetime={post.publishedAt}>{date}</time>
     </p>
-    <h3>{post.title}</h3>
-    {excerpt && <p>{excerpt}</p>}
+    <h3>{cardTitle}</h3>
+    {excerpt && <p class:list={[{ 'is-summary': preferSummary }]}>{excerpt}</p>}
     {post.authorName && <p class="blog-index-card-author">{post.authorName}</p>}
   </div>
 </a>
@@ -63,6 +71,14 @@ const date = new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'lo
     text-transform: uppercase;
   }
   .blog-index-card h3 { font-size: 1.15rem; }
+  .blog-index-card-body .is-summary {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: var(--charcoal);
+    font-size: .93rem;
+  }
   .blog-index-card-author {
     color: var(--muted);
     font-size: 0.86rem;
