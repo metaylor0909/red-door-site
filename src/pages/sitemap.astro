@@ -1,0 +1,179 @@
+---
+// /sitemap — the human-readable site map linked from the footer (the
+// machine one is /sitemap.xml, generated after each build by
+// scripts/build-sitemap.mjs). City lists come from the same modules the
+// city pages are built from, so a new city appears here automatically.
+//
+// TODO when built: About, Tenants, Testimonials, and Notice to Vacate
+// (still static mockups, not yet ported — linking them now would 404).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { CITIES } from '../lib/property-management/cities';
+import { MARKETS } from '../lib/market-reports/markets';
+import { getCityLinks } from '../lib/interlinking/city-links';
+import { loadCityContentMap } from '../lib/listings/homes-for-rent-content';
+import { BLOG_TOPICS, topicPath } from '../lib/blog/topics';
+
+const pageTitle = 'Sitemap | Red Door Property Management';
+const pageDescription =
+  'Every section of the Red Door Property Management website: owner services, homes for rent, market reports, resources, and the communities we serve.';
+
+const groups: Array<{ heading: string; links: Array<{ href: string; label: string; external?: boolean }> }> = [
+  {
+    heading: 'Main Pages',
+    links: [
+      { href: '/', label: 'Home' },
+      { href: '/indianapolis-homes-for-rent', label: 'Homes for Rent' },
+      { href: '/pricing', label: 'Pricing' },
+      { href: '/contact', label: 'Contact' },
+      { href: '/blog', label: 'Blog' },
+    ],
+  },
+  {
+    heading: 'Owner Services',
+    links: [
+      { href: '/indianapolis-property-management', label: 'Property Management Overview' },
+      { href: '/market-readiness-assessment', label: '1. Market Readiness Assessment' },
+      { href: '/marketing-process', label: '2. Marketing' },
+      { href: '/tenant-screening', label: '3. Tenant Screening' },
+      { href: '/leasing-process', label: '4. Leasing' },
+      { href: '/maintenance', label: '5. Maintenance' },
+      { href: '/communication', label: '6. Communication' },
+      { href: '/eviction-protection-program', label: 'Eviction Protection Program' },
+    ],
+  },
+  {
+    heading: 'Owner Tools',
+    links: [
+      { href: '/rental-analysis', label: 'Free Rental Analysis' },
+      { href: '/rent-vs-sell', label: 'Rent vs. Sell Calculator' },
+      { href: '/rent-reduction', label: 'Rent Reduction Calculator' },
+      { href: 'https://reddoor.appfolio.com/oportal/users/log_in', label: 'Owner Portal', external: true },
+    ],
+  },
+  {
+    heading: 'Resident Resources',
+    links: [
+      { href: '/application-criteria', label: 'Application Criteria' },
+      { href: '/residents-benefits-package', label: 'Resident Benefits Package' },
+      { href: 'https://app.propertymeld.com/tenant/red-door-property-management', label: 'Maintenance Request', external: true },
+      { href: 'https://reddoor.appfolio.com/connect/users/sign_in', label: 'Tenant Portal', external: true },
+    ],
+  },
+  {
+    heading: 'Blog Topics',
+    links: BLOG_TOPICS.map((t) => ({ href: topicPath(t), label: t.heading })),
+  },
+  {
+    heading: 'Policies',
+    links: [
+      { href: '/privacy-policy', label: 'Privacy Policy' },
+      { href: '/website-accessibility-policy', label: 'Website Accessibility Policy' },
+    ],
+  },
+];
+
+// Every served city: Indianapolis first (its pages are bespoke, not in
+// CITIES), then the rest alphabetically. Homes-for-rent cities come from
+// that page type's own content map, since it can include a city with no
+// property-management page (Downtown Indianapolis, as of Oct 2026).
+const pmRows = ['indianapolis', ...CITIES.map((c) => c.slug)]
+  .map((slug) => getCityLinks(slug))
+  .filter((c): c is NonNullable<typeof c> => c !== null);
+const pmSlugs = new Set(pmRows.map((c) => c.slug));
+const hfrOnlyRows = Object.values(loadCityContentMap())
+  .filter((c) => !pmSlugs.has(c.citySlug))
+  .map((c) => ({ slug: c.citySlug, name: c.cityName, propertyManagementHref: null, homesForRentHref: `/${c.citySlug}-homes-for-rent` }));
+const cityRows = [...pmRows, ...hfrOnlyRows].sort((a, b) =>
+  a.slug === 'indianapolis' ? -1 : b.slug === 'indianapolis' ? 1 : a.name.localeCompare(b.name)
+);
+
+const marketLinks = MARKETS.map((m) => ({
+  href: `/${m.slug}-market-reports`,
+  label: m.h1,
+}));
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/sitemap">
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-kicker">Sitemap</span>
+      <h1>Sitemap</h1>
+      <p class="lead">Every section of our website in one place.</p>
+    </div>
+  </section>
+
+  <section class="sitemap-section">
+    <div class="container">
+      <div class="sitemap-grid">
+        {groups.map((g) => (
+          <nav class="sitemap-group" aria-label={g.heading}>
+            <h2>{g.heading}</h2>
+            <ul>
+              {g.links.map((l) => (
+                <li>
+                  {l.external ? (
+                    <a href={l.href} target="_blank" rel="noopener">{l.label}<span class="sr-only"> (opens a new site)</span></a>
+                  ) : (
+                    <a href={l.href}>{l.label}</a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))}
+      </div>
+
+      <div class="sitemap-wide">
+        <h2>Communities We Serve</h2>
+        <div class="sitemap-table-wrap">
+          <table class="sitemap-table">
+            <thead>
+              <tr><th scope="col">Community</th><th scope="col">Property Management</th><th scope="col">Homes for Rent</th></tr>
+            </thead>
+            <tbody>
+              {cityRows.map((c) => (
+                <tr>
+                  <th scope="row">{c.name}</th>
+                  <td>{c.propertyManagementHref && <a href={c.propertyManagementHref}>{c.name} Property Management</a>}</td>
+                  <td>{c.homesForRentHref && <a href={c.homesForRentHref}>{c.name} Homes for Rent</a>}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <nav class="sitemap-wide" aria-label="Market reports">
+        <h2>Rental Market Reports</h2>
+        <ul class="sitemap-columns">
+          {marketLinks.map((m) => <li><a href={m.href}>{m.label}</a></li>)}
+        </ul>
+      </nav>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .sitemap-section { padding-top: 48px; }
+  .sitemap-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px 40px; }
+  .sitemap-group h2, .sitemap-wide h2 { margin: 0 0 14px; font-size: 1.3rem; }
+  .sitemap-group ul, .sitemap-columns { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+  .sitemap-section a { color: var(--red-dark); font-weight: 600; }
+  .sitemap-section a:hover { color: var(--red); text-decoration: underline; }
+  .sitemap-wide { margin-top: 52px; padding-top: 36px; border-top: 1px solid var(--line); }
+  .sitemap-columns { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px 40px; }
+  .sitemap-table-wrap { overflow-x: auto; }
+  .sitemap-table { width: 100%; border-collapse: collapse; font-size: .97rem; }
+  .sitemap-table th, .sitemap-table td { padding: 10px 14px 10px 0; text-align: left; border-bottom: 1px solid var(--line); }
+  .sitemap-table thead th { color: var(--muted); font-size: .78rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  .sitemap-table tbody th { color: var(--ink); font-weight: 700; }
+  @media (max-width: 900px) {
+    .sitemap-grid, .sitemap-columns { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 560px) {
+    .sitemap-grid, .sitemap-columns { grid-template-columns: 1fr; }
+    .sitemap-table thead { display: none; }
+    .sitemap-table tr { display: grid; padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .sitemap-table th, .sitemap-table td { padding: 2px 0; border: 0; }
+  }
+</style>

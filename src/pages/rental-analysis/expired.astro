@@ -1,0 +1,27 @@
+---
+// Where a rental analysis report link lands once it's more than six
+// months old (see [token].astro and the privacy policy's retention
+// section). Rents move, so the useful next step is a fresh analysis.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const pageTitle = 'This Rental Analysis Has Expired | Red Door Property Management';
+const pageDescription = 'Rental analysis report links expire after six months. Request a fresh analysis with current market data.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/rental-analysis/expired">
+  <Fragment slot="head">
+    <meta name="robots" content="noindex, nofollow" />
+  </Fragment>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-kicker">Free Rental Analysis</span>
+      <h1>This Rental Analysis Has Expired</h1>
+      <p class="lead">Report links stay active for six months. Rents and comparable listings change quickly, so request a new analysis to see what your property could rent for today.</p>
+      <div class="cta-row" style="justify-content:flex-start;margin-top:24px">
+        <a class="btn btn-primary" href="/rental-analysis">Get a New Rental Analysis</a>
+        <a class="btn btn-secondary" href="/contact">Contact Us</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

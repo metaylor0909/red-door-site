@@ -1,0 +1,66 @@
+---
+// /website-accessibility-policy — replaces the old site's /wc3-policy
+// (2026-10-07), which committed to WCAG 1.0 Level A with 2017 deadlines.
+// /wc3-policy should 301 here once _redirects exists.
+//
+// Worded as a goal (WCAG 2.2 AA) plus a way to get help, not a claim the
+// site fully conforms today: a full accessibility pass is still on the
+// pre-launch list. Don't add specific claims ("tested with screen
+// readers", etc.) unless that testing has actually been done.
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pageTitle = 'Website Accessibility Policy | Red Door Property Management';
+const pageDescription =
+  "Red Door Property Management's commitment to an accessible website, the standard we work toward, and how to get help or report a problem.";
+const UPDATED = 'October 7, 2026';
+const CONTACT_EMAIL = 'info@rdpmindy.com';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/website-accessibility-policy">
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-kicker">Accessibility</span>
+      <h1>Website Accessibility Policy</h1>
+      <p class="lead">Everyone should be able to use our website to find a home, learn about our services, and get in touch with us. Last updated {UPDATED}.</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="criteria-content">
+      <p>Red Door Property Management is committed to making reddoorrents.com usable by as many people as possible, including people with disabilities who use assistive technology such as screen readers, screen magnifiers, voice control, or keyboard-only navigation.</p>
+
+      <h2>The standard we work toward</h2>
+      <p>Our goal is for this website to conform to the <a href="https://www.w3.org/TR/WCAG22/" target="_blank" rel="noopener">Web Content Accessibility Guidelines (WCAG) 2.2, Level AA</a>, published by the World Wide Web Consortium (W3C). These guidelines explain how to make web content easier to perceive, operate, and understand for people with a wide range of disabilities.</p>
+      <p>We build new pages with these guidelines in mind, including:</p>
+      <ul class="check-list">
+        <li>Text and button colors chosen for readable contrast</li>
+        <li>Descriptive page titles, headings, and link text</li>
+        <li>Text alternatives for meaningful images</li>
+        <li>Form fields with visible labels</li>
+        <li>Pages that work with a keyboard as well as a mouse</li>
+        <li>Animations that respect your device's reduced-motion setting</li>
+        <li>Written transcripts for many of our videos</li>
+      </ul>
+
+      <h2>Where we may fall short</h2>
+      <p>Accessibility is ongoing work, and some parts of the site may not fully meet our goal yet &mdash; for example, older blog videos without captions, some PDF documents, and interactive maps. When you need information that's in one of these, we're happy to provide it another way.</p>
+      <p>Some tasks happen on services run by other companies, such as our owner and resident portals (AppFolio), maintenance requests (Property Meld), pet and animal screening (PetScreening), embedded YouTube and Loom videos, and appointment scheduling (Calendly). We don't control the accessibility of those services, but if one of them is a barrier for you, contact us and we'll help you get the task done another way.</p>
+
+      <h2>Get help or report a problem</h2>
+      <p>If you have trouble using any part of this website, or you'd like information in a different format, please let us know. Tell us the page and what you were trying to do, and we'll work with you to provide the information or complete the task.</p>
+      <ul class="plain-list">
+        <li>Email: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></li>
+        <li>Phone: <a href="tel:3176601626">317.660.1626</a></li>
+        <li>Mail: Red Door Property Management, 3815 River Crossing Parkway, Suite 100, Indianapolis, IN 46240</li>
+      </ul>
+      <p>We aim to respond within two business days.</p>
+
+      <div class="criteria-note">
+        <p><strong>Housing accommodations are separate from this website.</strong> If you're an applicant or resident with a disability and need a reasonable accommodation or modification related to your home or the application process &mdash; including an assistance animal &mdash; contact us directly. See our <a href="/application-criteria">Application Criteria</a> for how assistance animals are handled.</p>
+      </div>
+
+      <h2>Reviewing this policy</h2>
+      <p>We review this policy and the site's accessibility at least once a year, and whenever we make significant changes to the website.</p>
+    </div>
+  </div>
+</BaseLayout>

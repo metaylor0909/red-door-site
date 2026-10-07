@@ -17,6 +17,7 @@
 import { CITIES, distinctZips, type CityConfig } from './cities';
 import { aggregateDataBlock, type RentCastDataBlock, type ZipPull } from './aggregate';
 import { computeLeaseTimes, fetchZipLeases, type LeaseRecord } from './leases';
+import { purgeExpiredSubmissions } from './retention';
 
 export interface Env {
   DB: D1Database;
@@ -170,6 +171,8 @@ export async function runRefresh(
 export default {
   async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
     ctx.waitUntil(runRefresh(env));
+    // Independent of the RentCast pull: a failed refresh shouldn't skip it.
+    ctx.waitUntil(purgeExpiredSubmissions(env.DB));
   },
   // Manual trigger for on-demand runs. Each run spends RentCast requests,
   // so it requires the REFRESH_SECRET (sent as X-Refresh-Secret) and is

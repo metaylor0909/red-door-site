@@ -119,6 +119,7 @@ const CALENDLY_URL = 'https://calendly.com/cknight-19/phone-call';
 const { token } = Astro.params;
 
 interface DbRow extends RentalAnalysisRow {
+  created_at: string;
   property_address: string;
   property_city: string;
   property_state: string;
@@ -150,6 +151,19 @@ const row = await db
 if (!row) {
   return Astro.redirect('/', 404);
 }
+
+// Report links stop working six months after the analysis was run, per
+// the privacy policy (/privacy-policy, "How long we keep information").
+// The row itself is deleted at two years by workers/rentcast-refresh's
+// monthly cleanup. No view tracking or staff alert for an expired link.
+const REPORT_LINK_DAYS = 183;
+if (Date.now() - Date.parse(row.created_at) > REPORT_LINK_DAYS * 86_400_000) {
+  return Astro.redirect('/rental-analysis/expired', 302);
+}
+
+// Each report shows an owner's property address: keep every report out
+// of search results even after the sitewide pre-launch noindex is removed.
+Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
 
 const snapshot: Snapshot = JSON.parse(row.snapshot_json);
 const reportUrl = `https://www.reddoorrents.com/rental-analysis/${token}`;
@@ -340,6 +354,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
   path={`/rental-analysis/${token}`}
 >
   <Fragment slot="head">
+    <meta name="robots" content="noindex, nofollow" />
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" />
   </Fragment>
 
