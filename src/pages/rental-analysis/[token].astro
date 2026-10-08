@@ -142,6 +142,10 @@ const PRINT_CSS = `
   .comps-table tr, .metric-trend-card, .estimate-card, .stat-tile, .snapshot-panel, .hero-media-grid,
   .comps-map-static, .print-report-contact { break-inside: avoid; }
   .comps-table thead { display: table-header-group; }
+  /* Keep cards, panels, tiles, and the address band whole on one page, and
+     drop the gray section washes, which print as large empty blocks. */
+  main [class*="card"], main [class*="panel"], main [class*="tile"], .listing-summary-band { break-inside: avoid; }
+  .section-soft { background: #fff !important; }
   .print-report-contact { margin-top: 10px; padding: 18px 0 0 !important; border-top: 3px solid #8b0e04; }
   .print-report-contact h2 { margin: 0 0 8px; }
   .print-report-contact p { margin: 0 0 4px; color: #252525; }

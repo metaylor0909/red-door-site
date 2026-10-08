@@ -56,6 +56,10 @@ export const GET: APIRoute = async ({ params, url, redirect }) => {
       pdfOptions: {
         format: 'letter',
         printBackground: true,
+        // Letter minus margins is ~720 CSS px, narrow enough to trigger the
+        // report's phone layout. Rendering at 0.72 gives a ~1000px page, so
+        // the PDF gets the desktop layout (side-by-side photo/map, 3-up tiles).
+        scale: 0.72,
         margin: { top: '0.5in', right: '0.5in', bottom: '0.65in', left: '0.5in' },
         displayHeaderFooter: true,
         headerTemplate: '<div></div>',
