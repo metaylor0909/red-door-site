@@ -13,7 +13,7 @@ export const prerender = false;
 const REPORT_LINK_DAYS = 183;
 // Part of the cache key: bump it whenever the print layout changes, or
 // downloads keep getting the old cached PDF for up to a day.
-const PDF_LAYOUT_VERSION = '2';
+const PDF_LAYOUT_VERSION = '3';
 const TOKEN_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 interface BrowserBinding {

@@ -133,7 +133,11 @@ const PRINT_CSS = `
   .print-report-title { margin: 0; font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 600; color: #171717; }
   .print-report-meta { margin: 2px 0 0; color: #555; font-size: .9rem; }
   .report-hero-section { padding-top: 14px !important; }
-  .hero-media-grid { height: 280px !important; }
+  /* Print media queries see the unscaled page (~720px), so the phone layout
+     rules (max-width: 900px) still fire even though the PDF renders at
+     ~1000px. Re-assert the desktop photo + map row explicitly. */
+  .hero-media-grid { grid-template-columns: 1fr 1fr !important; height: 280px !important; }
+  .hero-media-grid .subject-photo, .hero-media-grid .subject-map-static { height: 100% !important; }
   /* No Street View photo for this address (it removes itself on error): let the map fill the row. */
   .hero-media-grid:has(> :only-child) { grid-template-columns: 1fr !important; }
   .subject-map-static { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
@@ -146,6 +150,8 @@ const PRINT_CSS = `
      drop the gray section washes, which print as large empty blocks. */
   main [class*="card"], main [class*="panel"], main [class*="tile"], .listing-summary-band { break-inside: avoid; }
   .section-soft { background: #fff !important; }
+  /* Keep each market-data section with its heading (no orphaned titles). */
+  main section:has(.snapshot-panels), main section:has(.snapshot-grid) { break-inside: avoid; }
   .print-report-contact { margin-top: 10px; padding: 18px 0 0 !important; border-top: 3px solid #8b0e04; }
   .print-report-contact h2 { margin: 0 0 8px; }
   .print-report-contact p { margin: 0 0 4px; color: #252525; }
@@ -654,7 +660,13 @@ const preparedDate = new Date(row.created_at).toLocaleDateString('en-US', { mont
             />
           </div>
 
-          {cityContentEntry?.snapshotDetail.map((paragraph) => <p class="snapshot-detail">{paragraph}</p>)}
+          {/* The last paragraph in each city's content ("{City} won't always
+              have listings live... homes available nearby are shown below
+              instead of a dead end") describes the homes-for-rent page, not
+              this report, so it's left out here. */}
+          {cityContentEntry?.snapshotDetail
+            .filter((paragraph) => !/instead of a dead end/i.test(paragraph))
+            .map((paragraph) => <p class="snapshot-detail">{paragraph}</p>)}
 
           {/* Bedroom rent ladder, 50/50 split (2026-09-22) — table on the
               left (unchanged), the bar chart that used to live in the
