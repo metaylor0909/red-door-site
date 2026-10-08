@@ -11,6 +11,9 @@ import { env } from 'cloudflare:workers';
 export const prerender = false;
 
 const REPORT_LINK_DAYS = 183;
+// Part of the cache key: bump it whenever the print layout changes, or
+// downloads keep getting the old cached PDF for up to a day.
+const PDF_LAYOUT_VERSION = '2';
 const TOKEN_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 interface BrowserBinding {
@@ -35,7 +38,9 @@ export const GET: APIRoute = async ({ params, url, redirect }) => {
   }
 
   const cache = (caches as unknown as { default: Cache }).default;
-  const cacheKey = new Request(url.toString(), { method: 'GET' });
+  const cacheUrl = new URL(url.toString());
+  cacheUrl.search = `?layout=${PDF_LAYOUT_VERSION}`;
+  const cacheKey = new Request(cacheUrl.toString(), { method: 'GET' });
   const cached = await cache.match(cacheKey);
   if (cached) return cached;
 
