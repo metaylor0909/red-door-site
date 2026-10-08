@@ -116,6 +116,39 @@ const PROPERTY_TYPE_LABELS: Record<string, string> = {
 
 const CALENDLY_URL = 'https://calendly.com/cknight-19/phone-call';
 
+// Print/PDF layout. Applied to the screen render of ?print=1 (not inside
+// @media print), so what the PDF captures is exactly what that URL shows.
+const PRINT_CSS = `
+  body > :not(main) { display: none !important; }
+  html, body { background: #fff !important; }
+  .listing-hero, .cta-row, .info-tip, .trend-tooltip, .scroll-cue { display: none !important; }
+  .reveal { opacity: 1 !important; transform: none !important; }
+  main section { padding: 18px 0 !important; }
+  .container { width: 100% !important; max-width: none !important; padding-inline: 0 !important; }
+  .section-head { margin-bottom: 12px !important; }
+  h2 { font-size: 1.45rem !important; break-after: avoid; }
+  .print-report-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 0 0 14px; margin-bottom: 4px; border-bottom: 3px solid #8b0e04; }
+  .print-report-header img { height: 56px; width: auto; }
+  .print-report-header-text { text-align: right; }
+  .print-report-title { margin: 0; font-family: 'Literata', Georgia, serif; font-size: 1.5rem; font-weight: 600; color: #171717; }
+  .print-report-meta { margin: 2px 0 0; color: #555; font-size: .9rem; }
+  .report-hero-section { padding-top: 14px !important; }
+  .hero-media-grid { height: 280px !important; }
+  /* No Street View photo for this address (it removes itself on error): let the map fill the row. */
+  .hero-media-grid:has(> :only-child) { grid-template-columns: 1fr !important; }
+  .subject-map-static { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+  .comps-split-grid { grid-template-columns: 1fr !important; }
+  .comps-map-static { display: block; width: 100%; height: auto; margin-top: 4px; border-radius: 8px; border: 1px solid #e4e3e6; }
+  .comps-table tr, .metric-trend-card, .estimate-card, .stat-tile, .snapshot-panel, .hero-media-grid,
+  .comps-map-static, .print-report-contact { break-inside: avoid; }
+  .comps-table thead { display: table-header-group; }
+  .print-report-contact { margin-top: 10px; padding: 18px 0 0 !important; border-top: 3px solid #8b0e04; }
+  .print-report-contact h2 { margin: 0 0 8px; }
+  .print-report-contact p { margin: 0 0 4px; color: #252525; }
+  .print-report-link { color: #8b0e04 !important; font-size: .9rem; word-break: break-all; }
+  .print-report-fine { margin-top: 10px !important; color: #717073 !important; font-size: .8rem; }
+`;
+
 const { token } = Astro.params;
 
 interface DbRow extends RentalAnalysisRow {
@@ -168,7 +201,16 @@ Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
 const snapshot: Snapshot = JSON.parse(row.snapshot_json);
 const reportUrl = `https://www.reddoorrents.com/rental-analysis/${token}`;
 
+// ?print=1 is the PDF layout: ./[token]/pdf.ts has Cloudflare Browser
+// Rendering open this page with it and save the result as a PDF. It shows
+// still map images instead of the interactive maps, drops the site chrome,
+// listings, blog links, and calls to action, and adds a branded header and
+// contact block. It never counts as an owner visit, so generating a PDF
+// can't fire the return-visit alert to Chris.
+const isPrint = Astro.url.searchParams.get('print') === '1';
+
 // View tracking + decision #5's return-visit BD alert.
+if (!isPrint) {
 const update = computeViewTrackingUpdate(row, new Date());
 await db
   .prepare(
@@ -190,6 +232,7 @@ if (update.shouldFireAlert) {
     console.warn('[rental-analysis/token] ZAPIER_BD_ALERT_WEBHOOK_URL not configured — BD alert skipped.');
   }
 }
+} // end if (!isPrint)
 
 // "From Red Door" post carousel — real Sanity query, most-recent-4 from
 // the Market Reports / Landlord Tips categories (decision #5). Queried
@@ -346,6 +389,30 @@ const formatInventoryLatest = (v: number) => `${Math.round(v).toLocaleString()} 
 const propertyTypeLabel = PROPERTY_TYPE_LABELS[row.property_type] ?? 'Home';
 
 const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' });
+
+// Print layout only: interactive WebGL maps don't print, so the PDF uses
+// Mapbox Static Images of the same views. Comp pins are numbered to match
+// the # column the print layout adds to the comps table.
+const staticMap = (overlays: string, view: string, size: string) =>
+  `https://api.mapbox.com/styles/v1/mapbox/light-v11/static/${overlays}/${view}/${size}@2x?access_token=${MAPBOX_TOKEN}`;
+const hasSubjectCoords = row.property_lat != null && row.property_lon != null;
+const subjectMapImg = hasSubjectCoords
+  ? staticMap(`pin-l+8b0e04(${row.property_lon},${row.property_lat})`, `${row.property_lon},${row.property_lat},14`, '640x420')
+  : null;
+const compPins = compsWithDistance
+  .map((c, i) =>
+    typeof c.latitude === 'number' && typeof c.longitude === 'number' ? `pin-s-${i + 1}+bc1719(${c.longitude},${c.latitude})` : null
+  )
+  .filter((p): p is string => p !== null);
+const compsMapImg =
+  compPins.length > 0
+    ? staticMap(
+        [...compPins, ...(hasSubjectCoords ? [`pin-l-home+171717(${row.property_lon},${row.property_lat})`] : [])].join(','),
+        'auto',
+        '760x460'
+      ) + '&padding=40'
+    : null;
+const preparedDate = new Date(row.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 ---
 
 <BaseLayout
@@ -355,13 +422,25 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
 >
   <Fragment slot="head">
     <meta name="robots" content="noindex, nofollow" />
-    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" />
+    {!isPrint && <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" />}
+    {isPrint && <style is:inline set:html={PRINT_CSS}></style>}
   </Fragment>
 
   {/* Must load, unblocked by async/defer, before the module script below
       that reads `mapboxgl` — see the homes-for-rent listing detail
       page's own header comment on this exact script-load-order bug. */}
-  <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js" is:inline></script>
+  {!isPrint && <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js" is:inline></script>}
+
+  {isPrint && (
+    <header class="print-report-header">
+      <img src="/red-door-logo-horizontal.svg" alt="Red Door Property Management" width="150" height="73" />
+      <div class="print-report-header-text">
+        <p class="print-report-title">Rental Market Analysis</p>
+        <p class="print-report-meta">{row.property_address}, {row.property_city}, {row.property_state} {row.property_zip}</p>
+        <p class="print-report-meta">Prepared {preparedDate}</p>
+      </div>
+    </header>
+  )}
 
   <section class="listing-hero">
     <div class="listing-breadcrumb-bar">
@@ -392,6 +471,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
           </p>
           <div class="cta-row">
             <a class="btn btn-primary" href={CALENDLY_URL} target="_blank" rel="noopener">Talk to Red Door About Managing This Property</a>
+            <a class="btn btn-secondary" href={`/rental-analysis/${token}/pdf`} data-pdf-download>Download PDF</a>
           </div>
         </div>
         <TrendChartCard
@@ -434,7 +514,11 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
             loading="eager"
             onerror="this.remove()"
           />
-          <div class="subject-map" id="subject-map" data-lat={row.property_lat} data-lng={row.property_lon}></div>
+          {isPrint ? (
+            subjectMapImg && <img class="subject-map subject-map-static" src={subjectMapImg} alt={`Map of ${row.property_address}`} />
+          ) : (
+            <div class="subject-map" id="subject-map" data-lat={row.property_lat} data-lng={row.property_lon}></div>
+          )}
         </div>
       </div>
     </section>
@@ -451,6 +535,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
           <table class="comps-table">
             <thead>
               <tr>
+                {isPrint && <th>#</th>}
                 <th>Address</th>
                 <th>Beds/Baths</th>
                 <th>Sqft</th>
@@ -462,6 +547,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
             <tbody>
               {compsWithDistance.map((c, i) => (
                 <tr data-comp-index={i} class="comps-table-row">
+                  {isPrint && <td>{i + 1}</td>}
                   <td>{c.address}</td>
                   <td>{c.beds}bd / {c.baths}ba</td>
                   <td>{c.sqft ?? '—'}</td>
@@ -498,7 +584,8 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
             </tbody>
           </table>
         </div>
-        {compsWithDistance.length > 0 && (
+        {isPrint && compsMapImg && <img class="comps-map-static" src={compsMapImg} alt="Map of the comparable properties" />}
+        {!isPrint && compsWithDistance.length > 0 && (
           <div
             class="comps-map"
             id="comps-map"
@@ -656,7 +743,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
   }
 
   {
-    crossSellUnits.length > 0 && (
+    !isPrint && crossSellUnits.length > 0 && (
       <section>
         <div class="container">
           <div class="section-head">
@@ -684,7 +771,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
   }
 
   {
-    posts.length > 0 && (
+    !isPrint && posts.length > 0 && (
       <section>
         <div class="container">
           <div class="section-head">
@@ -705,6 +792,19 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
     )
   }
 
+  {isPrint && (
+    <section class="print-report-contact">
+      <div class="container">
+        <h2>Questions About This Analysis?</h2>
+        <p><strong>Chris Knight</strong>, Business Development Manager, Red Door Property Management</p>
+        <p>317.660.1626 &middot; reddoorrents.com &middot; Schedule a call: calendly.com/cknight-19/phone-call</p>
+        <p class="print-report-link">View this report online: {reportUrl}</p>
+        <p class="print-report-fine">This analysis is an estimate based on comparable rentals and market data available on {preparedDate}. It is not an appraisal or a guarantee of rent.</p>
+      </div>
+    </section>
+  )}
+
+  {!isPrint && (
   <section class="section-dark final-cta">
     <div class="container reveal">
       <h2>Curious What Red Door Could Do for This Property?</h2>
@@ -714,6 +814,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
       </div>
     </div>
   </section>
+  )}
 
   {/* Shared tooltip for every TrendChartCard's point markers on this
       page (2026-09-22) — one element, positioned per-hover via the
@@ -758,6 +859,21 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', year: '
       document.addEventListener('scroll', hideTooltip, true);
     })();
   </script>
+
+  {!isPrint && (
+    <script is:inline>
+      // The first download takes several seconds while the PDF is made;
+      // the browser stays on this page, so show that something's happening.
+      document.querySelectorAll('[data-pdf-download]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var label = btn.textContent;
+          btn.textContent = 'Preparing your PDF…';
+          btn.setAttribute('aria-busy', 'true');
+          setTimeout(function () { btn.textContent = label; btn.removeAttribute('aria-busy'); }, 15000);
+        });
+      });
+    </script>
+  )}
 
   <script define:vars={{ mapboxToken: MAPBOX_TOKEN }}>
     (function () {

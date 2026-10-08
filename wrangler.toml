@@ -27,6 +27,13 @@ binding = "ASSETS"
 # slash. Found 2026-10-07.
 html_handling = "drop-trailing-slash"
 
+# Cloudflare Browser Rendering, for the rental analysis PDF download
+# (src/pages/rental-analysis/[token]/pdf.ts, its "pdf" Quick Action).
+# Billed under Workers Paid: 10 browser-hours/month included, then
+# $0.09/hour; one PDF takes roughly 10-20 seconds.
+[browser]
+binding = "BROWSER"
+
 # See claude/rental-analysis-tool-build.md, decision #8, "Storage" — three
 # tables: rental_analyses (one row per submission + snapshot + view
 # tracking for the BD alert), rentcast_city_cache (shared with the
