@@ -34,3 +34,6 @@ yarn-error.log*
 .wrangler/
 # Regenerate with `npx wrangler types` whenever wrangler.toml's bindings change.
 worker-configuration.d.ts
+
+# Local test downloads (e.g. rental analysis PDFs, which contain an owner's address)
+claude/test-output/
