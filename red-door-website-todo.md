@@ -427,7 +427,24 @@ Judgment calls / open items carried forward from this build:
 
 ## Genuinely open — do these next
 
-- [ ] **PRE-LAUNCH: decide where the old `/tenants` URL goes.** Michael
+**Decisions, 2026-10-20 (Michael):**
+- **Redirects** (all in `public/_redirects`):
+  - `/tenants` -> Homes for Rent.
+  - `/testimonials` -> the home page.
+  - `/notice-to-vacate` -> the AppFolio tenant portal.
+  - Neither Testimonials nor Notice to Vacate gets ported.
+- **Blog Fair Housing cleanup (78 posts + 12 transcripts): deferred.**
+  Not a launch blocker for now. Card excerpts with flagged wording
+  stay hidden (`safeExcerpt` in `src/lib/blog/topics.ts`).
+- **Attorney review: done and approved.** That covers the Application
+  Criteria criminal-history clause, the privacy policy, and the
+  rental-analysis form's required consent checkbox.
+- **PMW contract: reviewed** (notice period / export question closed).
+- **Old-site blog freeze date: set.** The September catch-up migration
+  still needs to run.
+
+- [x] **DECIDED 2026-10-20: `/tenants` 301s to `/indianapolis-homes-for-rent`**
+      (in `public/_redirects`). Original note: Michael
       removed the Tenants page "for now" (2026-10-20). It was never built on
       the new site, and its header (For Tenants > Tenant Resources) and
       footer links are gone. But the old `/tenants` page is the one Search
