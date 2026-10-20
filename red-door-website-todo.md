@@ -427,6 +427,18 @@ Judgment calls / open items carried forward from this build:
 
 ## Genuinely open — do these next
 
+- [ ] **PRE-LAUNCH: decide where the old `/tenants` URL goes.** Michael
+      removed the Tenants page "for now" (2026-10-20). It was never built on
+      the new site, and its header (For Tenants > Tenant Resources) and
+      footer links are gone. But the old `/tenants` page is the one Search
+      Console shows with ~211,000 impressions (see the Search Console
+      section below), so at launch it shouldn't just 404.
+      **Options:**
+      - Add it to `_redirects` pointing at the closest replacement
+        (Application Criteria, or Homes for Rent).
+      - Or build the page later.
+      `pillar-page-seo-fixes.csv` already has a CTR-rewritten title and meta
+      for it, in case it comes back.
 - [x] **BUILT 2026-10-20 (live test still due at launch): route contact-form
       submissions by inquiry type, and auto-reply to maintenance requests.**
       Routing and both auto-replies (Michael-approved wording) live in

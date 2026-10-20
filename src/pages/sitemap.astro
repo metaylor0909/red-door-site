@@ -4,8 +4,9 @@
 // scripts/build-sitemap.mjs). City lists come from the same modules the
 // city pages are built from, so a new city appears here automatically.
 //
-// TODO when built: About, Tenants, Testimonials, and Notice to Vacate
-// (still static mockups, not yet ported — linking them now would 404).
+// TODO when built: Testimonials and Notice to Vacate (still static
+// mockups, not yet ported — linking them now would 404). Tenants was
+// removed for now (2026-10-20).
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { CITIES } from '../lib/property-management/cities';
 import { MARKETS } from '../lib/market-reports/markets';
@@ -24,6 +25,7 @@ const groups: Array<{ heading: string; links: Array<{ href: string; label: strin
       { href: '/', label: 'Home' },
       { href: '/indianapolis-homes-for-rent', label: 'Homes for Rent' },
       { href: '/pricing', label: 'Pricing' },
+      { href: '/about', label: 'About Us' },
       { href: '/contact', label: 'Contact' },
       { href: '/blog', label: 'Blog' },
     ],

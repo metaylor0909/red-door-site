@@ -1,0 +1,50 @@
+---
+// /about — copied from the live reddoorrents.com/about (Michael,
+// 2026-10-20), per CLAUDE.md Hard Rule 1: content moves as-is. One
+// sentence left out: the live page still offers the Guaranteed Lease
+// Program, which Michael confirmed discontinued on 2026-09-24 (it was
+// already removed from the about.html mockup then). Title and meta are the
+// live page's own; neither content-fixes.csv nor pillar-page-seo-fixes.csv
+// has a row for /about.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ORGANIZATION_ID, ORGANIZATION_JSONLD } from '../lib/schema/organization';
+
+const pageTitle = 'About Us | Red Door Property Management';
+const pageDescription = 'About the Red Door Property Management team';
+const canonicalUrl = 'https://www.reddoorrents.com/about';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'AboutPage',
+      '@id': `${canonicalUrl}#page`,
+      url: canonicalUrl,
+      name: 'About Red Door Property Management',
+      about: { '@id': ORGANIZATION_ID },
+    },
+    ORGANIZATION_JSONLD,
+  ],
+};
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/about">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
+
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-kicker">About Us</span>
+      <h1>About Red Door Property Management</h1>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="criteria-content">
+      <p>Red Door Property Management is a locally owned and operated boutique brokerage that specializes in residential real estate rentals, condos, town homes, and multi-family units in the Indianapolis area. RDPM services the metro Indy area including: Brownsburg, Carmel, Fishers, Geist, Indianapolis, Noblesville, Plainfield, Pittsboro, Westfield, and Zionsville. We are extremely passionate about real estate and providing the best customer service around. We treat every property like it is our own and use every resource available to protect your investment. We guarantee prompt responses to you, the tenants, and your properties.</p>
+      <p>RDPM is a full service property management firm that offers: tenant placement, tenant screening, and supervise maintenance, rent collection, evictions, and financial reporting to owners.</p>
+      <p>See our <a href="/indianapolis-property-management">Owner services page</a> to learn more about renting out your home with Red Door Property Management or <a href="/contact">contact us</a> if you would like to get more information.</p>
+    </div>
+  </div>
+</BaseLayout>
