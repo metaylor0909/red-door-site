@@ -4238,3 +4238,59 @@
       .pm-card-grid, .pm-video-grid, .pm-video-grid[data-active] { grid-template-columns: 1fr; }
       .is-featured h3 { font-size: 1.3rem; }
     }
+
+    /* ---------- /leasing-process redesign (2026-10-20) ---------- */
+    /* Numbered variant of the step-card icon square. */
+    .step-icon.is-number { font-size: 1.05rem; font-weight: 800; line-height: 1; }
+    .step-card .check-list { margin-top: 14px; }
+
+    .lease-intro-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 24px; align-items: stretch; }
+    .lease-intro-card { padding: clamp(26px, 3.4vw, 40px); background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 10px 28px rgba(20, 20, 20, .05); }
+    .lease-intro-card h2 { margin-bottom: 16px; }
+    .lease-intro-card p { color: var(--muted); }
+    .lease-intro-card p:last-child { margin-bottom: 0; }
+    /* Matches .guarantee-card: white, red top rule (not a dark box). */
+    .lease-accomplish { padding: clamp(24px, 3vw, 32px); background: var(--white); border: 1px solid var(--line); border-top: 5px solid var(--red); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .lease-accomplish h3 { margin: 0; font-size: 1.3rem; }
+
+    .lease-doc-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 56px); align-items: center; }
+    .lease-doc-grid .sample-report-stack { max-width: 460px; justify-self: center; width: 100%; }
+    .lease-doc-copy > p { color: var(--muted); }
+    .lease-pill-list { margin: 20px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+    .lease-pill-list li { padding: 14px 18px; color: var(--ink); background: var(--soft); border-radius: var(--radius); font-weight: 700; }
+
+    .lease-two-col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 48px); align-items: start; }
+    .lease-two-col .lead { margin-bottom: 22px; }
+    .lease-term-list { display: grid; gap: 12px; }
+    .lease-term { padding: 16px 20px; background: var(--white); border: 1px solid var(--line); border-left: 4px solid var(--red); border-radius: var(--radius); }
+    .lease-term h3 { margin: 0 0 4px; font-size: 1.05rem; }
+    .lease-term p { margin: 0; color: var(--muted); font-size: .95rem; }
+
+    .lease-panel { display: block; padding: clamp(22px, 3vw, 30px); color: inherit; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .lease-panel h3 { margin: 18px 0 10px; font-size: 1.35rem; }
+    .lease-panel > p { color: var(--muted); }
+    .lease-panel-kicker .section-kicker { margin: 0; }
+    .lease-panel-video { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: var(--radius); background: #111; }
+    .lease-panel-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .lease-panel-image { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    .lease-panel-link { text-decoration: none; transition: transform .18s ease; }
+    .lease-panel-link:hover { transform: translateY(-2px); }
+    .lease-panel-cta { color: var(--red-dark); font-weight: 800; }
+
+    .lease-renewal-steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+    .lease-renewal-steps li { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 16px; padding: 16px 20px; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); }
+    .lease-renewal-label { color: var(--red-dark); font-size: .78rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; line-height: 1.35; padding-top: 3px; }
+    .lease-renewal-steps h3 { margin: 0 0 4px; font-size: 1.05rem; }
+    .lease-renewal-steps p { margin: 0; color: var(--muted); font-size: .95rem; }
+
+    .lease-protect-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .lease-protect-grid .guarantee-card { min-height: 0; }
+    .lease-protect-grid .guarantee-card p { color: var(--muted); }
+    .lease-note { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--line); font-size: .9rem; }
+
+    @media (max-width: 900px) {
+      .lease-intro-grid, .lease-doc-grid, .lease-two-col, .lease-protect-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .lease-renewal-steps li { grid-template-columns: 1fr; gap: 6px; }
+    }
