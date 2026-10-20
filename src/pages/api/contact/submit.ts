@@ -12,7 +12,7 @@ import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
 import { verifyTurnstileToken } from '../../../lib/rental-analysis/turnstile';
 import { sendEmail } from '../../../lib/rental-analysis/resend-client';
-import { buildContactNotificationEmail } from '../../../lib/contact/emails';
+import { buildContactAutoReplyEmail, buildContactNotificationEmail, routeForInquiry } from '../../../lib/contact/emails';
 
 export const prerender = false;
 
@@ -112,6 +112,18 @@ export const POST: APIRoute = async ({ request }) => {
       );
     } catch (err) {
       console.error('[contact/submit] Notification email failed to send:', err);
+    }
+    // Property Availability and Maintenance Request submitters also get a
+    // confirmation pointing them to the next step (listings + application,
+    // or Property Meld). Sent separately so a failure here never affects
+    // the team notification above.
+    const autoReply = routeForInquiry(inquiryType).autoReply;
+    if (autoReply) {
+      try {
+        await sendEmail(buildContactAutoReplyEmail(autoReply, { name, email }), resendKey);
+      } catch (err) {
+        console.error(`[contact/submit] ${autoReply} auto-reply failed to send:`, err);
+      }
     }
   } else {
     console.warn('[contact/submit] RESEND_API_KEY not configured — notification email skipped.');

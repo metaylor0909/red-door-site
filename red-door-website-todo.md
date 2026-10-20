@@ -427,8 +427,13 @@ Judgment calls / open items carried forward from this build:
 
 ## Genuinely open — do these next
 
-- [ ] **PRE-LAUNCH: route contact-form submissions by inquiry type, and
-      auto-reply to maintenance requests.** Added 2026-10-20 (Michael).
+- [x] **BUILT 2026-10-20 (live test still due at launch): route contact-form
+      submissions by inquiry type, and auto-reply to maintenance requests.**
+      Routing and both auto-replies (Michael-approved wording) live in
+      `src/lib/contact/emails.ts` (`routeForInquiry`, `buildContactAutoReplyEmail`).
+      **Remaining:** one real submission of each type on reddoorrents.com
+      after DNS cutover. Turnstile blocks submissions on the workers.dev
+      preview, so this can't be tested before launch. Added 2026-10-20 (Michael).
       **Current behavior:** the `/contact` form's "Inquiry Type" dropdown
       offers General Inquiry, Property Management, Vendor Request,
       Maintenance Request, Property Availability, and Other. Every
@@ -458,9 +463,8 @@ Judgment calls / open items carried forward from this build:
       - Property Availability -> `leasing@rdpmindy.com`.
       - Maintenance Request -> `maintenance@rdpmindy.com`.
       - **Neither** is CC'd to LeadSimple.
-      - **Both** get an auto-reply, not just maintenance. Drafts of both
-        replies were sent to Michael 2026-10-20; waiting on his approved
-        wording before building.
+      - **Both** get an auto-reply, not just maintenance. Wording approved
+        2026-10-20.
 
       **Also:**
       - Update the privacy policy's sharing section if these go anywhere
