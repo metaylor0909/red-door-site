@@ -2,6 +2,9 @@
 # assets: one rule per line, "source destination status"). All permanent
 # (301) so search engines move each old URL's standing to its new home.
 # Keep static rules above any splat rules; the first matching line wins.
+#
+# The six old test pages (/landing, /test, ...) answer 410 Gone instead;
+# that's in src/middleware.ts, since _redirects can't return a 410.
 
 # Duplicates and retired pages (decided in CLAUDE.md)
 /owners                          /indianapolis-property-management  301
@@ -16,3 +19,25 @@
 /tenants                         /indianapolis-homes-for-rent        301
 /testimonials                    /                                   301
 /notice-to-vacate                https://reddoor.appfolio.com/connect/users/sign_in  301
+
+# Old form confirmation pages -> home, not the new thank-you pages: those
+# fire GA conversion events on load, so redirecting into them would count
+# bookmarks and bots as form submissions (Michael, 2026-10-20).
+/thank-you                       /                                   301
+/success                         /                                   301
+/amp-success                     /                                   301
+/LP-success                      /                                   301
+
+# Old pages with no direct equivalent -> the closest current page
+# (suggested targets approved by Michael, 2026-10-20)
+/meet-the-team                   /about                              301
+/tenant-login                    https://reddoor.appfolio.com/connect/users/sign_in  301
+/tenant-charges                  /residents-benefits-package         301
+/services-step-2                 /indianapolis-property-management  301
+/advanced-marketing-platform     /marketing-process                  301
+/airbnb-furniture-rental-indianapolis  /                             301
+/employment-verification         /application-criteria               301
+/tenant-verification             /application-criteria               301
+
+# PMW's own listing URLs (can't be mapped to RentEngine units one by one)
+/_system/listings/*              /indianapolis-homes-for-rent        301
