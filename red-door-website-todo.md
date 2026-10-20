@@ -427,6 +427,44 @@ Judgment calls / open items carried forward from this build:
 
 ## Genuinely open — do these next
 
+- [ ] **PRE-LAUNCH: route contact-form submissions by inquiry type, and
+      auto-reply to maintenance requests.** Added 2026-10-20 (Michael).
+      **Current behavior:** the `/contact` form's "Inquiry Type" dropdown
+      offers General Inquiry, Property Management, Vendor Request,
+      Maintenance Request, Property Availability, and Other. Every
+      submission, whatever the type, goes to the same place:
+      - One notification email to `cknight@rdpmindy.com`, CC'd to
+        LeadSimple's Web Forms inbox.
+      - Set in `src/lib/contact/emails.ts`, sent from
+        `src/pages/api/contact/submit.ts`.
+
+      That means a tenant's maintenance request or availability question
+      currently also lands in LeadSimple as a sales lead.
+      **Wanted:**
+      - **Property Availability** → the leasing team.
+      - **Maintenance Request** → the maintenance team, plus an automatic
+        reply to the person who submitted it. The reply says, in
+        substance: "Thank you. This has been forwarded to the maintenance
+        team, but please submit your maintenance request through Property
+        Meld." It links to
+        `https://app.propertymeld.com/tenant/red-door-property-management`.
+        The auto-reply uses the existing Resend setup (sending address
+        `reports@mail.rdpmindy.com`).
+      - **Everything else** (General Inquiry, Property Management, Vendor
+        Request, Other) and the Eviction Protection Program form, which
+        uses the same endpoint: unchanged, to Chris + LeadSimple.
+
+      **Needs from Michael:**
+      - The leasing team's and the maintenance team's email addresses.
+      - Whether those two types should still be CC'd to LeadSimple
+        (likely not, since they aren't owner leads).
+      - Final wording for the maintenance auto-reply.
+
+      **Also:**
+      - Update the privacy policy's sharing section if these go anywhere
+        other than Red Door inboxes.
+      - Test one submission of each type end to end on the real domain at
+        launch (Turnstile only works there).
 - [ ] **PRE-LAUNCH: write genuinely distinct content for every city
       `-property-management` page.** Added 2026-10-07 (Michael), when
       `/downtown-indianapolis-property-management` was built as the 19th
