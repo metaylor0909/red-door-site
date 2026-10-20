@@ -31,9 +31,11 @@ const pageDescription =
 // carries the same facts as the previous page (110-day renewals, 24-48 hour
 // move-outs, three-month video inspection, one month's rent deposit).
 
-// Loom ID for a tenant portal walkthrough, once Red Door has one to share.
-// Until then the tenant portal card shows its feature list without a video.
-const TENANT_PORTAL_LOOM_ID: string | null = null;
+// Tenant portal walkthrough (Loom). Set to null to show the card without it.
+const TENANT_PORTAL_LOOM_ID: string | null = 'd4d34616b18246d2bdb87f9f93949e85'; // "Online Portal Overview", 2:29
+
+// Rows from the sample report's kitchen page (page 6-7), all rated S.
+const INSPECTION_ROWS = ['Cabinets / Drawers', 'Counter', 'Range / Fan / Hood / Filter', 'Refrigerator', 'Sink / Disposal'];
 
 const LEASE_STEPS = [
   {
@@ -162,12 +164,28 @@ const RENEWAL_STEPS = [
           <div class="sample-report-stack-page is-back2" aria-hidden="true"></div>
           <div class="sample-report-stack-page is-back1" aria-hidden="true"></div>
           <a class="sample-report-card" href="/documents/sample-inspection-report.pdf" target="_blank" rel="noopener">
-            <div class="sample-report-card-photo">
-              <img src="/images/market-readiness/sample-report-cover.webp" alt="" loading="lazy" />
-              <span class="sample-report-card-badge" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
-                Quality<br />Verified
-              </span>
+            {/* A real excerpt of the sample report: its kitchen page's
+                checklist rows and the inspector's own photos (timestamps
+                burned in), instead of a stock house photo (Michael,
+                2026-10-20). */}
+            <div class="inspection-preview">
+              <div class="inspection-preview-head">
+                <span>Kitchen</span>
+                <span class="inspection-verified">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg>
+                  Quality Verified
+                </span>
+              </div>
+              <ul class="inspection-preview-rows">
+                {INSPECTION_ROWS.map((row) => (
+                  <li><span>{row}</span><span class="inspection-ok">Satisfactory</span></li>
+                ))}
+              </ul>
+              <div class="inspection-preview-photos">
+                <img src="/images/leasing/inspection-kitchen-range.webp" alt="Inspection photo of the kitchen range and cabinets" width="312" height="416" loading="lazy" />
+                <img src="/images/leasing/inspection-kitchen-fridge.webp" alt="Inspection photo of the open refrigerator" width="312" height="416" loading="lazy" />
+                <img src="/images/leasing/inspection-kitchen-cooktop.webp" alt="Inspection photo of the cooktop" width="312" height="416" loading="lazy" />
+              </div>
             </div>
             <div class="sample-report-card-body">
               <div class="sample-report-card-head">

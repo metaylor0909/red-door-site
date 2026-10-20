@@ -4256,6 +4256,19 @@
     .lease-doc-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 56px); align-items: center; }
     .lease-doc-grid .sample-report-stack { max-width: 460px; justify-self: center; width: 100%; }
     .lease-doc-copy > p { color: var(--muted); }
+    /* Report excerpt in place of a cover photo: checklist rows + the
+       inspector's photos, styled like the report itself. */
+    .inspection-preview { position: relative; padding: 18px 18px 16px; background: var(--soft); border-bottom: 1px solid var(--line); }
+    .inspection-preview-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; color: var(--ink); font-size: .95rem; font-weight: 800; }
+    .inspection-verified { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; color: var(--white); background: var(--brand); border-radius: 999px; font-size: .68rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .inspection-verified svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .inspection-preview-rows { margin: 0; padding: 0; list-style: none; background: var(--white); border: 1px solid var(--line); border-radius: 6px; }
+    .inspection-preview-rows li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 7px 12px; font-size: .82rem; color: var(--charcoal); }
+    .inspection-preview-rows li + li { border-top: 1px solid var(--line); }
+    .inspection-ok { display: inline-flex; align-items: center; gap: 6px; color: #1d7a3a; font-size: .74rem; font-weight: 800; white-space: nowrap; }
+    .inspection-ok::before { content: ""; width: 14px; height: 14px; border-radius: 50%; background: #1d7a3a url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27white%27 stroke-width=%273.2%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M5 13l4 4L19 7%27/%3E%3C/svg%3E") center / 10px no-repeat; }
+    .inspection-preview-photos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+    .inspection-preview-photos img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); }
     .lease-pill-list { margin: 20px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
     .lease-pill-list li { padding: 14px 18px; color: var(--ink); background: var(--soft); border-radius: var(--radius); font-weight: 700; }
 
@@ -4270,7 +4283,8 @@
     .lease-panel h3 { margin: 18px 0 10px; font-size: 1.35rem; }
     .lease-panel > p { color: var(--muted); }
     .lease-panel-kicker .section-kicker { margin: 0; }
-    .lease-panel-video { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: var(--radius); background: #111; }
+    /* The tenant portal Loom is recorded at 4:3 (1920x1440). */
+    .lease-panel-video { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--radius); background: #111; }
     .lease-panel-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
     .lease-panel-image { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
     .lease-panel-link { text-decoration: none; transition: transform .18s ease; }
