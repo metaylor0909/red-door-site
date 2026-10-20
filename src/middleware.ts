@@ -29,6 +29,12 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   const response = await next();
   if (response.status !== 404) return response;
+  // "/tenants/" -> "/tenants": _redirects rules match exact paths, so a
+  // trailing-slash variant of an old URL would otherwise 404. The
+  // slash-less URL then hits its own redirect (or a normal 404).
+  if (context.url.pathname.length > 1 && context.url.pathname.endsWith('/') && !LISTING_PATH.test(context.url.pathname)) {
+    return context.redirect(context.url.pathname.replace(/\/+$/, '') + context.url.search, 301);
+  }
   const match = context.url.pathname.match(LISTING_PATH);
   if (!match) return response;
   const hub = homesForRentHub(match[1], match[1]);
