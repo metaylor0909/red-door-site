@@ -454,11 +454,13 @@ Judgment calls / open items carried forward from this build:
         Request, Other) and the Eviction Protection Program form, which
         uses the same endpoint: unchanged, to Chris + LeadSimple.
 
-      **Needs from Michael:**
-      - The leasing team's and the maintenance team's email addresses.
-      - Whether those two types should still be CC'd to LeadSimple
-        (likely not, since they aren't owner leads).
-      - Final wording for the maintenance auto-reply.
+      **Decided 2026-10-20 (Michael):**
+      - Property Availability -> `leasing@rdpmindy.com`.
+      - Maintenance Request -> `maintenance@rdpmindy.com`.
+      - **Neither** is CC'd to LeadSimple.
+      - **Both** get an auto-reply, not just maintenance. Drafts of both
+        replies were sent to Michael 2026-10-20; waiting on his approved
+        wording before building.
 
       **Also:**
       - Update the privacy policy's sharing section if these go anywhere
