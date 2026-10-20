@@ -79,6 +79,43 @@ export async function fetchAllAvailableUnits(config: ListingsFetchConfig): Promi
   return units;
 }
 
+export interface LeasedUnitLocation {
+  city: string;
+  zip: string;
+  createdAt: string;
+}
+
+let leasedUnitsPromise: Promise<LeasedUnitLocation[]> | null = null;
+
+/** Every unit RentEngine has marked Leased: Red Door's own leasing record
+ * since it started using RentEngine (January 2026). Fetched once per build
+ * and shared, since every city page asks for it. Only location and date
+ * are kept. */
+export function fetchLeasedUnitLocations(config: ListingsFetchConfig): Promise<LeasedUnitLocation[]> {
+  leasedUnitsPromise ??= (async () => {
+    const out: LeasedUnitLocation[] = [];
+    for (let pageNumber = 0; pageNumber < 100; pageNumber++) {
+      const url = new URL(`${BASE_URL}/units`);
+      url.searchParams.set('statuses', 'Leased');
+      url.searchParams.set('limit', '100');
+      url.searchParams.set('page_number', String(pageNumber));
+      const response = await fetch(url.toString(), { headers: { Authorization: `Bearer ${config.apiKey}` } });
+      if (!response.ok) throw new Error(`RentEngine leased units request failed: ${response.status}`);
+      const page = (await response.json()) as RentEngineUnit[];
+      for (const u of page) {
+        if (u.status !== 'Leased') continue;
+        // RentEngine nests the timestamps under `dates` (not in RentEngineUnit's type).
+        const raw = u as unknown as { created_at?: string; dates?: { created_at?: string } };
+        const created = raw.dates?.created_at ?? raw.created_at ?? '';
+        out.push({ city: u.address.city ?? '', zip: u.address.zip_code ?? '', createdAt: created });
+      }
+      if (page.length < 100) break;
+    }
+    return out;
+  })();
+  return leasedUnitsPromise;
+}
+
 /** RentEngine's own `amount` fields on fee arrays come back as a mix of
  * numbers and numeric strings within the SAME array on the SAME unit
  * (confirmed live, 2026-09-20) — coerced to real numbers here, once,

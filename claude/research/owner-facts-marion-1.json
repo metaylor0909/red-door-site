@@ -1,0 +1,170 @@
+{
+  "_meta": {
+    "researched": "2026-10-20",
+    "scope": "Center Township, Downtown Indianapolis, Lawrence Township, Warren Township, Washington Township, Broad Ripple",
+    "fair_housing": "Places, rules, services and infrastructure only. No demographic, school, crime or 'family' content was collected. One source (Wikipedia, Warren Township) listed schools as landmarks; deliberately excluded.",
+    "note": "Every URL below was opened during research. Items not confirmed from a primary source are listed under 'unverified' rather than stated as fact."
+  },
+  "_shared_indianapolis": {
+    "rental_rules": "Owners or landlords of residential rental units in the City of Indianapolis must register with the Department of Business and Neighborhood Services (Code Chapter 851) through the Citizen Access Portal, listing an Indiana-resident manager and an agent for service of process; one $5 fee covers all of an owner's properties if registered together. Registration renews annually, and a new owner must re-register within 30 days of a change of ownership. The code expressly creates no rental inspection program, and properties in the excluded cities (Beech Grove, Lawrence, Southport, Speedway) are exempt.",
+    "short_term_rentals": "Since Jan. 1, 2025, each short-term rental unit in Indianapolis needs its own annual BNS permit under Code Chapter 852: $150 for the initial permit, no fee for renewals. The unit must be a legally built dwelling meeting building code (RVs, mobile homes, shipping containers and similar are prohibited), and an inspection may be required as part of the annual registration. Properties rented for under 30 consecutive days and no more than 180 days a year fall outside the long-term landlord registry definition.",
+    "property_tax": "Indiana caps property tax on residential property that is not a homestead, including single-family rentals, at 2% of gross assessed value (homesteads are capped at 1%); the county auditor applies a circuit-breaker credit for anything above the cap. 2025 legislation (SEA 1) also created a new deduction for 2%-cap property, including rentals, phased in over several years under IC 6-1.1-12-47. Marion County taxes are billed by the Treasurer in two installments; the 2026 due dates are May 11 and November 10.",
+    "utilities": {
+      "electric": "AES Indiana (formerly Indianapolis Power & Light) provides retail electric service in Indianapolis and parts of surrounding communities, with a 528-square-mile service territory.",
+      "natural_gas": "Citizens Energy Group delivers natural gas to residential and commercial customers in the Indianapolis area.",
+      "water": "Citizens Energy Group provides water across the 8-county Indianapolis area, and sells water wholesale to communities with their own water utilities, including Lawrence and Speedway.",
+      "wastewater": "Citizens Energy Group provides wastewater service in Marion County, with service agreements covering the City of Lawrence and the City of Beech Grove, among others.",
+      "exceptions": "The City of Lawrence runs its own water and sanitary sewer utility (Lawrence Utilities), so owners there set up water/sewer with the city rather than Citizens. Downtown, Citizens Thermal supplies steam and chilled water to commercial buildings, not single-family homes."
+    },
+    "sources": [
+      {"fact": "Landlord registry requirement; excluded cities exempt; STR permit program, $150 initial fee, free renewals, effective Jan. 1, 2025; BNS contact", "url": "https://www.indy.gov/activity/landlord-registration-program"},
+      {"fact": "Chapter 851 text: who must register, required info, Indiana-resident manager, 30-day change-of-ownership rule, annual renewal, no inspection program, penalties after 30-day cure notice, STR exclusion from 'rental unit'", "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH851INLAREPR"},
+      {"fact": "Landlord Registration Fact Sheet: $5 fee for all properties registered together; excluded cities are Beech Grove, Lawrence, Southport and Speedway; parcel number required; property manager may register for owner", "url": "https://us-east-1-indy.graphassets.com/ActDBC5rvRWeCZlNNnLrDz/mncP0hpuQ7uZXLHm7pvQ?dl=true"},
+      {"fact": "Chapter 852 STR permit program: per-unit annual permit, $150 fee, permitted/prohibited structure types, possible inspection, IC 36-1-24 authority", "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH852INSHRMREPEPR"},
+      {"fact": "Circuit breaker caps: 1% homestead, 2% residential (includes a single-family dwelling that is not a homestead), 3% nonresidential; auditor applies credit", "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"},
+      {"fact": "SEA 1 (2025) new 2% Properties Deduction under IC 6-1.1-12-47 covers residential property, including multi-family", "url": "https://www.in.gov/dlgf/files/2025-presentations/250618-FAQ-Webinar-Legislative-Update.pdf"},
+      {"fact": "Marion County property tax due dates May 11, 2026 and November 10, 2026", "url": "https://www.indy.gov/agency/marion-county-treasurers-office"},
+      {"fact": "Citizens Energy Group gas, water (8-county area; wholesale to Speedway, Brownsburg, Lawrence), wastewater (Marion County; agreements with Lawrence, Beech Grove), thermal downtown", "url": "https://info.citizensenergygroup.com/company/divisions"},
+      {"fact": "AES Indiana serves Indianapolis and portions of surrounding Central Indiana communities; 528-sq-mi territory; formerly Indianapolis Power & Light", "url": "https://www.aesindiana.com/aes-indiana-history"},
+      {"fact": "Lawrence Utilities provides water and sewer in the City of Lawrence", "url": "https://www.cityoflawrence.org/utilities/water-sewer"}
+    ],
+    "unverified": [
+      "Current landlord registry fee: the $5 figure comes from the city's fact sheet written for the 2015 launch; Chapter 851 sets the fee by reference to Code Sec. 131-501, which I did not open. Indy's fee schedules changed Jan. 5, 2026.",
+      "Exact SEA 1 deduction percentages by tax year: secondary sources disagree (e.g. 6% vs 7% for pay-2026), and I did not find a DLGF table with the schedule. Leave the percentages out until confirmed.",
+      "Whether any edge of Marion County (e.g. near the Hancock County line) gets electric service from a utility other than AES Indiana (an outage tracker lists small counts for Duke Energy and NineStar Connect in Marion County). Confirm by address.",
+      "Whether included towns (e.g. Cumberland, or Meridian Hills and the other small towns in Washington Township) fall under the Indianapolis registry. The city exempts only the four excluded cities, which suggests yes, but I have not confirmed it with BNS."
+    ]
+  },
+  "center-township": {
+    "jurisdiction": "Center Township, Marion County, in the middle of the county and containing downtown Indianapolis. Indianapolis city ordinances apply, including the landlord registry and STR permit program. It contains no excluded city.",
+    "rental_rules_local": "",
+    "eviction_court": "Landlord-tenant cases must be filed in the small claims court of the township where the property is located, which here is the Center Township Small Claims Court, Julia M. Carson Government Center, 300 E. Fall Creek Parkway N. Drive, Suite 130, Indianapolis, IN 46205, (317) 920-4530.",
+    "utilities_notes": "Standard Indianapolis providers: AES Indiana (electric) and Citizens Energy Group (gas, water, wastewater).",
+    "location": "Center Township is the central tile of Marion County's nine townships, with Washington Township to the north, Warren to the east, Perry to the south and Wayne to the west. Beyond the downtown core it takes in historic districts and neighborhoods such as the Old Northside, Lockerbie Square, Chatham Arch, Cottage Home, Fletcher Place and Fountain Square, plus Massachusetts Avenue and the Bottleworks District. Landmarks include White River State Park, the Indianapolis Zoo, the Canal Walk and the 8-mile Cultural Trail; the IndyGo Red Line runs through it to Broad Ripple and Fountain Square.",
+    "unverified": [
+      "Exact Center Township boundary streets were not confirmed from a primary source; the research file's border list (Washington N, Warren E, Perry S, Wayne W) comes from Wikipedia/INGenWeb.",
+      "Crown Hill Cemetery being in Center Township (listed in red-door-city-facts-research.md) was not re-verified this pass."
+    ],
+    "sources": [
+      {"fact": "Center Township in the middle of Marion County; Ralston chose the Center Township settlement for the Mile Square capital; neighborhoods, Mass Ave, Bottleworks, White River State Park, Zoo, Canal Walk, Cultural Trail, Red Line", "url": "https://indyencyclopedia.org/center-township/"},
+      {"fact": "Landlord-tenant claims must be filed in the township where the real estate is located; Center Township court address and phone", "url": "https://www.in.gov/townships/center49/small-claims-court/about-the-court/"},
+      {"fact": "Marion County township small claims court list; landlord-tenant cases filed in township where property is located", "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"},
+      {"fact": "Indianapolis landlord registry and STR permit program apply in the city", "url": "https://www.indy.gov/activity/landlord-registration-program"}
+    ]
+  },
+  "downtown-indianapolis": {
+    "jurisdiction": "Downtown Indianapolis is in Center Township; the Mile Square was the original 1821 plat, laid out on the Center Township settlement Ralston chose for the capital. City of Indianapolis ordinances apply, including the landlord registry and the STR permit program.",
+    "rental_rules_local": "No downtown-specific rental registration rules found. Chapter 852 requires a separate annual permit for each short-term rental unit, so each unit in a downtown building listed on Airbnb or Vrbo needs its own permit.",
+    "eviction_court": "Center Township Small Claims Court, 300 E. Fall Creek Parkway N. Drive, Suite 130, Indianapolis, IN 46205, (317) 920-4530. Landlord-tenant cases go to the township where the property sits, and downtown is in Center Township.",
+    "utilities_notes": "AES Indiana (electric) and Citizens Energy Group (gas, water, wastewater). Citizens Thermal also supplies steam heat and chilled water to more than 250 downtown commercial buildings, which may matter for owners of condo units in larger buildings.",
+    "location": "The Mile Square is bounded by North, South, East and West streets, with Monument Circle and the Soldiers and Sailors Monument at its center and Massachusetts, Virginia, Kentucky and Indiana avenues running diagonally out from the core. I-65 and I-70 form an inner loop around downtown, with I-465 as the outer beltway and the White River on the west edge. Downtown districts include Mass Ave, the Wholesale District, Lockerbie Square, Fletcher Place and Market East; venues and parks include Lucas Oil Stadium, Gainbridge Fieldhouse, Victory Field, White River State Park, the Canal Walk and the Indianapolis Cultural Trail.",
+    "unverified": [
+      "Whether all of ZIPs 46202, 46204 and 46225 lie entirely within Center Township was not confirmed (Wikipedia also lists 46203 for downtown).",
+      "Cultural Trail length: Encyclopedia of Indianapolis says 8 miles, Wikipedia says 10 miles. Use the official Cultural Trail figure if one is needed."
+    ],
+    "sources": [
+      {"fact": "Mile Square boundaries (North, South, East, West streets), diagonal avenues, Monument Circle, remains the heart of downtown", "url": "https://indyencyclopedia.org/mile-square/"},
+      {"fact": "Ralston selected the Center Township settlement for the one-square-mile capital", "url": "https://indyencyclopedia.org/center-township/"},
+      {"fact": "I-65/I-70 inner loop, I-465 outer beltway, White River west boundary, districts, parks, venues, ZIPs", "url": "https://en.wikipedia.org/wiki/Downtown_Indianapolis"},
+      {"fact": "Designated cultural districts include Mass Ave, Wholesale District, Canal and White River State Park, Indiana Avenue, Market East", "url": "https://indyencyclopedia.org/cultural-districts/"},
+      {"fact": "Citizens Thermal steam and chilled water for downtown buildings", "url": "https://info.citizensenergygroup.com/company/divisions"},
+      {"fact": "STR permit required per unit, annually", "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH852INSHRMREPEPR"},
+      {"fact": "Center Township Small Claims Court address; township venue rule for landlord-tenant cases", "url": "https://www.in.gov/townships/center49/small-claims-court/about-the-court/"}
+    ]
+  },
+  "lawrence-township": {
+    "jurisdiction": "Lawrence Township sits in the northeast corner of Marion County, roughly bounded by 96th Street, County Line Road, 38th Street and Emerson/Graham avenues. It contains the City of Lawrence, one of Marion County's four excluded cities with its own government (City Hall, 9001 E. 59th St.), and Lawrence properties are exempt from the Indianapolis landlord registry. The rest of the township is in the City of Indianapolis, where Indy's registry and STR permit rules apply.",
+    "rental_rules_local": "The City of Lawrence's published code (current through Ord. 18, 2024) has no rental registration or rental inspection chapter, and the city's services and building pages list none. Lawrence runs its own building permits and inspections, requires contractor registration, and temporarily adopted the Indianapolis zoning code. New residential water customers of Lawrence Utilities pay a $75 meter deposit.",
+    "eviction_court": "Lawrence Township Small Claims Court, 4455 McCoy St., Indianapolis, IN 46226, 317-545-2369. Landlord-tenant cases are filed in the township where the property is located.",
+    "utilities_notes": "Inside the City of Lawrence, water and sanitary sewer come from Lawrence Utilities (business office 317-542-0511), which buys wholesale water from Citizens, and Citizens treats Lawrence's wastewater under a service agreement. Gas is Citizens Energy Group and electric is AES Indiana. In the parts of the township outside the city, the standard Indianapolis providers apply.",
+    "location": "Pendleton Pike runs diagonally across the township, I-465 crosses it, and I-69 runs northeast toward the county line; the Castleton area along 82nd Street and Castleton Square Mall sit just off I-465. The former Fort Benjamin Harrison is now Fort Harrison State Park, about 1,700 acres on the northeast side with trails, Fall Creek access and The Fort Golf Course. Fall Creek runs through the township, and the Oaklandon Historic District lies in its northeast corner.",
+    "unverified": [
+      "Whether the City of Lawrence has adopted a rental registration or inspection ordinance after Dec. 18, 2024 (the end date of the online code). Confirm with Lawrence DPW at 317-545-8787.",
+      "Whether Lawrence applies its hotel/public lodging licensing chapter (Code 4-2-8, 'lodging ... regularly or occasionally, for private profit') to short-term rentals. Indy's Chapter 852 STR permit appears not to apply inside the excluded city, but I have not confirmed that.",
+      "The exact Lawrence Utilities water/sewer service area: whether every address in the City of Lawrence is on Lawrence Utilities, or some are served by Citizens directly. Confirm by address.",
+      "The Lawrence Township small claims court address comes from the Marion County small claims brochure published by Warren Township (2023) and court directories; I found no Lawrence Township page for it.",
+      "Castleton spans parts of Lawrence and Washington townships (Wikipedia says 'mostly' Lawrence; the Encyclopedia puts Castleton Square near the David Wolf Bridge in its Washington Township entry). Avoid assigning Castleton Square to one township without checking."
+    ],
+    "sources": [
+      {"fact": "Northeast township; bounded by 96th St, County Line Rd, 38th St, Emerson/Graham; Pendleton Pike, I-465, I-69, Castleton/82nd St, Fort Benjamin Harrison, Fall Creek, Geist", "url": "https://indyencyclopedia.org/lawrence-township/"},
+      {"fact": "City of Lawrence and Oaklandon (annexed into Lawrence 1976) in the township; I-69, Pendleton Pike", "url": "https://en.wikipedia.org/wiki/Lawrence_Township,_Marion_County,_Indiana"},
+      {"fact": "Lawrence is an excluded city, exempt from the Indianapolis landlord registry", "url": "https://us-east-1-indy.graphassets.com/ActDBC5rvRWeCZlNNnLrDz/mncP0hpuQ7uZXLHm7pvQ?dl=true"},
+      {"fact": "Lawrence code table of contents (no rental registration chapter); current through Ord. 18, 2024; City Hall 9001 E. 59th St.", "url": "https://codelibrary.amlegal.com/codes/lawrence/latest/overview"},
+      {"fact": "Lawrence Title 2 Art. 1 chapters: Building Code, Unsafe Building Code, Contractor Registration (no rental chapter)", "url": "https://codelibrary.amlegal.com/codes/lawrence/latest/lawrence_in/0-0-0-11999"},
+      {"fact": "Lawrence Title 3 Art. 5: temporary adoption of the City of Indianapolis Zoning Code", "url": "https://codelibrary.amlegal.com/codes/lawrence/latest/lawrence_in/0-0-0-19577"},
+      {"fact": "Lawrence hotel/public lodging licensing chapter and 'hotel' definition", "url": "https://codelibrary.amlegal.com/codes/lawrence/latest/lawrence_in/0-0-0-16315"},
+      {"fact": "$75 water meter deposit for new residential Lawrence Utilities customers", "url": "https://codelibrary.amlegal.com/codes/lawrence/latest/lawrence_in/0-0-0-18607"},
+      {"fact": "Lawrence Building Department: permits/inspections, contractor registration, Lawrence Utilities schedules water/sewer inspections, DPW 317-545-8787", "url": "https://www.cityoflawrence.org/building-department"},
+      {"fact": "Lawrence Utilities provides water and sewer; business office 317-542-0511", "url": "https://www.cityoflawrence.org/utilities/water-sewer"},
+      {"fact": "Citizens wholesale water to Lawrence; wastewater service agreement with City of Lawrence", "url": "https://info.citizensenergygroup.com/company/divisions"},
+      {"fact": "Fort Harrison State Park: ~1,700 acres, northeast Indianapolis, trails, Fall Creek, Fort Golf Course, 5753 Glenn Rd.", "url": "https://www.in.gov/dnr/state-parks/parks-lakes/fort-harrison-state-park/"},
+      {"fact": "Lawrence Township Small Claims Court, 4455 McCoy St., 46226, 317-545-2369; landlord-tenant venue rule", "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"}
+    ]
+  },
+  "warren-township": {
+    "jurisdiction": "Warren Township is on the east side of Marion County, due east of Center Township. Most of it is in the City of Indianapolis, where Indy's landlord registry and STR permit rules apply. It also includes the west half of the Town of Cumberland and a small portion of Beech Grove, which is an excluded city exempt from the Indianapolis registry.",
+    "rental_rules_local": "For property in the small Beech Grove portion, the Indianapolis registry does not apply, and Beech Grove's own rules (not researched) govern. Cumberland straddles the Marion-Hancock county line, so its Hancock County half is outside Indianapolis entirely.",
+    "eviction_court": "Warren Township Small Claims Court, Warren Township Government Center, 501 N. Post Road, Suite C, Indianapolis, IN 46219, 317-327-8919 (hours Mon-Fri 8:30 a.m.-4:00 p.m.). Landlord-tenant cases are filed in the township where the property is located.",
+    "utilities_notes": "Standard Indianapolis providers: AES Indiana (electric) and Citizens Energy Group (gas, water, wastewater). Citizens has a wastewater service agreement with Beech Grove.",
+    "location": "Early settlement followed the National Road (today's Washington Street), Brookville Road and Michigan Road, and I-465, I-70 and I-74 now cross the township. Shadeland Avenue developed as an industrial corridor in the 1950s and 1960s. Irvington, laid out in 1870 about five miles from Monument Circle with curving streets, and the Warren Park area between 10th and 16th streets are in the township, along with Cumberland, which grew up around an 1830 National Road waypoint.",
+    "unverified": [
+      "Whether Beech Grove (excluded city) has its own rental registration or inspection program. Search found nothing; check Beech Grove's code or city hall.",
+      "Whether the Marion County half of Cumberland (an included town) is covered by the Indianapolis landlord registry and STR permit program. Likely, since only the four excluded cities are exempt, but not confirmed with BNS.",
+      "The Warren Township court's suite and phone: the township brochure says Suite C / 317-327-8919, while the township website header shows Suite A and (317) 327-8947 (likely the trustee's office). Confirm before publishing.",
+      "Electric service near the Hancock County line (NineStar Connect shows up in Marion County on outage trackers). Confirm by address."
+    ],
+    "sources": [
+      {"fact": "East side location; National, Brookville and Michigan roads; I-465, I-70, I-74; Shadeland Ave corridor; Irvington (1870, ~5 mi from Circle); Warren Park (10th-16th streets); Cumberland origins", "url": "https://indyencyclopedia.org/warren-township/"},
+      {"fact": "West half of Cumberland and a small portion of Beech Grove are in the township", "url": "https://en.wikipedia.org/wiki/Warren_Township,_Marion_County,_Indiana"},
+      {"fact": "Beech Grove is an excluded city, exempt from the Indianapolis registry", "url": "https://us-east-1-indy.graphassets.com/ActDBC5rvRWeCZlNNnLrDz/mncP0hpuQ7uZXLHm7pvQ?dl=true"},
+      {"fact": "Warren Township Small Claims Court address, phone, hours; landlord-tenant venue rule", "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"},
+      {"fact": "Warren Township small claims court page (judge listing)", "url": "https://www.warrentownshiptrustee.org/index.php/small-claims-court/"},
+      {"fact": "Citizens wastewater agreement with City of Beech Grove", "url": "https://info.citizensenergygroup.com/company/divisions"}
+    ]
+  },
+  "washington-township": {
+    "jurisdiction": "Washington Township covers north-central Marion County, from Center Township north to the Hamilton County line at 96th Street. Most of it is in the City of Indianapolis, where Indy's landlord registry and STR permit rules apply. It also contains several small included towns: Crows Nest, Meridian Hills, North Crows Nest, Rocky Ripple, Spring Hill, Williams Creek and Wynnedale.",
+    "rental_rules_local": "",
+    "eviction_court": "Washington Township Small Claims Court, 5302 N. Keystone Ave., Suite E, Indianapolis, IN 46220, 317-327-8184. Landlord-tenant cases are filed in the township where the property is located.",
+    "utilities_notes": "Standard Indianapolis providers: AES Indiana (electric) and Citizens Energy Group (gas, water, wastewater).",
+    "location": "The White River and Fall Creek cross the township, and the Central Canal runs south from Broad Ripple toward downtown. The main commercial corridors are Keystone Avenue, College Avenue, 38th Street and 82nd/86th streets, where Castleton Square, The Fashion Mall at Keystone, Glendale and Nora sit. The Monon Trail runs north through it from 10th Street to 96th Street, passing Broad Ripple and the Indiana State Fairgrounds, and Butler University is in the township.",
+    "unverified": [
+      "Whether the small included towns (Meridian Hills, Williams Creek, etc.) are covered by the Indianapolis landlord registry and STR permit program. Likely, since only excluded cities are exempt, but not confirmed with BNS. Some of these towns may also have their own ordinances (not checked).",
+      "Washington Township's southern boundary (commonly given as 38th Street) was not confirmed from a primary source.",
+      "Washington Township court: the address comes from the Marion County brochure published by Warren Township (2023) and directory listings; I found no Washington Township court page.",
+      "Whether utility providers differ in the small included towns. No exception found, but not confirmed."
+    ],
+    "sources": [
+      {"fact": "Northern Marion County; 96th Street; Keystone, College, 38th, 82nd/86th corridors; White River, Fall Creek, Central Canal; Broad Ripple; Castleton Square, Fashion Mall, Glendale; Butler University", "url": "https://indyencyclopedia.org/washington-township/"},
+      {"fact": "Included municipalities (Crows Nest, Meridian Hills, North Crows Nest, Rocky Ripple, Spring Hill, Williams Creek, Wynnedale); communities incl. Broad Ripple Village, Nora, Fairgrounds", "url": "https://en.wikipedia.org/wiki/Washington_Township,_Marion_County,_Indiana"},
+      {"fact": "Monon Trail runs 10th St to 96th St, near Broad Ripple Village and the Indiana State Fairgrounds", "url": "https://parks.indy.gov/facilities/monon-trail/"},
+      {"fact": "Washington Township Small Claims Court, 5302 N. Keystone Ave., 46220, 317-327-8184; landlord-tenant venue rule", "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"}
+    ]
+  },
+  "broad-ripple": {
+    "jurisdiction": "Broad Ripple is a neighborhood of the City of Indianapolis in Washington Township, annexed in 1922 after being its own town. Indianapolis ordinances apply, including the landlord registry and STR permit program.",
+    "rental_rules_local": "",
+    "eviction_court": "Washington Township Small Claims Court, 5302 N. Keystone Ave., Suite E, Indianapolis, IN 46220, 317-327-8184. Broad Ripple is in Washington Township, and landlord-tenant cases are filed in the township where the property sits.",
+    "utilities_notes": "Standard Indianapolis providers: AES Indiana (electric) and Citizens Energy Group (gas, water, wastewater).",
+    "location": "Broad Ripple sits about six miles north of downtown, roughly bounded by the White River, Evanston Avenue, Kessler Boulevard and Meridian Street, with the Central Canal running through it. It is one of Indianapolis's designated cultural districts. Places include the Monon Trail, the 62-acre Broad Ripple Park on the White River, and the Indianapolis Art Center, and the IndyGo Red Line stops at College Avenue and Broad Ripple Avenue with service to downtown.",
+    "unverified": [
+      "Butler University is described as 'nearby' in the existing research file and is confirmed to be in Washington Township, but I did not confirm a distance from Broad Ripple.",
+      "The Encyclopedia of Indianapolis entry calls Broad Ripple a 'northeast Indianapolis neighborhood' (per the fetch summary), while Wikipedia says about six miles north of downtown. Use 'north side' as the safe wording."
+    ],
+    "sources": [
+      {"fact": "Broad Ripple in Washington Township; about six miles north of downtown; Central Canal, Monon Trail, Broad Ripple Park (62 acres), Indianapolis Art Center, Red Line station, cultural district", "url": "https://en.wikipedia.org/wiki/Broad_Ripple_Village,_Indianapolis"},
+      {"fact": "Boundaries (White River, Evanston Ave, Kessler Blvd, Meridian St); platted 1837; merged/incorporated 1884; annexed 1922; Broad Ripple Park 62 acres", "url": "https://indyencyclopedia.org/broad-ripple/"},
+      {"fact": "Broad Ripple platted in Washington Township in 1837 (Central Canal)", "url": "https://indyencyclopedia.org/washington-township/"},
+      {"fact": "Broad Ripple Village is one of Indianapolis's designated cultural districts", "url": "https://indyencyclopedia.org/cultural-districts/"},
+      {"fact": "Monon Trail passes Broad Ripple Village", "url": "https://parks.indy.gov/facilities/monon-trail/"},
+      {"fact": "Washington Township Small Claims Court address; landlord-tenant venue rule", "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"}
+    ]
+  },
+  "_court_context": {
+    "note": "2025 SB 327 would have required Marion County small claims cases to be filed in a specific township or a contiguous one and added a $26 service fee. It passed the Senate 48-1 but its last action was referral to House Judiciary on 3/3/2025, so it appears not to have become law. I did not check the 2026 session for similar bills.",
+    "sources": [
+      {"fact": "SB 327 committee amendment on venue and fees", "url": "https://legislativeupdate.courts.in.gov/2025/02/07/marion-county-small-claims-court-jurisdiction-venue-and-fees/"},
+      {"fact": "SB 327 bill status: last action House Judiciary referral 3/3/2025", "url": "https://iga.in.gov/legislative/2025/bills/senate/327"}
+    ]
+  }
+}

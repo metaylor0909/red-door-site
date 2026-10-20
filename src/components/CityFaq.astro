@@ -1,0 +1,72 @@
+---
+// City FAQ on the [city]-property-management pages (2026-10-20). Native
+// <details> (same reasoning as portabletext/AccordionSection.astro: free
+// keyboard and screen-reader behavior, no script). The page emits the
+// matching FAQPage JSON-LD from the same list.
+interface Props {
+  cityName: string;
+  faqs: Array<{ q: string; a: string }>;
+}
+
+const { cityName, faqs } = Astro.props;
+---
+
+{faqs.length > 0 && (
+  <section class="section-soft city-faq" aria-labelledby="city-faq-title">
+    <div class="container city-faq-inner">
+      <div class="section-head center reveal">
+        <div class="section-kicker">Owner Questions</div>
+        <h2 id="city-faq-title">{cityName} Property Management FAQ</h2>
+      </div>
+      <div class="city-faq-list reveal">
+        {faqs.map((f) => (
+          <details class="city-faq-item">
+            <summary>
+              <span>{f.q}</span>
+              <span class="city-faq-icon" aria-hidden="true"></span>
+            </summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .city-faq-inner { max-width: 860px; }
+  .city-faq-inner h2 { text-wrap: balance; }
+  .city-faq-list { display: grid; gap: 12px; }
+  .city-faq-item {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .city-faq-item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 60px;
+    padding: 16px 20px;
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 1.02rem;
+    cursor: pointer;
+    list-style: none;
+  }
+  .city-faq-item summary::-webkit-details-marker { display: none; }
+  .city-faq-icon { flex: 0 0 auto; position: relative; width: 20px; height: 20px; }
+  .city-faq-icon::before,
+  .city-faq-icon::after {
+    content: '';
+    position: absolute;
+    background: var(--brand);
+    border-radius: 2px;
+  }
+  .city-faq-icon::before { top: 9px; left: 2px; width: 16px; height: 2px; }
+  .city-faq-icon::after { top: 2px; left: 9px; width: 2px; height: 16px; transition: transform .15s ease; }
+  .city-faq-item[open] .city-faq-icon::after { transform: scaleY(0); }
+  .city-faq-item p { margin: 0; padding: 0 20px 20px; line-height: 1.7; color: var(--ink); }
+</style>

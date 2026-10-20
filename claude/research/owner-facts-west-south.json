@@ -1,0 +1,154 @@
+{
+  "_meta": {
+    "researched": "2026-10-20",
+    "scope": "Avon and Brownsburg (Hendricks County), Zionsville (Boone County), Greenwood (Johnson County)",
+    "fair_housing": "Places, rules, services and infrastructure only. No demographic, school, crime or 'family' content was collected. Greenwood's 'Move to Greenwood' page and its trails page use people-based marketing language (safety, schools, families); only the trail mileage and facility names were taken from them. Avon's short-term-rental standards and IC 36-1-24-10 list prohibited STR uses that touch protected-class territory (e.g., sober living homes); those were deliberately left out of the summaries.",
+    "note": "Every URL in 'sources' was opened during this pass. Municipal codes were searched in full text: Brownsburg, Greenwood and Zionsville on American Legal (codelibrary.amlegal.com search API scoped to each code), Avon on its CivicPlus code site (avon.municipalcodeonline.com, both the Municipal Code and the UDO). Brownsburg's UDO is adopted by reference and published only as a PDF, which was text-searched in full (296 pages, version dated August 13, 2026). Distances are the straight-line convention already used in red-door-city-facts-research.md.",
+    "state_rental_law": "IC 36-1-20-3.6 (added by P.L.157-2026) bars a unit from adopting or enforcing rules that prohibit or restrict an owner from using a privately owned residential property as a rental; health/safety, building/fire codes, reasonable occupancy standards and registration/inspection programs are still allowed. IC 36-1-20-5 lets a local unit run a rental registration program but caps the fee at $5 per year (per parcel, or per rental unit community). IC 36-1-20-4.1 bars local inspection of, or inspection fees on, a unit managed by a professional real estate manager that had a qualifying third-party inspection in the previous 12 months. None of the four areas below has adopted a rental registration or inspection program that this pass could find.",
+    "state_str_law": "IC 36-1-24 (2018, amended 2026): an owner-occupied short-term rental is a permitted residential use that zoning may not disallow (sec. 8); a non-owner-occupied STR may be made subject to a special exception, special use or variance, but not applied so as to prohibit or unreasonably restrict STRs (sec. 9); a local STR permit is one per property, expires after one year, and the fee is capped at $150 for an initial permit or reissue after revocation (secs. 11, 13). Owners still owe state and county innkeeper's tax on STR stays (not separately verified this pass).",
+    "property_tax_state": "IC 6-1.1-20.6-7.5 caps property tax on 'residential property' at 2% of gross assessed value (1% for a homestead), and IC 6-1.1-20.6-4 defines residential property to include a single-family dwelling that is not part of a homestead, i.e. a single-family rental. Voter-approved referendum levies are not counted toward the cap (7.5(b)), so a bill can exceed 2% by those amounts."
+  },
+  "avon": {
+    "jurisdiction": "Town of Avon (a town, not a city; incorporated 1995), in eastern Hendricks County. It lies in Washington and Lincoln townships.",
+    "rental_rules": "None found. Neither the Avon Municipal Code nor the Unified Development Ordinance has a rental registration, licensing, or inspection requirement for 12-month leases. The one rental-specific rule is Code 7-87: in a renter-occupied unit the owner, manager or rental agent must install required smoke detectors (AC-powered with battery backup) and repair or replace one within two business days of written notice.",
+    "short_term_rentals": "Avon requires a short-term rental permit before a property is used as an STR (UDO 4.11). The owner must post a 24/7 contact person who has a key and can be on site within 3 hours, post the maximum occupancy and parking instructions, and keep parking on paved areas such as driveways.",
+    "eviction_court": "Hendricks County evictions (EV) are filed in Hendricks Superior Court No. 1, 3, 4, or 5, assigned on an even and random basis, under the county's local rules as modified 12/16/25. The courts sit at the Hendricks County Courthouse, 51 W. Main St., Danville.",
+    "property_tax": "Billed by the Hendricks County Treasurer (Danville); 2026 installments are due May 11 and November 10, with bills mailed once a year in late March or early April. As a non-homestead single-family home, a rental is capped at 2% of gross assessed value under IC 6-1.1-20.6-7.5, before any voter-approved referendum levies.",
+    "utilities": {
+      "water": "Citizens Energy Group, per the Town of Avon's local-utilities page.",
+      "sewer": "West Central Conservancy District (243 S. County Road 625 E, Avon), per the Town of Avon.",
+      "electric": "Varies by location: the town lists Duke Energy, Hendricks Power Cooperative, and Indianapolis Power and Light.",
+      "gas": "CenterPoint Energy, per the Town of Avon."
+    },
+    "location": "About 13 miles west of downtown Indianapolis on US-36, the main east-west road through town; the Ronald Reagan Parkway corridor also runs through Avon (both have their own UDO overlay districts). The town's White Lick Creek Trail project is a north-south multi-use trail along White Lick Creek through Washington Township Park, with a planned branch to Avon Town Hall Park and a long-term link to Brownsburg's Williams Park. Avon has no town trash service; private haulers provide pickup.",
+    "unverified": [
+      "Water provider by address: the town page names only Citizens Energy Group, but a third-party directory also lists Aqua Indiana for parts of Hendricks County. Confirm before stating Citizens serves all of Avon.",
+      "The town's utility page still lists 'Indianapolis Power and Light'; that utility now operates as AES Indiana. The page looks dated, so confirm the electric list before publishing.",
+      "Township split (Washington and Lincoln) comes from Wikipedia only; the town's library name (Avon-Washington Township Public Library) supports Washington Township but no official map was opened.",
+      "Avon STR permit fee and application process: the UDO requires a permit but the fee schedule was not checked.",
+      "Hendricks County has posted proposed amendments to its caseload allocation plan effective January 1, 2027. The eviction court list could change; re-check before launch."
+    ],
+    "sources": [
+      {"fact": "Avon is a town in Hendricks County, Washington and Lincoln townships, ~13 mi west of Indianapolis on US-36", "url": "https://en.wikipedia.org/wiki/Avon,_Indiana"},
+      {"fact": "Avon Municipal Code (no rental registration chapter; 'rental' search hits only fees and 7-87)", "url": "https://avon.municipalcodeonline.com/book?type=ordinances"},
+      {"fact": "Code 7-87: renter-occupied units, smoke detector installation and two-business-day repair duty on owner/manager/rental agent", "url": "https://avon.municipalcodeonline.com/book?type=ordinances#name=7-87_DWELLINGS_-_SMOKE_DETECTOR_REQUIREMENTS"},
+      {"fact": "UDO 4.11 Short-Term Rentals: permit required, 24/7 contact within 3 hours, posted occupancy and parking", "url": "https://avon.municipalcodeonline.com/book?type=development#name=4.11_Short-Term_Rentals"},
+      {"fact": "Town links its online UDO from this page", "url": "https://www.avonindiana.gov/267/Unified-Development-Ordinance"},
+      {"fact": "Local utilities: Citizens Energy Group water, West Central Conservancy District sewer, CenterPoint gas, Duke/Hendricks Power/IPL electric, no town trash service", "url": "https://www.avonindiana.gov/439/Local-Utilities"},
+      {"fact": "White Lick Creek Trail, Washington Township Park, Avon Town Hall Park link", "url": "https://avonindiana.gov/Facilities/Facility/Details/White-Lick-Creek-Trail-41"},
+      {"fact": "Hendricks County local rule: EVs filed in Superior Courts 1, 3, 4, 5 on even and random basis (modified 12/16/25)", "url": "https://www.in.gov/courts/files/hendricks-local-rules.pdf"},
+      {"fact": "Hendricks County Courthouse address; proposed caseload-allocation amendments effective 1/1/2027", "url": "https://www.co.hendricks.in.us/department/index.php?structureid=13"},
+      {"fact": "Hendricks County Treasurer: 2026 due dates May 11 / Nov 10, annual mailing", "url": "https://www.co.hendricks.in.us/department/index.php?structureid=22"},
+      {"fact": "2% cap on residential property; referendum levies excluded", "url": "https://iga.in.gov/laws/2026/ic/titles/6"},
+      {"fact": "State rental-use protection, $5 registration cap, inspection limits (IC 36-1-20); STR rules (IC 36-1-24)", "url": "https://iga.in.gov/laws/2026/ic/titles/36#36-1-20"}
+    ]
+  },
+  "brownsburg": {
+    "jurisdiction": "Town of Brownsburg (a town), in Hendricks County, mainly Lincoln Township.",
+    "rental_rules": "None found. The Brownsburg Code of Ordinances (current through Ord. 2026-14, passed 8-27-26) has no rental registration, licensing, or inspection chapter; full-text searches for 'landlord', 'rental unit', and 'rental property' return nothing. One practical point: the town water utility requires a copy of the lease and an extra sewer deposit ($100 for meters 1 inch or smaller) from renters opening an account, on top of the $75 water meter deposit.",
+    "short_term_rentals": "No Brownsburg-specific short-term rental rule found: neither the town code nor the Unified Development Ordinance (PDF version dated August 13, 2026) defines or regulates short-term rentals, so the state STR law (IC 36-1-24) is the governing framework. The UDO regulates bed-and-breakfasts separately, as an owner-occupied use.",
+    "eviction_court": "Hendricks County evictions (EV) are filed in Hendricks Superior Court No. 1, 3, 4, or 5, assigned on an even and random basis, under the county's local rules as modified 12/16/25. The courts sit at the Hendricks County Courthouse, 51 W. Main St., Danville.",
+    "property_tax": "Billed by the Hendricks County Treasurer (Danville); 2026 installments are due May 11 and November 10, with bills mailed once a year in late March or early April. As a non-homestead single-family home, a rental is capped at 2% of gross assessed value under IC 6-1.1-20.6-7.5, before any voter-approved referendum levies.",
+    "utilities": {
+      "water": "Town of Brownsburg water utility (two treatment plants and eight wells, plus water bought from Citizens Energy Group); billed monthly by the town.",
+      "sewer": "Town of Brownsburg wastewater utility (5.25 MGD plant discharging to White Lick Creek); billed on the same monthly town bill as water and stormwater.",
+      "electric": "Not confirmed for Brownsburg specifically. Hendricks County's economic development partnership lists Duke Energy, Hendricks Power Cooperative, Indiana Municipal Power Agency, and Indianapolis Power & Light as county providers.",
+      "gas": "Not confirmed for Brownsburg specifically. The county partnership lists Vectren (now CenterPoint Energy) as the county's natural gas provider."
+    },
+    "location": "About 13 miles west-northwest of downtown Indianapolis (straight line), with I-74 exits at SR-267/Green Street (exit 66) and Ronald Reagan Parkway (exit 68), about 4 to 7 miles west of the I-465 junction; US-136 runs east-west through town. The town manages part of the 8.2-mile paved B&O Trail, plus the White Lick Creek Greenway to Arbuckle Acres Park and downtown, and the Bicentennial Trail links the B&O Trail into Avon. Avon borders Brownsburg to the south.",
+    "unverified": [
+      "Electric and gas provider by address: only a county-level list (HCEDP) was found. Third-party sources suggest a Duke Energy / Hendricks Power Cooperative split, but no official territory map was opened.",
+      "Township coverage: Wikipedia says Brownsburg spans Lincoln, Brown, Middle and Washington townships. Only 'mainly Lincoln Township' is stated above, and even that rests on Wikipedia, not an official source.",
+      "Whether Brownsburg requires any zoning approval for a non-owner-occupied STR: the UDO has no STR use, and how the town classifies one in practice (permitted as a dwelling vs. needing a special exception) was not confirmed with Development Services.",
+      "Hendricks County proposed caseload-allocation amendments effective January 1, 2027 could change the eviction court list."
+    ],
+    "sources": [
+      {"fact": "Brownsburg Code of Ordinances, S-34 supplement current through Ord. 2026-14 (8-27-26); chapter lists for Titles V, IX, XI, XV", "url": "https://codelibrary.amlegal.com/codes/brownsburg/latest/brownsburg_in"},
+      {"fact": "Chapter 155: UDO adopted by reference (Ord. 2024-16, amended through Ord. 2026-12, 8-13-26)", "url": "https://codelibrary.amlegal.com/codes/brownsburg/latest/brownsburg_in/0-0-0-28388"},
+      {"fact": "Brownsburg UDO PDF (Aug 13, 2026): no short-term rental use; bed-and-breakfast standards owner-occupied", "url": "https://www.brownsburg.org/DocumentCenter/View/3743/Brownsburg-UDO-PDF"},
+      {"fact": "Development Services page linking the UDO", "url": "https://www.brownsburg.org/158/Development-Services"},
+      {"fact": "Utility service application: $75 water meter deposit; renters $100 sewer deposit and copy of lease", "url": "https://www.brownsburg.org/242/Service-Application"},
+      {"fact": "Town bills water, sewer, stormwater and fire protection monthly", "url": "https://www.brownsburg.org/236/Utility-Billing"},
+      {"fact": "Water system: two plants, eight wells, purchases water from Citizens Energy Group", "url": "https://www.brownsburg.org/258/Water-Department"},
+      {"fact": "Wastewater: 5.25 MGD plant discharging to White Lick Creek", "url": "https://www.brownsburg.org/266/Wastewater"},
+      {"fact": "Trails: B&O Trail 8.2 mi, White Lick Creek Greenway, Bicentennial Trail to Avon, Arbuckle Acres and Williams Park loops", "url": "https://www.brownsburg.org/547/Trails"},
+      {"fact": "I-74 exits 66 (SR 267) and 68 (Ronald Reagan Pkwy) at Brownsburg; distance to I-465 junction", "url": "https://en.wikipedia.org/wiki/Interstate_74_in_Indiana"},
+      {"fact": "County utility provider list (electric, gas, water/sewer)", "url": "https://hcedp.org/?p=1432"},
+      {"fact": "Township list (Wikipedia)", "url": "https://en.wikipedia.org/wiki/Brownsburg,_Indiana"},
+      {"fact": "Hendricks County local rule: EVs filed in Superior Courts 1, 3, 4, 5", "url": "https://www.in.gov/courts/files/hendricks-local-rules.pdf"},
+      {"fact": "Hendricks County Courthouse address and proposed 2027 amendments", "url": "https://www.co.hendricks.in.us/department/index.php?structureid=13"},
+      {"fact": "Hendricks County Treasurer due dates", "url": "https://www.co.hendricks.in.us/department/index.php?structureid=22"},
+      {"fact": "2% cap / residential property definition", "url": "https://iga.in.gov/laws/2026/ic/titles/6"},
+      {"fact": "State STR law (IC 36-1-24) and rental-registration limits (IC 36-1-20)", "url": "https://iga.in.gov/laws/2026/ic/titles/36#36-1-20"}
+    ]
+  },
+  "zionsville": {
+    "jurisdiction": "Town of Zionsville (a town), in Boone County. Its limits cover Eagle and Union townships (annexed 2010) and part of Perry Township (2014).",
+    "rental_rules": "None found. The Zionsville Code of Ordinances (current through Ord. 2026-06, passed 3-16-2026; zoning through Ord. 2025-19) has no rental registration, licensing, or inspection chapter; full-text searches for 'landlord', 'rental unit', and 'rental property' return nothing.",
+    "short_term_rentals": "No Zionsville-specific short-term rental ordinance found: 'short-term rental' does not appear anywhere in the code or its zoning chapter (Ch. 194), so the state STR law (IC 36-1-24) is the governing framework. The zoning ordinance regulates bed-and-breakfasts as a separate use.",
+    "eviction_court": "All Boone County small claims, including evictions (EV), are filed in Boone Superior Court II, which has exclusive small claims jurisdiction, at the Boone County Courthouse, 112 Courthouse Square, Lebanon.",
+    "property_tax": "Billed by the Boone County Treasurer (209 Courthouse Square, Lebanon), in two installments due May 10 and November 10; statements are typically mailed in April. As a non-homestead single-family home, a rental is capped at 2% of gross assessed value under IC 6-1.1-20.6-7.5, before any voter-approved referendum levies.",
+    "utilities": {
+      "water": "Citizens Water (Citizens Energy Group), per the Town of Zionsville's utilities page.",
+      "sewer": "Town of Zionsville wastewater, billed by the town at a flat residential rate ($56.85 per month per residence as of January 1, 2025). Trash and recycling in the urban service district are contracted through Priority Waste, on the same town bill.",
+      "electric": "Not confirmed from an official source. Third-party guides describe Duke Energy on the east side and Boone REMC on the west side.",
+      "gas": "Not confirmed from an official source. Third-party guides name CenterPoint Energy; Citizens supplies gas in at least part of Union Township, per 2025 local reporting."
+    },
+    "location": "About 15 miles northwest of downtown Indianapolis, with I-65 and I-865 both serving the town; US-421 (Michigan Road) runs along the east side toward Carmel. The town's 12-foot-plus paved Big-4 Rail Trail is the 5-mile spine of more than 20 miles of connected paved paths and runs to the Whitestown border. The historic brick Main Street village is the town center.",
+    "unverified": [
+      "Electric and gas providers: only third-party relocation guides and a news article were found. Confirm with Duke Energy, Boone REMC, and CenterPoint service-territory lookups.",
+      "Sewer: a November 2025 report says part of Union Township was proposed to move from Hamilton Southeastern Utilities to Citizens Wastewater, which means the town flat rate may not cover every Zionsville address. The outcome of that transfer was not confirmed.",
+      "Zionsville's zoning chapter on American Legal is current only through Ord. 2025-19 (July 2025). If the town has adopted a newer zoning or UDO rewrite since then, the 'no STR provision' finding needs re-checking with the Planning Department.",
+      "Older 2016-17 news coverage reportedly described the town treating Airbnb-style rentals as bed-and-breakfast uses through its zoning appeals board. Not opened or verified, and it predates IC 36-1-24, so it is not used above.",
+      "The I-865 and US-421 placement comes from Wikipedia and the existing city-facts file, not an official source."
+    ],
+    "sources": [
+      {"fact": "Zionsville code current through Ord. 2026-06 (3-16-2026); zoning through Ord. 2025-19 (7-21-2025); full-text searches", "url": "https://codelibrary.amlegal.com/codes/zionsville/latest/overview"},
+      {"fact": "Town, Boone County; Eagle/Union annexed 2010, Perry 2014; I-65, I-865, US-421; Big-4 Rail Trail", "url": "https://en.wikipedia.org/wiki/Zionsville,_Indiana"},
+      {"fact": "Big-4 Rail Trail: 12'+ paved, 5-mile spine of 20+ miles of paths, runs to Whitestown border", "url": "https://zionsville-in.gov/701/Big-4-Rail-Trail"},
+      {"fact": "Trash (Priority) and town sewer flat rate $56.85/month as of 1/1/2025; Citizens Water contact", "url": "https://www.zionsville-in.gov/691/Trash-and-Utilities"},
+      {"fact": "Proposed transfer of Union Township wastewater rights to Citizens; Citizens provides gas and water there", "url": "https://youarecurrent.com/2025/11/13/change-planned-for-wastewater-service-in-parts-of-zionsville/"},
+      {"fact": "Boone local rules: Superior II has exclusive jurisdiction over all small claims including EV", "url": "https://www.in.gov/courts/files/boone-local-rules.pdf"},
+      {"fact": "Boone Superior Court II: small claims only filed there; 112 Courthouse Square, Lebanon", "url": "https://boonecounty.in.gov/offices/superior-court-II"},
+      {"fact": "Boone County Treasurer: due May 10 / Nov 10, statements mailed in April, 209 Courthouse Square", "url": "https://boonecounty.in.gov/offices/treasurer"},
+      {"fact": "2% cap / residential property definition", "url": "https://iga.in.gov/laws/2026/ic/titles/6"},
+      {"fact": "State STR law (IC 36-1-24) and rental-registration limits (IC 36-1-20)", "url": "https://iga.in.gov/laws/2026/ic/titles/36#36-1-20"}
+    ]
+  },
+  "greenwood": {
+    "jurisdiction": "City of Greenwood (a second-class city since 2010), in northern Johnson County. It covers the northern half of Pleasant Township and the northeast part of White River Township, with its eastern edge reaching into Clark Township.",
+    "rental_rules": "None found. The Greenwood Code of Ordinances (current through Ord. 26-23, passed 7-6-26) has no rental registration, licensing, or inspection chapter. One owner-specific point: city sanitary sewer and waste bills go to property owners monthly, and sewer service is started or stopped only through the water provider, not by the tenant contacting the city.",
+    "short_term_rentals": "Greenwood's UDO (Sec. 10-03-16 G) sets standards for short-term rental residences. In the RL, RM, and RA zones the proprietor must also have a primary residence on site, and guest counts are capped per property; everywhere, units need working fire extinguishers, smoke detectors, and carbon monoxide detectors, and guest stays may not exceed 40 days.",
+    "eviction_court": "Johnson County small claims cases, including evictions (EV), are filed in the Johnson Circuit and Superior Courts on a random and even basis and heard by the courts' magistrate, at the Johnson County Courthouse, 5 E. Jefferson St., Franklin. Greenwood City Court handles misdemeanors, infractions, and city ordinance violations, not evictions.",
+    "property_tax": "Billed by the Johnson County Treasurer (86 W. Court St., Franklin); 2026 installments are due May 11 and November 10. As a non-homestead single-family home, a rental is capped at 2% of gross assessed value under IC 6-1.1-20.6-7.5, before any voter-approved referendum levies.",
+    "utilities": {
+      "water": "Varies by area: the city lists Indiana American Water and Bargersville Water as local water providers.",
+      "sewer": "City of Greenwood Sanitation Department (about 500 miles of sewer in northern Johnson County), billed to property owners monthly. Residential trash inside city limits is added to the same account (Best Way Disposal).",
+      "electric": "Not confirmed from an official source. Duke Energy Indiana is the presumed main provider, with Johnson County REMC in parts of the county.",
+      "gas": "Not confirmed from an official source. CenterPoint Energy (formerly Vectren) is the presumed provider."
+    },
+    "location": "About 11 miles south of downtown Indianapolis, with three I-65 exits (97, 99, 101) on the city's east side, I-69 interchanges just west of city limits, and US-31 and SR-135 as the main north-south streets. The city lists more than 50 linear miles of multi-use trails and runs the Freedom Springs aquatic center, the Greenwood Fieldhouse, and Greenwood Sports Park; Indy South Greenwood Airport is city-owned.",
+    "unverified": [
+      "Electric and gas providers: no official city or utility page was opened that names them. Confirm with Duke Energy, Johnson County REMC, and CenterPoint service-territory lookups before publishing.",
+      "Legal question for counsel: Greenwood's owner-on-site requirement for STRs in the RL/RM/RA zones may conflict with IC 36-1-24-9 (a non-owner-occupied STR can be made to need a special exception or variance, but not effectively prohibited) unless Greenwood qualifies for the pre-2018 exemption in IC 36-1-24-1. The section shown is from Ord. 20-29 (2020). Don't present this as settled.",
+      "The STR guest cap in the ordinance is stated by guest age. It is summarized above only as 'guest counts are capped' to keep age wording off a housing page; confirm the exact wording with counsel if it is quoted.",
+      "Water split: which Greenwood addresses get Bargersville Water vs. Indiana American Water was not mapped.",
+      "Johnson County court assignments come from the consolidated local rules on in.gov; a 2025 order (25S-MS-4) amended other caseload rules. Re-check the small claims/EV rule before launch."
+    ],
+    "sources": [
+      {"fact": "Greenwood code current through Ord. 26-23 (7-6-26); full-text searches found no rental registration", "url": "https://codelibrary.amlegal.com/codes/greenwood/latest/greenwood_in"},
+      {"fact": "UDO Sec. 10-03-16 G: Short-Term Rental Residences standards", "url": "https://codelibrary.amlegal.com/codes/greenwood/latest/greenwood_in/0-0-0-24695"},
+      {"fact": "Townships, city class, I-65 exits 97/99/101, I-69 exits west of city, US-31 and SR-135", "url": "https://en.wikipedia.org/wiki/Greenwood,_Indiana"},
+      {"fact": "Sanitation Dept: ~500 mi of sewer, bills sent to property owners monthly; turn-on/off via water provider; local water providers Indiana American Water and Bargersville Water", "url": "https://www.greenwood.in.gov/division/blocks.php?structureid=269"},
+      {"fact": "Trash service via Best Way Disposal inside city limits", "url": "https://www.greenwood.in.gov/division/blocks.php?structureid=202"},
+      {"fact": "Greenwood City Court jurisdiction: misdemeanors, infractions, city ordinance violations", "url": "https://www.greenwood.in.gov/department/index.php?structureid=87"},
+      {"fact": "Trail network: more than fifty linear miles of multi-use trails", "url": "https://greenwood.in.gov/trails"},
+      {"fact": "City-run Freedom Springs, Greenwood Fieldhouse, Greenwood Sports Park", "url": "https://www.greenwood.in.gov/play"},
+      {"fact": "Johnson County local rules: SC including EV filed in Circuit and Superior Courts, random and even, heard by magistrate", "url": "https://www.in.gov/courts/files/johnson-local-rules.pdf"},
+      {"fact": "Johnson County Courthouse, 5 E Jefferson St, Franklin", "url": "https://johnsoncounty.in.gov/department/index.php?structureid=19"},
+      {"fact": "Johnson County Treasurer: 2026 due dates May 11 / Nov 10; 86 W Court St, Franklin", "url": "https://johnsoncounty.in.gov/department/index.php?structureid=42"},
+      {"fact": "2% cap / residential property definition", "url": "https://iga.in.gov/laws/2026/ic/titles/6"},
+      {"fact": "State STR law (IC 36-1-24) and rental-registration limits (IC 36-1-20)", "url": "https://iga.in.gov/laws/2026/ic/titles/36#36-1-20"}
+    ]
+  }
+}

@@ -23,6 +23,11 @@
 // /rental-analysis instead; Michael asked 2026-09-24 for the real form
 // to render inline across these pages too).
 //
+// Per-city content added 2026-10-20 so the pages aren't near-duplicates:
+// CityOwnerInsights (owner paragraphs from RentCast data, researched local
+// facts, Red Door's RentEngine lease count) and CityFaq, with FAQPage
+// JSON-LD built from the same list.
+//
 // Shared sections (JourneyProcess, WhyChooseAccordion, GuaranteeSection,
 // ReviewsCarousel, AreasServedGrid, LandlordLibrary, ProofStrip) are the
 // same components the homepage uses — confirmed via diff that their
@@ -44,14 +49,40 @@ import CityInterlinkPanel from '../components/CityInterlinkPanel.astro';
 import { getCityLinks } from '../lib/interlinking/city-links';
 import MarketReportStrip from '../components/MarketReportStrip.astro';
 import { loadRecentCityReports } from '../lib/blog/city-reports';
+import CityOwnerInsights from '../components/CityOwnerInsights.astro';
+import CityFaq from '../components/CityFaq.astro';
+import { loadCityMarketRaw, buildCityInsights, redDoorTrackRecord } from '../lib/property-management/city-insights';
+import { getCityLocalFacts } from '../lib/property-management/local-facts';
+import { fetchLeasedUnitLocations, RENTENGINE_ACCOUNT_ID, type LeasedUnitLocation } from '../lib/listings/rentengine';
 
 export async function getStaticPaths() {
+  // Red Door's own leases, fetched once for all 19 pages. Without a key
+  // (or if RentEngine is down) the pages build without the count line.
+  let leased: LeasedUnitLocation[] | null = null;
+  const apiKey = import.meta.env.RENTENGINE_LISTINGS_KEY;
+  if (apiKey) {
+    try {
+      leased = await fetchLeasedUnitLocations({
+        apiKey,
+        accountId: import.meta.env.RENTENGINE_LISTINGS_ACCOUNT_ID || RENTENGINE_ACCOUNT_ID,
+      });
+    } catch (err) {
+      console.warn('[city property-management] Could not load leased units — pages will build without the Red Door count.', err);
+    }
+  }
+  const metroRaw = await loadCityMarketRaw(env.DB, 'indianapolis');
+
   return Promise.all(
     CITIES.map(async (city) => {
-      const snapshot = await loadMarketSnapshot(env.DB, city.slug);
+      const [snapshot, raw] = await Promise.all([loadMarketSnapshot(env.DB, city.slug), loadCityMarketRaw(env.DB, city.slug)]);
       return {
         params: { city: city.slug },
-        props: { city, snapshot },
+        props: {
+          city,
+          snapshot,
+          insights: buildCityInsights(city.name, raw, metroRaw),
+          trackRecord: leased ? redDoorTrackRecord(leased, city.name, raw?.zipsUsed ?? []) : null,
+        },
       };
     })
   );
@@ -60,15 +91,33 @@ export async function getStaticPaths() {
 interface Props {
   city: CityEntry;
   snapshot: Awaited<ReturnType<typeof loadMarketSnapshot>>;
+  insights: ReturnType<typeof buildCityInsights>;
+  trackRecord: ReturnType<typeof redDoorTrackRecord> | null;
 }
 
-const { city, snapshot } = Astro.props;
+const { city, snapshot, insights, trackRecord } = Astro.props;
 const { slug, name } = city;
 const cityLinks = getCityLinks(slug);
 
 // Recent market reports under the snapshot. Cities without recent
 // reports of their own render nothing (see loadRecentCityReports).
 const recentReports = await loadRecentCityReports(slug, name);
+
+const localFacts = getCityLocalFacts(slug);
+
+// Data FAQs first (rent, lease time), then the researched local ones
+// (rental rules, evictions), then Red Door's own.
+const trackSentence = trackRecord?.metroCount
+  ? ` ${trackRecord.since ? `Since ${trackRecord.since}, the` : 'The'} team has leased ${trackRecord.metroCount} homes across the area${trackRecord.cityCount ? `, ${trackRecord.cityCount} of them in ${name}` : ''}.`
+  : '';
+const faqs = [
+  ...(insights?.faqs ?? []),
+  ...(localFacts?.faqs ?? []),
+  {
+    q: `Does Red Door manage rental homes in ${name}?`,
+    a: `Yes. Red Door manages single-family rental homes in ${name} and across Central Indiana, handling marketing, tenant screening, leasing, maintenance, and owner reporting.${trackSentence} Management fees are listed on the pricing page, and a free rental analysis is the usual first step.`,
+  },
+];
 
 const pageTitle = `${name} Property Management | Red Door Property Management`;
 const pageDescription = `Full-service ${name} property management from Red Door — marketing, tenant screening, leasing, maintenance, and communication for rental owners.`;
@@ -101,6 +150,15 @@ const jsonLd = {
         { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.reddoorrents.com/' },
         { '@type': 'ListItem', position: 2, name: `${name} Property Management`, item: canonicalUrl },
       ],
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${canonicalUrl}#faq`,
+      mainEntity: faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
     },
   ],
 };
@@ -168,6 +226,8 @@ const jsonLd = {
     </div>
   </section>
 
+  <CityOwnerInsights cityName={name} insights={insights} localFacts={localFacts} trackRecord={trackRecord} />
+
   <WhyChooseAccordion cityName={name} areaLabel={`${name}-area`} />
 
   <GuaranteeSection />
@@ -193,6 +253,8 @@ const jsonLd = {
       <RentalAnalysisForm />
     </div>
   </section>
+
+  <CityFaq cityName={name} faqs={faqs} />
 
   <AreasServedGrid
     headingLine1={`${name} Property Management,`}

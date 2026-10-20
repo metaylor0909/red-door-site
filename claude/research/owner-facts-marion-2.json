@@ -1,0 +1,187 @@
+{
+  "_meta": {
+    "researched": "2026-10-20",
+    "scope": "Decatur, Franklin, Perry, Pike, Wayne townships (Marion County). Citywide Indianapolis rental registry and citywide utilities are covered by a separate researcher; this file covers township-specific details and the included/excluded towns inside these townships.",
+    "fair_housing": "Places, rules, services and infrastructure only. No demographics, schools, crime or resident descriptions were collected. Source pages that included that kind of content (e.g. the Perry Township Wikipedia page's list of high schools) were deliberately left out.",
+    "shared_sources": [
+      {"fact": "Landlord-tenant small claims cases must be filed in the township small claims court where the property is located (Small Claims Rule 12); if the township has no court, they may be filed in any township. Lists all nine township court addresses.", "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"},
+      {"fact": "AES Indiana tariff (effective July 27, 2026) lists Indianapolis, Beech Grove, Southport, Speedway, Clermont and Marion County among places where it provides electric service; the sheet says it is informational and not a full description of the territory.", "url": "https://www.aesindiana.com/sites/aesvault.com/files/2026-07/Service-Area-Description-46258-Effective-07-27-26.pdf"},
+      {"fact": "Citizens Energy Group provides natural gas in the Indianapolis area, water in the 8-county Indianapolis area, and wastewater in Marion County. It sells water to communities that run their own water utilities (Speedway named) and has wastewater agreements with Ben Davis Conservancy District, City of Beech Grove and Tri-County Conservancy District, among others.", "url": "https://info.citizensenergygroup.com/company/divisions"},
+      {"fact": "Citizens' Septic Tank Elimination Program (STEP) connects properties still on septic systems to sewer; owners can check a specific address with a Utility Availability Request.", "url": "https://info.citizensenergygroup.com/projects/step"},
+      {"fact": "Under Unigov, Beech Grove, Lawrence, Southport and Speedway are excluded cities/towns that keep most of their own government; Clermont and Homecroft are among the included towns.", "url": "https://en.wikipedia.org/wiki/Unigov"}
+    ]
+  },
+
+  "decatur-township": {
+    "jurisdiction": "Decatur Township is the southwest-corner township of Marion County, governed as part of the consolidated City of Indianapolis. It has no included or excluded towns of its own; Camby (partly) and Valley Mills are unincorporated communities inside it.",
+    "local_rules_notes": "No separate town-level rental rules apply, because no included or excluded town lies inside the township. Citywide Indianapolis/Marion County rules apply (covered separately).",
+    "eviction_court": "Decatur Township Small Claims Court, 3730 S. Foltz St., Indianapolis, IN 46221, (317) 241-2854. Evictions on Decatur Township property must be filed here.",
+    "utilities": {
+      "water": "Citizens Energy Group in most of the township. Much of Decatur Township is still farmland, so some properties may be on private wells; check each address.",
+      "sewer": "Citizens Energy Group in most of the township. Properties still on septic can check whether Citizens' STEP program covers them with a Utility Availability Request.",
+      "electric": "AES Indiana.",
+      "gas": "Citizens Energy Group."
+    },
+    "location": "Southwest Marion County, with the White River forming its eastern line with Perry Township. I-465 and I-70 cross the northern part of the township, State Road 67 (Kentucky Avenue) runs through it, and the Ronald Reagan Parkway links the 1,500-acre AmeriPlex industrial park to I-70 near the airport. Indianapolis International Airport, about seven miles southwest of downtown, spans Decatur and Wayne townships and has its 2008 midfield terminal here; Southwestway Park (8400 Mann Road, along the White River) has trails and an 18-hole golf course.",
+    "unverified": [
+      "Court ZIP code: the township's official court page says 46221, but the 2023 Warren Township brochure lists 3750 S. Foltz St., 46241. Use the official page (3730 / 46221), but confirm by phone before printing.",
+      "Exactly which parts of Decatur Township rely on private wells or septic. No source names specific areas; only that much of the township is still farmland.",
+      "Whether any part of Decatur Township is inside the Tri-County Conservancy District (a sewer district covering parts of Marion, Morgan and Hendricks counties and serving Heartland Crossing). Its pages don't say which Marion County areas it covers.",
+      "Southwestway Park acreage: Wikipedia gives both 587 and 487.5 acres. Leave the acreage out.",
+      "Which township the new I-69/I-465 interchange (opened August 2024, just west of the SR 37/Harding St interchange) sits in, Decatur or Perry. Not confirmed, so I-69 is left out of this text.",
+      "Straight-line distance from the township center to downtown is about 7.5 miles, but that figure is calculated from coordinates in red-door-city-facts-research.md, not taken from a source."
+    ],
+    "sources": [
+      {"fact": "Southwest Marion County; I-465 and I-70 cross the northern part; SR 67 (Kentucky Ave); Ronald Reagan Parkway links AmeriPlex (1,500 acres) to I-70 near airport; 2008 midfield terminal; much of the township still farmland", "url": "https://indyencyclopedia.org/decatur-township/"},
+      {"fact": "Communities: Airport (south half), Ameriplex, Camby (northeast two-thirds), Valley Mills, West Newton; only municipality listed is Indianapolis (partial); White River water boundary with Perry", "url": "https://en.wikipedia.org/wiki/Decatur_Township,_Marion_County,_Indiana"},
+      {"fact": "Court location 3730 S. Foltz St., Indianapolis, IN 46221; courthouse phone (317) 241-2854; hours 8:30-4:00", "url": "http://www.in.gov/townships/decatur49/departments/small-claims-court/"},
+      {"fact": "Court hears landlord-tenant disputes up to $10,000 and emergency possessory actions under IC 32-31-6", "url": "http://www.in.gov/townships/decatur49/departments/small-claims-court/court-information/"},
+      {"fact": "Landlord-tenant cases must be filed in the township where the property is located; Decatur court listed at 3750 S. Foltz St., 46241 (conflicts with official page)", "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"},
+      {"fact": "Airport is 7 miles southwest of downtown and occupies 7,700 acres across Wayne and Decatur townships", "url": "https://en.wikipedia.org/wiki/Indianapolis_International_Airport"},
+      {"fact": "Southwestway Park at 8400 Mann Road on the White River's west bank; trails; Winding River Golf Course (18 holes)", "url": "https://en.wikipedia.org/wiki/Southwestway_Park"},
+      {"fact": "Tri-County Conservancy District covers parts of Morgan, Marion and Hendricks counties and handles sewer for properties inside it; Citizens provides water to its Marion and Hendricks customers", "url": "https://tricountyconservancy-in.gov/faqs"},
+      {"fact": "Citizens: water, wastewater (Marion County), gas", "url": "https://info.citizensenergygroup.com/company/divisions"},
+      {"fact": "AES Indiana serves Indianapolis / Marion County", "url": "https://www.aesindiana.com/sites/aesvault.com/files/2026-07/Service-Area-Description-46258-Effective-07-27-26.pdf"}
+    ]
+  },
+
+  "franklin-township": {
+    "jurisdiction": "Franklin Township is the southeast-corner township of Marion County, governed as part of the consolidated City of Indianapolis. The eastern portion of Beech Grove, an excluded city, lies inside it; Acton, Wanamaker and Gallaudet are unincorporated communities.",
+    "local_rules_notes": "Outside Beech Grove, citywide Indianapolis/Marion County rules apply. Beech Grove is an excluded city with its own government and its own city-owned sewer utility. No Beech Grove rental registration or inspection ordinance could be found or confirmed.",
+    "eviction_court": "Franklin Township Small Claims Court, 4531 Independence Square, Indianapolis, IN 46203, 317-784-1751. Evictions on Franklin Township property must be filed here.",
+    "utilities": {
+      "water": "Citizens Energy Group in most of the township. Franklin Township holds about 40% of Marion County's undeveloped farm ground, so rural properties may be on private wells; check each address.",
+      "sewer": "Citizens Energy Group in most of the township, with septic likely on rural parcels (check through Citizens' Utility Availability Request). In Beech Grove, sewer is a city-owned utility that bills residents and pays Citizens for treatment.",
+      "electric": "AES Indiana.",
+      "gas": "Citizens Energy Group."
+    },
+    "location": "Southeast side of Indianapolis, covering about 42 square miles. I-74 follows the old Michigan Road route (Southeastern Avenue) through the township, I-65 runs along its western edge, and Southport Road and Franklin Road are the main local corridors. Southeastway Park (5624 S. Carroll Rd., off I-74 at Acton Road) is a 188-acre nature park on Buck Creek, the township is home to the Marion County Fairgrounds, and suburban subdivisions sit next to working farmland.",
+    "unverified": [
+      "Court address: a third-party directory (recordsfinder) gives 4351 Independence Square. The township's own courts page and the 2023 Warren Township brochure both say 4531, which is used here.",
+      "Whether Beech Grove has its own rental registration or inspection requirement. Beech Grove's official site and code could not be reached; a commercial tenant site claims it has no local housing ordinances beyond state law, which is not confirmed.",
+      "Beech Grove's drinking-water provider, assumed to be Citizens Energy. Only a commercial aggregator says so.",
+      "Whether the Indianapolis rental registry applies inside Beech Grove (an excluded city). Hand this to the citywide researcher.",
+      "Whether I-465 crosses Franklin Township. Not confirmed in any source opened, so it is left out.",
+      "Exact location of the Marion County Fairgrounds: the encyclopedia says only that it is near the Five Points area. The township-landmark claim comes from the earlier research file.",
+      "Straight-line distance from the township center to downtown is about 9 miles, calculated from coordinates in red-door-city-facts-research.md, not taken from a source."
+    ],
+    "sources": [
+      {"fact": "Southeastern corner, about 42 sq mi; Michigan Road is now I-74/Southeastern Ave; Southport and Franklin roads; 40 percent of the county's underdeveloped farm ground; working farms alongside subdivisions; Five Points area near Marion County Fairgrounds", "url": "https://indyencyclopedia.org/franklin-township/"},
+      {"fact": "Beech Grove (excluded city) eastern portion in township; communities Acton, Gallaudet, I-65/South Emerson (east half), Poplar Grove, Wanamaker; no included towns", "url": "https://en.wikipedia.org/wiki/Franklin_Township,_Marion_County,_Indiana"},
+      {"fact": "Franklin Township Small Claims Court, 4531 Independence Square, Indianapolis, IN 46203; phone 317-784-1751; landlord/tenant disputes and emergency possessory actions", "url": "https://franklintownshipindiana.org/courts/"},
+      {"fact": "Brochure lists Franklin Township court at 4531 Independence Sq., 46203, 317-784-1751; landlord-tenant venue rule", "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"},
+      {"fact": "Southeastway Park, 5624 S Carroll Rd, 188-acre nature park, Buck Creek, reached from I-74 at the Acton Road exit in Franklin Township", "url": "https://parks.indy.gov/parks/southeastway-park/"},
+      {"fact": "Beech Grove owns its sewer system and pays Citizens Energy Group for wastewater treatment (Aug 5, 2025)", "url": "https://mirrorindy.org/beech-grove-city-council-approves-sewer-stormwater-rate-bill-increase/"},
+      {"fact": "Citizens has a wastewater service agreement with the City of Beech Grove; provides water, wastewater and gas", "url": "https://info.citizensenergygroup.com/company/divisions"},
+      {"fact": "AES Indiana lists Beech Grove, Indianapolis and Marion County in its service area", "url": "https://www.aesindiana.com/sites/aesvault.com/files/2026-07/Service-Area-Description-46258-Effective-07-27-26.pdf"},
+      {"fact": "Septic-to-sewer program and Utility Availability Request", "url": "https://info.citizensenergygroup.com/projects/step"}
+    ]
+  },
+
+  "perry-township": {
+    "jurisdiction": "Perry Township is on the south side of Marion County, governed as part of the consolidated City of Indianapolis. It contains Southport (an excluded city), Homecroft (an included town) and the southwest third of Beech Grove (an excluded city).",
+    "local_rules_notes": "Southport's official city site lists no rental registration or landlord program; its Clerk-Treasurer handles building permits and trade licenses. Homecroft's ordinance list has nothing on rentals, and Indianapolis-Marion County law applies there as an included town. No Beech Grove rental ordinance could be confirmed.",
+    "eviction_court": "Perry Township Small Claims Court, 4925 Shelby Street, Suite 100, Indianapolis, IN 46227, (317) 786-9242. The court's own page says landlord-tenant cases 'shall be in the township where the real estate is located.'",
+    "utilities": {
+      "water": "Citizens Energy Group in most of the township.",
+      "sewer": "Citizens Energy Group in most of the township. Beech Grove runs its own city-owned sewer utility and pays Citizens for treatment. Southport's sewer arrangement was not confirmed.",
+      "electric": "AES Indiana, including Southport and Beech Grove.",
+      "gas": "Citizens Energy Group."
+    },
+    "location": "Directly south of Center Township and downtown, with the White River on its west side and Johnson County (Greenwood) to the south. I-65 and I-465 cross the township, and Madison Avenue, South Meridian Street (SR 135), US 31 and SR 37 are the main commuter roads. Landmarks include the University of Indianapolis, the historic Southport commercial district, and Perry Park (451 E. Stop 11 Rd.), home to Indy Parks' only indoor ice rink and a seasonal outdoor pool.",
+    "unverified": [
+      "Southport's sewer and water providers. Southport's official site doesn't say; the only lead is an old IBJ story about the Southport wastewater treatment plant, which is a Citizens/city plant and not proof of who serves the city of Southport.",
+      "Whether the Indianapolis rental registry applies inside Southport and Beech Grove (excluded cities). Hand this to the citywide researcher.",
+      "A 'Southport short-term rental ordinance' that turned up in search is from Southport, North Carolina (cityofsouthport.com), NOT Southport, Indiana. Do not use it.",
+      "Whether Homecroft's full code (homecroft.municipal.codes) has any rental provision. Only the town's ordinance list page was checked.",
+      "Citizens' STEP septic-to-sewer project list includes 'Banta/Bluff Crest' and 'Thompson/Meridian', which by street names look like Perry Township, but the page doesn't map projects to townships.",
+      "Whether I-69 (connected to I-465 near Harding St in August 2024) enters Perry Township. Not confirmed, so it is left out.",
+      "Straight-line distance from the township center to downtown is about 6 miles, calculated from coordinates in red-door-city-facts-research.md, not taken from a source."
+    ],
+    "sources": [
+      {"fact": "South side of Indianapolis; Beech Grove partly in Perry; Southport platted 1849/incorporated 1853; Homecroft an included town; Madison Ave, S. Meridian (SR 135), SR 37, US 31, I-465, I-65; University of Indianapolis; Southport business district", "url": "https://indyencyclopedia.org/perry-township/"},
+      {"fact": "Municipalities: Beech Grove (southwest third), Homecroft, Indianapolis (partial), Southport; White River water boundary with Decatur", "url": "https://en.wikipedia.org/wiki/Perry_Township,_Marion_County,_Indiana"},
+      {"fact": "Perry Township Small Claims Court, 4925 Shelby St, Suite 100, Indianapolis, IN 46227; (317) 786-9242; landlord-tenant venue in the township where the real estate is located; up to $10,000", "url": "https://www.perrytownship-in.gov/court-information.html"},
+      {"fact": "Perry Township court listed at 4925 S. Shelby St., 46227, 317-786-9242", "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"},
+      {"fact": "Southport official site: departments listed; no rental registration content", "url": "https://www.in.gov/cities/southport/"},
+      {"fact": "Southport Clerk-Treasurer handles trade licenses and building permits; no rental/landlord registration content", "url": "https://www.in.gov/cities/southport/clerk-treasurer/"},
+      {"fact": "Homecroft ordinance list (17-02 peddlers, 16-02, 16-03, 16-04): none on rentals", "url": "https://www.townofhomecroftin.gov/ordinances.html"},
+      {"fact": "Perry Park, 451 E Stop 11 Rd, Indy Parks' only indoor ice rink (Sept-April) and seasonal outdoor pool", "url": "https://parks.indy.gov/parks/perry-park/"},
+      {"fact": "Beech Grove-owned sewer system pays Citizens for treatment", "url": "https://mirrorindy.org/beech-grove-city-council-approves-sewer-stormwater-rate-bill-increase/"},
+      {"fact": "AES Indiana lists Southport and Beech Grove", "url": "https://www.aesindiana.com/sites/aesvault.com/files/2026-07/Service-Area-Description-46258-Effective-07-27-26.pdf"},
+      {"fact": "STEP project areas include Banta/Bluff Crest and Thompson/Meridian", "url": "https://info.citizensenergygroup.com/projects/step"}
+    ]
+  },
+
+  "pike-township": {
+    "jurisdiction": "Pike Township is the northwest-corner township of Marion County, governed as part of the consolidated City of Indianapolis. Part of Clermont (an included town split between Pike and Wayne townships) lies inside it; Augusta and Traders Point are unincorporated communities.",
+    "local_rules_notes": "Clermont's own site says that as an included town, 'all laws of Indianapolis-Marion County now also apply in Clermont,' and its ordinance page lists no rental or landlord ordinance. Clermont is rewriting its town code (started 2023), so check the current code before relying on that.",
+    "eviction_court": "Pike Township Small Claims Court, 5665 Lafayette Road, Suite B, Indianapolis, IN 46254, 317-293-1842. Evictions on Pike Township property must be filed here.",
+    "utilities": {
+      "water": "Citizens Energy Group.",
+      "sewer": "Citizens Energy Group. Sewer construction in 1969 opened the township to development.",
+      "electric": "AES Indiana, including Clermont.",
+      "gas": "Citizens Energy Group."
+    },
+    "location": "Northwest side of Indianapolis, bordering Boone and Hamilton counties. I-65 and I-465 meet at the township's north junction, I-74 crosses its southwest corner (with no exits there), and Lafayette Road, Michigan Road, West 86th Street and Zionsville Road are the main corridors. Eagle Creek Park, about 5,000 acres including a 1,400-acre reservoir, is one of the largest municipal parks in the U.S.; other landmarks are Lafayette Square Mall (opened 1968), the Pyramids office buildings near Michigan Road and 86th Street, and the Park 100 business park.",
+    "unverified": [
+      "No official Pike Township web page for the small claims court was found. The address comes from the 2023 Warren Township brochure (which leaves out the suite) and Indiana Legal Help's tenant-clinic listing (which gives Suite B).",
+      "Which half of Clermont lies in Pike: Wikipedia's Pike page says the 'northern half' in one place and 'a portion... in the southwest corner' in another, and its Wayne page says 'south half.' Safe wording: Clermont lies partly in Pike and partly in Wayne.",
+      "Clermont's water and sewer providers were not confirmed separately (assumed Citizens).",
+      "Pike-specific confirmation of Citizens water and gas. The Citizens page describes service areas only at the county/metro level.",
+      "Eagle Creek Park acreage varies by source: the encyclopedia says 5,000 acres, Wikipedia about 3,900 land plus 1,400 water (about 5,300 total). Use 'about 5,000 acres.'",
+      "Straight-line distance from the township center to downtown is about 8.5-9 miles, calculated from coordinates in red-door-city-facts-research.md, not taken from a source."
+    ],
+    "sources": [
+      {"fact": "Northwest Marion County; I-465 and I-65 built in 1960s; Lafayette Road, Michigan Road; commercial development along W. 86th St and Zionsville Rd; Eagle Creek Park 5,000 acres with 1,400-acre reservoir; Pyramids; Lafayette Square Mall (1968); Park 100; 1969 sewer construction", "url": "https://indyencyclopedia.org/pike-township/"},
+      {"fact": "Included town Clermont (partial); Augusta and Traders Point; north junction of I-65 and I-465; I-74 crosses SW corner with no exits", "url": "https://en.wikipedia.org/wiki/Pike_Township,_Marion_County,_Indiana"},
+      {"fact": "Eagle Creek Park: northwest Indianapolis, 7840 W. 56th St, about 3,900 acres land + 1,400 water; one of the largest municipal parks in the US", "url": "https://en.wikipedia.org/wiki/Eagle_Creek_Park"},
+      {"fact": "Pike Township court listed at 5665 Lafayette Rd., 46254, 317-293-1842; landlord-tenant venue rule", "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"},
+      {"fact": "Pike Township Small Claims Court, 5665 Lafayette Road, Suite B, Indianapolis 46254", "url": "https://indianalegalhelp.org/event/pike-township-tenant-assistance/"},
+      {"fact": "Clermont is an included town; all Indianapolis-Marion County laws apply; town recodification begun 2023; no rental ordinances listed", "url": "http://www.in.gov/towns/clermont/government/ordinances/"},
+      {"fact": "Clermont lies in Pike and Wayne townships; included town since 1970", "url": "https://en.wikipedia.org/wiki/Clermont,_Indiana"},
+      {"fact": "AES Indiana lists Clermont, Indianapolis, Marion County", "url": "https://www.aesindiana.com/sites/aesvault.com/files/2026-07/Service-Area-Description-46258-Effective-07-27-26.pdf"},
+      {"fact": "Citizens water, wastewater, gas", "url": "https://info.citizensenergygroup.com/company/divisions"}
+    ]
+  },
+
+  "wayne-township": {
+    "jurisdiction": "Wayne Township is on the west side of Marion County, governed as part of the consolidated City of Indianapolis. It contains the town of Speedway (an excluded town with its own government) and the south part of Clermont (an included town).",
+    "local_rules_notes": "Speedway requires a landlord license before an owner lets anyone occupy a rental unit, plus a rental unit permit for each unit, renewed every year. The license requires completing a landlord training program, and units can be inspected within 24 months of the permit. The town says the landlord license is valid until October 1 each year; short-term rentals need a separate $150 permit, valid one year and renewable at no charge (Speedway Municipal Code Ch. 5.48 and 5.49).",
+    "eviction_court": "Wayne Township Small Claims Court, Wayne Township Government Center, 5401 W. Washington St., Indianapolis, IN 46241, (317) 241-9573. Evictions on Wayne Township property, including Speedway, must be filed here.",
+    "utilities": {
+      "water": "Citizens Energy Group in most of the township. Speedway runs its own water utility, billed by the Town Clerk-Treasurer, and buys some of its water from Citizens.",
+      "sewer": "Citizens Energy Group in most of the township. Speedway runs its own wastewater utility. The Ben Davis Conservancy District owns the sewer lines in part of west-side Wayne Township and sends wastewater to Citizens for treatment.",
+      "electric": "AES Indiana, including Speedway and Clermont.",
+      "gas": "Citizens Energy Group."
+    },
+    "location": "West side of Indianapolis, between Center Township and Hendricks County. I-70, I-74 and I-465 run through the township, along with US 40 (Washington Street, the old National Road). Landmarks include the Indianapolis Motor Speedway in the town of Speedway (about six miles west of downtown, home of the Indianapolis 500 and Brickyard 400), the north half of Indianapolis International Airport with its FedEx hub, the Park Fletcher office park, and Krannert Park's recreation center (605 S. High School Rd., reopened January 2024 with a year-round indoor pool).",
+    "unverified": [
+      "Speedway fees: the 2006 ordinance set a $20 application fee, a $125 license fee ($25 for owners of five or fewer units) and $15 per unit per year. Current fees were not confirmed and may have changed, since state law now limits local rental registration and inspection fees. Don't publish fee amounts without checking with the Speedway Clerk-Treasurer (317-246-4111).",
+      "Speedway Ordinance 1074 (amending the inspection and search-warrant language after a lawsuit) was seen only in search snippets; its page was not opened.",
+      "Whether the Indianapolis rental registry also applies inside Speedway (an excluded town). Speedway's ordinance says Indianapolis city-county code applies 'to the extent' it covers the town. Hand this to the citywide researcher.",
+      "Speedway's gas provider (assumed Citizens) is not confirmed for the town specifically.",
+      "Ben Davis Conservancy District details. Its boundaries (per a 2017 WRTV story: Penn Central tracks north, Minnesota St south, Tibbs Ave east, Lucerne west) and its founding year (sources say both 1949 and 1958) are inconsistent across sources, and its status is in flux (proposed own treatment plant; a Citizens acquisition offer). Mention it only as 'parts of the township are served by the Ben Davis Conservancy District,' and confirm per address.",
+      "Krannert Park acreage was not confirmed by an official source.",
+      "Straight-line distance from the township center to downtown is about 5.5 miles, calculated from coordinates in red-door-city-facts-research.md, not taken from a source."
+    ],
+    "sources": [
+      {"fact": "West side, western Marion County; I-70, I-74 and I-465 run through the township; National Road now US 40; Indianapolis Motor Speedway next to the town of Speedway; airport; Park Fletcher office park; FedEx hub", "url": "https://indyencyclopedia.org/wayne-township/"},
+      {"fact": "Municipalities: Clermont (south half, included town), Indianapolis (partial), Speedway (excluded town); communities include Airport (north half), Ben Davis, Bridgeport, Park Fletcher", "url": "https://en.wikipedia.org/wiki/Wayne_Township,_Marion_County,_Indiana"},
+      {"fact": "Speedway Ordinance 1057 (adopted June 12, 2006): new Chapter 5.48; landlord license required before permitting occupancy; landlord training program; annual rental unit permit per unit; inspection within 24 months; fees as listed in the 2006 text", "url": "https://www.speedwayin.gov/ordinances/pages/ordinance-no-1057"},
+      {"fact": "Landlord License valid until October 1 each year; Short Term Rental Permit $150, valid one year, renewable at no charge", "url": "https://www.speedwayin.gov/clerk-treasurer/pages/business-licenses-and-other-permits"},
+      {"fact": "Town of Speedway landlord license application form (requires government ID, unit addresses, management company details)", "url": "https://www.speedwayin.gov/sites/g/files/vyhlif8506/f/pages/landlord_license_application.pdf"},
+      {"fact": "Speedway Clerk-Treasurer bills water and sewer; new service needs ID and a lease or proof of ownership", "url": "https://www.speedwayin.gov/clerk-treasurer/pages/utility-billing-payment"},
+      {"fact": "Citizens supplies water to communities with their own water utilities (Speedway named); wastewater agreement with Ben Davis Conservancy District", "url": "https://info.citizensenergygroup.com/company/divisions"},
+      {"fact": "Ben Davis Conservancy District owns only the sewer lines and sends wastewater to Citizens for treatment (IBJ, Mar 25, 2022)", "url": "https://www.ibj.com/articles/when-neighborhoods-collide"},
+      {"fact": "Ben Davis Conservancy District formed as a special taxing unit when sewers were mandated in the 1950s; Ben Davis area of west side", "url": "https://indyencyclopedia.org/?p=1107"},
+      {"fact": "Ben Davis Conservancy District boundaries and its use of the Belmont plant (2017)", "url": "https://www.wrtv.com/news/local-news/indianapolis/west-side/west-side-sewer-customers-face-rate-increase"},
+      {"fact": "Wayne Township Division of the Small Claims Court; court phone (317) 241-9573; Government Center at 5401 W. Washington St., 46241; landlord/tenant disputes; $10,000 limit", "url": "https://www.waynetwp.org/small-claims-court/"},
+      {"fact": "Wayne Township court listed at 5401 W. Washington St., 46241, 317-241-9573; landlord-tenant venue rule", "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"},
+      {"fact": "Indianapolis Motor Speedway in Speedway, six miles west of downtown; Indianapolis 500 and Brickyard 400", "url": "https://en.wikipedia.org/wiki/Indianapolis_Motor_Speedway"},
+      {"fact": "Airport 7 miles southwest of downtown across Wayne and Decatur townships; second-largest FedEx Express hub", "url": "https://en.wikipedia.org/wiki/Indianapolis_International_Airport"},
+      {"fact": "Krannert Park Family Center, 605 S High School Rd, 46241; opened January 2024; year-round indoor pool", "url": "https://parks.indy.gov/facilities/krannert-park-family-center/"},
+      {"fact": "AES Indiana lists Speedway and Clermont", "url": "https://www.aesindiana.com/sites/aesvault.com/files/2026-07/Service-Area-Description-46258-Effective-07-27-26.pdf"}
+    ]
+  }
+}

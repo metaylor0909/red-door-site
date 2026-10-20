@@ -1,0 +1,1198 @@
+{
+  "center-township": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "Rental owners in the City of Indianapolis must register with the city’s Department of Business and Neighborhood Services, naming an Indiana-resident manager and an agent for service of process. Registration renews every year, and a new owner has 30 days to register after buying. The ordinance (Code Chapter 851) does not create a routine rental inspection program."
+      },
+      {
+        "label": "Short-term rentals",
+        "text": "Each short-term rental unit needs its own annual city permit under Code Chapter 852, in effect since January 2025: $150 for the first permit, no fee to renew."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Marion County eviction cases are filed in the small claims court of the township where the rental is located: here, the Center Township Small Claims Court, Julia M. Carson Government Center, 300 E. Fall Creek Pkwy. N. Dr., Suite 130."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home. The Marion County Treasurer bills in two installments, due each May and November."
+      },
+      {
+        "label": "Utilities",
+        "text": "AES Indiana for electric; Citizens Energy Group for gas, water, and sewer."
+      },
+      {
+        "label": "Location",
+        "text": "The center of Marion County, taking in downtown and historic districts including the Old Northside, Lockerbie Square, Chatham Arch, Cottage Home, Fletcher Place, and Fountain Square. The Cultural Trail and Canal Walk run through it, and the IndyGo Red Line connects it north to Broad Ripple."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Center Township?",
+        "a": "Yes. Rental homes in the City of Indianapolis must be registered with the city’s Department of Business and Neighborhood Services, with an Indiana-resident manager and an agent for service of process named, and the registration renewed every year. A short-term rental needs a separate annual permit for each unit."
+      },
+      {
+        "q": "Where are evictions filed for a Center Township rental?",
+        "a": "In the Center Township Small Claims Court, at 300 E. Fall Creek Pkwy. N. Dr., Suite 130. In Marion County, landlord-tenant cases go to the small claims court of the township where the property sits, so Center Township cases are heard there."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Indianapolis landlord registration",
+        "url": "https://www.indy.gov/activity/landlord-registration-program"
+      },
+      {
+        "label": "Indianapolis Code Ch. 851",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH851INLAREPR"
+      },
+      {
+        "label": "Indianapolis Code Ch. 852 (short-term rentals)",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH852INSHRMREPEPR"
+      },
+      {
+        "label": "Indiana DLGF circuit-breaker caps",
+        "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"
+      },
+      {
+        "label": "Center Township Small Claims Court",
+        "url": "https://www.in.gov/townships/center49/small-claims-court/about-the-court/"
+      },
+      {
+        "label": "Citizens Energy Group",
+        "url": "https://info.citizensenergygroup.com/company/divisions"
+      }
+    ]
+  },
+  "downtown-indianapolis": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "Rental owners in the City of Indianapolis must register with the city’s Department of Business and Neighborhood Services, naming an Indiana-resident manager and an agent for service of process. Registration renews every year, and a new owner has 30 days to register after buying. The ordinance (Code Chapter 851) does not create a routine rental inspection program."
+      },
+      {
+        "label": "Short-term rentals",
+        "text": "Each short-term rental unit needs its own annual city permit under Code Chapter 852, in effect since January 2025: $150 for the first permit, no fee to renew. In a building with several units on Airbnb or Vrbo, each unit needs its own permit."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Marion County eviction cases are filed in the small claims court of the township where the rental is located: here, the Center Township Small Claims Court, Julia M. Carson Government Center, 300 E. Fall Creek Pkwy. N. Dr., Suite 130."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home. The Marion County Treasurer bills in two installments, due each May and November."
+      },
+      {
+        "label": "Utilities",
+        "text": "AES Indiana for electric; Citizens Energy Group for gas, water, and sewer. Some larger downtown buildings also take steam heat and chilled water from Citizens Thermal, which shows up in condo association costs rather than an owner’s own bills."
+      },
+      {
+        "label": "Location",
+        "text": "The Mile Square, bounded by North, South, East, and West streets with Monument Circle at its center, plus surrounding districts such as Mass Ave, the Wholesale District, Lockerbie Square, and Fletcher Place. I-65 and I-70 form an inner loop around it; Lucas Oil Stadium, Gainbridge Fieldhouse, White River State Park, and the Cultural Trail are all within it."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Downtown Indianapolis?",
+        "a": "Yes. Rental homes in the City of Indianapolis must be registered with the city’s Department of Business and Neighborhood Services, with an Indiana-resident manager and an agent for service of process named, and the registration renewed every year. A short-term rental needs a separate annual permit for each unit."
+      },
+      {
+        "q": "Where are evictions filed for a Downtown Indianapolis rental?",
+        "a": "In the Center Township Small Claims Court, at 300 E. Fall Creek Pkwy. N. Dr., Suite 130. In Marion County, landlord-tenant cases go to the small claims court of the township where the property sits, so Downtown Indianapolis cases are heard there."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Indianapolis landlord registration",
+        "url": "https://www.indy.gov/activity/landlord-registration-program"
+      },
+      {
+        "label": "Indianapolis Code Ch. 851",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH851INLAREPR"
+      },
+      {
+        "label": "Indianapolis Code Ch. 852 (short-term rentals)",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH852INSHRMREPEPR"
+      },
+      {
+        "label": "Indiana DLGF circuit-breaker caps",
+        "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"
+      },
+      {
+        "label": "Center Township Small Claims Court",
+        "url": "https://www.in.gov/townships/center49/small-claims-court/about-the-court/"
+      },
+      {
+        "label": "Citizens Energy Group",
+        "url": "https://info.citizensenergygroup.com/company/divisions"
+      }
+    ]
+  },
+  "lawrence-township": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "It depends on the address. The City of Lawrence is an excluded city with its own government, so homes inside it are exempt from the Indianapolis landlord registry, and Lawrence’s published code has no rental registration or inspection chapter of its own. In the rest of the township, the Indianapolis registry applies: register with the city, name an Indiana-resident manager and an agent for service of process, and renew every year."
+      },
+      {
+        "label": "Short-term rentals",
+        "text": "Outside the City of Lawrence: each short-term rental unit needs its own annual city permit under Code Chapter 852, in effect since January 2025: $150 for the first permit, no fee to renew."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Marion County eviction cases are filed in the small claims court of the township where the rental is located: here, the Lawrence Township Small Claims Court, 4455 McCoy St."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home. The Marion County Treasurer bills in two installments, due each May and November."
+      },
+      {
+        "label": "Utilities",
+        "text": "Inside the City of Lawrence, water and sewer come from Lawrence Utilities, the city’s own utility, with a $75 meter deposit for new residential water customers. Gas is Citizens Energy Group and electric is AES Indiana. Outside the city, Citizens provides water and sewer too."
+      },
+      {
+        "label": "Location",
+        "text": "The northeast corner of Marion County. Pendleton Pike runs diagonally across it, I-465 and I-69 cross it, and Fall Creek runs through it. Fort Harrison State Park, about 1,700 acres on the former Fort Benjamin Harrison, has trails and a golf course, and the Oaklandon Historic District is in the northeast corner."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Lawrence Township?",
+        "a": "It depends on the address. Homes inside the City of Lawrence are exempt from the Indianapolis landlord registry, and Lawrence’s published code has no rental registration chapter. Homes elsewhere in the township are in the City of Indianapolis and must be registered with its Department of Business and Neighborhood Services every year."
+      },
+      {
+        "q": "Where are evictions filed for a Lawrence Township rental?",
+        "a": "In the Lawrence Township Small Claims Court, at 4455 McCoy St. In Marion County, landlord-tenant cases go to the small claims court of the township where the property sits, so Lawrence Township cases are heard there."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Indianapolis landlord registration",
+        "url": "https://www.indy.gov/activity/landlord-registration-program"
+      },
+      {
+        "label": "Indianapolis Code Ch. 851",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH851INLAREPR"
+      },
+      {
+        "label": "Indianapolis Code Ch. 852 (short-term rentals)",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH852INSHRMREPEPR"
+      },
+      {
+        "label": "Indiana DLGF circuit-breaker caps",
+        "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"
+      },
+      {
+        "label": "City of Lawrence code",
+        "url": "https://codelibrary.amlegal.com/codes/lawrence/latest/overview"
+      },
+      {
+        "label": "Lawrence Utilities",
+        "url": "https://www.cityoflawrence.org/utilities/water-sewer"
+      },
+      {
+        "label": "Marion County small claims courts brochure",
+        "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"
+      }
+    ]
+  },
+  "warren-township": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "Rental owners in the City of Indianapolis must register with the city’s Department of Business and Neighborhood Services, naming an Indiana-resident manager and an agent for service of process. Registration renews every year, and a new owner has 30 days to register after buying. The ordinance (Code Chapter 851) does not create a routine rental inspection program. The small part of Beech Grove inside the township is an excluded city and is exempt."
+      },
+      {
+        "label": "Short-term rentals",
+        "text": "Each short-term rental unit needs its own annual city permit under Code Chapter 852, in effect since January 2025: $150 for the first permit, no fee to renew."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Marion County eviction cases are filed in the small claims court of the township where the rental is located: here, the Warren Township Small Claims Court, Warren Township Government Center, 501 N. Post Rd."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home. The Marion County Treasurer bills in two installments, due each May and November."
+      },
+      {
+        "label": "Utilities",
+        "text": "AES Indiana for electric; Citizens Energy Group for gas, water, and sewer."
+      },
+      {
+        "label": "Location",
+        "text": "The east side of Marion County, crossed by I-465, I-70, and I-74 and by Washington Street, the old National Road. It includes Irvington, laid out in 1870 with curving streets about five miles from Monument Circle, the Shadeland Avenue corridor, and the west half of Cumberland, which grew up as a National Road stop."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Warren Township?",
+        "a": "Yes. Rental homes in the City of Indianapolis must be registered with the city’s Department of Business and Neighborhood Services, with an Indiana-resident manager and an agent for service of process named, and the registration renewed every year. A short-term rental needs a separate annual permit for each unit. The small part of Beech Grove inside Warren Township is an excluded city and is exempt from the Indianapolis registry."
+      },
+      {
+        "q": "Where are evictions filed for a Warren Township rental?",
+        "a": "In the Warren Township Small Claims Court, at the Warren Township Government Center, 501 N. Post Rd. In Marion County, landlord-tenant cases go to the small claims court of the township where the property sits, so Warren Township cases are heard there."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Indianapolis landlord registration",
+        "url": "https://www.indy.gov/activity/landlord-registration-program"
+      },
+      {
+        "label": "Indianapolis Code Ch. 851",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH851INLAREPR"
+      },
+      {
+        "label": "Indianapolis Code Ch. 852 (short-term rentals)",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH852INSHRMREPEPR"
+      },
+      {
+        "label": "Indiana DLGF circuit-breaker caps",
+        "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"
+      },
+      {
+        "label": "Marion County small claims courts brochure",
+        "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"
+      },
+      {
+        "label": "Citizens Energy Group",
+        "url": "https://info.citizensenergygroup.com/company/divisions"
+      }
+    ]
+  },
+  "washington-township": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "Rental owners in the City of Indianapolis must register with the city’s Department of Business and Neighborhood Services, naming an Indiana-resident manager and an agent for service of process. Registration renews every year, and a new owner has 30 days to register after buying. The ordinance (Code Chapter 851) does not create a routine rental inspection program."
+      },
+      {
+        "label": "Short-term rentals",
+        "text": "Each short-term rental unit needs its own annual city permit under Code Chapter 852, in effect since January 2025: $150 for the first permit, no fee to renew."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Marion County eviction cases are filed in the small claims court of the township where the rental is located: here, the Washington Township Small Claims Court, 5302 N. Keystone Ave., Suite E."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home. The Marion County Treasurer bills in two installments, due each May and November."
+      },
+      {
+        "label": "Utilities",
+        "text": "AES Indiana for electric; Citizens Energy Group for gas, water, and sewer."
+      },
+      {
+        "label": "Location",
+        "text": "North-central Marion County, running up to the Hamilton County line at 96th Street. The White River, Fall Creek, and the Central Canal cross it, the Monon Trail runs its full length, and Keystone Avenue, College Avenue, and 86th Street are its main corridors. Butler University, the State Fairgrounds, Glendale, Nora, and The Fashion Mall at Keystone are all in the township."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Washington Township?",
+        "a": "Yes. Rental homes in the City of Indianapolis must be registered with the city’s Department of Business and Neighborhood Services, with an Indiana-resident manager and an agent for service of process named, and the registration renewed every year. A short-term rental needs a separate annual permit for each unit."
+      },
+      {
+        "q": "Where are evictions filed for a Washington Township rental?",
+        "a": "In the Washington Township Small Claims Court, at 5302 N. Keystone Ave., Suite E. In Marion County, landlord-tenant cases go to the small claims court of the township where the property sits, so Washington Township cases are heard there."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Indianapolis landlord registration",
+        "url": "https://www.indy.gov/activity/landlord-registration-program"
+      },
+      {
+        "label": "Indianapolis Code Ch. 851",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH851INLAREPR"
+      },
+      {
+        "label": "Indianapolis Code Ch. 852 (short-term rentals)",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH852INSHRMREPEPR"
+      },
+      {
+        "label": "Indiana DLGF circuit-breaker caps",
+        "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"
+      },
+      {
+        "label": "Marion County small claims courts brochure",
+        "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"
+      },
+      {
+        "label": "Citizens Energy Group",
+        "url": "https://info.citizensenergygroup.com/company/divisions"
+      }
+    ]
+  },
+  "broad-ripple": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "Rental owners in the City of Indianapolis must register with the city’s Department of Business and Neighborhood Services, naming an Indiana-resident manager and an agent for service of process. Registration renews every year, and a new owner has 30 days to register after buying. The ordinance (Code Chapter 851) does not create a routine rental inspection program."
+      },
+      {
+        "label": "Short-term rentals",
+        "text": "Each short-term rental unit needs its own annual city permit under Code Chapter 852, in effect since January 2025: $150 for the first permit, no fee to renew."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Marion County eviction cases are filed in the small claims court of the township where the rental is located: here, the Washington Township Small Claims Court, 5302 N. Keystone Ave., Suite E."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home. The Marion County Treasurer bills in two installments, due each May and November."
+      },
+      {
+        "label": "Utilities",
+        "text": "AES Indiana for electric; Citizens Energy Group for gas, water, and sewer."
+      },
+      {
+        "label": "Location",
+        "text": "About six miles north of downtown, between the White River, Kessler Boulevard, and Meridian Street, with the Central Canal running through it. It is one of Indianapolis’s designated cultural districts. The Monon Trail, 62-acre Broad Ripple Park, and the Indianapolis Art Center are here, and the IndyGo Red Line runs to downtown."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Broad Ripple?",
+        "a": "Yes. Rental homes in the City of Indianapolis must be registered with the city’s Department of Business and Neighborhood Services, with an Indiana-resident manager and an agent for service of process named, and the registration renewed every year. A short-term rental needs a separate annual permit for each unit."
+      },
+      {
+        "q": "Where are evictions filed for a Broad Ripple rental?",
+        "a": "In the Washington Township Small Claims Court, at 5302 N. Keystone Ave., Suite E. In Marion County, landlord-tenant cases go to the small claims court of the township where the property sits, so Broad Ripple cases are heard there."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Indianapolis landlord registration",
+        "url": "https://www.indy.gov/activity/landlord-registration-program"
+      },
+      {
+        "label": "Indianapolis Code Ch. 851",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH851INLAREPR"
+      },
+      {
+        "label": "Indianapolis Code Ch. 852 (short-term rentals)",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH852INSHRMREPEPR"
+      },
+      {
+        "label": "Indiana DLGF circuit-breaker caps",
+        "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"
+      },
+      {
+        "label": "Marion County small claims courts brochure",
+        "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"
+      },
+      {
+        "label": "Citizens Energy Group",
+        "url": "https://info.citizensenergygroup.com/company/divisions"
+      }
+    ]
+  },
+  "decatur-township": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "Rental owners in the City of Indianapolis must register with the city’s Department of Business and Neighborhood Services, naming an Indiana-resident manager and an agent for service of process. Registration renews every year, and a new owner has 30 days to register after buying. The ordinance (Code Chapter 851) does not create a routine rental inspection program."
+      },
+      {
+        "label": "Short-term rentals",
+        "text": "Each short-term rental unit needs its own annual city permit under Code Chapter 852, in effect since January 2025: $150 for the first permit, no fee to renew."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Marion County eviction cases are filed in the small claims court of the township where the rental is located: here, the Decatur Township Small Claims Court, 3730 S. Foltz St."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home. The Marion County Treasurer bills in two installments, due each May and November."
+      },
+      {
+        "label": "Utilities",
+        "text": "AES Indiana for electric; Citizens Energy Group for gas, water, and sewer. Much of the township is still farmland, so some homes are on private wells or septic; Citizens’ Utility Availability Request shows what serves a specific address."
+      },
+      {
+        "label": "Location",
+        "text": "The southwest corner of Marion County, with the White River on its eastern edge. I-465 and I-70 cross its northern part, State Road 67 (Kentucky Avenue) runs through it, and the Ronald Reagan Parkway links the AmeriPlex industrial park to I-70 near Indianapolis International Airport, whose terminal is in the township. Southwestway Park sits along the White River."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Decatur Township?",
+        "a": "Yes. Rental homes in the City of Indianapolis must be registered with the city’s Department of Business and Neighborhood Services, with an Indiana-resident manager and an agent for service of process named, and the registration renewed every year. A short-term rental needs a separate annual permit for each unit."
+      },
+      {
+        "q": "Where are evictions filed for a Decatur Township rental?",
+        "a": "In the Decatur Township Small Claims Court, at 3730 S. Foltz St. In Marion County, landlord-tenant cases go to the small claims court of the township where the property sits, so Decatur Township cases are heard there."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Indianapolis landlord registration",
+        "url": "https://www.indy.gov/activity/landlord-registration-program"
+      },
+      {
+        "label": "Indianapolis Code Ch. 851",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH851INLAREPR"
+      },
+      {
+        "label": "Indianapolis Code Ch. 852 (short-term rentals)",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH852INSHRMREPEPR"
+      },
+      {
+        "label": "Indiana DLGF circuit-breaker caps",
+        "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"
+      },
+      {
+        "label": "Decatur Township Small Claims Court",
+        "url": "http://www.in.gov/townships/decatur49/departments/small-claims-court/"
+      },
+      {
+        "label": "Citizens Energy Group",
+        "url": "https://info.citizensenergygroup.com/company/divisions"
+      },
+      {
+        "label": "Citizens septic-to-sewer program",
+        "url": "https://info.citizensenergygroup.com/projects/step"
+      }
+    ]
+  },
+  "franklin-township": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "Rental owners in the City of Indianapolis must register with the city’s Department of Business and Neighborhood Services, naming an Indiana-resident manager and an agent for service of process. Registration renews every year, and a new owner has 30 days to register after buying. The ordinance (Code Chapter 851) does not create a routine rental inspection program. The eastern part of Beech Grove inside the township is an excluded city and is exempt."
+      },
+      {
+        "label": "Short-term rentals",
+        "text": "Each short-term rental unit needs its own annual city permit under Code Chapter 852, in effect since January 2025: $150 for the first permit, no fee to renew."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Marion County eviction cases are filed in the small claims court of the township where the rental is located: here, the Franklin Township Small Claims Court, 4531 Independence Square."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home. The Marion County Treasurer bills in two installments, due each May and November."
+      },
+      {
+        "label": "Utilities",
+        "text": "AES Indiana for electric; Citizens Energy Group for gas, water, and sewer. The township holds a large share of Marion County’s remaining farmland, so rural homes may be on private wells or septic. In Beech Grove, sewer is the city’s own utility."
+      },
+      {
+        "label": "Location",
+        "text": "The southeast corner of Marion County, about 42 square miles. I-74 runs through it along Southeastern Avenue and I-65 runs along its western edge, with Southport Road and Franklin Road as its main local roads. Southeastway Park, a 188-acre nature park on Buck Creek, is off I-74 at Acton Road, and newer subdivisions sit beside working farmland."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Franklin Township?",
+        "a": "Yes. Rental homes in the City of Indianapolis must be registered with the city’s Department of Business and Neighborhood Services, with an Indiana-resident manager and an agent for service of process named, and the registration renewed every year. A short-term rental needs a separate annual permit for each unit. The part of Beech Grove inside Franklin Township is an excluded city and is exempt from the Indianapolis registry."
+      },
+      {
+        "q": "Where are evictions filed for a Franklin Township rental?",
+        "a": "In the Franklin Township Small Claims Court, at 4531 Independence Square. In Marion County, landlord-tenant cases go to the small claims court of the township where the property sits, so Franklin Township cases are heard there."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Indianapolis landlord registration",
+        "url": "https://www.indy.gov/activity/landlord-registration-program"
+      },
+      {
+        "label": "Indianapolis Code Ch. 851",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH851INLAREPR"
+      },
+      {
+        "label": "Indianapolis Code Ch. 852 (short-term rentals)",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH852INSHRMREPEPR"
+      },
+      {
+        "label": "Indiana DLGF circuit-breaker caps",
+        "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"
+      },
+      {
+        "label": "Franklin Township courts",
+        "url": "https://franklintownshipindiana.org/courts/"
+      },
+      {
+        "label": "Citizens Energy Group",
+        "url": "https://info.citizensenergygroup.com/company/divisions"
+      },
+      {
+        "label": "Citizens septic-to-sewer program",
+        "url": "https://info.citizensenergygroup.com/projects/step"
+      }
+    ]
+  },
+  "perry-township": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "Rental owners in the City of Indianapolis must register with the city’s Department of Business and Neighborhood Services, naming an Indiana-resident manager and an agent for service of process. Registration renews every year, and a new owner has 30 days to register after buying. The ordinance (Code Chapter 851) does not create a routine rental inspection program. Southport and the part of Beech Grove inside the township are excluded cities and are exempt; Southport’s city site lists no rental registration program of its own. Homecroft is an included town, so Indianapolis rules apply there."
+      },
+      {
+        "label": "Short-term rentals",
+        "text": "Each short-term rental unit needs its own annual city permit under Code Chapter 852, in effect since January 2025: $150 for the first permit, no fee to renew."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Marion County eviction cases are filed in the small claims court of the township where the rental is located: here, the Perry Township Small Claims Court, 4925 Shelby St., Suite 100."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home. The Marion County Treasurer bills in two installments, due each May and November."
+      },
+      {
+        "label": "Utilities",
+        "text": "AES Indiana for electric; Citizens Energy Group for gas, water, and sewer. In Beech Grove, sewer is the city’s own utility."
+      },
+      {
+        "label": "Location",
+        "text": "Directly south of downtown, with the White River on its west side and Greenwood to the south. I-65 and I-465 cross it, and Madison Avenue, Meridian Street, US 31, and SR 37 are its main commuter roads. The University of Indianapolis, the historic Southport commercial district, and Perry Park, home to Indy Parks’ only indoor ice rink, are here."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Perry Township?",
+        "a": "Yes. Rental homes in the City of Indianapolis must be registered with the city’s Department of Business and Neighborhood Services, with an Indiana-resident manager and an agent for service of process named, and the registration renewed every year. A short-term rental needs a separate annual permit for each unit. Southport and the part of Beech Grove inside Perry Township are excluded cities and are exempt from the Indianapolis registry."
+      },
+      {
+        "q": "Where are evictions filed for a Perry Township rental?",
+        "a": "In the Perry Township Small Claims Court, at 4925 Shelby St., Suite 100. In Marion County, landlord-tenant cases go to the small claims court of the township where the property sits, so Perry Township cases are heard there."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Indianapolis landlord registration",
+        "url": "https://www.indy.gov/activity/landlord-registration-program"
+      },
+      {
+        "label": "Indianapolis Code Ch. 851",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH851INLAREPR"
+      },
+      {
+        "label": "Indianapolis Code Ch. 852 (short-term rentals)",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH852INSHRMREPEPR"
+      },
+      {
+        "label": "Indiana DLGF circuit-breaker caps",
+        "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"
+      },
+      {
+        "label": "Perry Township Small Claims Court",
+        "url": "https://www.perrytownship-in.gov/court-information.html"
+      },
+      {
+        "label": "Citizens Energy Group",
+        "url": "https://info.citizensenergygroup.com/company/divisions"
+      }
+    ]
+  },
+  "pike-township": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "Rental owners in the City of Indianapolis must register with the city’s Department of Business and Neighborhood Services, naming an Indiana-resident manager and an agent for service of process. Registration renews every year, and a new owner has 30 days to register after buying. The ordinance (Code Chapter 851) does not create a routine rental inspection program. Part of Clermont lies in the township; it is an included town, so Indianapolis rules apply there too."
+      },
+      {
+        "label": "Short-term rentals",
+        "text": "Each short-term rental unit needs its own annual city permit under Code Chapter 852, in effect since January 2025: $150 for the first permit, no fee to renew."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Marion County eviction cases are filed in the small claims court of the township where the rental is located: here, the Pike Township Small Claims Court, 5665 Lafayette Rd., Suite B."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home. The Marion County Treasurer bills in two installments, due each May and November."
+      },
+      {
+        "label": "Utilities",
+        "text": "AES Indiana for electric; Citizens Energy Group for gas, water, and sewer."
+      },
+      {
+        "label": "Location",
+        "text": "The northwest corner of Marion County, bordering Boone and Hamilton counties. I-65 and I-465 meet at its north end, and Lafayette Road, Michigan Road, 86th Street, and Zionsville Road are its main corridors. Eagle Creek Park, about 5,000 acres around a 1,400-acre reservoir, is one of the largest city parks in the country; Park 100 and the Pyramids office buildings are here too."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Pike Township?",
+        "a": "Yes. Rental homes in the City of Indianapolis must be registered with the city’s Department of Business and Neighborhood Services, with an Indiana-resident manager and an agent for service of process named, and the registration renewed every year. A short-term rental needs a separate annual permit for each unit."
+      },
+      {
+        "q": "Where are evictions filed for a Pike Township rental?",
+        "a": "In the Pike Township Small Claims Court, at 5665 Lafayette Rd., Suite B. In Marion County, landlord-tenant cases go to the small claims court of the township where the property sits, so Pike Township cases are heard there."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Indianapolis landlord registration",
+        "url": "https://www.indy.gov/activity/landlord-registration-program"
+      },
+      {
+        "label": "Indianapolis Code Ch. 851",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH851INLAREPR"
+      },
+      {
+        "label": "Indianapolis Code Ch. 852 (short-term rentals)",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH852INSHRMREPEPR"
+      },
+      {
+        "label": "Indiana DLGF circuit-breaker caps",
+        "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"
+      },
+      {
+        "label": "Town of Clermont ordinances",
+        "url": "http://www.in.gov/towns/clermont/government/ordinances/"
+      },
+      {
+        "label": "Marion County small claims courts brochure",
+        "url": "https://www.warrentownshiptrustee.org/wp-content/uploads/2023/09/Small-Claims-Court-Brochure-2023.pdf"
+      },
+      {
+        "label": "Citizens Energy Group",
+        "url": "https://info.citizensenergygroup.com/company/divisions"
+      }
+    ]
+  },
+  "wayne-township": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "Rental owners in the City of Indianapolis must register with the city’s Department of Business and Neighborhood Services, naming an Indiana-resident manager and an agent for service of process. Registration renews every year, and a new owner has 30 days to register after buying. The ordinance (Code Chapter 851) does not create a routine rental inspection program. Speedway is different: it is an excluded town, exempt from the Indianapolis registry, and requires its own landlord license before a home is occupied, plus a rental unit permit for each unit renewed every year. The license includes a landlord training course, and units can be inspected."
+      },
+      {
+        "label": "Short-term rentals",
+        "text": "Each short-term rental unit needs its own annual city permit under Code Chapter 852, in effect since January 2025: $150 for the first permit, no fee to renew. In Speedway, a short-term rental needs the town’s own $150 permit, valid for a year and renewable at no charge."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Marion County eviction cases are filed in the small claims court of the township where the rental is located: here, the Wayne Township Small Claims Court, Wayne Township Government Center, 5401 W. Washington St. That includes homes in Speedway."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home. The Marion County Treasurer bills in two installments, due each May and November."
+      },
+      {
+        "label": "Utilities",
+        "text": "AES Indiana for electric; Citizens Energy Group for gas, water, and sewer. Speedway runs its own water and sewer utility, billed by the town Clerk-Treasurer, and parts of the west side are served by the Ben Davis Conservancy District’s sewer lines; check by address."
+      },
+      {
+        "label": "Location",
+        "text": "The west side of Marion County, between Center Township and Hendricks County. I-70, I-74, I-465, and US 40 (Washington Street, the old National Road) run through it. The Indianapolis Motor Speedway, the north half of Indianapolis International Airport and its FedEx hub, and the Park Fletcher office park are here."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Wayne Township?",
+        "a": "It depends on the address. Homes in the City of Indianapolis part of the township must be registered with the city’s Department of Business and Neighborhood Services every year. Homes in the Town of Speedway are exempt from the Indianapolis registry but need a Speedway landlord license and an annual rental unit permit for each unit instead."
+      },
+      {
+        "q": "Where are evictions filed for a Wayne Township rental?",
+        "a": "In the Wayne Township Small Claims Court, at 5401 W. Washington St. In Marion County, landlord-tenant cases go to the small claims court of the township where the property sits, so Wayne Township cases are heard there."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Indianapolis landlord registration",
+        "url": "https://www.indy.gov/activity/landlord-registration-program"
+      },
+      {
+        "label": "Indianapolis Code Ch. 851",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH851INLAREPR"
+      },
+      {
+        "label": "Indianapolis Code Ch. 852 (short-term rentals)",
+        "url": "https://library.municode.com/in/indianapolis_-_marion_county/codes/code_of_ordinances?nodeId=TITIVBUCORELI_CH852INSHRMREPEPR"
+      },
+      {
+        "label": "Indiana DLGF circuit-breaker caps",
+        "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"
+      },
+      {
+        "label": "Speedway Ordinance 1057",
+        "url": "https://www.speedwayin.gov/ordinances/pages/ordinance-no-1057"
+      },
+      {
+        "label": "Speedway licenses and permits",
+        "url": "https://www.speedwayin.gov/clerk-treasurer/pages/business-licenses-and-other-permits"
+      },
+      {
+        "label": "Wayne Township Small Claims Court",
+        "url": "https://www.waynetwp.org/small-claims-court/"
+      },
+      {
+        "label": "Citizens Energy Group",
+        "url": "https://info.citizensenergygroup.com/company/divisions"
+      }
+    ]
+  },
+  "carmel": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "Required. Under Ordinance D-2770-25, every single-family home or townhome rented for more than 30 days must be registered and permitted through the city, at $5 per property per year; condos are not covered, and there are no inspections tied to the permit. Late fees are $100 at 30 days and $200 at 60 days."
+      },
+      {
+        "label": "Rental cap",
+        "text": "Carmel caps permits at 10% of the homes in a subdivision of ten or more lots; homes registered by January 31, 2026 kept their permits as “legacy” rentals. HOA covenants can be stricter. A 2026 state law (HEA 1210) bars cities from restricting owners from renting their homes, which is expected to phase the cap out; check its current status before buying a rental in a capped subdivision."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Hamilton County eviction cases are filed in Hamilton Superior Court No. 4, 6, or 7, all at One Hamilton County Square in Noblesville (county Local Rule 103.40)."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home. Hamilton County bills in May and November installments; the 2026 certified rate for the Carmel district was 2.0167 per $100 of assessed value."
+      },
+      {
+        "label": "Utilities",
+        "text": "Water and sewer for most of the city come from Carmel Utilities, the city-owned utility; parts of western Carmel are on the TriCo Regional Sewer Utility, and some edges of the city get water from Citizens. Check the address."
+      },
+      {
+        "label": "Location",
+        "text": "About 15 miles north of downtown Indianapolis by Keystone Parkway or US 31 (Meridian Street). The Monon Greenway runs through the city and through the center of the Carmel Arts & Design District in Old Town, a certified Indiana cultural district of galleries, design showrooms, and restaurants."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Carmel?",
+        "a": "Yes. Since February 1, 2026, every single-family home or townhome in Carmel rented for more than 30 days needs a city rental registration and permit, at $5 per property per year. Permits are capped at 10% of the homes in subdivisions of ten or more lots, with homes registered by January 31, 2026 kept as legacy rentals; a 2026 state law is expected to phase the cap out."
+      },
+      {
+        "q": "Where are evictions filed for a Carmel rental?",
+        "a": "In Hamilton Superior Court No. 4, 6, or 7, at One Hamilton County Square in Noblesville. Under the county’s Local Rule 103.40, all Hamilton County eviction and small claims cases go to those three courts, wherever in the county the rental is."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Carmel rental registration",
+        "url": "https://www.carmel.in.gov/government/departments-services/rental-registration"
+      },
+      {
+        "label": "Carmel rental FAQ",
+        "url": "https://www.carmel.in.gov/m/faq?cat=27"
+      },
+      {
+        "label": "HEA 1210 (2026)",
+        "url": "https://iga.in.gov/legislative/2026/bills/house/1210/details"
+      },
+      {
+        "label": "Hamilton County court rules (LR 103.40)",
+        "url": "https://www.hamiltoncounty.in.gov/201/Administrative-Rules"
+      },
+      {
+        "label": "Indiana DLGF circuit-breaker caps",
+        "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"
+      },
+      {
+        "label": "DLGF 2026 certified tax rates",
+        "url": "https://www.in.gov/dlgf/files/2026-reports/2026_Certifed_Tax_Rates_By_District.pdf"
+      },
+      {
+        "label": "Carmel Utilities",
+        "url": "https://carmelutilities.com/"
+      }
+    ]
+  },
+  "fishers": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "Required. Fishers Code Chapter 163, in effect since January 1, 2026, requires every single-family home, townhome, or platted condo rented long-term in the city to be registered and permitted. There is no fee, and the permit lasts until the home is sold. Fines run $250 for failing to register and $1,000 for renting without a permit, higher for repeat violations."
+      },
+      {
+        "label": "Rental cap",
+        "text": "Rentals are capped at 10% per subdivision. The city publishes a capacity map of full subdivisions, and buyers can get a 60-day pre-approval. A 2026 state law (HEA 1210) bars cities from restricting owners from renting their homes, which is expected to phase the cap out; check its current status before buying a rental in a capped subdivision."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Hamilton County eviction cases are filed in Hamilton Superior Court No. 4, 6, or 7, all at One Hamilton County Square in Noblesville (county Local Rule 103.40)."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home. Hamilton County bills in May and November installments; the 2026 certified rate for the Fishers district was 2.1994 per $100 of assessed value (2.1684 in the Fall Creek Township portion)."
+      },
+      {
+        "label": "Utilities",
+        "text": "Water comes from Citizens Energy Group or Indiana American Water depending on the address. The city runs sewer and stormwater, and sewer and the citywide trash service are billed monthly to the property owner, not the tenant. Electric is Duke Energy or NineStar Power, depending on location."
+      },
+      {
+        "label": "Location",
+        "text": "About 16 miles northeast of downtown Indianapolis by I-69. Conner Prairie, the living-history museum on Allisonville Road, and the Fishers Event Center arena, opened in 2024, are both in the city."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Fishers?",
+        "a": "Yes. Since January 1, 2026, every single-family home, townhome, or platted condo rented long-term in Fishers needs a city registration and permit. There is no fee and the permit lasts until the home is sold, but renting without one carries a $1,000 fine. Rentals are capped at 10% per subdivision for now; a 2026 state law is expected to phase the cap out."
+      },
+      {
+        "q": "Where are evictions filed for a Fishers rental?",
+        "a": "In Hamilton Superior Court No. 4, 6, or 7, at One Hamilton County Square in Noblesville. Under the county’s Local Rule 103.40, all Hamilton County eviction and small claims cases go to those three courts, wherever in the county the rental is."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Fishers rental registration & permitting",
+        "url": "https://fishersin.gov/government/administrative/rental-registration-permitting/"
+      },
+      {
+        "label": "HEA 1210 (2026)",
+        "url": "https://iga.in.gov/legislative/2026/bills/house/1210/details"
+      },
+      {
+        "label": "Hamilton County court rules (LR 103.40)",
+        "url": "https://www.hamiltoncounty.in.gov/201/Administrative-Rules"
+      },
+      {
+        "label": "Indiana DLGF circuit-breaker caps",
+        "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"
+      },
+      {
+        "label": "DLGF 2026 certified tax rates",
+        "url": "https://www.in.gov/dlgf/files/2026-reports/2026_Certifed_Tax_Rates_By_District.pdf"
+      },
+      {
+        "label": "Fishers new-resident utilities",
+        "url": "https://fishersin.gov/services-resources/resident-resources/new-residents/"
+      }
+    ]
+  },
+  "noblesville": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "None. Noblesville’s code of ordinances (current through September 2026) has no rental registration, licensing, or inspection requirement and no rental cap. The city’s housing and property maintenance code applies to all property, rented or not."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Hamilton County eviction cases are filed in Hamilton Superior Court No. 4, 6, or 7, all at One Hamilton County Square in Noblesville (county Local Rule 103.40). Noblesville is the county seat, so the courts are downtown."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home. Hamilton County bills in May and November installments; the 2026 certified rate for the Noblesville City district was 2.5549 per $100 of assessed value."
+      },
+      {
+        "label": "Utilities",
+        "text": "Water comes from Indiana American Water. Sewer is Noblesville Utilities, the city utility, which also bills city trash service."
+      },
+      {
+        "label": "Location",
+        "text": "About 24 miles north-northeast of downtown Indianapolis by SR 37 and I-69. Downtown is built around the Hamilton County Courthouse square, completed in 1879 and on the National Register since 1978, and Ruoff Music Center is in the city."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Noblesville?",
+        "a": "No. As of September 2026, Noblesville’s city code has no rental registration, licensing, or inspection requirement and no rental cap. Rentals are held to the same housing and property maintenance code as any other home, and HOA covenants can add their own rules."
+      },
+      {
+        "q": "Where are evictions filed for a Noblesville rental?",
+        "a": "In Hamilton Superior Court No. 4, 6, or 7, at One Hamilton County Square in Noblesville. Under the county’s Local Rule 103.40, all Hamilton County eviction and small claims cases go to those three courts, wherever in the county the rental is."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Noblesville code of ordinances",
+        "url": "https://codelibrary.amlegal.com/codes/noblesville/latest/overview"
+      },
+      {
+        "label": "Hamilton County court rules (LR 103.40)",
+        "url": "https://www.hamiltoncounty.in.gov/201/Administrative-Rules"
+      },
+      {
+        "label": "Indiana DLGF circuit-breaker caps",
+        "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"
+      },
+      {
+        "label": "DLGF 2026 certified tax rates",
+        "url": "https://www.in.gov/dlgf/files/2026-reports/2026_Certifed_Tax_Rates_By_District.pdf"
+      },
+      {
+        "label": "Noblesville Utilities",
+        "url": "https://www.noblesville.in.gov/273/Utilities"
+      }
+    ]
+  },
+  "westfield": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "None for long-term rentals. Westfield’s code of ordinances has no rental registration, licensing, or inspection requirement and no rental cap."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Hamilton County eviction cases are filed in Hamilton Superior Court No. 4, 6, or 7, all at One Hamilton County Square in Noblesville (county Local Rule 103.40)."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home. Hamilton County bills in May and November installments; the 2026 certified rate for the Westfield district was 2.3448 per $100 of assessed value."
+      },
+      {
+        "label": "Utilities",
+        "text": "Water and sewer come from Citizens Westfield, part of Citizens Energy Group, which bought the city’s systems in 2014. Gas is Citizens Westfield in part of the city and CenterPoint Energy (formerly Vectren) in the rest."
+      },
+      {
+        "label": "Location",
+        "text": "About 20 miles north of downtown Indianapolis by US 31 (Meridian Street). Grand Park Sports Campus, more than 400 acres with 26 diamonds, is in Westfield, and the Monon Trail runs through the city."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Westfield?",
+        "a": "Not for a long-term rental. Westfield’s city code has no rental registration, licensing, or inspection requirement and no rental cap. HOA covenants can add their own rules, so check them before renting."
+      },
+      {
+        "q": "Where are evictions filed for a Westfield rental?",
+        "a": "In Hamilton Superior Court No. 4, 6, or 7, at One Hamilton County Square in Noblesville. Under the county’s Local Rule 103.40, all Hamilton County eviction and small claims cases go to those three courts, wherever in the county the rental is."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Westfield code of ordinances",
+        "url": "https://codelibrary.amlegal.com/codes/westfieldin/latest/westfield_in/"
+      },
+      {
+        "label": "Hamilton County court rules (LR 103.40)",
+        "url": "https://www.hamiltoncounty.in.gov/201/Administrative-Rules"
+      },
+      {
+        "label": "Indiana DLGF circuit-breaker caps",
+        "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"
+      },
+      {
+        "label": "DLGF 2026 certified tax rates",
+        "url": "https://www.in.gov/dlgf/files/2026-reports/2026_Certifed_Tax_Rates_By_District.pdf"
+      },
+      {
+        "label": "Citizens Westfield",
+        "url": "https://info.citizensenergygroup.com/hubfs/site/rights%20and%20responsibilities%20documents/Rights-and-Responsibilities-Insert-Westfield-(combined).pdf"
+      }
+    ]
+  },
+  "avon": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "None. Avon’s municipal code and development ordinance have no registration, licensing, or inspection requirement for long-term rentals. The one rental-specific rule (Code 7-87): in a rented home, the owner or manager must install the required smoke detectors and repair or replace one within two business days of written notice."
+      },
+      {
+        "label": "Short-term rentals",
+        "text": "A town permit is required before a home is used as a short-term rental (UDO 4.11). The owner must post a 24/7 contact who has a key and can be on site within three hours, along with the maximum occupancy and parking instructions."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Hendricks County eviction cases are filed in Hendricks Superior Court No. 1, 3, 4, or 5, assigned at random, at the courthouse in Danville."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home (voter-approved referendum levies sit outside the cap). The Hendricks County Treasurer bills in May and November installments."
+      },
+      {
+        "label": "Utilities",
+        "text": "Per the town, water is Citizens Energy Group, sewer is the West Central Conservancy District, and gas is CenterPoint Energy. Electric depends on location: Duke Energy, Hendricks Power Cooperative, or AES Indiana. Avon has no town trash service; owners or tenants hire a private hauler."
+      },
+      {
+        "label": "Location",
+        "text": "About 13 miles west of downtown Indianapolis on US 36, the main east-west road through town, with the Ronald Reagan Parkway running north-south through it. The White Lick Creek Trail runs along the creek through Washington Township Park."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Avon?",
+        "a": "No. Avon has no registration, licensing, or inspection requirement for long-term rentals. The town does require owners of rented homes to install smoke detectors and fix one within two business days of written notice, and a short-term rental needs a town permit."
+      },
+      {
+        "q": "Where are evictions filed for a Avon rental?",
+        "a": "In Hendricks Superior Court No. 1, 3, 4, or 5 at the Hendricks County Courthouse, 51 W. Main St., Danville. Under the county’s local rules, eviction cases are assigned among those four courts at random."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Avon Municipal Code and UDO",
+        "url": "https://avon.municipalcodeonline.com/book?type=ordinances"
+      },
+      {
+        "label": "Hendricks County local rules",
+        "url": "https://www.in.gov/courts/files/hendricks-local-rules.pdf"
+      },
+      {
+        "label": "Hendricks County Treasurer",
+        "url": "https://www.co.hendricks.in.us/department/index.php?structureid=22"
+      },
+      {
+        "label": "Indiana Code Title 6 (2% cap)",
+        "url": "https://iga.in.gov/laws/2026/ic/titles/6"
+      },
+      {
+        "label": "Avon local utilities",
+        "url": "https://www.avonindiana.gov/439/Local-Utilities"
+      }
+    ]
+  },
+  "brownsburg": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "None. Brownsburg’s code of ordinances (current through August 2026) has no rental registration, licensing, or inspection requirement."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Hendricks County eviction cases are filed in Hendricks Superior Court No. 1, 3, 4, or 5, assigned at random, at the courthouse in Danville."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home (voter-approved referendum levies sit outside the cap). The Hendricks County Treasurer bills in May and November installments."
+      },
+      {
+        "label": "Utilities",
+        "text": "The town runs water and sewer on one monthly bill. A tenant opening an account provides a copy of the lease and pays a $100 sewer deposit on top of the $75 water meter deposit."
+      },
+      {
+        "label": "Location",
+        "text": "About 13 miles west-northwest of downtown Indianapolis, with I-74 exits at Green Street (SR 267) and the Ronald Reagan Parkway, and US 136 running through town. The 8.2-mile B&O Trail, the White Lick Creek Greenway to Arbuckle Acres Park, and the Bicentennial Trail link to Avon, which borders Brownsburg to the south."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Brownsburg?",
+        "a": "No. As of August 2026, Brownsburg’s town code has no rental registration, licensing, or inspection requirement. When a tenant opens the water and sewer account, the town asks for a copy of the lease and a $100 sewer deposit in addition to the $75 water meter deposit."
+      },
+      {
+        "q": "Where are evictions filed for a Brownsburg rental?",
+        "a": "In Hendricks Superior Court No. 1, 3, 4, or 5 at the Hendricks County Courthouse, 51 W. Main St., Danville. Under the county’s local rules, eviction cases are assigned among those four courts at random."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Brownsburg code of ordinances",
+        "url": "https://codelibrary.amlegal.com/codes/brownsburg/latest/brownsburg_in"
+      },
+      {
+        "label": "Hendricks County local rules",
+        "url": "https://www.in.gov/courts/files/hendricks-local-rules.pdf"
+      },
+      {
+        "label": "Hendricks County Treasurer",
+        "url": "https://www.co.hendricks.in.us/department/index.php?structureid=22"
+      },
+      {
+        "label": "Indiana Code Title 6 (2% cap)",
+        "url": "https://iga.in.gov/laws/2026/ic/titles/6"
+      },
+      {
+        "label": "Brownsburg utility service application",
+        "url": "https://www.brownsburg.org/242/Service-Application"
+      },
+      {
+        "label": "Brownsburg trails",
+        "url": "https://www.brownsburg.org/547/Trails"
+      }
+    ]
+  },
+  "zionsville": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "None. Zionsville’s code of ordinances has no rental registration, licensing, or inspection requirement."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Boone County eviction cases are filed in Boone Superior Court II, which hears all of the county’s small claims, at the Boone County Courthouse, 112 Courthouse Square, Lebanon."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home (voter-approved referendum levies sit outside the cap). The Boone County Treasurer bills in May and November installments."
+      },
+      {
+        "label": "Utilities",
+        "text": "Water is Citizens Water. Sewer is the town’s own utility, billed at a flat residential rate ($56.85 a month as of January 2025), with trash and recycling in the town’s urban service district on the same bill."
+      },
+      {
+        "label": "Location",
+        "text": "About 15 miles northwest of downtown Indianapolis, served by I-65 and I-865, with US 421 (Michigan Road) along its east side. The paved Big-4 Rail Trail is the five-mile spine of more than 20 miles of connected paths, and the historic brick Main Street village is the town center."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Zionsville?",
+        "a": "No. Zionsville’s town code has no rental registration, licensing, or inspection requirement. HOA covenants can add their own rules, so check them before renting."
+      },
+      {
+        "q": "Where are evictions filed for a Zionsville rental?",
+        "a": "In Boone Superior Court II at the Boone County Courthouse, 112 Courthouse Square, Lebanon. That court has exclusive jurisdiction over all Boone County small claims cases, including evictions."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Zionsville code of ordinances",
+        "url": "https://codelibrary.amlegal.com/codes/zionsville/latest/overview"
+      },
+      {
+        "label": "Boone Superior Court II",
+        "url": "https://boonecounty.in.gov/offices/superior-court-II"
+      },
+      {
+        "label": "Indiana Code Title 6 (2% cap)",
+        "url": "https://iga.in.gov/laws/2026/ic/titles/6"
+      },
+      {
+        "label": "Zionsville trash and utilities",
+        "url": "https://www.zionsville-in.gov/691/Trash-and-Utilities"
+      }
+    ]
+  },
+  "greenwood": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "None. Greenwood’s code of ordinances (current through July 2026) has no rental registration, licensing, or inspection requirement."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Johnson County eviction cases are filed in the Johnson Circuit and Superior Courts, assigned at random and heard by the courts’ magistrate, at the courthouse in Franklin. Greenwood City Court does not hear evictions."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home (voter-approved referendum levies sit outside the cap). The Johnson County Treasurer bills in May and November installments."
+      },
+      {
+        "label": "Utilities",
+        "text": "City sewer bills go to the property owner every month, not the tenant, and service is started or stopped through the water provider. Water is Indiana American Water or Bargersville Water depending on the address, and city trash is added to the sewer account."
+      },
+      {
+        "label": "Location",
+        "text": "About 11 miles south of downtown Indianapolis, with three I-65 exits on the east side, I-69 just west of city limits, and US 31 and SR 135 as the main north-south streets. The city lists more than 50 miles of multi-use trails and runs the Freedom Springs aquatic center and Greenwood Sports Park."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Greenwood?",
+        "a": "No. As of July 2026, Greenwood’s city code has no rental registration, licensing, or inspection requirement. City sewer is billed to the property owner monthly, not the tenant, so it belongs in an owner’s operating budget."
+      },
+      {
+        "q": "Where are evictions filed for a Greenwood rental?",
+        "a": "In the Johnson Circuit and Superior Courts at the Johnson County Courthouse in Franklin, where small claims cases, including evictions, are assigned at random and heard by the magistrate. Greenwood City Court does not handle evictions."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Greenwood code of ordinances",
+        "url": "https://codelibrary.amlegal.com/codes/greenwood/latest/greenwood_in"
+      },
+      {
+        "label": "Johnson County local rules",
+        "url": "https://www.in.gov/courts/files/johnson-local-rules.pdf"
+      },
+      {
+        "label": "Indiana Code Title 6 (2% cap)",
+        "url": "https://iga.in.gov/laws/2026/ic/titles/6"
+      },
+      {
+        "label": "Greenwood Sanitation Department",
+        "url": "https://www.greenwood.in.gov/division/blocks.php?structureid=269"
+      }
+    ]
+  }
+}

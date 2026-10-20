@@ -1,0 +1,114 @@
+---
+// "Owning a Rental in {City}" on the [city]-property-management pages
+// (2026-10-20): the per-city owner paragraphs generated from RentCast data
+// (city-insights.ts), the researched local facts (local-facts.ts), and
+// Red Door's own leasing count from RentEngine. Each part renders only
+// when its data exists, so a city with no verified facts still gets the
+// market paragraphs.
+import type { CityInsights, TrackRecord } from '../lib/property-management/city-insights';
+import type { CityLocalFacts } from '../lib/property-management/local-facts';
+
+interface Props {
+  cityName: string;
+  insights: CityInsights | null;
+  localFacts: CityLocalFacts | null;
+  trackRecord: TrackRecord | null;
+}
+
+const { cityName, insights, localFacts, trackRecord } = Astro.props;
+
+const trackLine =
+  trackRecord && trackRecord.metroCount > 0
+    ? `${trackRecord.since ? `Since ${trackRecord.since}, ` : ''}Red Door has leased ${trackRecord.metroCount} rental homes across Central Indiana${trackRecord.cityCount ? `, including ${trackRecord.cityCount} in ${cityName}` : ''}.`
+    : null;
+---
+
+{(insights || localFacts) && (
+  <section class="owner-insights" aria-labelledby="owner-insights-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-kicker">For {cityName} Rental Owners</div>
+        <h2 id="owner-insights-title">Owning a Rental in {cityName}</h2>
+      </div>
+      <div class="owner-insights-copy reveal">
+        {insights?.paragraphs.map((p) => <p>{p}</p>)}
+        {trackLine && <p class="owner-track">{trackLine}</p>}
+        {insights && <p class="owner-source">{insights.sourceNote}</p>}
+      </div>
+      {localFacts && (
+        <aside class="owner-facts reveal" aria-label={`${cityName} rules and costs for rental owners`}>
+          <h3>Local Rules &amp; Costs</h3>
+          <dl>
+            {localFacts.facts.map((f) => (
+              <div class="owner-fact">
+                <dt>{f.label}</dt>
+                <dd>{f.text}</dd>
+              </div>
+            ))}
+          </dl>
+          {localFacts.sources.length > 0 && (
+            <p class="owner-facts-sources">
+              Sources:{' '}
+              {localFacts.sources.map((s, i) => (
+                <>
+                  {i > 0 && ', '}
+                  <a href={s.url} target="_blank" rel="noopener">{s.label}</a>
+                </>
+              ))}
+              . Rules change; confirm current requirements before acting on them.
+            </p>
+          )}
+        </aside>
+      )}
+    </div>
+  </section>
+)}
+
+<style>
+  .owner-insights { padding: 88px 0; background: var(--white); }
+  .owner-insights .section-head { max-width: 760px; margin-bottom: 32px; }
+  .owner-insights-copy { max-width: 860px; }
+  .owner-insights-copy p { margin: 0 0 18px; font-size: 1.05rem; line-height: 1.7; color: var(--ink); }
+  .owner-track {
+    padding: 14px 18px;
+    border-left: 3px solid var(--brand-mid);
+    background: var(--brand-tint);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    font-weight: 600;
+  }
+  .owner-insights-copy .owner-source { font-size: .85rem; line-height: 1.55; color: var(--gray); margin-top: 6px; }
+  .owner-facts {
+    margin-top: 40px;
+    padding: 32px;
+    background: var(--soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .owner-facts h3 { margin: 0 0 18px; font-size: 1.3rem; }
+  .owner-facts dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px 36px;
+  }
+  .owner-fact { padding-top: 14px; border-top: 1px solid var(--line); }
+  .owner-fact dt {
+    margin: 0 0 4px;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--brand-mid);
+  }
+  .owner-fact dd { margin: 0; font-size: .96rem; line-height: 1.6; color: var(--ink); }
+  .owner-facts-sources { margin: 18px 0 0; font-size: .8rem; line-height: 1.55; color: var(--gray); }
+  .owner-facts-sources a { color: var(--gray); text-decoration: underline; }
+  @media (max-width: 1100px) and (min-width: 901px) {
+    .owner-facts dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 900px) {
+    .owner-insights { padding: 64px 0; }
+    .owner-facts { padding: 22px; }
+    .owner-facts dl { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  }
+</style>

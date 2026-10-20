@@ -1,0 +1,165 @@
+{
+  "_meta": {
+    "researched": "2026-10-20",
+    "scope": "Carmel, Fishers, Noblesville, Westfield (Hamilton County)",
+    "fair_housing": "Places, rules, services and infrastructure only. No demographic, school, crime or 'family' content was collected. City and builder pages that listed schools or places of worship were used only for the utility/landmark facts and those items were excluded. Fishers' rental-registration page frames its cap partly in terms of investor ownership shares; those statistics were deliberately left out.",
+    "note": "Every URL below was opened during research. Anything not confirmed from a primary or dated source is listed under 'unverified' rather than stated as fact. Driving distances are from the public OSRM router (OpenStreetMap data), city center to Monument Circle, rounded.",
+    "big_change": "Carmel and Fishers both adopted long-term rental registration plus a 10%-per-subdivision rental cap effective early 2026. Indiana HEA 1210 (Public Law 157-2026, signed March 12, 2026) now bars local rental caps; local reporting says existing caps may be enforced only through January 2028, while registration programs can continue. Treat any cap language on these pages as time-limited."
+  },
+  "_shared_hamilton": {
+    "eviction_court": "Hamilton County Local Rule 103.40 says eviction (EV) and small claims (SC) cases are filed in Hamilton Superior Court No. 4, No. 6, or No. 7, all at One Hamilton County Square in Noblesville. Each of those three courts publishes its own eviction complaint forms.",
+    "property_tax": "Rental homes are billed by Hamilton County: the Auditor (33 N. 9th St., Noblesville) handles deductions and rates and the Treasurer collects; for 2025-pay-2026 bills, installments were delinquent after May 11 and November 10. Indiana's constitutional circuit-breaker caps a non-homestead residential property, including a single-family rental, at 2% of gross assessed value (1% applies only to an owner's homestead).",
+    "state_rental_law": "HEA 1210 (2026), per the official IGA digest, 'prohibits a unit from adopting or enforcing' rules that restrict an owner from using a residential property as a rental, with certain exceptions, and retroactively narrows the state definition of 'short term rental'.",
+    "sources": [
+      {"fact": "EV and SC cases filed in Superior Court 4, 6, or 7 (LR 103.40)", "url": "https://www.hamiltoncounty.in.gov/201/Administrative-Rules"},
+      {"fact": "Small claims/eviction forms published by Superior Courts 4, 6 and 7", "url": "https://www.hamiltoncounty.in.gov/195/Small-Claims-Forms"},
+      {"fact": "Hamilton County Courts address, 1 Hamilton County Square, Noblesville", "url": "https://www.hamiltoncounty.in.gov/189/Courts"},
+      {"fact": "Auditor's office address and deduction filing", "url": "https://www.hamiltoncounty.in.gov/443/Auditors-Office"},
+      {"fact": "Treasurer's notice for 2025 pay 2026, installment delinquency dates May 11 / Nov 10", "url": "https://www.hamiltoncounty.in.gov/DocumentCenter/View/31242/2025-pay-2026-Certified-Tax-Rate-Chart-PDF"},
+      {"fact": "Circuit-breaker caps: 1% homestead, 2% residential incl. single-family dwelling not part of a homestead", "url": "https://www.in.gov/dlgf/files/240429-Fact-Sheet-Circuit-Breaker-Caps.pdf"},
+      {"fact": "2026 certified gross tax rates by district (Hamilton County = county 29)", "url": "https://www.in.gov/dlgf/files/2026-reports/2026_Certifed_Tax_Rates_By_District.pdf"},
+      {"fact": "HEA 1210 digest; signed March 12, 2026; Public Law 157", "url": "https://iga.in.gov/legislative/2026/bills/house/1210/details"},
+      {"fact": "Carmel and Fishers caps enforceable through January 2028; Fishers keeping registration", "url": "https://youarecurrent.com/2026/03/16/new-state-law-affects-fishers-carmel-rental-caps/"}
+    ]
+  },
+  "carmel": {
+    "jurisdiction": "City of Carmel (a town from 1874, a city since January 1, 1976), Hamilton County. It is Clay Township's city: the county notes the Clay Township taxing district was 100% annexed into the City of Carmel starting with 2019-pay-2020 taxes, and a separate 'Carmel Washington' tax district covers a small part in Washington Township.",
+    "rental_rules": "Yes. Under Ordinance D-2770-25 (as amended), every single-family home or townhome rented for more than 30 days must be registered and permitted through the city's Slate portal ($5 per property per year, renewed annually; condos are not covered); enforcement began February 1, 2026, with late fees of $100 at 30 days and $200 at 60 days. Permits are capped at 10% of homes in a subdivision of ten or more lots, with rentals registered by January 31, 2026 kept as 'legacy dwellings'; the city FAQ says there are no inspections tied to the permit, and HOA covenants can be stricter.",
+    "short_term_rentals": "The city FAQ still describes Ordinance Z-706-26: a permit for owner-occupied rentals of 30 days or less and Board of Zoning Appeals special-exception approval for non-owner-occupied ones. In March 2026 the mayor said HEA 1210 had 'effectively neutered' those restrictions, and the city dropped a pending enforcement suit; a revised ordinance was expected but none was confirmed adopted as of October 2026.",
+    "eviction_court": "Hamilton Superior Court No. 4, No. 6, or No. 7 (small claims/eviction dockets), One Hamilton County Square, Noblesville.",
+    "property_tax": "Billed by the Hamilton County Auditor and Treasurer; a rental is capped at 2% of gross assessed value under Indiana's circuit breaker. The 2026 certified gross rate for the Carmel district was 2.0167 per $100 of assessed value (Carmel Washington district: 2.4068).",
+    "utilities": {
+      "water": "Carmel Utilities, the city-owned water, wastewater and trash utility (20 wells, five treatment facilities; customer service 317-571-2442). Some edges of the city may be served by Citizens Water; check the address.",
+      "sewer": "Carmel Utilities for most of the city; TriCo Regional Sewer Utility (formerly Clay Township Regional Waste District) has served roughly the western half of Carmel.",
+      "electric": "Duke Energy (not confirmed from an official Carmel or Duke service-area page; see unverified).",
+      "gas": "CenterPoint Energy (formerly Vectren) is the likely provider, not confirmed from an official source; see unverified."
+    },
+    "location": "About 15 driving miles north of downtown Indianapolis, mainly via Keystone Parkway/Keystone Avenue or US-31 (Meridian Street). The Monon Trail, called the Monon Greenway in Carmel, runs through the city on its 28.5-mile route from Indianapolis to Sheridan, and it runs through the center of the Carmel Arts & Design District in Old Town, a certified Indiana Cultural District of galleries, design showrooms and restaurants.",
+    "unverified": [
+      "Carmel short-term rental status after HEA 1210: no confirmed replacement ordinance; the city FAQ still lists the Z-706-26 permit/BZA process. Call Carmel Community Services (317-571-2400) before publishing STR guidance.",
+      "Exact sunset date for Carmel's 10% cap: local reporting says 'through January 2028' (one secondary source says January 1, 2028); not checked against the enrolled bill text.",
+      "Carmel's own pages conflict on whether legacy dwellings are 'exempt from' or 'count toward' the 10% cap. Both can be true (they keep their permit but count in the percentage); wording should be confirmed with the city.",
+      "Electric (Duke Energy) and gas (CenterPoint) providers for Carmel: no official city or utility service-area page was found; the Carmel city website was mid-migration and its old utilities page returns 404.",
+      "Which Carmel addresses get water from Citizens rather than Carmel Utilities: the city GIS lists a 'Citizens Water' layer, but no boundary was confirmed.",
+      "TriCo's 'western half of Carmel' sewer area comes from 2016 and 2020 news reporting, not a current service map.",
+      "Whether the 2.0167 rate leads to circuit-breaker credits on a given rental depends on the parcel's net liability; the 2% cap figure is the binding number to cite, not the rate."
+    ],
+    "sources": [
+      {"fact": "Rental registration: Ordinance D-2770-25, scope, $5 fee, dates, 10% cap, legacy dwellings, HOA documentation, annual renewal", "url": "https://www.carmel.in.gov/government/departments-services/rental-registration"},
+      {"fact": "City FAQ: Z-706-26 STR process; legacy dwellings count toward cap; $5 annual fee; no inspections", "url": "https://www.carmel.in.gov/m/faq?cat=27"},
+      {"fact": "D-2770-25 passed 9-0; exemptions incl. short-term rentals; $500 fine for failing to register (June 2025 reporting)", "url": "https://readthereporter.com/?p=148683"},
+      {"fact": "HEA 1210 voided Carmel STR restrictions; mayor quote; lawsuit dropped; council to revisit in May (Mar. 25, 2026)", "url": "https://youarecurrent.com/2026/03/25/new-state-law-voids-carmels-short-term-rental-restrictions/"},
+      {"fact": "Clay Twp taxing district annexed 100% to City of Carmel beginning 2019 pay 2020", "url": "https://www.hamiltoncounty.in.gov/DocumentCenter/View/28681/2025-District-Rates"},
+      {"fact": "2026 certified gross rate: Carmel 2.0167, Carmel Washington 2.4068", "url": "https://www.in.gov/dlgf/files/2026-reports/2026_Certifed_Tax_Rates_By_District.pdf"},
+      {"fact": "Carmel Utilities: water, wastewater, customer service 317-571-2442", "url": "https://carmelutilities.com/"},
+      {"fact": "Carmel water: twenty wells, five treatment facilities", "url": "https://carmelutilities.com/water/"},
+      {"fact": "TriCo serves the western half of Carmel (Dec. 15, 2020)", "url": "https://www.youarecurrent.com/?p=198111"},
+      {"fact": "CTRWD served the west half of Carmel and part of Zionsville (June 27, 2016)", "url": "https://youarecurrent.com/2016/06/27/clay-township-regional-waste-district-to-celebrate-40-years-at-june-29-open-house/"},
+      {"fact": "Driving distance ~14.9 mi via Keystone Parkway / Keystone Ave to Meridian St", "url": "https://router.project-osrm.org/route/v1/driving/-86.113,39.968;-86.1581,39.7684?overview=false&steps=true"},
+      {"fact": "Monon Trail 28.5 mi, connects Indianapolis, Carmel, Westfield, Sheridan; called Monon Greenway in Carmel", "url": "https://en.wikipedia.org/wiki/Monon_Trail"},
+      {"fact": "Arts & Design District in Old Town, certified Indiana Cultural District; Monon Greenway runs through its center", "url": "https://www.carmel.in.gov/513/Arts-Design-District"},
+      {"fact": "City status 1976, US-31 corridor (prior research)", "url": "file:claude/red-door-city-facts-research.md"}
+    ]
+  },
+  "fishers": {
+    "jurisdiction": "City of Fishers (a town from 1891, a city since January 1, 2015), Hamilton County. It spans Fall Creek and Delaware townships, which is why county tax tables carry separate 'Fishers' and 'Fishers FC' (Fall Creek) districts.",
+    "rental_rules": "Yes. Fishers Code Chapter 163, the Home Rental Registration & Permitting Program (adopted April 21, 2025, effective January 1, 2026), requires every single-family home, townhome or platted condominium rented long-term inside city limits to be registered and permitted through the city's Slate portal. There is no fee, and permits last until the property changes hands. Rentals are capped at 10% per subdivision (a public capacity map shows which subdivisions are full, and buyers can get a 60-day pre-approval); fines run $250 for failing to register and $1,000 for operating without a permit, rising to $5,000-$7,500 for repeat violations.",
+    "short_term_rentals": "The registration ordinance does not cover short-term rentals; the city says they fall under Unified Development Ordinance Section 5.4.6(D). The specific STR requirements in that section were not confirmed from the UDO text.",
+    "eviction_court": "Hamilton Superior Court No. 4, No. 6, or No. 7 (small claims/eviction dockets), One Hamilton County Square, Noblesville.",
+    "property_tax": "Billed by the Hamilton County Auditor and Treasurer; a rental is capped at 2% of gross assessed value under Indiana's circuit breaker. 2026 certified gross rates were 2.1994 per $100 of assessed value for the Fishers district and 2.1684 for the Fishers Fall Creek district.",
+    "utilities": {
+      "water": "Varies by address: Citizens Energy Group or Indiana American Water (the city says to check the bill).",
+      "sewer": "The City of Fishers owns and operates sewer and stormwater; sewer and the citywide trash contract are billed monthly to the property owner, and stormwater is billed annually.",
+      "electric": "Duke Energy or NineStar Power, depending on location.",
+      "gas": "The city lists Vectren Energy Delivery; Vectren's gas business now operates as CenterPoint Energy (rebrand not confirmed on the city page)."
+    },
+    "location": "About 16 driving miles northeast of downtown Indianapolis, primarily via I-69. Conner Prairie living-history museum (13400 Allisonville Road) is in Fishers, as is the Fishers Event Center arena, which opened November 22, 2024.",
+    "unverified": [
+      "Fishers UDO 5.4.6(D) short-term rental terms (secondary sources say owner-occupied STRs need no permit and non-owner-occupied ones need a BZA special exception); the UDO text was not opened.",
+      "Exact sunset date for Fishers' 10% cap under HEA 1210 ('through January 2028' per local reporting).",
+      "That the 'Fishers' tax district (006) is the Delaware Township portion, an inference from the county's township column order.",
+      "Gas provider name: the city page still says Vectren; CenterPoint as the current brand comes from secondary sources.",
+      "Prior research cites 25 parks and 131+ miles of trails; not re-verified here, so it was left out."
+    ],
+    "sources": [
+      {"fact": "Chapter 163 program, effective Jan 1 2026, 10% cap, $250 fine, HOA covenants may be stricter, capacity map, pre-approval, enforcement steps and fines, no fee, permit valid until ownership change, STRs under UDO 5.4.6(D), unincorporated properties exempt", "url": "https://fishersin.gov/government/administrative/rental-registration-permitting/"},
+      {"fact": "Council vote 9-0, grandfathering, exemptions (Apr. 22, 2025)", "url": "https://www.ibj.com/articles/fishers-passes-rental-home-cap-while-carmel-introduces-its-own"},
+      {"fact": "HEA 1210 lets Fishers enforce its cap through January 2028; city keeping registration", "url": "https://youarecurrent.com/2026/03/16/new-state-law-affects-fishers-carmel-rental-caps/"},
+      {"fact": "2026 certified gross rates: Fishers 2.1994, Fishers FC 2.1684", "url": "https://www.in.gov/dlgf/files/2026-reports/2026_Certifed_Tax_Rates_By_District.pdf"},
+      {"fact": "Utilities: Citizens or American Water; city-owned sewer/stormwater billed to owners; Duke or NineStar; Vectren gas", "url": "https://fishersin.gov/services-resources/resident-resources/new-residents/"},
+      {"fact": "Driving distance ~16.4 mi via I-69 and Binford Blvd", "url": "https://router.project-osrm.org/route/v1/driving/-86.013,39.956;-86.1581,39.7684?overview=false&steps=true"},
+      {"fact": "Conner Prairie at 13400 Allisonville Road, Fishers", "url": "https://www.connerprairie.org/plan-your-visit/"},
+      {"fact": "Fishers Event Center opened Nov 22, 2024", "url": "https://en.wikipedia.org/wiki/Fishers_Event_Center"},
+      {"fact": "City status 2015, I-69 corridor (prior research)", "url": "file:claude/red-door-city-facts-research.md"}
+    ]
+  },
+  "noblesville": {
+    "jurisdiction": "City of Noblesville (a city since 1887), Hamilton County's county seat. Most of it is in Noblesville Township, with separate tax districts for portions in Fall Creek and Wayne townships.",
+    "rental_rules": "None found. Noblesville's Code of Ordinances (current through Ord. 46-08-26, passed September 15, 2026) has no rental registration, licensing or inspection chapter; Chapter 158 adopts a housing and property maintenance code by reference, which applies to all property. Noblesville has not adopted a rental cap.",
+    "short_term_rentals": "None found. The Unified Development Ordinance (Chapter 159) has no short-term rental section; the closest use is 'bed and breakfast establishments' (Sec. 159.125).",
+    "eviction_court": "Hamilton Superior Court No. 4, No. 6, or No. 7 (small claims/eviction dockets), One Hamilton County Square in downtown Noblesville.",
+    "property_tax": "Billed by the Hamilton County Auditor and Treasurer; a rental is capped at 2% of gross assessed value under Indiana's circuit breaker. The 2026 certified gross rate for the Noblesville City district was 2.5549 per $100 of assessed value (other Noblesville districts in Fall Creek and Wayne townships ran 2.4503 to 2.4813).",
+    "utilities": {
+      "water": "Indiana American Water operates the Noblesville distribution system.",
+      "sewer": "Noblesville Utilities (city) handles wastewater; city trash service is also billed through Noblesville Utilities (317-776-6353), with pickup by Republic Services.",
+      "electric": "Duke Energy.",
+      "gas": "CenterPoint Energy."
+    },
+    "location": "About 24 driving miles north-northeast of downtown Indianapolis via SR-37 to I-69. Downtown is built around the Hamilton County Courthouse square (courthouse completed 1879, on the National Register since 1978), and Ruoff Music Center (12880 E. 146th St.) is in the city.",
+    "unverified": [
+      "Electric (Duke) and gas (CenterPoint) come from a home-builder's community sheet for one Noblesville subdivision (revised April 3, 2026) plus news reports of Duke outages in Noblesville, not an official city or utility service-area page.",
+      "Noblesville city council activity on rental registration after September 2026 would not appear in the online code yet.",
+      "Which townships each Noblesville tax district covers is inferred from the DLGF district names ('Noblesville FC', 'Nob Wayne')."
+    ],
+    "sources": [
+      {"fact": "Code current through Ord. 46-08-26 (9-15-26); Title IX, XI, XV chapter lists show no rental registration chapter", "url": "https://codelibrary.amlegal.com/codes/noblesville/latest/overview"},
+      {"fact": "Chapter 158 Housing and Property Maintenance Code adopted by reference", "url": "https://codelibrary.amlegal.com/codes/noblesville/latest/noblesville_in/0-0-0-7883"},
+      {"fact": "UDO Chapter 159 section list: 159.125 Bed and breakfast establishments; no STR section", "url": "https://codelibrary.amlegal.com/codes/noblesville/latest/noblesville_in/0-0-0-7890"},
+      {"fact": "Noblesville and Westfield had not adopted rental caps (secondary)", "url": "https://midtownhomecollective.com/blog/carmels-10-rental-cap-made-headlines-in-2025-it-already-has-an-expiration-date"},
+      {"fact": "2026 certified gross rates: Noblesville City 2.5549; Noblesville SE 2.4813, Noblesville FC 2.4503, Nob Wayne 2.4737", "url": "https://www.in.gov/dlgf/files/2026-reports/2026_Certifed_Tax_Rates_By_District.pdf"},
+      {"fact": "Noblesville Utilities handles wastewater; trash billed through Utilities; Republic Services", "url": "https://www.noblesville.in.gov/273/Utilities"},
+      {"fact": "Indiana American Water Noblesville distribution system (July 14, 2026)", "url": "https://newsroom.amwater.com/2026-07-14-Indiana-American-Water-Investing-15-Million-in-New-Elevated-Water-Tank-and-System-Upgrades-in-Noblesville?asPDF=1"},
+      {"fact": "Builder sheet: Duke Energy, CenterPoint Energy, Indiana American Water, city sewer/trash", "url": "https://dam.mihomes.com/media/5090102/50365"},
+      {"fact": "Duke Energy outages concentrated in Noblesville and Westfield (June 19, 2025)", "url": "https://readthereporter.com/ridin-the-storm-out-in-hamilton-county/"},
+      {"fact": "Driving distance ~24.2 mi via SR-37 and I-69", "url": "https://router.project-osrm.org/route/v1/driving/-85.953,40.025;-86.1581,39.7684?overview=false&steps=true"},
+      {"fact": "Courthouse square, built 1877-79, NRHP 1978", "url": "https://en.wikipedia.org/wiki/Hamilton_County_Courthouse_(Indiana)"},
+      {"fact": "Ruoff Music Center at 12880 E. 146th St., Noblesville", "url": "https://www.ruoffmusiccenter.net/"},
+      {"fact": "City status 1887, SR-37 corridor (prior research)", "url": "file:claude/red-door-city-facts-research.md"}
+    ]
+  },
+  "westfield": {
+    "jurisdiction": "City of Westfield (a town from 1848, a city since January 1, 2008), Hamilton County, in Washington Township (county and state tax tables list it as the Westfield and Westfield Washington Township districts).",
+    "rental_rules": "None found for long-term rentals. Westfield's Code of Ordinances (current through Ord. 26-17, passed April 13, 2026) has no rental registration, licensing or inspection chapter, and Westfield has not adopted a rental cap.",
+    "short_term_rentals": "Pending. A short-term rental permit ordinance was introduced September 28, 2026 ($150 permit, revocation for up to a year after three or more citations in a calendar year, renting without a permit a Class C infraction, proposed effective in January). The council tabled it 6-0 on October 13, 2026 for revisions, with adoption expected the following month.",
+    "eviction_court": "Hamilton Superior Court No. 4, No. 6, or No. 7 (small claims/eviction dockets), One Hamilton County Square, Noblesville.",
+    "property_tax": "Billed by the Hamilton County Auditor and Treasurer; a rental is capped at 2% of gross assessed value under Indiana's circuit breaker. The 2026 certified gross rate for the Westfield district was 2.3448 per $100 of assessed value.",
+    "utilities": {
+      "water": "Citizens Westfield (Citizens Energy Group), which bought the city's water and wastewater systems in 2014.",
+      "sewer": "Citizens Westfield.",
+      "electric": "Duke Energy.",
+      "gas": "Varies by area: Citizens Westfield serves part of the city, and the rest of the Westfield area is served by Vectren, now CenterPoint Energy."
+    },
+    "location": "About 20 driving miles north of downtown Indianapolis via US-31 (Meridian Street). Grand Park Sports Campus (19000 Grand Park Blvd., 400+ acres, 26 diamonds) is in Westfield, and the Monon Trail runs through the city.",
+    "unverified": [
+      "Final text and adoption of Westfield's STR permit ordinance: the October 13 tabling comes from a meeting aggregator (MyTownView), not the city's own minutes. Re-check in November 2026.",
+      "Citizens Westfield gas versus Vectren/CenterPoint split: from an undated Citizens customer insert with older customer counts (about 3,700 gas customers); no current service map.",
+      "Electric (Duke) is supported by news outage reporting, not an official service-area page; the Westfield city site was mid-migration and its old utility FAQ returns 404.",
+      "A reported Monon Trail construction closure in Westfield (156th to 169th streets, through the end of 2026) comes only from a search summary of TrailLink, which blocked direct fetching, so it was left out of the copy."
+    ],
+    "sources": [
+      {"fact": "Westfield Code current through Ord. 26-17 (4-13-2026); title/chapter lists show no rental chapter", "url": "https://codelibrary.amlegal.com/codes/westfieldin/latest/westfield_in/"},
+      {"fact": "Title IX chapters: animals, nuisances, trees, parks", "url": "https://codelibrary.amlegal.com/codes/westfieldin/latest/westfield_in/0-0-0-3645"},
+      {"fact": "Title XI chapters: no rental chapter", "url": "https://codelibrary.amlegal.com/codes/westfieldin/latest/westfield_in/0-0-0-4812"},
+      {"fact": "Title XV chapters incl. 153 UDO", "url": "https://codelibrary.amlegal.com/codes/westfieldin/latest/westfield_in/0-0-0-5551"},
+      {"fact": "STR permit ordinance introduced Sept 28, 2026: $150 fee, revocation, Class C infraction, January effective", "url": "https://youarecurrent.com/2026/09/28/westfield-eyes-ordinance-regulating-short-term-rentals/"},
+      {"fact": "Council tabled STR ordinance 6-0 on Oct 13, 2026", "url": "https://mytownview.com/indiana/hamilton/westfield"},
+      {"fact": "2026 certified gross rate: Westfield 2.3448", "url": "https://www.in.gov/dlgf/files/2026-reports/2026_Certifed_Tax_Rates_By_District.pdf"},
+      {"fact": "Citizens Westfield water/wastewater/gas; other Westfield-area gas customers served by Vectren", "url": "https://info.citizensenergygroup.com/hubfs/site/rights%20and%20responsibilities%20documents/Rights-and-Responsibilities-Insert-Westfield-(combined).pdf"},
+      {"fact": "Duke Energy outages concentrated in Noblesville and Westfield (June 19, 2025)", "url": "https://readthereporter.com/ridin-the-storm-out-in-hamilton-county/"},
+      {"fact": "Driving distance ~20.4 mi via Meridian St (US-31)", "url": "https://router.project-osrm.org/route/v1/driving/-86.153,40.032;-86.1581,39.7684?overview=false&steps=true"},
+      {"fact": "Grand Park in Westfield, 400+ acres, 26 diamonds", "url": "https://www.grandpark.org/"},
+      {"fact": "Monon Trail passes through Westfield", "url": "https://en.wikipedia.org/wiki/Monon_Trail"},
+      {"fact": "City status 2008, US-31 corridor (prior research)", "url": "file:claude/red-door-city-facts-research.md"}
+    ]
+  }
+}

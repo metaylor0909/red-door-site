@@ -500,7 +500,23 @@ Judgment calls / open items carried forward from this build:
         other than Red Door inboxes.
       - Test one submission of each type end to end on the real domain at
         launch (Turnstile only works there).
-- [ ] **PRE-LAUNCH: write genuinely distinct content for every city
+- [x] **DONE 2026-10-20 (pending team review of the local facts):**
+      Michael decided not to supply leasing observations. In their place,
+      four sources of per-city content were built, none needing the team to write anything:
+      - **Owner market paragraphs** generated from each city's RentCast
+        data (`src/lib/property-management/city-insights.ts`). They cover
+        rent against the Indianapolis median, a bedroom breakdown, lease
+        time and vacancy cost, and gross yield.
+      - **A researched "Local Rules & Costs" card**
+        (`data/property-management/local-facts.json`, compiled from
+        `claude/research/`). It covers rental registration, short-term
+        rentals, eviction court, property tax, utilities, and location.
+      - **A city FAQ with FAQPage JSON-LD.**
+      - **Red Door's own RentEngine lease count.**
+
+      Team check-and-confirm list: `claude/city-local-facts-review.md`.
+      The original brief is below, for context.
+- [x] **(Original brief, superseded by the entry above) PRE-LAUNCH: write genuinely distinct content for every city
       `-property-management` page.** Added 2026-10-07 (Michael), when
       `/downtown-indianapolis-property-management` was built as the 19th
       page on the shared template. **Current state:** all 19
