@@ -34,6 +34,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PropertyManagementJourneyCarousel from '../components/PropertyManagementJourneyCarousel.astro';
 import LandlordLibrary from '../components/LandlordLibrary.astro';
+import SampleReportCard from '../components/SampleReportCard.astro';
 import { PILLAR_LANDLORD_LIBRARY_POSTS } from '../lib/property-management/pillar-landlord-library-posts';
 
 const pageTitle = 'Market Readiness Assessment | Red Door Property Management';
@@ -122,36 +123,7 @@ const pageDescription =
             <li>Fast execution by our in-house maintenance team and trusted vendors</li>
           </ul>
         </div>
-        <div class="sample-report-stack">
-          <div class="sample-report-stack-page is-back2" aria-hidden="true"></div>
-          <div class="sample-report-stack-page is-back1" aria-hidden="true"></div>
-          <a class="sample-report-card" href="/documents/sample-inspection-report.pdf" target="_blank" rel="noopener">
-            <div class="sample-report-card-photo">
-              <img src="/images/market-readiness/sample-report-cover.webp" alt="" loading="lazy" />
-              <span class="sample-report-card-badge" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
-                Quality<br />Verified
-              </span>
-            </div>
-            <div class="sample-report-card-body">
-              <div class="sample-report-card-head">
-                <span class="sample-report-card-kicker">Sample Report</span>
-                <span class="sample-report-card-pages">26 pages</span>
-              </div>
-              <h3>Move-In Inspection Report</h3>
-              <dl class="sample-report-card-facts">
-                <div><dt>Property Type</dt><dd>Single Family</dd></div>
-                <div><dt>Areas Inspected</dt><dd>10+</dd></div>
-                <div><dt>Result</dt><dd>100% Satisfactory</dd></div>
-                <div><dt>Report Length</dt><dd>26 pages</dd></div>
-              </dl>
-            </div>
-            <div class="sample-report-card-foot">
-              View the full sample report
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
-            </div>
-          </a>
-        </div>
+        <SampleReportCard />
       </div>
     </div>
   </section>

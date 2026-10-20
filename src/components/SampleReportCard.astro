@@ -1,0 +1,53 @@
+---
+// The sample move-in inspection report card (Leasing and Market Readiness
+// pages), linking to the full 26-page PDF. Its top shows a real excerpt of
+// that report: the kitchen page's checklist rows (pages 6-7, all rated S)
+// and three of the inspector's own photos with their timestamps, instead
+// of a stock house photo (Michael, 2026-10-20). The photos were pulled
+// from the published PDF and re-encoded without EXIF/GPS data.
+// Styles: .sample-report-* and .inspection-* in global.css.
+
+const INSPECTION_ROWS = ['Cabinets / Drawers', 'Counter', 'Range / Fan / Hood / Filter', 'Refrigerator', 'Sink / Disposal'];
+---
+<div class="sample-report-stack">
+  <div class="sample-report-stack-page is-back2" aria-hidden="true"></div>
+  <div class="sample-report-stack-page is-back1" aria-hidden="true"></div>
+  <a class="sample-report-card" href="/documents/sample-inspection-report.pdf" target="_blank" rel="noopener">
+    <div class="inspection-preview">
+      <div class="inspection-preview-head">
+        <span>Kitchen</span>
+        <span class="inspection-verified">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg>
+          Quality Verified
+        </span>
+      </div>
+      <ul class="inspection-preview-rows">
+        {INSPECTION_ROWS.map((row) => (
+          <li><span>{row}</span><span class="inspection-ok">Satisfactory</span></li>
+        ))}
+      </ul>
+      <div class="inspection-preview-photos">
+        <img src="/images/leasing/inspection-kitchen-range.webp" alt="Inspection photo of the kitchen range and cabinets" width="312" height="416" loading="lazy" />
+        <img src="/images/leasing/inspection-kitchen-fridge.webp" alt="Inspection photo of the open refrigerator" width="312" height="416" loading="lazy" />
+        <img src="/images/leasing/inspection-kitchen-cooktop.webp" alt="Inspection photo of the cooktop" width="312" height="416" loading="lazy" />
+      </div>
+    </div>
+    <div class="sample-report-card-body">
+      <div class="sample-report-card-head">
+        <span class="sample-report-card-kicker">Sample Report</span>
+        <span class="sample-report-card-pages">26 pages</span>
+      </div>
+      <h3>Move-In Inspection Report</h3>
+      <dl class="sample-report-card-facts">
+        <div><dt>Property Type</dt><dd>Single Family</dd></div>
+        <div><dt>Areas Inspected</dt><dd>10+</dd></div>
+        <div><dt>Result</dt><dd>100% Satisfactory</dd></div>
+        <div><dt>Report Length</dt><dd>26 pages</dd></div>
+      </dl>
+    </div>
+    <div class="sample-report-card-foot">
+      View the full sample report
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+    </div>
+  </a>
+</div>
