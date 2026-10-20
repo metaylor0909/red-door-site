@@ -14,6 +14,17 @@ const LEADSIMPLE_INBOUND_ADDRESS = 'new-deal937b93ae52@newlead.leadsimple.com';
 const CALENDLY_URL = 'https://calendly.com/cknight-19/phone-call';
 const RED_DOOR_ADDRESS = '3815 River Crossing Parkway, Suite 100, Indianapolis, Indiana 46240';
 
+// The street address is exactly what the visitor typed (submit.ts keeps
+// intake.propertyStreet), so it must be escaped before it goes into HTML.
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export interface OwnerEmailParams {
   ownerName: string;
   ownerEmail: string;
@@ -26,7 +37,13 @@ export interface OwnerEmailParams {
   reportUrl: string;
 }
 
-export function buildOwnerEmail(params: OwnerEmailParams): { from: string; to: string; subject: string; html: string; replyTo: string } {
+export function buildOwnerEmail(raw: OwnerEmailParams): { from: string; to: string; subject: string; html: string; replyTo: string } {
+  const params = {
+    ...raw,
+    propertyAddress: escapeHtml(raw.propertyAddress),
+    confidenceBucketLabel: escapeHtml(raw.confidenceBucketLabel),
+    reportUrl: escapeHtml(raw.reportUrl),
+  };
   // Headline-only per decision #5 — estimate, range, confidence, one
   // CTA, no charts/tables. Inline styles and a system font stack, since
   // self-hosted web fonts don't render reliably across email clients.
@@ -82,7 +99,7 @@ export function buildOwnerEmail(params: OwnerEmailParams): { from: string; to: s
   return {
     from: SENDER,
     to: params.ownerEmail,
-    subject: `Your rental analysis for ${params.propertyAddress}`,
+    subject: `Your rental analysis for ${raw.propertyAddress}`,
     html,
     replyTo: REPLY_TO,
   };

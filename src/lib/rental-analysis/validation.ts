@@ -20,6 +20,13 @@ export type PropertyStatus = (typeof PROPERTY_STATUSES)[number];
 export const TIMELINES = ['asap', 'within-30-days', 'within-2-3-months', 'just-researching'] as const;
 export type Timeline = (typeof TIMELINES)[number];
 
+/** The rental analysis form's contact consent wording (attorney-approved,
+ * 2026-10-20). Rendered by RentalAnalysisForm.astro and stored with each
+ * submission (rental_analyses.contact_consent_text), so the record always
+ * matches what the person saw. Change it here, not in the form. */
+export const CONTACT_CONSENT_TEXT =
+  'I agree that Red Door Property Management may contact me by phone, email, or text about this property and my rental analysis. Message and data rates may apply.';
+
 export const CONTACT_METHODS = ['phone', 'email', 'text'] as const;
 export type ContactMethod = (typeof CONTACT_METHODS)[number];
 
@@ -118,6 +125,12 @@ export function validateIntake(raw: Record<string, string>): ValidationResult {
   const preferredContactMethodRaw = readString(raw, 'preferred_contact_method');
   const preferredContactMethod = CONTACT_METHODS.find((m) => m === preferredContactMethodRaw);
   if (!preferredContactMethod) errors.preferred_contact_method = 'Select a preferred way to connect.';
+
+  // Required in the browser too; enforced here so it's always recorded.
+  const consentRaw = readString(raw, 'contact_consent');
+  if (consentRaw !== 'on' && consentRaw !== 'true') {
+    errors.contact_consent = 'Please agree to be contacted about your rental analysis.';
+  }
 
   if (Object.keys(errors).length > 0) {
     return { valid: false, errors };

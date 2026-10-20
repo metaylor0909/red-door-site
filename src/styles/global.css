@@ -20,8 +20,8 @@
       --shadow-strong: 0 28px 70px rgba(10, 10, 10, .24);
       --radius: 8px;
       --max: 1220px;
-      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-      --font-head: 'Literata', Georgia, 'Times New Roman', serif;
+      --font: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      --font-head: 'Literata Variable', 'Literata', Georgia, 'Times New Roman', serif;
     }
 
     * {
@@ -3142,7 +3142,7 @@
       border: 2px solid var(--white);
       border-radius: 50%;
       box-shadow: var(--shadow);
-      font-family: 'Inter', sans-serif;
+      font-family: var(--font);
       font-weight: 700;
       font-size: .52rem;
       line-height: 1.15;
@@ -3160,7 +3160,7 @@
       margin-bottom: 8px;
     }
     .sample-report-card-kicker {
-      font-family: 'Inter', sans-serif;
+      font-family: var(--font);
       font-weight: 700;
       font-size: .74rem;
       letter-spacing: .04em;

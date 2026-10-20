@@ -21,7 +21,7 @@
 
 import type { APIRoute } from 'astro';
 import { env } from 'cloudflare:workers';
-import { validateIntake } from '../../../lib/rental-analysis/validation';
+import { CONTACT_CONSENT_TEXT, validateIntake } from '../../../lib/rental-analysis/validation';
 import { verifyTurnstileToken } from '../../../lib/rental-analysis/turnstile';
 import { geocodeAddress } from '../../../lib/rental-analysis/geocode';
 import { fetchComps } from '../../../lib/rental-analysis/rentengine-client';
@@ -238,8 +238,9 @@ export const POST: APIRoute = async ({ request }) => {
         property_city, property_state, property_zip, property_lat,
         property_lon, property_beds, property_baths, property_sqft,
         property_type, property_furnished, property_status,
-        desired_timeline, current_rent, snapshot_json, distinct_visit_count
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)`
+        desired_timeline, current_rent, snapshot_json, distinct_visit_count,
+        contact_consent, contact_consent_text
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 1, ?)`
     )
     .bind(
       token,
@@ -263,7 +264,9 @@ export const POST: APIRoute = async ({ request }) => {
       intake.propertyStatus,
       intake.desiredTimeline,
       intake.currentRent,
-      JSON.stringify(snapshot)
+      JSON.stringify(snapshot),
+      // contact_consent = 1 (validateIntake rejects the form without it)
+      CONTACT_CONSENT_TEXT
     )
     .run();
 

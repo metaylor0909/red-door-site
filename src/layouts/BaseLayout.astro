@@ -1,4 +1,10 @@
 ---
+// Self-hosted fonts (CLAUDE.md: no Google Fonts CDN in production). One
+// variable file per family covers every weight the site uses; Literata's
+// opsz file keeps its automatic optical sizing. Browsers fetch only the
+// Latin subset (~48 KB Inter + ~110 KB Literata).
+import '@fontsource-variable/inter/wght.css';
+import '@fontsource-variable/literata/opsz.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import MobileSticky from '../components/MobileSticky.astro';
@@ -73,12 +79,6 @@ const ga4MeasurementId = import.meta.env.PUBLIC_GA4_MEASUREMENT_ID;
     <link rel="alternate icon" href="/favicon-32.png" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon-180.png" />
     <meta name="theme-color" content="#8c0c03" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap"
-    />
     <slot name="head" />
   </head>
   <body>
