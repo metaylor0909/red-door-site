@@ -1,8 +1,7 @@
-# TEMPORARY — see robots.txt's own header comment and
-# red-door-website-todo.md's "Pre-launch: remove the temporary noindex"
-# item. X-Robots-Tag is the authoritative signal (works even for crawlers
-# that fetch pages despite robots.txt, and for non-HTML responses);
-# robots.txt is defense in depth on top of it. MUST BE REMOVED before
-# this deploys to the real reddoorrents.com domain.
-/*
+# Keep the workers.dev preview address out of search results now that
+# www.reddoorrents.com serves the same pages (every page's canonical tag
+# already points at www; this makes it explicit). Scoped by hostname, so
+# it never applies to the real domain. Removed the old sitewide /* rule at
+# launch (2026-10-22).
+https://red-door-site.mtaylor-0d7.workers.dev/*
   X-Robots-Tag: noindex, nofollow
