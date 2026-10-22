@@ -155,6 +155,10 @@ const pageDescription =
           if (error) error.textContent = 'Something went wrong. Please check your connection and try again.';
         } finally {
           if (submitButton) submitButton.disabled = false;
+          // A Turnstile token verifies once. The server checks it before
+          // anything else, so any failed submit has spent it; get a fresh
+          // one or every retry on this page fails the spam check.
+          (window as any).turnstile?.reset();
         }
       });
     })();

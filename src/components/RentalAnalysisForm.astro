@@ -452,6 +452,9 @@ const googlePlacesApiKey = import.meta.env.PUBLIC_GOOGLE_PLACES_API_KEY;
         error.textContent = 'Something went wrong. Please check your connection and try again.';
       } finally {
         submitting = false;
+        // A Turnstile token verifies once; get a fresh one so a retry
+        // after a failed submit isn't rejected as spam.
+        (window as any).turnstile?.reset();
         nextButton.disabled = false;
         previousButton.disabled = false;
         nextButton.textContent = previousLabel;

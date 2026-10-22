@@ -264,6 +264,8 @@ const jsonLd = {
           if (error) error.textContent = 'Something went wrong. Please check your connection and try again.';
         } finally {
           if (submitButton) submitButton.disabled = false;
+          // Fresh Turnstile token for a retry; see contact.astro.
+          (window as any).turnstile?.reset();
         }
       });
     })();
