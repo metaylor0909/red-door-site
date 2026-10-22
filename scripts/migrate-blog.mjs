@@ -14,6 +14,12 @@
 //   node scripts/migrate-blog.mjs --limit 3         # dry run, first 3 posts only
 //   node scripts/migrate-blog.mjs --limit 3 --write # ACTUALLY writes 3 posts to Sanity
 //   node scripts/migrate-blog.mjs --write           # ACTUALLY writes all 309 posts
+//   node scripts/migrate-blog.mjs --source <dir>    # read <dir>/blog and <dir>/images instead of archive/
+//
+// --source exists for the launch catch-up (2026-10-22): the 15 posts
+// published on the old site after the archive crawl were downloaded to
+// red-door-pmw-website-scrape/catchup-2026-10/, leaving archive/ frozen.
+// Images are looked up there first, then in archive/images.
 //
 // Always run a small --limit batch with --write first and check it in
 // Sanity Studio before running the full, unlimited --write pass.
@@ -27,8 +33,12 @@ import * as cheerio from 'cheerio';
 import { createClient } from '@sanity/client';
 
 const SCRAPE_ROOT = 'C:\\Users\\mtayl\\red-door-pmw-website-scrape';
-const BLOG_DIR = path.join(SCRAPE_ROOT, 'archive', 'blog');
-const IMAGES_DIR = path.join(SCRAPE_ROOT, 'archive', 'images');
+const SOURCE_ROOT = (() => {
+  const i = process.argv.indexOf('--source');
+  return i !== -1 ? process.argv[i + 1] : path.join(SCRAPE_ROOT, 'archive');
+})();
+const BLOG_DIR = path.join(SOURCE_ROOT, 'blog');
+const IMAGES_DIRS = [path.join(SOURCE_ROOT, 'images'), path.join(SCRAPE_ROOT, 'archive', 'images')];
 const CONTENT_FIXES_CSV = path.join(SCRAPE_ROOT, 'content-fixes.csv');
 
 const DRY_RUN = !process.argv.includes('--write');
@@ -182,8 +192,8 @@ async function resolveImageAsset(src) {
   if (SKIP_IMAGE_BASENAMES.has(basename)) return null;
   if (assetCache.has(basename)) return assetCache.get(basename);
 
-  const filePath = path.join(IMAGES_DIR, basename);
-  if (!fs.existsSync(filePath)) {
+  const filePath = IMAGES_DIRS.map((dir) => path.join(dir, basename)).find((p) => fs.existsSync(p));
+  if (!filePath) {
     assetCache.set(basename, null);
     return null;
   }

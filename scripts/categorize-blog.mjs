@@ -14,6 +14,7 @@
 //   node scripts/categorize-blog.mjs                  # dry run, all posts
 //   node scripts/categorize-blog.mjs --limit 10        # dry run, first 10
 //   node scripts/categorize-blog.mjs --write           # ACTUALLY writes
+//   node scripts/categorize-blog.mjs --uncategorized   # only posts with no categories yet
 //
 // Idempotent: category documents use deterministic _ids and
 // createIfNotExists; post category assignments use a plain patch (set),
@@ -120,7 +121,7 @@ function classifyTopic(text, title) {
 }
 
 function detectCities(text) {
-  if (/westside/i.test(text)) return ['Westside'];
+  if (/west[ -]?side/i.test(text)) return ['Westside'];
   return CITIES.filter((c) => text.includes(c));
 }
 
@@ -138,7 +139,10 @@ async function main() {
     if (!DRY_RUN) await client.createIfNotExists({ _id: id, _type: 'category', title: city });
   }
 
-  const posts = await client.fetch(`*[_type=="post"]{_id, title, "slug": slug.current, excerpt}`);
+  // --uncategorized: only posts with no categories yet (e.g. the 2026-10-22
+  // launch catch-up), leaving every existing assignment untouched.
+  const filter = process.argv.includes('--uncategorized') ? ' && !defined(categories)' : '';
+  const posts = await client.fetch(`*[_type=="post"${filter}]{_id, title, "slug": slug.current, excerpt}`);
   const list = posts.slice(0, LIMIT);
 
   console.log(`${DRY_RUN ? '[DRY RUN] ' : '[WRITE] '}Classifying ${list.length} of ${posts.length} posts...\n`);

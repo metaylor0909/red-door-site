@@ -440,8 +440,18 @@ Judgment calls / open items carried forward from this build:
   Criteria criminal-history clause, the privacy policy, and the
   rental-analysis form's required consent checkbox.
 - **PMW contract: reviewed** (notice period / export question closed).
-- **Old-site blog freeze date: set.** The September catch-up migration
-  still needs to run.
+- **Old-site blog freeze date: set. Catch-up migration DONE 2026-10-22.**
+  - **Which posts:** the 15 posts on the live site's sitemap but not in `archive/` (Sept 5 – Oct 16, 2026).
+  - **Where they were saved:** downloaded to
+    `red-door-pmw-website-scrape/catchup-2026-10/blog/`, so `archive/` stays frozen.
+  - **How they were migrated:** with
+    `node scripts/migrate-blog.mjs --source <that folder> --write`.
+  - **Follow-up passes:**
+    - Categorized with `categorize-blog.mjs --uncategorized`. Three owner-marketing posts were moved by hand from Tenant Resources to Landlord Tips.
+    - 13 SEO titles added to `scripts/data/seo-title-fixes-*.json`.
+    - 10 summaries added to `blog-summaries.json`. Every figure was checked verbatim against its post.
+  - **One correction:** the July 2026 Westfield report's SEO title had been mislabeled "August 2026" and is now "July 2026".
+  - **Result:** the link check is at 0 broken links.
 
 - [x] **DECIDED 2026-10-20: `/tenants` 301s to `/indianapolis-homes-for-rent`**
       (in `public/_redirects`). Original note: Michael
@@ -1886,7 +1896,11 @@ one.
       school system attracts families seeking a quality education for their
       children"), plus "Safe & Secure" in one title and a Crooked Creek
       "diversity and inclusion" pitch. 12 more only in video transcripts
-      (staff speech — still Red Door's own copy, not testimonials). Column
+      (staff speech — still Red Door's own copy, not testimonials). A 13th
+      transcript joined with the Oct 22 catch-up:
+      `indianapolis-economic-update-why-the-1-rule-is-outdated-for-rental-investors`
+      ("factoring in crime, socioeconomic conditions"), migrated as-is per
+      Hard Rule 1. Column
       `fair_housing_terms_*` in the audit CSV. Some hits are benign (e.g.
       "diversity of sectors") — needs a human pass. Conflicts with Hard Rule 1
       (no content rewrites during migration), but the precedent is set:

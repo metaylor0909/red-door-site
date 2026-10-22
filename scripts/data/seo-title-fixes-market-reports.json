@@ -1,11 +1,23 @@
 [
   {
+    "slug": "-january-2024-market-report-indianapolis--surrounding-areas---is-the-boom-still-on",
+    "newTitle": "Indianapolis Rental Market Report — January 2024"
+  },
+  {
+    "slug": "-red-door-property-management-guiding-you-through-the-indianapolis-rental-market",
+    "newTitle": "Brian Kelly on Working with Red Door Property Management"
+  },
+  {
     "slug": "anderson-market-report-affordable-value-add-deals-still-create-cash-flow",
     "newTitle": "Anderson Rental Market Report — June 2026"
   },
   {
     "slug": "anderson-market-report-cheap-deals-higher-inventory-and-real-risk",
     "newTitle": "Anderson Rental Market Report — May 2026"
+  },
+  {
+    "slug": "anderson-market-report-rental-supply-jumps-47-as-leasing-slows--august-2026",
+    "newTitle": "Anderson Rental Market Report — August 2026"
   },
   {
     "slug": "anderson-market-updates-affordable-investment-market-or-expensive-mistake",
@@ -28,6 +40,10 @@
     "newTitle": "Fishers Rental Market Report — April 2024"
   },
   {
+    "slug": "fishers-market-report-rents-hold-at-2382-as-leasing-slows-to-46-days--august-2026",
+    "newTitle": "Fishers Rental Market Report — August 2026"
+  },
+  {
     "slug": "fishers-market-report-rents-rise-while-housing-stays-surprisingly-stable",
     "newTitle": "Fishers Rental Market Report — June 2026"
   },
@@ -42,6 +58,10 @@
   {
     "slug": "greenfield-market-report-rent-growth-surges-while-home-prices-stay-accessible",
     "newTitle": "Greenfield Rental Market Report — June 2026"
+  },
+  {
+    "slug": "greenfield-market-report-rents-rise-as-rental-inventory-falls--august-2026",
+    "newTitle": "Greenfield Rental Market Report — August 2026"
   },
   {
     "slug": "greenfield-market-updates-affordable-active-and-overlooked",
@@ -64,6 +84,10 @@
     "newTitle": "Greenwood Rental Market Report — June 2026"
   },
   {
+    "slug": "greenwood-market-report-rents-hold-as-home-prices-fall-nearly-8--august-2026",
+    "newTitle": "Greenwood Rental Market Report — August 2026"
+  },
+  {
     "slug": "greenwood-market-updates-affordable-entry-solid-rent-and-investor-upside",
     "newTitle": "Greenwood Rental Market Report — March 2026"
   },
@@ -72,16 +96,24 @@
     "newTitle": "Greenwood Rental Market Report — April 2026"
   },
   {
-    "slug": "indianapolis-market-report-boring-numbers-beautiful-investor-signal",
-    "newTitle": "Indianapolis Rental Market Report — April 2026"
+    "slug": "indianapolis--surrounding-areas-real-estate-market-update-july-2024",
+    "newTitle": "Indianapolis Metro Market Update — July 2024"
   },
   {
     "slug": "indianapolis-market-report--december-2025-rental--sales-trends",
     "newTitle": "Indianapolis Rental Market Report — December 2025"
   },
   {
+    "slug": "indianapolis-market-report-boring-numbers-beautiful-investor-signal",
+    "newTitle": "Indianapolis Rental Market Report — April 2026"
+  },
+  {
     "slug": "indianapolis-market-updates-carmel-fishers-credit-scores--vacancy-math",
     "newTitle": "Indianapolis Rental Market: Credit & Vacancy Signals"
+  },
+  {
+    "slug": "indianapolis-market-updates-rents-hold-at-1775-as-leasing-reaches-50-days--august-2026",
+    "newTitle": "Indianapolis Rental Market Report — August 2026"
   },
   {
     "slug": "indianapolis-market-updates-rents-hold-but-easy-cash-flow-is-gone",
@@ -102,10 +134,6 @@
   {
     "slug": "indianapolis-rental-market-report--january-2025-trends--investment-insights",
     "newTitle": "Indianapolis Rental Market Report — January 2025"
-  },
-  {
-    "slug": "indianapolis--surrounding-areas-real-estate-market-update-july-2024",
-    "newTitle": "Indianapolis Metro Market Update — July 2024"
   },
   {
     "slug": "is-anderson-indiana-still-a-cash-flow-market-for-investors--july-2026-market-report",
@@ -137,15 +165,15 @@
   },
   {
     "slug": "is-westfield-indiana-still-worth-investing-in-with-127-rental-days-on-market--market-report",
-    "newTitle": "Westfield Rental Market Report — August 2026"
-  },
-  {
-    "slug": "-january-2024-market-report-indianapolis--surrounding-areas---is-the-boom-still-on",
-    "newTitle": "Indianapolis Rental Market Report — January 2024"
+    "newTitle": "Westfield Rental Market Report — July 2026"
   },
   {
     "slug": "lebanon-market-report-five-rentals-signal-an-underserved-growth-market",
     "newTitle": "Lebanon Rental Market Report — June 2026"
+  },
+  {
+    "slug": "lebanon-market-report-rents-rise-20-with-only-4-active-rentals--august-2026",
+    "newTitle": "Lebanon Rental Market Report — August 2026"
   },
   {
     "slug": "lebanon-market-updates-early-inning-growth-low-inventory-real-upside",
@@ -172,6 +200,10 @@
     "newTitle": "Noblesville Rental Market Report — April 2026"
   },
   {
+    "slug": "noblesville-market-report-rents-rise-11-as-leasing-speeds-up--august-2026",
+    "newTitle": "Noblesville Rental Market Report — August 2026"
+  },
+  {
     "slug": "noblesville-market-update-predictable-rent-healthy-demand-and-a-market-investors-should-watch",
     "newTitle": "Noblesville Rental Market Report — March 2026"
   },
@@ -180,16 +212,20 @@
     "newTitle": "Plainfield Rental Market Report — March 2024"
   },
   {
-    "slug": "-red-door-property-management-guiding-you-through-the-indianapolis-rental-market",
-    "newTitle": "Brian Kelly on Working with Red Door Property Management"
-  },
-  {
     "slug": "understanding-the-impact-of-urban-development-on-rental-markets",
     "newTitle": "How Urban Development Impacts the Indianapolis Rental Market"
   },
   {
+    "slug": "west-side-roundup-market-report-rents-rise-as-leasing-stays-fast--august-2026",
+    "newTitle": "Westside Rental Market Report — August 2026"
+  },
+  {
     "slug": "westfield-market-report-2800-rents-meet-128-days-on-market",
     "newTitle": "Westfield Rental Market Report — June 2026"
+  },
+  {
+    "slug": "westfield-market-report-leasing-improves-as-rental-supply-drops-52--august-2026",
+    "newTitle": "Westfield Rental Market Report — August 2026"
   },
   {
     "slug": "westfield-market-updates-big-appreciation-brutal-rental-days",
