@@ -35,8 +35,9 @@ export interface InquiryRoute {
 /** Where a contact-form submission goes, by its self-selected inquiry type
  * (Michael, 2026-10-20). Property Availability -> leasing team, Maintenance
  * Request -> maintenance team, each with an auto-reply and no LeadSimple CC.
- * Everything else, including the Eviction Protection Program form (same
- * endpoint), is unchanged: Chris + LeadSimple. */
+ * Everything else is unchanged: Chris + LeadSimple. (Eviction Protection
+ * Program inquiries now come through this same form; that page's own form
+ * was removed 2026-10-22.) */
 export function routeForInquiry(inquiryType: string): InquiryRoute {
   switch (inquiryType) {
     case 'Property Availability':

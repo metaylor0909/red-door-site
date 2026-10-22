@@ -1,20 +1,62 @@
 ---
-// /eviction-protection-program — ported from the eviction-protection-program.html
-// mockup. Body copy is the live reddoorrents.com page's, migrated as-is
-// (verified against archive/pages/eviction-protection-program.html). The
-// mockup's form only faked a confirmation; this one submits to the contact
-// form's real pipeline (/api/contact/submit: Turnstile, D1, staff email +
-// LeadSimple CC) with the property details folded into the comment.
+// /eviction-protection-program — rebuilt 2026-10-22 from Michael's approved
+// mockup (Red-Door-Eviction-Protection.html): the program's current terms
+// ($12.50 per month, per unit; coverage timing for occupied properties;
+// covered vs. excluded expenses; the signed addendum governs) replace the
+// old site's copy. Built from the site's existing pieces wherever the
+// mockup used them: the pillar hero, lease-intro-grid / lease-accomplish /
+// check-list / lease-panel (global.css), step-card, the accordion FAQ
+// pattern, PropertyManagementJourneyCarousel, LandlordLibrary, and the
+// dark final-cta. Only the eviction-specific pieces (price card, coverage
+// cards, timing band, addendum card) are styled here.
+//
+// The mockup routes every enrollment action to /contact instead of an
+// on-page form (enrollment starts with a conversation and a signed
+// addendum; a web inquiry doesn't activate coverage), so the old inline
+// inquiry form is gone.
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PropertyManagementJourneyCarousel from '../components/PropertyManagementJourneyCarousel.astro';
+import LandlordLibrary from '../components/LandlordLibrary.astro';
+import { PILLAR_LANDLORD_LIBRARY_POSTS } from '../lib/property-management/pillar-landlord-library-posts';
 import { ORGANIZATION_ID, ORGANIZATION_JSONLD } from '../lib/schema/organization';
-
-const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
 
 const pagePath = '/eviction-protection-program';
 const canonicalUrl = `https://www.reddoorrents.com${pagePath}`;
 const pageTitle = 'Eviction Protection Program | Red Door Property Management';
 const pageDescription =
-  "Red Door's Eviction Protection Program covers attorney fees, court costs, and filing fees for covered evictions, so owners don't pay them up front.";
+  "Red Door's optional Eviction Protection Program covers attorney, filing, court, and other specified eviction expenses for $12.50 per month, per unit.";
+
+const covered = [
+  'Attorney fees',
+  'Eviction filing fees',
+  'Process server fees',
+  'Court costs',
+  'Broker representation fees',
+  'Writ of possession fees',
+  'Copy charges',
+];
+const notCovered = ['Lost rent', 'Property damage', 'Jury trial costs', 'Costs to physically remove the tenant'];
+
+const faqs = [
+  { q: 'How much does the program cost?', a: '$12.50 per month, per unit.' },
+  {
+    q: 'Does it cover unpaid rent?',
+    a: 'No. Lost rent is excluded. The program covers the specified eviction-related expenses outlined above.',
+  },
+  { q: 'Does it cover property damage?', a: 'No. Property damage is excluded.' },
+  {
+    q: 'Can I enroll a property that already has a tenant?',
+    a: 'If the property is tenant-occupied when Red Door’s Property Management Agreement is executed, coverage does not apply to that existing tenancy. With a signed program addendum, coverage begins when Red Door places a replacement tenant.',
+  },
+  {
+    q: 'Are all evictions covered?',
+    a: 'No. Evictions must be for cause, such as nonpayment of rent, and cannot be owner-caused. The program’s stated exclusions also apply.',
+  },
+  {
+    q: 'How do I enroll?',
+    a: 'Contact our team to review eligibility and the program addendum. A website inquiry does not activate coverage.',
+  },
+];
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -24,12 +66,26 @@ const jsonLd = {
       '@type': 'Service',
       '@id': `${canonicalUrl}#service`,
       name: 'Eviction Protection Program',
-      serviceType: 'Eviction cost coverage for managed rental properties',
+      serviceType: 'Eviction expense coverage for managed rental properties',
       description:
-        'For enrolled owners, Red Door Property Management pays the up-front cost of covered evictions: attorney fees, eviction filing fees, process server fees, court costs, broker representation fees, writ of possession fees, and copy charges.',
+        'An optional program for Red Door-managed properties that covers specified expenses for qualifying evictions: attorney fees, eviction filing fees, process server fees, court costs, broker representation fees, writ of possession fees, and copy charges. Coverage is subject to eligibility and the signed program addendum.',
       provider: { '@id': ORGANIZATION_ID },
       areaServed: 'Indianapolis, IN metro area',
       url: canonicalUrl,
+      offers: {
+        '@type': 'Offer',
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          price: '12.50',
+          priceCurrency: 'USD',
+          unitText: 'per unit, per month',
+        },
+      },
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${canonicalUrl}#faq`,
+      mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
     },
     {
       '@type': 'BreadcrumbList',
@@ -46,244 +102,292 @@ const jsonLd = {
 <BaseLayout title={pageTitle} description={pageDescription} path={pagePath}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-    {turnstileSiteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />}
   </Fragment>
 
-  <section class="hero" aria-labelledby="page-title">
+  <section class="hero hero-pillar epp-hero" aria-labelledby="page-title">
     <div class="hero-content">
-      <div class="eyebrow">Owner Protection</div>
+      <div class="eyebrow">Optional Owner Protection</div>
       <h1 id="page-title"><span>Eviction Protection Program</span></h1>
-      <p class="hero-copy">Court costs and eviction fees are usually an up-front owner expense &mdash; our Eviction Protection Program changes that.</p>
+      <p class="hero-copy">An added layer of protection against unexpected eviction expenses&mdash;for $12.50 per month, per unit.</p>
       <div class="cta-row">
-        <a class="btn btn-primary" href="#epp-inquiry">Inquire About Our Services</a>
-        <a class="btn btn-secondary" href="/contact">Contact Us</a>
+        <a class="btn btn-primary" href="/contact">Ask About Enrollment</a>
+        <a class="btn btn-secondary" href="#coverage">See What&rsquo;s Covered</a>
       </div>
+      <p class="epp-hero-note">For eligible properties. Coverage terms and exclusions apply.</p>
     </div>
-    <a class="scroll-cue" href="#epp-main" aria-label="Scroll to content">
+    <a class="scroll-cue" href="#program-overview" aria-label="Scroll to program overview">
       <span aria-hidden="true"></span>
       Scroll
     </a>
   </section>
 
-  <section id="epp-main">
+  <section id="program-overview" class="epp-overview">
+    <div class="container lease-intro-grid">
+      <div class="epp-intro-copy reveal">
+        <div class="section-kicker">A Little More Certainty</div>
+        <h2>Screen Carefully.<br />Plan for the Unexpected.</h2>
+        <p class="lead">Even a carefully screened tenant can experience circumstances that lead to an eviction.</p>
+        <p>When that happens, legal and court-related expenses can add another burden to an already difficult situation. Red Door&rsquo;s optional Eviction Protection Program covers specified expenses for qualifying evictions, helping owners plan with greater confidence.</p>
+      </div>
+      <aside class="lease-accomplish epp-price reveal" aria-label="Program pricing">
+        <span class="epp-label">Optional Eviction Protection</span>
+        <div class="epp-price-value">$12.50</div>
+        <p class="epp-price-unit">per month, per unit</p>
+        <ul class="check-list">
+          <li>Optional program</li>
+          <li>Specified eviction expenses covered</li>
+          <li>Subject to eligibility and the signed addendum</li>
+        </ul>
+        <a class="btn btn-primary" href="/contact">Discuss My Property</a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section-soft" id="coverage" aria-labelledby="coverage-heading">
     <div class="container">
-      <div class="content-block reveal">
-        <p>While Red Door makes every effort possible to screen our tenants and go the extra mile to avoid potential problems, it is inevitable that some renters will just have to be evicted for one reason or another. Sometimes families that are well-qualified when they move experience life altering circumstances that will result in them no longer being able to meet the obligations of the lease. It may be a job loss, death in the family, reduction in work hours, divorce or a number of any other unfortunate situations that might cause an eviction to take place. When a tenant fails to pay rent, the only legal action we can take is take the tenant through the eviction process.</p>
-        <p>Typical evictions cost between $800.00 &ndash; $1,500 and are borne up-front by the owner as an expense. In a usual case, owners pay for the eviction up-front and are later compensated by the refund of the tenant security deposit. However, in most cases, if the tenants are behind on rent prior to filing the eviction, the security deposit is unlikely to fully cover all of the unpaid rents plus expenses not to mention any repairs that will be needed to get the property rent-ready again.</p>
-        <p class="callout-note">If you are enrolled in the Eviction Protection Program, Red Door Property Management will assume the up-front financial burden of the eviction as a company expense, not to be charged to the owner like all other property management companies.</p>
+      <div class="section-head center reveal">
+        <div class="section-kicker">Clear Terms. Informed Decisions.</div>
+        <h2 id="coverage-heading">Know What&rsquo;s Covered<br />Before You Need It.</h2>
+        <p>Specified eviction expenses, with clear boundaries.</p>
       </div>
+      <div class="epp-coverage-grid">
+        <article class="epp-coverage-card epp-covered reveal">
+          <div class="epp-card-heading">
+            <span class="epp-symbol" aria-hidden="true">&check;</span>
+            <div><span class="epp-label">Included in the Program</span><h3>Covered Expenses</h3></div>
+          </div>
+          <ul class="epp-expense-list">
+            {covered.map((item) => <li>{item}</li>)}
+          </ul>
+        </article>
+        <article class="epp-coverage-card epp-excluded reveal">
+          <div class="epp-card-heading">
+            <span class="epp-symbol" aria-hidden="true">&minus;</span>
+            <div><span class="epp-label">Program Exclusions</span><h3>Not Covered</h3></div>
+          </div>
+          <ul class="epp-expense-list">
+            {notCovered.map((item) => <li>{item}</li>)}
+          </ul>
+          <p class="epp-distinction"><strong>A distinction to know:</strong> Writ of possession fees are covered. The cost of physically removing a tenant is excluded.</p>
+        </article>
+      </div>
+      <p class="epp-qualification reveal">Evictions must be for cause, such as nonpayment of rent, and cannot be owner-caused.</p>
     </div>
   </section>
 
-  <section class="section-soft">
+  <section class="epp-eligibility-section" id="eligibility" aria-labelledby="eligibility-heading">
     <div class="container">
-      <div class="content-block reveal">
-        <div class="section-kicker">How It Works</div>
-        <h2>Our Eviction Protection Program Changes That</h2>
-        <p>Court costs and eviction fees that are usually borne as an up-front owner expense are no longer of concern for you. Our Eviction Protection Plan (EPP) will cover the cost of almost all evictions. This could save you more than a few hours of worry or lost nights of sleep wondering about how to pay for an unexpected eviction while your tenant is not paying rent. Red Door Property Management will file for eviction on your behalf, as usual, but RDPM will also assume the up-front financial burden of the eviction as a company expense, not to be charged to the owner. That means in most cases you will end up paying nothing out of pocket for the eviction!</p>
-        <p>By enrolling in the EPP, security deposits can be preserved and applied directly to your lost rent and damages as you would expect. Red Door Property Management pays for your eviction in full, and as a result, the security deposit is available to be applied towards your unpaid rent, property damages, or any other fees you are entitled to recover from the tenant.</p>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div class="container reveal">
-      <div class="section-head">
-        <div class="section-kicker">Covered vs. Not Covered</div>
-        <h2>What&rsquo;s Included in the EPP</h2>
-      </div>
-      <div class="management-pricing epp-coverage">
-        <div class="fee-block epp-covered">
-          <span class="badge">We Cover</span>
-          <ul class="plain-list">
-            <li>Attorney Fees</li>
-            <li>Eviction Filing Fees</li>
-            <li>Process Server Fees</li>
-            <li>Court Costs</li>
-            <li>Broker Representation Fees</li>
-            <li>Writ of Possession Fees</li>
-            <li>All Copy Charges</li>
-          </ul>
-          <p class="callout-note epp-note">Evictions must be for cause (i.e. non-payment of rent), and cannot be owner caused.</p>
+      <div class="epp-eligibility reveal">
+        <div>
+          <div class="section-kicker">Coverage Timing</div>
+          <h2 id="eligibility-heading">Already Have a Tenant?<br />Here&rsquo;s When Coverage Can Begin.</h2>
         </div>
-        <div class="fee-block epp-not-covered">
-          <span class="badge">Not Covered</span>
-          <ul class="plain-list">
-            <li>Cost of a jury trial (very rare)</li>
-            <li>Lost rents</li>
-            <li>Damage to the property</li>
-            <li>Cost to physically &ldquo;remove&rdquo; the tenant</li>
-          </ul>
+        <div class="epp-eligibility-copy">
+          <p>If your property is tenant-occupied when you sign Red Door&rsquo;s Property Management Agreement, <strong>the existing tenancy is not eligible for this program.</strong></p>
+          <p>With a signed program addendum, coverage begins when Red Door places a replacement tenant.</p>
+          <p class="epp-help">Our team can review your property&rsquo;s situation and explain enrollment and coverage timing.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section-soft" id="epp-inquiry">
+  <section class="epp-get-started" aria-labelledby="getting-started-heading">
+    <div class="container">
+      <div class="section-head center reveal">
+        <div class="section-kicker">A Conversation Comes First</div>
+        <h2 id="getting-started-heading">How to Get Started</h2>
+      </div>
+      <ol class="epp-steps">
+        <li class="step-card reveal" data-step="01">
+          <span class="epp-step-number" aria-hidden="true">01</span>
+          <h3>1. Review Your Property</h3>
+          <p>Talk with our team about your property and program eligibility.</p>
+        </li>
+        <li class="step-card reveal" data-step="02">
+          <span class="epp-step-number" aria-hidden="true">02</span>
+          <h3>2. Review and Sign the Addendum</h3>
+          <p>Confirm the pricing, covered expenses, exclusions, and applicable coverage start.</p>
+        </li>
+        <li class="step-card reveal" data-step="03">
+          <span class="epp-step-number" aria-hidden="true">03</span>
+          <h3>3. Add Protection for Eligible Evictions</h3>
+          <p>Once coverage is in effect, the program covers the specified expenses for qualifying evictions under the signed addendum.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section-soft epp-document-section" aria-labelledby="document-heading">
+    <div class="container">
+      <div class="epp-document lease-panel reveal">
+        <div class="epp-document-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 56" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h20l10 10v40H9z"></path><path d="M29 3v11h10M16 25h16M16 33h16M16 41h10"></path></svg>
+        </div>
+        <div class="epp-document-copy">
+          <div class="section-kicker">The Details, in Writing</div>
+          <h2 id="document-heading">Review the Eviction Protection Program Addendum</h2>
+          <p>See the pricing, eligibility requirements, covered expenses, and exclusions before deciding whether to enroll.</p>
+        </div>
+        <a class="btn btn-secondary" href="/contact">Request the Program Addendum</a>
+      </div>
+      <p class="epp-document-note">This page summarizes the program. Coverage is subject to the signed Eviction Protection Program Addendum.</p>
+    </div>
+  </section>
+
+  <section id="faq" class="epp-faq">
     <div class="container reveal">
       <div class="section-head center">
-        <div class="section-kicker">Get Started</div>
-        <h2>Inquire About Our Services</h2>
+        <div class="section-kicker">Questions Owners Ask</div>
+        <h2>Eviction Protection FAQs</h2>
       </div>
-      <form class="form-card epp-form" data-epp-form>
-        <div class="field-grid">
-          <label>Your Name
-            <input name="name" autocomplete="name" required />
-          </label>
-          <label>Email
-            <input type="email" name="email" autocomplete="email" required />
-          </label>
-        </div>
-        <label>Phone
-          <input type="tel" name="phone" autocomplete="tel" />
-        </label>
-        <div class="field-grid">
-          <label>Property Type
-            <select name="property_type" required>
-              <option value="">Select One...</option>
-              <option>Single Family Home</option>
-              <option>Condo</option>
-              <option>Townhome</option>
-              <option>Multi Family 1&ndash;4</option>
-              <option>Multi Family 4+</option>
-              <option>Other</option>
-            </select>
-          </label>
-          <label>Your Role
-            <select name="role" required>
-              <option value="">Select One...</option>
-              <option>Owner</option>
-              <option>Renter</option>
-            </select>
-          </label>
-        </div>
-        <div class="field-grid">
-          <label>Status
-            <select name="status">
-              <option value="">Select One...</option>
-              <option>Vacant</option>
-              <option>Occupied by Tenant</option>
-              <option>Occupied by Owner</option>
-            </select>
-          </label>
-          <label>Best Time to Contact
-            <select name="best_time">
-              <option value="">Select One...</option>
-              <option>Morning</option>
-              <option>Afternoon</option>
-              <option>Evening</option>
-              <option>Anytime</option>
-            </select>
-          </label>
-        </div>
-        <label>Property Address
-          <input name="address" autocomplete="street-address" />
-        </label>
-        <div class="field-grid">
-          <label>City
-            <input name="city" autocomplete="address-level2" />
-          </label>
-          <label>Zip Code
-            <input name="zip" autocomplete="postal-code" inputmode="numeric" />
-          </label>
-        </div>
-        <label>Comments
-          <textarea name="comments"></textarea>
-        </label>
-        <label class="epp-consent">
-          <input type="checkbox" name="sms_consent" />
-          <span class="consent">By providing your mobile number you consent to receiving text messages from Red Door Property Management. Reply STOP to opt out. Msg &amp; data rates may apply.</span>
-        </label>
-
-        {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey} />}
-
-        <p class="error-text" aria-live="polite" data-form-error></p>
-        <div class="form-actions epp-actions">
-          <button class="btn btn-primary" type="submit">Submit</button>
-        </div>
-      </form>
+      <div class="accordion" data-accordion>
+        {faqs.map((f, i) => (
+          <article class={`accordion-item${i === 0 ? ' is-open' : ''}`}>
+            <button class="accordion-trigger" type="button" aria-expanded={i === 0 ? 'true' : 'false'}>
+              <span>{f.q}</span><span aria-hidden="true">+</span>
+            </button>
+            <div class="accordion-panel"><div><p>{f.a}</p></div></div>
+          </article>
+        ))}
+      </div>
     </div>
   </section>
+
+  <PropertyManagementJourneyCarousel />
+
+  <LandlordLibrary
+    heading="The Red Door Landlord Library"
+    subheading="Market updates, investment insights, and practical property-management guidance for Central Indiana rental owners."
+    posts={PILLAR_LANDLORD_LIBRARY_POSTS}
+  />
 
   <section class="section-dark final-cta">
     <div class="container reveal">
-      <h2>Protect Your Investment</h2>
-      <p>Ask about enrolling in the Eviction Protection Program on your managed property.</p>
+      <h2>Want an Added Layer of Protection?</h2>
+      <p>Let&rsquo;s review your property&rsquo;s eligibility and help you decide whether the Eviction Protection Program fits your needs.</p>
       <div class="cta-row">
-        <a class="btn btn-primary" href="#epp-inquiry">Inquire About Our Services</a>
-        <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+        <a class="btn btn-primary" href="/contact">Ask About Enrollment</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
       </div>
+      <p class="epp-call"><a href="tel:3176601626">Call 317.660.1626</a></p>
     </div>
   </section>
 
   <script>
-    (function () {
-      const form = document.querySelector<HTMLFormElement>('[data-epp-form]');
-      if (!form) return;
-      const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]');
-      const error = form.querySelector<HTMLElement>('[data-form-error]');
-
-      form.addEventListener('submit', async function (event) {
-        event.preventDefault();
-        if (!form.reportValidity()) return;
-        if (submitButton) submitButton.disabled = true;
-        if (error) error.textContent = '';
-
-        const fields = new FormData(form);
-        const get = (name: string) => String(fields.get(name) ?? '').trim();
-        const location = [get('address'), get('city'), get('zip')].filter(Boolean).join(', ');
-        const details = [
-          `Property type: ${get('property_type')}`,
-          `Role: ${get('role')}`,
-          get('status') && `Status: ${get('status')}`,
-          get('best_time') && `Best time to contact: ${get('best_time')}`,
-          location && `Property: ${location}`,
-          get('comments') && `\nComments:\n${get('comments')}`,
-        ].filter(Boolean);
-
-        const payload = new FormData();
-        payload.set('name', get('name'));
-        payload.set('email', get('email'));
-        payload.set('phone', get('phone'));
-        payload.set('inquiry_type', 'Eviction Protection Program');
-        payload.set('referral_source', 'Eviction Protection Program page');
-        payload.set('comment', details.join('\n'));
-        if (fields.get('sms_consent')) payload.set('sms_consent', 'on');
-        const token = fields.get('cf-turnstile-response');
-        if (token) payload.set('cf-turnstile-response', String(token));
-
-        try {
-          const response = await fetch('/api/contact/submit', { method: 'POST', body: payload });
-          const data = await response.json().catch(() => ({}));
-          if (response.ok && data.redirectUrl) {
-            window.location.href = data.redirectUrl;
-            return;
-          }
-          if (error) error.textContent = data.error || 'Something went wrong. Please try again.';
-        } catch {
-          if (error) error.textContent = 'Something went wrong. Please check your connection and try again.';
-        } finally {
-          if (submitButton) submitButton.disabled = false;
-          // Fresh Turnstile token for a retry; see contact.astro.
-          (window as any).turnstile?.reset();
-        }
+    document.querySelectorAll('[data-accordion]').forEach(function (accordion) {
+      accordion.querySelectorAll('.accordion-trigger').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          var item = trigger.closest('.accordion-item');
+          accordion.querySelectorAll('.accordion-item').forEach(function (candidate) {
+            var candidateTrigger = candidate.querySelector('.accordion-trigger');
+            var shouldOpen = candidate === item && !candidate.classList.contains('is-open');
+            candidate.classList.toggle('is-open', shouldOpen);
+            candidateTrigger?.setAttribute('aria-expanded', String(shouldOpen));
+          });
+        });
       });
-    })();
+    });
   </script>
 </BaseLayout>
 
 <style>
-  .epp-coverage { grid-template-columns: 1fr 1fr; }
-  .epp-covered { border-top-color: var(--brand); }
-  .epp-not-covered { border-top-color: var(--line); }
-  .epp-not-covered .badge { background: var(--soft); color: var(--muted); }
-  .epp-note { margin-top: 20px; }
-  .epp-form { max-width: 640px; margin-inline: auto; }
-  .epp-consent { display: flex; flex-direction: row; align-items: flex-start; gap: 10px; margin-top: 2px; }
-  .epp-consent input { width: auto; min-height: 0; margin-top: 3px; }
-  .epp-consent .consent { font-weight: 400; }
-  .epp-actions { justify-content: flex-end; }
+  /* Eviction-specific pieces only; everything else is global.css. Values
+     from the approved mockup. #5d5c61 is its secondary-text gray, a shade
+     darker than --muted for small text on tinted panels. */
+  .epp-hero .hero-content { max-width: 1120px; margin-inline: auto; }
+  .epp-hero h1 { font-size: clamp(2.35rem, 5vw, 4.45rem); max-width: 1100px; }
+  .epp-hero .hero-copy { max-width: 720px; }
+  .epp-hero-note { color: var(--white); margin: 21px auto 0; font-size: .85rem; }
+
+  .epp-overview { padding: 58px 0 78px; }
+  .epp-intro-copy { align-self: center; max-width: 700px; padding: 12px 36px 12px 0; }
+  .epp-intro-copy h2 { font-size: clamp(2rem, 3.5vw, 2.9rem); }
+  .epp-intro-copy > p:last-child { color: #5d5c61; margin-bottom: 0; }
+  .epp-price { padding: 32px 36px; }
+  .epp-label { display: block; letter-spacing: .1em; text-transform: uppercase; font-size: .69rem; font-weight: 800; color: #5d5c61; }
+  .epp-price-value { color: var(--brand); font-family: var(--font-head); font-size: clamp(3.5rem, 6vw, 4.6rem); font-weight: 500; line-height: 1.2; margin-top: 9px; letter-spacing: -.04em; }
+  .epp-price-unit { color: #5d5c61; margin: 3px 0 23px; font-size: 1rem; }
+  .epp-price .check-list { border-top: 1px solid var(--line); padding-top: 20px; margin-top: 0; }
+  .epp-price .btn { width: 100%; margin-top: 26px; font-size: .84rem; }
+
+  .epp-coverage-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .epp-coverage-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 32px 36px; box-shadow: 0 10px 28px rgba(20, 20, 20, .05); }
+  .epp-covered { border-top: 4px solid var(--brand); }
+  .epp-excluded { border-top: 4px solid var(--gray); }
+  .epp-card-heading { display: flex; align-items: center; gap: 16px; margin-bottom: 25px; }
+  .epp-card-heading h3 { font-size: 1.65rem; margin: 5px 0 0; }
+  .epp-symbol { display: grid; place-items: center; flex: 0 0 42px; height: 42px; border: 1px solid rgba(140, 12, 3, .14); border-radius: 8px; color: var(--brand); background: var(--brand-tint); font-size: 1.6rem; font-weight: 500; }
+  .epp-excluded .epp-symbol { color: #55545a; border-color: var(--line); background: var(--soft); }
+  .epp-expense-list { list-style: none; margin: 0; padding: 0; }
+  .epp-expense-list li { position: relative; padding: 10px 0 10px 26px; border-top: 1px solid #efedf0; font-size: .97rem; }
+  .epp-expense-list li::before { content: '✓'; position: absolute; left: 0; color: var(--brand); font-weight: 700; }
+  .epp-excluded .epp-expense-list li::before { content: '−'; color: #66636a; }
+  .epp-distinction { color: #5d5c61; background: var(--soft); font-size: .88rem; margin: 25px 0 0; padding: 17px 19px; border-radius: 6px; line-height: 1.65; }
+  .epp-qualification { text-align: center; max-width: 800px; margin: 25px auto 0; font-size: .94rem; color: #55545a; }
+
+  .epp-eligibility-section { padding-bottom: 0; }
+  .epp-eligibility { background: var(--brand-tint); border: 1px solid rgba(140, 12, 3, .12); border-left: 5px solid var(--brand); border-radius: var(--radius); display: grid; grid-template-columns: 1fr 1fr; gap: 50px; padding: 42px 44px; }
+  .epp-eligibility h2 { font-size: clamp(1.8rem, 3vw, 2.35rem); line-height: 1.2; margin: 0; }
+  .epp-eligibility-copy p { font-size: .98rem; margin-bottom: 17px; }
+  .epp-eligibility-copy p:last-child { margin: 0; }
+  .epp-help { border-top: 1px solid rgba(140, 12, 3, .15); padding-top: 17px; color: #5d5c61; }
+
+  .epp-get-started { padding-top: 66px; }
+  .epp-steps { padding: 0; margin: 0; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+  .epp-step-number { display: block; color: var(--brand); font-size: .8rem; font-weight: 800; letter-spacing: .1em; margin-bottom: 18px; }
+  .epp-steps .step-card { border-radius: var(--radius); padding: 28px; }
+  .epp-steps .step-card h3 { font-size: 1.17rem; line-height: 1.35; max-width: 280px; }
+  .epp-steps .step-card p { margin-bottom: 0; }
+
+  .epp-document-section { padding: 52px 0; }
+  .epp-document { display: grid; grid-template-columns: 62px 1fr auto; gap: 28px; align-items: center; padding: 30px 34px; }
+  .epp-document-icon { color: var(--brand); background: var(--brand-tint); border-radius: 8px; padding: 14px 12px; align-self: start; }
+  .epp-document-icon svg { display: block; width: 100%; height: 46px; }
+  .epp-document h2 { font-size: 1.5rem; line-height: 1.25; margin-bottom: 11px; }
+  .epp-document .section-kicker { font-size: .68rem; margin-bottom: 11px; }
+  .epp-document-copy > p { color: #5d5c61; font-size: .94rem; margin: 0; max-width: 620px; }
+  .epp-document .btn { max-width: 235px; font-size: .76rem; }
+  .epp-document-note { margin: 19px auto 0; text-align: center; color: #5d5c61; font-size: .85rem; max-width: 820px; }
+
+  .epp-faq .accordion-panel p { color: #5d5c61; }
+  .epp-call { margin: 22px 0 0 !important; font-size: .95rem !important; }
+  .epp-call a { color: var(--white) !important; }
+  .epp-hero a:focus-visible, .final-cta a:focus-visible { outline-color: var(--white); }
+  #coverage, #program-overview, #eligibility, #faq { scroll-margin-top: 95px; }
+
+  @media (max-width: 960px) {
+    .epp-document { grid-template-columns: 52px 1fr; gap: 20px; }
+    .epp-document .btn { grid-column: 2; justify-self: start; max-width: none; }
+    .epp-eligibility { gap: 30px; padding: 32px; }
+    .epp-intro-copy { padding-right: 0; }
+    .epp-price { padding: 28px; }
+    .epp-steps { gap: 16px; }
+    .epp-steps .step-card { padding: 24px 20px; }
+  }
   @media (max-width: 720px) {
-    .epp-coverage { grid-template-columns: 1fr; }
+    .epp-hero h1 { font-size: clamp(2rem, 8.4vw, 3rem); line-height: 1.15; }
+    .epp-hero .hero-content { width: calc(100% - 36px); padding-top: 132px; }
+    .epp-hero .hero-copy { max-width: 440px; font-size: 1.02rem; }
+    .epp-hero .cta-row { max-width: 420px; margin-inline: auto; }
+    .epp-hero-note { max-width: 300px; font-size: .78rem; }
+    .epp-overview { padding: 35px 0 52px; }
+    .epp-intro-copy h2 { font-size: 2rem; }
+    .epp-coverage-grid, .epp-eligibility, .epp-steps { grid-template-columns: 1fr; }
+    .epp-coverage-card { padding: 27px 24px; }
+    .epp-card-heading h3 { font-size: 1.5rem; }
+    .epp-eligibility { padding: 28px 24px; gap: 23px; }
+    .epp-eligibility h2 { font-size: 1.85rem; }
+    .epp-get-started { padding-top: 50px; }
+    .epp-document { grid-template-columns: 1fr; padding: 26px; gap: 18px; }
+    .epp-document-icon { width: 60px; }
+    .epp-document .btn { grid-column: auto; width: 100%; }
+    .epp-document h2 { font-size: 1.4rem; }
+    .epp-qualification { text-align: left; font-size: .88rem; }
+    .epp-steps .step-card { padding: 26px; }
+    .epp-steps .step-card h3 { max-width: none; }
+    .epp-document-note { text-align: left; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .epp-faq .accordion-panel { transition: none; }
   }
 </style>
