@@ -22,9 +22,11 @@ const BLEND_THRESHOLD = 5;
 const RANGE_PCT = 0.1;
 
 export interface EstimateResult {
-  estimatedRent: number;
-  rangeLow: number;
-  rangeHigh: number;
+  /** null when the pool is empty — no comps survived the cascade. Callers
+   * must show a "we'll follow up" message rather than a number. */
+  estimatedRent: number | null;
+  rangeLow: number | null;
+  rangeHigh: number | null;
   /** The comps actually used for the median — see the module header for
    * the three-tier fill order. */
   estimatePool: RentEngineComp[];
@@ -71,9 +73,12 @@ export function buildEstimate(rankedComps: RentEngineComp[]): EstimateResult {
   // bed count before it enters this median — bedroomAdjustedRent is only
   // ever set on those comps (see bedroom-adjustment.ts), so comps at the
   // subject's own bed count are unaffected.
-  const estimatedRent = Math.round(median(estimatePool.map((c) => c.bedroomAdjustedRent ?? c.rent)));
-  const rangeLow = Math.round(estimatedRent * (1 - RANGE_PCT));
-  const rangeHigh = Math.round(estimatedRent * (1 + RANGE_PCT));
+  // An empty pool's median is undefined, which Math.round turned into NaN
+  // — that's what reached owners as "$NaN/mo" before (2026-10-23).
+  const estimatedRent =
+    estimatePool.length > 0 ? Math.round(median(estimatePool.map((c) => c.bedroomAdjustedRent ?? c.rent))) : null;
+  const rangeLow = estimatedRent != null ? Math.round(estimatedRent * (1 - RANGE_PCT)) : null;
+  const rangeHigh = estimatedRent != null ? Math.round(estimatedRent * (1 + RANGE_PCT)) : null;
 
   return {
     estimatedRent,

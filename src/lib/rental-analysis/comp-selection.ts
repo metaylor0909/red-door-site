@@ -6,7 +6,7 @@
 
 import type { CascadeCompromises, RentEngineComp, SubjectProperty } from './types';
 import { haversineMiles, normalizeAddress } from './geo';
-import { classifyRentEnginePropertyType } from './property-type';
+import { isCompatiblePropertyType } from './property-type';
 
 const CASCADE_SIGNAL_MINIMUM = 5;
 const FINAL_COMP_CAP = 12;
@@ -70,8 +70,9 @@ function applyQualityFilters(comps: RentEngineComp[], subject: SubjectProperty, 
     // 'townhome', etc. — see validation.ts); c.property_type is
     // RentEngine's own raw string ("Single Family", "Apartment", ...),
     // never directly comparable — see property-type.ts's header comment
-    // for the real bug this fixes.
-    if (classifyRentEnginePropertyType(c.property_type) !== subject.property_type) return false;
+    // for the real bug this fixes. Duplexes also accept multi-family and
+    // single-family comps — see isCompatiblePropertyType.
+    if (!isCompatiblePropertyType(c.property_type, subject.property_type)) return false;
     if (subject.sqft != null && c.sqft != null) {
       const lower = subject.sqft * 0.8;
       const upper = subject.sqft * 1.2;

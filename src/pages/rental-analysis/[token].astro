@@ -178,9 +178,11 @@ interface DbRow extends RentalAnalysisRow {
 
 interface Snapshot {
   comps: RentEngineComp[];
-  estimatedRent: number;
-  rangeLow: number;
-  rangeHigh: number;
+  /** null when no comps survived selection (stored as JSON null) — the
+   * page shows a follow-up message instead of a figure. */
+  estimatedRent: number | null;
+  rangeLow: number | null;
+  rangeHigh: number | null;
   confidence: ConfidenceResult;
   isMultiUnitPath: boolean;
 }
@@ -469,16 +471,25 @@ const preparedDate = new Date(row.created_at).toLocaleDateString('en-US', { mont
       <div class="report-hero-grid">
         <div class="estimate-card reveal">
           <div class="section-kicker">Estimated Monthly Rent</div>
-          <div class="estimate-figure">${snapshot.estimatedRent.toLocaleString()}/mo</div>
-          <p class="estimate-range">Range: ${snapshot.rangeLow.toLocaleString()} &ndash; ${snapshot.rangeHigh.toLocaleString()}/mo</p>
-          <div class={`confidence-badge is-${snapshot.confidence.bucket}`}>
-            {snapshot.confidence.displayPercent}% &mdash; {snapshot.confidence.bucketLabel}
-          </div>
-          <p class="methodology-note">{snapshot.confidence.templateSentence}</p>
-          <p class="report-hero-dek">
-            Based on the median rent of {snapshot.comps.length} comparable {snapshot.comps.length === 1 ? 'property' : 'properties'} near
-            this address, leased or currently listed within the past 12 months.
-          </p>
+          {snapshot.estimatedRent != null && snapshot.rangeLow != null && snapshot.rangeHigh != null ? (
+            <>
+              <div class="estimate-figure">${snapshot.estimatedRent.toLocaleString()}/mo</div>
+              <p class="estimate-range">Range: ${snapshot.rangeLow.toLocaleString()} &ndash; ${snapshot.rangeHigh.toLocaleString()}/mo</p>
+              <div class={`confidence-badge is-${snapshot.confidence.bucket}`}>
+                {snapshot.confidence.displayPercent}% &mdash; {snapshot.confidence.bucketLabel}
+              </div>
+              <p class="methodology-note">{snapshot.confidence.templateSentence}</p>
+              <p class="report-hero-dek">
+                Based on the median rent of {snapshot.comps.length} comparable {snapshot.comps.length === 1 ? 'property' : 'properties'} near
+                this address, leased or currently listed within the past 12 months.
+              </p>
+            </>
+          ) : (
+            <p class="report-hero-dek">
+              We couldn't find enough comparable rentals near this property to produce an automated estimate.
+              Chris Knight will review it personally and follow up with a rent range.
+            </p>
+          )}
           <div class="cta-row">
             <a class="btn btn-primary" href={CALENDLY_URL} target="_blank" rel="noopener">Talk to Red Door About Managing This Property</a>
             <a class="btn btn-secondary" href={`/rental-analysis/${token}/pdf`} data-pdf-download>Download PDF</a>
@@ -534,6 +545,7 @@ const preparedDate = new Date(row.created_at).toLocaleDateString('en-US', { mont
     </section>
   )}
 
+  {snapshot.comps.length > 0 && (
   <section class="section-soft">
     <div class="container">
       <div class="section-head">
@@ -606,6 +618,7 @@ const preparedDate = new Date(row.created_at).toLocaleDateString('en-US', { mont
       </div>
     </div>
   </section>
+  )}
 
   {
     isRentCastCovered && reportStatTiles.length > 0 && (
@@ -702,15 +715,16 @@ const preparedDate = new Date(row.created_at).toLocaleDateString('en-US', { mont
                             </div>
                           ))}
                         </div>
-                        <p class="context-card-note">This property's {row.property_beds}-bedroom estimate sits {(() => {
+                        {snapshot.estimatedRent != null && <p class="context-card-note">This property's {row.property_beds}-bedroom estimate sits {(() => {
                           const subjectRung = bedroomChartData.find((b) => b.beds === row.property_beds);
                           if (!subjectRung) return 'outside the current bedroom-count data for this submarket.';
+                          if (snapshot.estimatedRent == null) return '';
                           return snapshot.estimatedRent > subjectRung.avgRent
                             ? 'above the broader ladder for this submarket.'
                             : snapshot.estimatedRent < subjectRung.avgRent
                               ? 'below the broader ladder for this submarket.'
                               : 'right in line with the broader ladder for this submarket.';
-                        })()}</p>
+                        })()}</p>}
                       </>
                     ) : (
                       <p class="context-card-note">Not enough RentCast bedroom-count data for {row.property_city} to chart this yet.</p>

@@ -29,9 +29,11 @@ export interface OwnerEmailParams {
   ownerName: string;
   ownerEmail: string;
   propertyAddress: string;
-  estimatedRent: number;
-  rangeLow: number;
-  rangeHigh: number;
+  /** null when no comps were found — the email swaps the figure for a
+   * "we'll follow up personally" note instead of printing $NaN. */
+  estimatedRent: number | null;
+  rangeLow: number | null;
+  rangeHigh: number | null;
   confidencePercent: number;
   confidenceBucketLabel: string;
   reportUrl: string;
@@ -47,6 +49,18 @@ export function buildOwnerEmail(raw: OwnerEmailParams): { from: string; to: stri
   // Headline-only per decision #5 — estimate, range, confidence, one
   // CTA, no charts/tables. Inline styles and a system font stack, since
   // self-hosted web fonts don't render reliably across email clients.
+  const estimateBlock =
+    params.estimatedRent != null && params.rangeLow != null && params.rangeHigh != null
+      ? `<p style="margin:0 0 6px;color:#717073;font-size:13px;font-weight:bold;letter-spacing:.04em;text-transform:uppercase;">Estimated Monthly Rent</p>
+                <p style="margin:0 0 6px;font-size:34px;font-weight:bold;color:#171717;">$${params.estimatedRent.toLocaleString()}/mo</p>
+                <p style="margin:0 0 18px;color:#717073;font-size:15px;">Range: $${params.rangeLow.toLocaleString()} &ndash; $${params.rangeHigh.toLocaleString()}/mo</p>
+                <p style="display:inline-block;margin:0 0 24px;padding:6px 14px;background:#f5f5f6;border-radius:999px;font-size:14px;font-weight:bold;">
+                  ${params.confidencePercent}% &mdash; ${params.confidenceBucketLabel}
+                </p>`
+      : `<p style="margin:0 0 24px;font-size:15px;line-height:1.5;">
+                  We couldn't find enough comparable rentals near this property to produce an automated estimate.
+                  Chris Knight will review it personally and follow up with a rent range.
+                </p>`;
   const html = `
 <!doctype html>
 <html>
@@ -63,12 +77,7 @@ export function buildOwnerEmail(raw: OwnerEmailParams): { from: string; to: stri
             </tr>
             <tr>
               <td style="padding:0 32px;">
-                <p style="margin:0 0 6px;color:#717073;font-size:13px;font-weight:bold;letter-spacing:.04em;text-transform:uppercase;">Estimated Monthly Rent</p>
-                <p style="margin:0 0 6px;font-size:34px;font-weight:bold;color:#171717;">$${params.estimatedRent.toLocaleString()}/mo</p>
-                <p style="margin:0 0 18px;color:#717073;font-size:15px;">Range: $${params.rangeLow.toLocaleString()} &ndash; $${params.rangeHigh.toLocaleString()}/mo</p>
-                <p style="display:inline-block;margin:0 0 24px;padding:6px 14px;background:#f5f5f6;border-radius:999px;font-size:14px;font-weight:bold;">
-                  ${params.confidencePercent}% &mdash; ${params.confidenceBucketLabel}
-                </p>
+                ${estimateBlock}
               </td>
             </tr>
             <tr>
@@ -121,9 +130,9 @@ export interface LeadSimpleEmailParams {
   propertyStatus: string;
   desiredTimeline: string;
   currentRent: number | null;
-  estimatedRent: number;
-  rangeLow: number;
-  rangeHigh: number;
+  estimatedRent: number | null;
+  rangeLow: number | null;
+  rangeHigh: number | null;
   confidencePercent: number;
   reportUrl: string;
 }
@@ -133,6 +142,10 @@ export function buildLeadSimpleEmail(params: LeadSimpleEmailParams): { from: str
   // lead source inferred by LeadSimple purely from the receiving
   // address, "Comments" carries everything else.
   const currentRentLine = params.currentRent != null ? ` Current/expected rent: $${params.currentRent}/mo.` : '';
+  const estimateLine =
+    params.estimatedRent != null
+      ? `Estimated rent: $${params.estimatedRent}/mo (range $${params.rangeLow}-$${params.rangeHigh}). Confidence: ${params.confidencePercent}%.`
+      : 'Estimated rent: NONE - no comparable properties found, owner was told we would follow up personally with a rent range.';
   const text = `Name: ${params.ownerName}
 Email: ${params.ownerEmail}
 Phone Number: ${params.ownerPhone}
@@ -140,7 +153,7 @@ Address: ${params.propertyAddress}
 City: ${params.propertyCity}
 State: ${params.propertyState}
 Zip Code: ${params.propertyZip}
-Comments: Rental analysis request for ${params.propertyAddress}. Estimated rent: $${params.estimatedRent}/mo (range $${params.rangeLow}-$${params.rangeHigh}). Confidence: ${params.confidencePercent}%. Property status: ${params.propertyStatus}. Timeline: ${params.desiredTimeline}. Preferred contact: ${params.preferredContactMethod}.${currentRentLine} Full report: ${params.reportUrl}`;
+Comments: Rental analysis request for ${params.propertyAddress}. ${estimateLine} Property status: ${params.propertyStatus}. Timeline: ${params.desiredTimeline}. Preferred contact: ${params.preferredContactMethod}.${currentRentLine} Full report: ${params.reportUrl}`;
 
   return {
     from: SENDER,

@@ -9,9 +9,10 @@ import type { RentEngineComp, SubjectProperty } from './types';
 
 export interface AnalysisResult {
   comps: RentEngineComp[];
-  estimatedRent: number;
-  rangeLow: number;
-  rangeHigh: number;
+  /** null when no comps survived — see fallback-and-estimate.ts. */
+  estimatedRent: number | null;
+  rangeLow: number | null;
+  rangeHigh: number | null;
   confidence: ReturnType<typeof computeConfidence>;
   isMultiUnitPath: boolean;
 }

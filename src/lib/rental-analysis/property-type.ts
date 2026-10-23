@@ -32,3 +32,23 @@ export function classifyRentEnginePropertyType(raw: string): PropertyType {
   if (s.includes('multi') || s.includes('apartment')) return 'multi-family';
   return 'other';
 }
+
+// Comp types each subject type accepts — exact match everywhere except
+// duplex. Found via a real bug (2026-10-23): RentCast has no duplex
+// category (it files duplexes under "Multi-Family"), and its comps for a
+// real 3bd/1ba duplex in 46226 came back 22 "Single Family", 2
+// "Apartment", 1 "Multi-Family". Exact matching dropped all 25, so every
+// duplex submission got zero comps and a NaN estimate. Duplexes compete
+// for the same renters as small single-family homes (RentCast's own AVM
+// comps them that way), so they take both plus multi-family.
+const COMPATIBLE_COMP_TYPES: Partial<Record<PropertyType, PropertyType[]>> = {
+  duplex: ['duplex', 'multi-family', 'single-family'],
+};
+
+/** Whether a comp's raw property_type string (RentEngine's or RentCast's
+ * own wording) is usable for a subject of this tool's PropertyType. */
+export function isCompatiblePropertyType(rawCompType: string, subjectType: string): boolean {
+  const compType = classifyRentEnginePropertyType(rawCompType);
+  const accepted = COMPATIBLE_COMP_TYPES[subjectType as PropertyType];
+  return accepted ? accepted.includes(compType) : compType === subjectType;
+}
