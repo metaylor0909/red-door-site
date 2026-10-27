@@ -742,6 +742,11 @@ Judgment calls / open items carried forward from this build:
       application process instead (see `application-criteria.astro` /
       Findigs). Not building these pages; the live pages' EchoSign iframe
       embeds don't need porting.
+      **Reversed for `/tenant-verification` (Oct 27):** LeadSimple emails
+      still link there, so it's restored (`tenant-verification.astro`,
+      noindex) with the same Adobe Sign widget embedded and its 301
+      removed. `/employment-verification` still 301s to
+      `/application-criteria`.
 - [ ] **Build `self-manage-vs-pm-calculator.html`** — a standalone, fuller
       version of the "What does self-management or bad management really
       cost you?" widget now embedded on `pricing.html` (Sep 18 rebuild).

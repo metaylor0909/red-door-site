@@ -37,7 +37,6 @@
 /advanced-marketing-platform     /marketing-process                  301
 /airbnb-furniture-rental-indianapolis  /                             301
 /employment-verification         /application-criteria               301
-/tenant-verification             /application-criteria               301
 
 # PMW's own listing URLs (can't be mapped to RentEngine units one by one)
 /_system/listings/*              /indianapolis-homes-for-rent        301

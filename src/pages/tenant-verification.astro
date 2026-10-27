@@ -1,0 +1,54 @@
+---
+// /tenant-verification — the old site's "Verification of Rent" page,
+// restored 2026-10-27 at Michael's request. It had been 301'd to
+// /application-criteria at launch (Sep 24 call that verification was
+// covered by the application process), but LeadSimple emails still link
+// here and the request is still in use.
+//
+// The form itself is the same Adobe Acrobat Sign web form the PMW page
+// embedded (recovered from the Wayback Machine's Apr 2026 snapshot; the
+// widget was confirmed still live). It collects SSN and DOB, so it stays on
+// Adobe rather than being rebuilt here — this site never touches that data.
+// Completed forms go to whichever Adobe Sign account owns the widget.
+//
+// noindex: a form for applicants already in process, no search value.
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pageTitle = 'Tenant Verification | Red Door Property Management';
+const pageDescription = 'Rental verification request form for Red Door Property Management.';
+const formUrl = 'https://na1.documents.adobe.com/public/esignWidget?wid=CBFCIBAA3AAABLblqZhDg-BOjApcoDdW7t91f60bSfHuv0Xd3vygEzAdBwKeQh1kWQXdAQzxw-RZt-LAVF9Y*&hosted=false';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path="/tenant-verification">
+  <Fragment slot="head">
+    <meta name="robots" content="noindex, nofollow" />
+  </Fragment>
+
+  <section class="page-hero">
+    <div class="container">
+      <h1>Verification of Rent</h1>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="verification-form">
+      <iframe src={formUrl} title="Rental Verification Request form" loading="eager"></iframe>
+      <p class="verification-fallback">
+        Form not loading? <a href={formUrl} target="_blank" rel="noopener">Open it in a new tab</a>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .verification-form { padding: 40px 0 64px; }
+  .verification-form iframe {
+    display: block;
+    width: 100%;
+    height: 1100px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--white);
+  }
+  .verification-fallback { margin: 14px 0 0; color: var(--gray); font-size: .95rem; }
+</style>
