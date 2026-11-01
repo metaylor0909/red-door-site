@@ -1,7 +1,9 @@
 // POST /api/rebuild-webhook — bridges RentEngine's `units`-table webhook
 // to a real rebuild+deploy, per CLAUDE.md's locked "wire the webhook
 // directly to a rebuild on every INSERT/UPDATE/DELETE — no debounce, no
-// queue" decision.
+// queue" decision. Sanity's webhook for published posts uses the same
+// endpoint and secret, adding `?source=sanity` to its URL so its rebuilds
+// show up in GitHub Actions as their own event type.
 //
 // Why this exists instead of a Cloudflare "Deploy Hook": that classic
 // POST-able rebuild URL is a Cloudflare Pages-only feature (confirmed
@@ -29,6 +31,7 @@ export const prerender = false;
 const GITHUB_OWNER = 'metaylor0909';
 const GITHUB_REPO = 'red-door-site';
 const DISPATCH_EVENT_TYPE = 'rentengine-listing-changed';
+const SANITY_DISPATCH_EVENT_TYPE = 'sanity-post-published';
 
 function jsonResponse(status: number, body: Record<string, unknown>): Response {
   return new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
@@ -66,6 +69,8 @@ export const POST: APIRoute = async ({ request }) => {
     return jsonResponse(401, { error: 'Invalid or missing webhook secret.' });
   }
 
+  const eventType = url.searchParams.get('source') === 'sanity' ? SANITY_DISPATCH_EVENT_TYPE : DISPATCH_EVENT_TYPE;
+
   const response = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/dispatches`, {
     method: 'POST',
     headers: {
@@ -74,7 +79,7 @@ export const POST: APIRoute = async ({ request }) => {
       'Content-Type': 'application/json',
       'User-Agent': 'red-door-site-rebuild-webhook',
     },
-    body: JSON.stringify({ event_type: DISPATCH_EVENT_TYPE }),
+    body: JSON.stringify({ event_type: eventType }),
   });
 
   if (!response.ok) {

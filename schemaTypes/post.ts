@@ -36,6 +36,22 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'updatedAt',
+      title: 'Updated at',
+      type: 'datetime',
+      group: 'content',
+      description:
+        'Optional. Set this when you make a real change to a live post, so search engines see the new date. Leave it blank for typo fixes and for new posts.',
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const published = (context.document as {publishedAt?: string} | undefined)?.publishedAt
+          if (value && published && Date.parse(value) < Date.parse(published)) {
+            return 'Updated at can’t be before Published at.'
+          }
+          return true
+        }),
+    }),
+    defineField({
       name: 'author',
       title: 'Author',
       type: 'reference',

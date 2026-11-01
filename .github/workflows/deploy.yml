@@ -3,17 +3,18 @@
 # src/pages/api/rebuild-webhook.ts fires when RentEngine's `units`-table
 # webhook reports a listing change, per CLAUDE.md's locked "wire the
 # webhook directly to a rebuild on every INSERT/UPDATE/DELETE — no
-# debounce, no queue" decision. See that file's own header comment for
-# why this GitHub Actions relay exists instead of a Cloudflare "Deploy
-# Hook" (that feature is Pages-only; this site deploys as a Worker with
-# static assets, which has no equivalent manual-trigger URL of its own).
+# debounce, no queue" decision, and when Sanity's webhook reports a
+# published post. See that file's own header comment for why this GitHub
+# Actions relay exists instead of a Cloudflare "Deploy Hook" (that feature
+# is Pages-only; this site deploys as a Worker with static assets, which
+# has no equivalent manual-trigger URL of its own).
 name: Deploy to Cloudflare
 
 on:
   push:
     branches: [main]
   repository_dispatch:
-    types: [rentengine-listing-changed]
+    types: [rentengine-listing-changed, sanity-post-published]
   workflow_dispatch:
 
 # Cancel a superseded in-flight run in favor of the newest one rather than
@@ -51,6 +52,9 @@ jobs:
           PUBLIC_GOOGLE_PLACES_API_KEY: ${{ secrets.PUBLIC_GOOGLE_PLACES_API_KEY }}
           PUBLIC_GA4_MEASUREMENT_ID: ${{ secrets.PUBLIC_GA4_MEASUREMENT_ID }}
           RENTENGINE_LISTINGS_KEY: ${{ secrets.RENTENGINE_LISTINGS_KEY }}
+          # Optional. Blog posts fall back to publishedAt for the video's
+          # uploadDate without it (see src/lib/blog/youtube.ts).
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           # No RENTENGINE_LISTINGS_ACCOUNT_ID here — the build already
           # falls back to the known-non-secret account id when this is
           # unset (see src/pages/[city]-homes-for-rent.astro and
@@ -62,3 +66,16 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: '0d7caebb9fcee4be86380c04533ac4ed'
+
+      # Only posts changed since the last successful run are sent (see
+      # scripts/send-indexnow.mjs). Measuring from a successful run means
+      # a run cancelled by a newer one, or one where this step failed,
+      # leaves its posts to be picked up by the next run.
+      - name: Send changed blog posts to IndexNow
+        run: |
+          since="$(gh run list --workflow deploy.yml --status success --limit 1 --json createdAt --jq '.[0].createdAt')"
+          INDEXNOW_SINCE="$since" node scripts/send-indexnow.mjs --send
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
+          SANITY_DATASET: production
