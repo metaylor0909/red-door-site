@@ -333,6 +333,16 @@ All external links or embeds — none are locked to the current platform.
   "[city] homes for rent" searches *in addition to* their city's own
   homes-for-rent hub page (all 20 are kept, see Content structure above), so
   the city can't just live in the URL path either way.
+- **Sanity publishing** — a Sanity webhook for published posts calls
+  `/api/rebuild-webhook?source=sanity`, which fires the
+  `sanity-post-published` dispatch, so a publish rebuilds the site. After
+  each deploy, `scripts/send-indexnow.mjs` sends IndexNow the blog posts
+  changed since the last successful deploy. **Never send the whole site:**
+  it sends nothing when there's no earlier deploy to compare against or more
+  than 25 posts changed (a bulk script touches every post's `_updatedAt`).
+  The IndexNow key in `public/` is public by design. Set a post's
+  `updatedAt` when a live post really changes; `dateModified` and the
+  sitemap's `lastmod` read it and fall back to `publishedAt`.
 - **AppFolio** — owner and tenant portals
 - **PropertyMeld** — maintenance requests
 - **Findigs** — rental applications

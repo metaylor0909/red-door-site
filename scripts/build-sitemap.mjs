@@ -12,6 +12,8 @@
 //   - lastmod comes from the page's JSON-LD dateModified/datePublished
 //     when it has one (blog posts). Other pages get no lastmod rather than
 //     a build date, which would be the same meaningless date every time.
+//     It keeps the time, since a date alone can't show a second change the
+//     same day, and an evening post's UTC date is tomorrow.
 //
 // Server-rendered pages (rental analysis reports, API routes, /studio)
 // aren't in dist and are never listed.
@@ -51,7 +53,7 @@ for (const file of htmlFiles(DIST)) {
     continue;
   }
   const date = html.match(/"dateModified":"([^"]+)"/)?.[1] ?? html.match(/"datePublished":"([^"]+)"/)?.[1];
-  entries.push({ loc: canonical, lastmod: date && !Number.isNaN(Date.parse(date)) ? new Date(date).toISOString().slice(0, 10) : null });
+  entries.push({ loc: canonical, lastmod: date && !Number.isNaN(Date.parse(date)) ? new Date(date).toISOString() : null });
 }
 
 // One entry per URL, sorted so diffs between builds stay readable.

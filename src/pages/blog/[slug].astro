@@ -11,6 +11,7 @@ import { getBlogCityLinks } from '../../lib/interlinking/city-links';
 import { ORGANIZATION_ID, ORGANIZATION_JSONLD } from '../../lib/schema/organization';
 import PostCard from '../../components/blog/PostCard.astro';
 import { POST_CARD_PROJECTION, cityTagsFor, relatedPosts, topicFor, topicPath, type PostCardData } from '../../lib/blog/topics';
+import { fetchYoutubePublishDates, youtubeIdFrom } from '../../lib/blog/youtube';
 
 const portableTextComponents = {
   type: {
@@ -26,7 +27,12 @@ export async function getStaticPaths() {
     // Card data for every post, fetched once, so each page's related
     // posts are picked at build time without another query per post.
     const posts: PostCardData[] = await sanityClient.fetch(`*[_type == "post"] ${POST_CARD_PROJECTION}`);
-    return posts.map((post) => ({ params: { slug: post.slug }, props: { related: relatedPosts(post, posts, 3) } }));
+    const videoIds = posts.map((post) => youtubeIdFrom(post.youtubeUrl)).filter((id): id is string => Boolean(id));
+    const videoDates = await fetchYoutubePublishDates(videoIds, import.meta.env.YOUTUBE_API_KEY);
+    return posts.map((post) => ({
+      params: { slug: post.slug },
+      props: { related: relatedPosts(post, posts, 3), videoDate: videoDates.get(youtubeIdFrom(post.youtubeUrl) ?? '') },
+    }));
   } catch (err) {
     console.warn('[blog] Could not reach Sanity yet — no post pages will build. Set SANITY_PROJECT_ID once the project exists.', err);
     return [];
@@ -35,12 +41,14 @@ export async function getStaticPaths() {
 
 const { slug } = Astro.params;
 const related: PostCardData[] = Astro.props.related ?? [];
+const videoDate: string | undefined = Astro.props.videoDate;
 
 const post = await sanityClient.fetch(
   `*[_type == "post" && slug.current == $slug][0]{
     title,
     "slug": slug.current,
     publishedAt,
+    updatedAt,
     excerpt,
     "body": body[]{
       ...,
@@ -72,7 +80,7 @@ const postUrl = `https://www.reddoorrents.com${canonicalPath}`;
 // it (401/403/404), so it's never used as the share image or VideoObject.
 // maxresdefault (16:9, no letterbox bars) 404s for some videos, so fall back
 // to hqdefault. Network failures keep the video with the safe hqdefault.
-const youtubeId = post.youtubeUrl?.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([a-zA-Z0-9_-]{11})/)?.[1];
+const youtubeId = youtubeIdFrom(post.youtubeUrl);
 let video: { id: string; thumbnailUrl: string } | null = null;
 if (youtubeId) {
   const hq = `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
@@ -109,7 +117,7 @@ const jsonLd = {
       ...(pageDescription ? { description: pageDescription } : {}),
       ...(post.summary ? { abstract: post.summary } : {}),
       datePublished: post.publishedAt,
-      dateModified: post.publishedAt,
+      dateModified: post.updatedAt || post.publishedAt,
       ...(post.authorName ? { author: { '@type': 'Person', name: post.authorName } } : {}),
       publisher: { '@id': ORGANIZATION_ID },
       mainEntityOfPage: postUrl,
@@ -137,7 +145,7 @@ const jsonLd = {
             name: post.title,
             description: pageDescription || post.title,
             thumbnailUrl: video.thumbnailUrl,
-            uploadDate: post.publishedAt,
+            uploadDate: videoDate || post.publishedAt,
             embedUrl: `https://www.youtube.com/embed/${video.id}`,
           },
         ]
