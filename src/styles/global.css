@@ -1968,9 +1968,10 @@
       box-shadow: 0 10px 30px rgba(23, 23, 23, .06);
     }
 
+    /* 16:9 to match the YouTube thumbnails it shows (Nov 3, 2026). */
     .article-image {
       position: relative;
-      aspect-ratio: 16 / 10;
+      aspect-ratio: 16 / 9;
       overflow: hidden;
       background:
         linear-gradient(180deg, rgba(7, 7, 7, 0), rgba(7, 7, 7, .08)),
