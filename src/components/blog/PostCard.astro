@@ -47,9 +47,12 @@ const date = new Date(post.publishedAt).toLocaleDateString('en-US', { month: 'lo
     transition: transform .18s ease, box-shadow .18s ease;
   }
   .blog-index-card:hover { transform: translateY(-2px); }
+  /* 16:9, the shape of every post's featured image (a YouTube
+     thumbnail): a 16:10 box cut the sides off thumbnails with text
+     to the edge (Nov 3, 2026). */
   .blog-index-card img {
     width: 100%;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
     display: block;
   }
