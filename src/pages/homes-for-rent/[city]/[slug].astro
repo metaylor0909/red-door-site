@@ -24,7 +24,7 @@
 //   - The sitewide `section` double-padding bug — `#listing-main` zeroes
 //     its own section padding and controls spacing via `.listing-grid`.
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID } from '../../../lib/listings/rentengine';
+import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID, isKeyRejected, listingsKey } from '../../../lib/listings/rentengine';
 import { haversineMiles } from '../../../lib/rental-analysis/geo';
 import type { RentEngineUnit } from '../../../lib/listings/types';
 import { petPolicy, petBadgeHtml } from '../../../lib/listings/pets';
@@ -42,11 +42,11 @@ const MAPBOX_TOKEN =
   'pk.eyJ1IjoibWV0YXlsb3IwOTA5IiwiYSI6ImNtdTdmZXJ5MzBpM3cyenB1eXMwNWdwaXkifQ.0sGI21TcAeEe9v_Pa91a9A';
 
 export async function getStaticPaths() {
-  const apiKey = import.meta.env.RENTENGINE_LISTINGS_KEY;
+  // listingsKey() fails a GitHub Actions build that has no key; locally a
+  // missing key builds zero pages, like src/pages/blog/index.astro's
+  // missing-Sanity-credentials handling.
+  const apiKey = listingsKey();
   if (!apiKey) {
-    // Same graceful-degradation pattern as src/pages/blog/index.astro's
-    // missing-Sanity-credentials handling: log and build zero pages rather
-    // than crash the build. RENTENGINE_LISTINGS_KEY isn't set yet.
     console.warn('[homes-for-rent] RENTENGINE_LISTINGS_KEY not configured — no listing detail pages will build.');
     return [];
   }
@@ -58,6 +58,7 @@ export async function getStaticPaths() {
       accountId: import.meta.env.RENTENGINE_LISTINGS_ACCOUNT_ID || RENTENGINE_ACCOUNT_ID,
     });
   } catch (err) {
+    if (isKeyRejected(err)) throw err;
     console.warn('[homes-for-rent] Could not reach RentEngine — no listing detail pages will build.', err);
     return [];
   }

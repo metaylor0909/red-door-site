@@ -42,7 +42,7 @@
 import { env } from 'cloudflare:workers';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { ORGANIZATION_JSONLD } from '../lib/schema/organization';
-import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID } from '../lib/listings/rentengine';
+import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID, isKeyRejected, listingsKey } from '../lib/listings/rentengine';
 import type { RentEngineUnit } from '../lib/listings/types';
 import { petPolicy, petBadgeHtml } from '../lib/listings/pets';
 import { loadCityContentMap, loadCityMarketData } from '../lib/listings/homes-for-rent-content';
@@ -61,12 +61,11 @@ const MAPBOX_TOKEN =
   'pk.eyJ1IjoibWV0YXlsb3IwOTA5IiwiYSI6ImNtdTdmZXJ5MzBpM3cyenB1eXMwNWdwaXkifQ.0sGI21TcAeEe9v_Pa91a9A';
 
 export async function getStaticPaths() {
-  const apiKey = import.meta.env.RENTENGINE_LISTINGS_KEY;
+  const apiKey = listingsKey();
   let units: RentEngineUnit[] = [];
   if (!apiKey) {
-    // Same graceful-degradation pattern as the sibling listing-detail route
-    // and src/pages/blog/index.astro's missing-Sanity-credentials handling:
-    // log and build with zero live listings rather than crash the build.
+    // Local build without a key (GitHub Actions fails inside listingsKey()):
+    // same zero-listings fallback as the sibling listing-detail route.
     console.warn(
       '[city homes-for-rent] RENTENGINE_LISTINGS_KEY not configured — all 19 city hub pages will build with zero live listings.'
     );
@@ -77,6 +76,7 @@ export async function getStaticPaths() {
         accountId: import.meta.env.RENTENGINE_LISTINGS_ACCOUNT_ID || RENTENGINE_ACCOUNT_ID,
       });
     } catch (err) {
+      if (isKeyRejected(err)) throw err;
       console.warn('[city homes-for-rent] Could not reach RentEngine — all 19 city hub pages will build with zero live listings.', err);
     }
   }
