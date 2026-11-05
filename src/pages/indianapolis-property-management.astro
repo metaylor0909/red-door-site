@@ -303,6 +303,18 @@ const CHAIN_STEPS = [
 
   <ProofStrip cityLabel="Indianapolis" />
 
+  {/* Overview video, same embed as the pillar pages. It sits after the
+      proof strip rather than straight after the hero (as on the pillars)
+      because .proof-panel's -62px top margin tucks it under the hero and
+      would cover the bottom of the video otherwise. */}
+  <section class="video-section">
+    <div class="container">
+      <div class="video-embed reveal">
+        <iframe src="https://www.youtube.com/embed/ASUMnD4ZZ-A" title="Red Door Property Management Services overview video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
   <PropertyManagementJourneyCarousel />
 
   <section class="pm-owners">
