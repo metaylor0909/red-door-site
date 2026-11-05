@@ -49,6 +49,41 @@ export interface ListingsFetchConfig {
   accountId?: string;
 }
 
+// A key RentEngine refuses must fail the build, not ship empty listings.
+// The pages that read /units fall back to zero listings when RentEngine
+// can't be reached, which is right for an outage but wrong for a bad key:
+// a revoked, expired or under-scoped key would rebuild the live site with
+// no listings and no listing detail pages, and nothing would say so. A
+// failed build leaves the last good deploy live instead. RentEngine
+// answers a bad key with 401; 403 covers a key missing the units scope.
+const KEY_REJECTED_ERROR = 'RentEngineKeyRejected';
+
+function keyRejectedError(status: number): Error {
+  const err = new Error(
+    `RentEngine rejected RENTENGINE_LISTINGS_KEY (HTTP ${status}). Failing the build so the live site keeps its listings. ` +
+      'Replace the GitHub secret with a key that has read access to units.'
+  );
+  err.name = KEY_REJECTED_ERROR;
+  return err;
+}
+
+/** True for the error thrown when RentEngine refuses the key. Each page's
+ * catch rethrows these and keeps its zero-listings fallback for the rest. */
+export function isKeyRejected(err: unknown): boolean {
+  return err instanceof Error && err.name === KEY_REJECTED_ERROR;
+}
+
+/** The listings key, or undefined for a local build without one. A
+ * GitHub Actions build without it fails instead, for the same reason as
+ * keyRejectedError: an empty secret would deploy a site with no listings. */
+export function listingsKey(): string | undefined {
+  const key = import.meta.env.RENTENGINE_LISTINGS_KEY;
+  if (!key && import.meta.env.GITHUB_ACTIONS === 'true') {
+    throw new Error('RENTENGINE_LISTINGS_KEY is not set in GitHub Actions. Failing the build so the live site keeps its listings.');
+  }
+  return key || undefined;
+}
+
 /** Fetches every currently-Available unit, paginating through RentEngine's
  * 100-per-page limit until a short page signals the end. */
 export async function fetchAllAvailableUnits(config: ListingsFetchConfig): Promise<RentEngineUnit[]> {
@@ -65,6 +100,7 @@ export async function fetchAllAvailableUnits(config: ListingsFetchConfig): Promi
       headers: { Authorization: `Bearer ${config.apiKey}` },
     });
 
+    if (response.status === 401 || response.status === 403) throw keyRejectedError(response.status);
     if (!response.ok) {
       throw new Error(`RentEngine units request failed: ${response.status} ${await response.text()}`);
     }
@@ -100,6 +136,7 @@ export function fetchLeasedUnitLocations(config: ListingsFetchConfig): Promise<L
       url.searchParams.set('limit', '100');
       url.searchParams.set('page_number', String(pageNumber));
       const response = await fetch(url.toString(), { headers: { Authorization: `Bearer ${config.apiKey}` } });
+      if (response.status === 401 || response.status === 403) throw keyRejectedError(response.status);
       if (!response.ok) throw new Error(`RentEngine leased units request failed: ${response.status}`);
       const page = (await response.json()) as RentEngineUnit[];
       for (const u of page) {
