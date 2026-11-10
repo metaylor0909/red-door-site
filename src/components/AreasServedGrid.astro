@@ -41,6 +41,13 @@ const cities: CityEntry[] = [
   { slug: 'zionsville', label: 'Zionsville' },
   { slug: 'broad-ripple', label: 'Broad Ripple' },
 ];
+// Cities with a property-management page but no homes-for-rent page
+// (added 2026-11-10): linked on property-management grids, plain text on
+// homes-for-rent grids, where the link would 404.
+const PM_ONLY_SLUGS = new Set(['anderson', 'danville', 'fortville', 'greenfield', 'lebanon', 'mccordsville']);
+function pmOnlyLink(slug: string) {
+  return PM_ONLY_SLUGS.has(slug) && pageType === 'property-management';
+}
 function hrefFor(slug: string) {
   return `/${slug}-${pageType}`;
 }
@@ -97,7 +104,7 @@ function hrefFor(slug: string) {
             <p>Northeast communities with commuter access and affordable rental options.</p>
           </div>
           <ul class="city-list">
-            <li><span class="area-text">Anderson</span></li>
+            <li>{pmOnlyLink('anderson') ? (currentSlug === 'anderson' ? <span class="area-link is-current">Anderson</span> : <a class="area-link" href={hrefFor('anderson')}>Anderson</a>) : <span class="area-text">Anderson</span>}</li>
             <li><span class="area-text">Pendleton</span></li>
             <li><span class="area-text">Lapel</span></li>
             <li><span class="area-text">Ingalls</span></li>
@@ -121,7 +128,7 @@ function hrefFor(slug: string) {
                 </li>
               );
             })}
-            <li><span class="area-text">Danville</span></li>
+            <li>{pmOnlyLink('danville') ? (currentSlug === 'danville' ? <span class="area-link is-current">Danville</span> : <a class="area-link" href={hrefFor('danville')}>Danville</a>) : <span class="area-text">Danville</span>}</li>
             <li><span class="area-text">Plainfield</span></li>
           </ul>
         </article>
@@ -149,10 +156,10 @@ function hrefFor(slug: string) {
             <p>Eastside growth areas with newer-home inventory and suburban appeal.</p>
           </div>
           <ul class="city-list">
-            <li><span class="area-text">Greenfield</span></li>
-            <li><span class="area-text">McCordsville</span></li>
+            <li>{pmOnlyLink('greenfield') ? (currentSlug === 'greenfield' ? <span class="area-link is-current">Greenfield</span> : <a class="area-link" href={hrefFor('greenfield')}>Greenfield</a>) : <span class="area-text">Greenfield</span>}</li>
+            <li>{pmOnlyLink('mccordsville') ? (currentSlug === 'mccordsville' ? <span class="area-link is-current">McCordsville</span> : <a class="area-link" href={hrefFor('mccordsville')}>McCordsville</a>) : <span class="area-text">McCordsville</span>}</li>
             <li><span class="area-text">New Palestine</span></li>
-            <li><span class="area-text">Fortville</span></li>
+            <li>{pmOnlyLink('fortville') ? (currentSlug === 'fortville' ? <span class="area-link is-current">Fortville</span> : <a class="area-link" href={hrefFor('fortville')}>Fortville</a>) : <span class="area-text">Fortville</span>}</li>
             <li><span class="area-text">Cumberland</span></li>
           </ul>
         </article>
@@ -182,7 +189,7 @@ function hrefFor(slug: string) {
               )}
             </li>
             <li><span class="area-text">Whitestown</span></li>
-            <li><span class="area-text">Lebanon</span></li>
+            <li>{pmOnlyLink('lebanon') ? (currentSlug === 'lebanon' ? <span class="area-link is-current">Lebanon</span> : <a class="area-link" href={hrefFor('lebanon')}>Lebanon</a>) : <span class="area-text">Lebanon</span>}</li>
             <li><span class="area-text">Mooresville</span></li>
             <li><span class="area-text">Martinsville</span></li>
           </ul>

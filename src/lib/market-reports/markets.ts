@@ -26,10 +26,9 @@ export interface MarketConfig {
   postTitleMatches: string[];
   ctaHeading: string;
   /** /[slug]-property-management to link from the CTA band, or null if
-   * no such page exists for this market (Anderson/Lebanon/Greenfield
-   * have market-reports coverage but no property-management page —
-   * confirmed in this project's own build notes) — falls back to the
-   * Indianapolis property-management page, same as those notes decided. */
+   * no such page exists for this market — falls back to the Indianapolis
+   * property-management page. (Anderson, Lebanon, and Greenfield used
+   * that fallback until their own pages were added 2026-11-10.) */
   propertyManagementHref: string | null;
   /** Subtitle shown under each entry in the "nearby markets" grid. */
   county: string;
@@ -123,7 +122,7 @@ export const MARKETS: MarketConfig[] = [
     rentCastSlugs: ['anderson'],
     postTitleMatches: ['Anderson'],
     ctaHeading: 'Own a Rental in Anderson?',
-    propertyManagementHref: null,
+    propertyManagementHref: '/anderson-property-management',
     county: 'Madison County',
   },
   {
@@ -137,7 +136,7 @@ export const MARKETS: MarketConfig[] = [
     rentCastSlugs: ['lebanon'],
     postTitleMatches: ['Lebanon'],
     ctaHeading: 'Own a Rental in Lebanon?',
-    propertyManagementHref: null,
+    propertyManagementHref: '/lebanon-property-management',
     county: 'Boone County',
   },
   {
@@ -151,7 +150,7 @@ export const MARKETS: MarketConfig[] = [
     rentCastSlugs: ['greenfield'],
     postTitleMatches: ['Greenfield'],
     ctaHeading: 'Own a Rental in Greenfield?',
-    propertyManagementHref: null,
+    propertyManagementHref: '/greenfield-property-management',
     county: 'Hancock County',
   },
 ];

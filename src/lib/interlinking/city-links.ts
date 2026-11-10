@@ -21,9 +21,11 @@ import { MARKETS } from '../market-reports/markets';
 export interface CityPageLinks {
   slug: string;
   name: string;
-  /** null only from getBlogCityLinks, for a market-only area (e.g. Anderson)
+  /** null only from getBlogCityLinks, for a market-only area (e.g. Westside)
    * with no property-management/homes-for-rent pages of its own. */
   propertyManagementHref: string | null;
+  /** null for a city with a property-management page but no homes-for-rent
+   * page (Anderson, Greenfield, Lebanon, and the 2026-11-10 pilots). */
   homesForRentHref: string | null;
   /** null when this city has no -market-reports coverage at all (most of
    * the 19 property-management/homes-for-rent cities don't -- only 6 of
@@ -41,7 +43,7 @@ export interface CityPageLinks {
 // indianapolis-homes-for-rent.astro), not the [city]-... dynamic route,
 // so it isn't in property-management/cities.ts's CITIES list -- added
 // back in here since it's a real, valid interlink target.
-const KNOWN_CITIES: Array<{ slug: string; name: string }> = [
+const KNOWN_CITIES: Array<{ slug: string; name: string; hasHomesForRent?: boolean }> = [
   { slug: 'indianapolis', name: 'Indianapolis' },
   ...PROPERTY_MANAGEMENT_CITIES,
 ];
@@ -65,8 +67,8 @@ function hrefFor(kind: 'property-management' | 'homes-for-rent', slug: string): 
 }
 
 /** For a property-management or homes-for-rent page: this city's own
- * cross-links. propertyManagementHref/homesForRentHref are always
- * populated (every KNOWN_CITIES entry has both page types);
+ * cross-links. propertyManagementHref is always populated;
+ * homesForRentHref is null for cities with no homes-for-rent page;
  * marketReportHref is null when this city has no report coverage. */
 export function getCityLinks(citySlug: string): CityPageLinks | null {
   const city = KNOWN_CITIES.find((c) => c.slug === citySlug);
@@ -77,7 +79,7 @@ export function getCityLinks(citySlug: string): CityPageLinks | null {
     slug: city.slug,
     name: city.name,
     propertyManagementHref: hrefFor('property-management', city.slug),
-    homesForRentHref: hrefFor('homes-for-rent', city.slug),
+    homesForRentHref: city.hasHomesForRent === false ? null : hrefFor('homes-for-rent', city.slug),
     marketReportHref: market ? `/${market.slug}-market-reports` : null,
     marketReportLabel: market ? market.h1.replace(' Market Report', '') : null,
   };

@@ -28,6 +28,15 @@
 // facts, Red Door's RentEngine lease count) and CityFaq, with FAQPage
 // JSON-LD built from the same list.
 //
+// Six cities added 2026-11-10 (Marketing L10): Anderson, Greenfield, and
+// Lebanon (market reports already published) and a Danville / Fortville /
+// McCordsville pilot. None has a homes-for-rent page, so their rental
+// links open the all-areas listings view; the snapshot intro links to the
+// city's market report instead. The pilots have no market report (none
+// are being added for new cities), so MarketReportGallery shows the
+// nearest markets' reports where MarketReportStrip would be. See
+// CityEntry in cities.ts.
+//
 // Shared sections (JourneyProcess, WhyChooseAccordion, GuaranteeSection,
 // ReviewsCarousel, AreasServedGrid, LandlordLibrary, ProofStrip) are the
 // same components the homepage uses — confirmed via diff that their
@@ -54,6 +63,11 @@ import CityFaq from '../components/CityFaq.astro';
 import { loadCityMarketRaw, buildCityInsights, redDoorTrackRecord } from '../lib/property-management/city-insights';
 import { getCityLocalFacts } from '../lib/property-management/local-facts';
 import { fetchLeasedUnitLocations, RENTENGINE_ACCOUNT_ID, isKeyRejected, listingsKey, type LeasedUnitLocation } from '../lib/listings/rentengine';
+import MarketReportGallery from '../components/MarketReportGallery.astro';
+import type { GalleryMarket } from '../lib/market-reports/gallery';
+import { MARKETS, type MarketConfig } from '../lib/market-reports/markets';
+import { loadMarketReportSnapshot, type MarketSnapshotStat } from '../lib/market-reports/snapshot';
+import { FALLBACK_HUB_HREF } from '../lib/listings/hub';
 
 export async function getStaticPaths() {
   // Red Door's own leases, fetched once for all 19 pages. Without a key
@@ -74,9 +88,32 @@ export async function getStaticPaths() {
   }
   const metroRaw = await loadCityMarketRaw(env.DB, 'indianapolis');
 
+  // Market snapshots for the report gallery on cities with no market
+  // report of their own (CityEntry.nearbyMarkets), read once per market.
+  const marketSnapshots = new Map<string, Promise<MarketSnapshotStat | null>>();
+  const marketSnapshot = (m: MarketConfig) => {
+    if (!marketSnapshots.has(m.slug)) marketSnapshots.set(m.slug, loadMarketReportSnapshot(env.DB, m.rentCastSlugs));
+    return marketSnapshots.get(m.slug)!;
+  };
+
   return Promise.all(
     CITIES.map(async (city) => {
       const [snapshot, raw] = await Promise.all([loadMarketSnapshot(env.DB, city.slug), loadCityMarketRaw(env.DB, city.slug)]);
+      const nearby = (city.nearbyMarkets ?? []).map((s) => MARKETS.find((m) => m.slug === s)).filter((m): m is MarketConfig => !!m);
+      const reportGallery = nearby.length
+        ? {
+            featured: await Promise.all(
+              nearby.map(async (m) => ({
+                slug: m.slug,
+                name: m.h1.replace(' Market Report', ''),
+                county: m.county,
+                covers: m.serviceAreaChips.filter((c) => c !== 'Marion County'),
+                snapshot: await marketSnapshot(m),
+              }))
+            ),
+            others: MARKETS.filter((m) => !nearby.includes(m)).map((m) => ({ slug: m.slug, name: m.h1.replace(' Market Report', '') })),
+          }
+        : null;
       return {
         params: { city: city.slug },
         props: {
@@ -84,6 +121,7 @@ export async function getStaticPaths() {
           snapshot,
           insights: buildCityInsights(city.name, raw, metroRaw),
           trackRecord: leased ? redDoorTrackRecord(leased, city.name, raw?.zipsUsed ?? []) : null,
+          reportGallery,
         },
       };
     })
@@ -95,15 +133,23 @@ interface Props {
   snapshot: Awaited<ReturnType<typeof loadMarketSnapshot>>;
   insights: ReturnType<typeof buildCityInsights>;
   trackRecord: ReturnType<typeof redDoorTrackRecord> | null;
+  reportGallery: { featured: GalleryMarket[]; others: Array<{ slug: string; name: string }> } | null;
 }
 
-const { city, snapshot, insights, trackRecord } = Astro.props;
+const { city, snapshot, insights, trackRecord, reportGallery } = Astro.props;
 const { slug, name } = city;
 const cityLinks = getCityLinks(slug);
+// Cities added 2026-11-10 have no homes-for-rent page; their rental links
+// open the all-areas listings view instead.
+const homesForRentHref = cityLinks?.homesForRentHref ?? null;
 
 // Recent market reports under the snapshot. Cities without recent
-// reports of their own render nothing (see loadRecentCityReports).
-const recentReports = await loadRecentCityReports(slug, name);
+// reports of their own render nothing (see loadRecentCityReports), except
+// the no-report pilot cities, which get a gallery of nearby markets.
+const recentReports = reportGallery ? [] : await loadRecentCityReports(slug, name);
+// Only shown when there's somewhere for it to link (the pilots have no
+// homes-for-rent page or market report; the gallery covers reports).
+const interlinkCities = cityLinks && (cityLinks.homesForRentHref || cityLinks.marketReportHref) ? [cityLinks] : [];
 
 const localFacts = getCityLocalFacts(slug);
 
@@ -196,7 +242,13 @@ const jsonLd = {
       <div class="section-head center reveal">
         <div class="section-kicker">Where the {name} Market Stands Right Now</div>
         <h2>{name} Rental &amp; Sales Snapshot</h2>
-        <p>A condensed look at what's happening in {name} right now &mdash; for the full rental trend data and bedroom-by-bedroom breakdown, see the <a class="area-link" href={`/${slug}-homes-for-rent`}>{name} homes for rent page</a>.</p>
+        {homesForRentHref ? (
+          <p>A condensed look at what's happening in {name} right now &mdash; for the full rental trend data and bedroom-by-bedroom breakdown, see the <a class="area-link" href={homesForRentHref}>{name} homes for rent page</a>.</p>
+        ) : cityLinks?.marketReportHref ? (
+          <p>A condensed look at what's happening in {name} right now &mdash; for rent trends and Red Door's recurring {name} write-ups, see the <a class="area-link" href={cityLinks.marketReportHref}>{cityLinks.marketReportLabel} market report</a>.</p>
+        ) : (
+          <p>A condensed look at what's happening in {name} right now, from current RentCast rental and for-sale listings.</p>
+        )}
       </div>
       {snapshot.dataAsOf && <p class="snapshot-asof reveal">{snapshot.dataAsOf}</p>}
       <div class="snapshot-panels reveal">
@@ -206,7 +258,11 @@ const jsonLd = {
           <div class="snapshot-stat-row"><span class="snapshot-stat-label">Average Rent</span><span class="snapshot-stat-value">{formatCurrency(snapshot.rental.averageRent)}</span></div>
           <div class="snapshot-stat-row"><span class="snapshot-stat-label">Median Rent</span><span class="snapshot-stat-value">{formatCurrency(snapshot.rental.medianRent)}</span></div>
           <div class="snapshot-stat-row"><span class="snapshot-stat-label">Active Listings</span><span class="snapshot-stat-value">{snapshot.rental.activeListings}</span></div>
-          <p class="snapshot-note"><a class="area-link" href={`/${slug}-homes-for-rent`}>See the full {name} rental market &rarr;</a></p>
+          {homesForRentHref ? (
+            <p class="snapshot-note"><a class="area-link" href={homesForRentHref}>See the full {name} rental market &rarr;</a></p>
+          ) : (
+            <p class="snapshot-note"><a class="area-link" href={FALLBACK_HUB_HREF}>See Red Door's homes for rent across the area &rarr;</a></p>
+          )}
         </div>
         <div class="snapshot-panel is-sales">
           <span class="snapshot-panel-label">Sales Market</span>
@@ -219,12 +275,16 @@ const jsonLd = {
           </p>
         </div>
       </div>
-      <MarketReportStrip
-        cityName={name}
-        reports={recentReports}
-        archiveHref={cityLinks?.marketReportHref}
-        archiveLabel={cityLinks?.marketReportLabel}
-      />
+      {reportGallery ? (
+        <MarketReportGallery cityName={name} featured={reportGallery.featured} others={reportGallery.others} />
+      ) : (
+        <MarketReportStrip
+          cityName={name}
+          reports={recentReports}
+          archiveHref={cityLinks?.marketReportHref}
+          archiveLabel={cityLinks?.marketReportLabel}
+        />
+      )}
     </div>
   </section>
 
@@ -287,7 +347,7 @@ const jsonLd = {
     </div>
   </section>
 
-  <CityInterlinkPanel current="property-management" cities={cityLinks ? [cityLinks] : []} />
+  <CityInterlinkPanel current="property-management" cities={interlinkCities} />
 
   <section class="section-dark final-cta">
     <div class="container reveal">
