@@ -66,6 +66,25 @@ the "call before launch" items.
   - **Not confirmed with BNS:** so the pages don't call them out.
 - **SEA 1 (2025) rental property tax deduction.** It exists, but sources disagree on the percentages, so it isn't mentioned.
 
+## Added November 10, 2026 (six new city pages)
+
+Researched November 10, 2026 for the Anderson, Greenfield, Lebanon, Danville,
+Fortville and McCordsville pages. Full research: `owner-facts-anderson-lebanon.json`,
+`owner-facts-hancock.json`, `owner-facts-danville.json`.
+
+**Call before launch:**
+
+1. **Fortville rental registration (new, Ord. 2026-8A, adopted Aug 17, 2026).**
+   - **Published:** registration required, $5 fee waived through Dec 31, 2026, local agent rule, complaint-only inspections (from the town's own registration form).
+   - **Left out:** the $250/$500 violation and re-inspection fees and the exemptions. They come from the draft in the council packet, not the signed ordinance, and the draft's dates already differ from the form's.
+   - **Ask:** the Clerk-Treasurer for the adopted text. Then **attorney question:** the ordinance exempts only 5+ unit managed communities, so a managed single-family home isn't exempt; how that squares with IC 36-1-20-4.1 (no local inspection of professionally managed units inspected by a third party in the past 12 months) is open. Red Door should register any Fortville homes it manages.
+2. **Lebanon's online code stops at December 2020.** The page says "none found" and gives that date. Confirm with the Clerk-Treasurer or Planning that no rental or short-term-rental ordinance has passed since.
+3. **Stale online codes elsewhere:** Greenfield (Dec 2024), McCordsville (Feb 2025), Danville (Nov 2024). Each page states its code date.
+4. **Danville short-term rentals.** Published as a special exception in residential districts, per the UDO table. Its "additional standards" section doesn't exist in the UDO, and IC 36-1-24-8 bars requiring approval for owner-occupied STRs. Attorney question if it matters.
+5. **Anderson electric territory.** Published as Anderson Municipal Light & Power; outlying addresses may be on Duke Energy or a REMC.
+
+**Deliberately left off the pages:** Greenfield's 2024 registration proposal that failed (news source only); Greenfield's pending zoning rewrite (Ord. 2026-28); electric and gas providers for Fortville, Danville and Lebanon (no official source); highway exit numbers sourced only from Wikipedia.
+
 ## Areas covered
 
 | Area | Rental registration | Eviction court |
@@ -78,6 +97,12 @@ the "call before launch" items.
 | Westfield | None | Hamilton Superior 4/6/7, Noblesville |
 | Zionsville | None | Boone Superior II, Lebanon |
 | Greenwood | None | Johnson Circuit/Superior, Franklin |
+| Danville | None (smoke-detector rule only) | Hendricks Superior 1/3/4/5, Danville |
+| Lebanon | None found (code online only through 2020) | Boone Superior II, Lebanon |
+| Anderson | None (vacant-structure penalties apply) | Madison Circuit Div. 4/5, Anderson |
+| Greenfield | None (smoke-detector rule only) | Hancock Circuit / Superior 1, Greenfield |
+| Fortville | **Required since Aug 2026**, $5 | Hancock Circuit / Superior 1, Greenfield |
+| McCordsville | None | Hancock Circuit / Superior 1, Greenfield |
 | Center Twp / Downtown | Indianapolis registry | Center Twp Small Claims |
 | Broad Ripple / Washington Twp | Indianapolis registry | Washington Twp Small Claims |
 | Lawrence Twp | Indianapolis registry, except City of Lawrence (none) | Lawrence Twp Small Claims |
