@@ -1159,6 +1159,66 @@
       }
     ]
   },
+  "lebanon": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "None found. Lebanon’s code of ordinances, as published online (current through December 2020), has no rental registration, licensing, or inspection requirement; code enforcement responds to written complaints and gives owners a deadline to correct violations."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Boone County eviction cases are filed in Boone Superior Court II, which hears all of the county’s small claims, at the Boone County Courthouse, 112 Courthouse Square, Lebanon."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home (voter-approved referendum levies sit outside the cap). The Boone County Treasurer bills in May and November installments."
+      },
+      {
+        "label": "Utilities",
+        "text": "Lebanon Utilities, owned by the city, provides electric, water, and sewer on one bill. Before a tenant can open an account, the owner signs a Verification of Utility Customer form naming every adult resident. While the tenant lives there, the owner can’t have service shut off without a court order. To keep service on between tenants, the owner signs an Underlying Service Agreement, which moves service into the owner’s name when a tenant’s account ends."
+      },
+      {
+        "label": "Location",
+        "text": "About 25 miles northwest of downtown Indianapolis, just off I-65 at SR 39 and SR 32, with US 52 to the north. Lebanon is the Boone County seat, with the 1911 courthouse on the original public square and the 3.3-mile Big Four Trail running through downtown. The state’s LEAP Lebanon Innovation District, 9,000-plus acres on the I-65 corridor, includes Eli Lilly’s Lebanon API site."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Lebanon?",
+        "a": "No registration requirement appears in Lebanon’s city code as published online, which runs through December 2020. The practical step is on the utility side: Lebanon Utilities needs the owner’s signed verification form before a tenant can open an account, and an Underlying Service Agreement keeps service on between tenants."
+      },
+      {
+        "q": "Where are evictions filed for a Lebanon rental?",
+        "a": "In Boone Superior Court II at the Boone County Courthouse, 112 Courthouse Square, Lebanon. That court has exclusive jurisdiction over all Boone County small claims cases, including evictions."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Lebanon code of ordinances",
+        "url": "https://codelibrary.amlegal.com/codes/lebanonin/latest/overview"
+      },
+      {
+        "label": "Boone Superior Court II",
+        "url": "https://boonecounty.in.gov/offices/superior-court-II"
+      },
+      {
+        "label": "Indiana Code Title 6 (2% cap)",
+        "url": "https://iga.in.gov/laws/2026/ic/titles/6"
+      },
+      {
+        "label": "Lebanon Utilities customer service",
+        "url": "https://lebanon-utilities.com/customer-service/"
+      },
+      {
+        "label": "Lebanon Utilities landlord agreement",
+        "url": "http://lebanon-utilities.com/wp-content/uploads/2020/11/LU-Underlying-Service-Agreement-for-Landlords-11.4.2020.pdf"
+      },
+      {
+        "label": "Lebanon parks and trails",
+        "url": "https://seashorewaterpark.org/167/Our-Parks"
+      }
+    ]
+  },
   "zionsville": {
     "facts": [
       {
@@ -1260,6 +1320,290 @@
       {
         "label": "Greenwood Sanitation Department",
         "url": "https://www.greenwood.in.gov/division/blocks.php?structureid=269"
+      }
+    ]
+  },
+  "greenfield": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "None. Greenfield’s code of ordinances (current through December 2024) has no rental registration, licensing, or inspection requirement. The one rental-specific rule (Sec. 91.136): in a rented home, the owner or manager must install the required smoke detectors and repair or replace one within seven business days of written notice."
+      },
+      {
+        "label": "Short-term rentals",
+        "text": "The city’s development ordinance has no short-term rental permit or standards. It regulates bed-and-breakfasts only as an operator-occupied use that needs approval, so Indiana’s state short-term rental law sets the rules."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Hancock County eviction cases are filed in the Hancock Circuit Court or Superior Court No. 1, assigned at random, at the county courthouse, 9 E. Main St., Greenfield. Small claims go to Superior Court No. 2."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home (voter-approved referendum levies sit outside the cap). The Hancock County Treasurer bills in May and November installments."
+      },
+      {
+        "label": "Utilities",
+        "text": "The city runs water, wastewater, stormwater, and its own electric utility, Greenfield Power and Light, inside city limits. A tenant opening an account provides a copy of the lease and pays a $50 water deposit plus a $100 electric deposit ($150 for an all-electric home)."
+      },
+      {
+        "label": "Location",
+        "text": "About 21 miles east of downtown Indianapolis on US 40 (Main Street), with SR 9 (State Street) crossing downtown and I-70 along the north side. The Pennsy Trail runs through downtown, near the James Whitcomb Riley home on Main Street and Riley Park."
+      },
+      {
+        "label": "Growth",
+        "text": "Greenfield’s comprehensive plan, adopted in June 2025, projects a need for about 7,800 more housing units by 2055."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Greenfield?",
+        "a": "No. As of its December 2024 codification, Greenfield’s city code has no rental registration, licensing, or inspection requirement. Owners of rented homes must keep smoke detectors working and fix one within seven business days of written notice."
+      },
+      {
+        "q": "Where are evictions filed for a Greenfield rental?",
+        "a": "In the Hancock Circuit Court or Hancock Superior Court No. 1 at the Hancock County Courthouse, 9 E. Main St., Greenfield. Under the county’s local rules (amended January 2025), eviction cases go to those two courts and the Clerk assigns them at random; small claims cases are heard separately in Superior Court No. 2."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Greenfield code of ordinances",
+        "url": "https://codelibrary.amlegal.com/codes/greenfieldin/latest/overview"
+      },
+      {
+        "label": "Greenfield Unified Development Ordinance",
+        "url": "https://www.greenfieldin.gov/211/Unified-Development-Ordinance"
+      },
+      {
+        "label": "Hancock County local rules",
+        "url": "https://www.in.gov/courts/files/hancock-local-rules.pdf"
+      },
+      {
+        "label": "Hancock County Treasurer",
+        "url": "https://www.hancockin.gov/304/Treasurer"
+      },
+      {
+        "label": "Indiana Code Title 6 (2% cap)",
+        "url": "https://iga.in.gov/laws/2026/ic/titles/6"
+      },
+      {
+        "label": "Greenfield starting utility service",
+        "url": "https://www.greenfieldin.gov/339/Starting-Utility-Service"
+      },
+      {
+        "label": "Greenfield comprehensive plan",
+        "url": "https://www.greenfieldin.gov/346/Comp-Plan"
+      }
+    ]
+  },
+  "fortville": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "Required. Ordinance 2026-8A, adopted August 17, 2026, makes owners register each rental with the town. The fee is $5, waived through December 31, 2026. The owner certifies that no homestead deduction is claimed, keeps a current tenant contact list, and reports a sale within 30 days. An owner living outside Hancock County and more than 50 miles away must name a local agent. Inspections happen only after a complaint."
+      },
+      {
+        "label": "Short-term rentals",
+        "text": "Fortville’s code and zoning ordinance have no short-term rental rules. A bed-and-breakfast is treated as an owner-occupied use that needs a special exception, so the state short-term rental law governs."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Hancock County eviction cases are filed in the Hancock Circuit Court or Superior Court No. 1, assigned at random, at the county courthouse, 9 E. Main St., Greenfield. Small claims go to Superior Court No. 2."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home (voter-approved referendum levies sit outside the cap). The Hancock County Treasurer bills in May and November installments."
+      },
+      {
+        "label": "Utilities",
+        "text": "The town runs water, sewer, and stormwater on one Fortville Water Works bill, and trash is a town-contracted service billed to owners. A tenant opening an account needs the lease signature page signed by the landlord. Under the utility code, sewer and stormwater charges stay with the owner until the property is sold, and unpaid sewer on a rental can become a lien after notice to the owner."
+      },
+      {
+        "label": "Location",
+        "text": "About 20 miles northeast of downtown Indianapolis on US 36/SR 67 (Main Street), with the downtown business district along Main Street. Memorial Park, the town’s 33-acre park, opened in 1920."
+      },
+      {
+        "label": "New construction",
+        "text": "The town issued 194 new single-family permits in 2025, up from 84 in 2024 and 50 in 2023. Most were in Beyers Estates (99), Northwest Fortville (62), and Mt. Vernon North (33)."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Fortville?",
+        "a": "Yes. Since Ordinance 2026-8A (August 2026), each rental needs a town registration. The fee is $5 and is waived through December 31, 2026. A sale must be reported within 30 days, and an owner living outside Hancock County and more than 50 miles away must name a local agent. The town inspects only after a complaint."
+      },
+      {
+        "q": "Where are evictions filed for a Fortville rental?",
+        "a": "In the Hancock Circuit Court or Hancock Superior Court No. 1 at the Hancock County Courthouse, 9 E. Main St., Greenfield. Under the county’s local rules (amended January 2025), eviction cases go to those two courts and the Clerk assigns them at random; small claims cases are heard separately in Superior Court No. 2."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Fortville Planning & Building (rental registration form, 2025 permit report)",
+        "url": "https://fortville.in.gov/planning-building"
+      },
+      {
+        "label": "Fortville code of ordinances",
+        "url": "https://codelibrary.amlegal.com/codes/fortvillein/latest/fortville_in"
+      },
+      {
+        "label": "Hancock County local rules",
+        "url": "https://www.in.gov/courts/files/hancock-local-rules.pdf"
+      },
+      {
+        "label": "Hancock County Treasurer",
+        "url": "https://www.hancockin.gov/304/Treasurer"
+      },
+      {
+        "label": "Indiana Code Title 6 (2% cap)",
+        "url": "https://iga.in.gov/laws/2026/ic/titles/6"
+      },
+      {
+        "label": "Fortville utility service",
+        "url": "https://fortville.in.gov/beginning-or-ending-utility-service"
+      },
+      {
+        "label": "Fortville town history",
+        "url": "https://fortville.in.gov/fortville-town-history"
+      }
+    ]
+  },
+  "mccordsville": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "None. McCordsville’s code of ordinances (current through February 2025) has no rental registration, licensing, or inspection requirement. Town sewer, stormwater, and trash fees follow the deed, not the occupant: the owner stays responsible, and unpaid fees can become a lien."
+      },
+      {
+        "label": "Short-term rentals",
+        "text": "The town’s zoning ordinance has no short-term rental rules; it lists bed-and-breakfasts as a separate use. Indiana’s state short-term rental law governs."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Hancock County eviction cases are filed in the Hancock Circuit Court or Superior Court No. 1, assigned at random, at the county courthouse, 9 E. Main St., Greenfield. Small claims go to Superior Court No. 2."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home (voter-approved referendum levies sit outside the cap). The Hancock County Treasurer bills in May and November installments."
+      },
+      {
+        "label": "Utilities",
+        "text": "Water is Citizens Energy Group, billed by Citizens; the town has no water utility. The town bills wastewater, stormwater, and trash (Priority Waste, $18.48 a month, under contract through 2032). Homes south of CR 650N are on Aqua Indiana sewer. Electric is NineStar Connect or AES Indiana depending on location, and gas is CenterPoint Energy."
+      },
+      {
+        "label": "Location",
+        "text": "About 15 miles northeast of downtown Indianapolis on US 36/SR 67 (W Broadway) at Mt. Comfort Road, where SR 234 begins. McCord Square, the new town center at Broadway and Mt. Comfort Road, holds IU Health, NineStar Connect offices, and the police headquarters."
+      },
+      {
+        "label": "New construction",
+        "text": "Per the town’s 2040 comprehensive plan, about 9,500 homes are built or approved, more than three-quarters of the existing housing dates from after 2000, and 13 residential projects were approved to pull building permits in early 2025. The town issued 437 single-family permits in 2021, up from 240 in 2020."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in McCordsville?",
+        "a": "No. As of its February 2025 codification, McCordsville’s town code has no rental registration, licensing, or inspection requirement. Town sewer, stormwater, and trash charges stay with the deed holder even when a tenant lives there, so owners should make sure those bills are paid."
+      },
+      {
+        "q": "Where are evictions filed for a McCordsville rental?",
+        "a": "In the Hancock Circuit Court or Hancock Superior Court No. 1 at the Hancock County Courthouse, 9 E. Main St., Greenfield. Under the county’s local rules (amended January 2025), eviction cases go to those two courts and the Clerk assigns them at random; small claims cases are heard separately in Superior Court No. 2."
+      }
+    ],
+    "sources": [
+      {
+        "label": "McCordsville code of ordinances",
+        "url": "https://codelibrary.amlegal.com/codes/mccordsville/latest/overview"
+      },
+      {
+        "label": "Hancock County local rules",
+        "url": "https://www.in.gov/courts/files/hancock-local-rules.pdf"
+      },
+      {
+        "label": "Hancock County Treasurer",
+        "url": "https://www.hancockin.gov/304/Treasurer"
+      },
+      {
+        "label": "Indiana Code Title 6 (2% cap)",
+        "url": "https://iga.in.gov/laws/2026/ic/titles/6"
+      },
+      {
+        "label": "McCordsville utility FAQs",
+        "url": "https://www.mccordsville.in.gov/departments/utility/faqs.php"
+      },
+      {
+        "label": "McCordsville trash and recycling",
+        "url": "https://www.mccordsville.in.gov/departments/utility/trash_recycling.php"
+      },
+      {
+        "label": "McCordsville 2040 comprehensive plan",
+        "url": "https://www.mccordsville.in.gov/Planning%20&%20Building/Planning/1765-McCordsvilleCompPlan_digital%20format.pdf"
+      },
+      {
+        "label": "McCordsville 2021 annual report",
+        "url": "https://www.mccordsville.org/egov/documents/1646933390_79426.pdf"
+      }
+    ]
+  },
+  "anderson": {
+    "facts": [
+      {
+        "label": "Rental registration",
+        "text": "None. Anderson’s code of ordinances (current through July 2026) has no rental registration, licensing, or inspection requirement. Under Code 93.43, the owner or manager must install working smoke detectors at the start of each lease; the tenant maintains them, but hard-wired detectors stay the owner’s responsibility."
+      },
+      {
+        "label": "Vacant homes",
+        "text": "Under the city’s vacant-structure ordinance (Ch. 165), a home left vacant 90 days or more can draw a $500 civil penalty, rising each further 90 days to a $5,000-a-year cap. The exceptions require the owner to have documentation approved by the Building Commissioner, be current on property taxes, and, for example, keep the home maintained and actively offered for rent or sale."
+      },
+      {
+        "label": "Eviction filings",
+        "text": "Madison County eviction and small claims cases are split evenly between Madison Circuit Court Divisions 4 and 5, at the Madison County Government Center, 16 E. 9th St., Anderson."
+      },
+      {
+        "label": "Property tax",
+        "text": "A rental isn’t a homestead, so Indiana caps its property tax at 2% of assessed value, against 1% for an owner-occupied home (voter-approved referendum levies sit outside the cap). The Madison County Treasurer bills in May and November installments."
+      },
+      {
+        "label": "Utilities",
+        "text": "Anderson City Utilities runs electric (Anderson Municipal Light & Power) and water, with city sewer; gas is CenterPoint Energy. A tenant opening an account provides a copy of the lease listing every adult resident; deposits are credit-based ($0 to $420). Sewer and stormwater can be billed to the tenant, but the owner stays liable for unpaid charges, and a home with no water use for 60 days gets a stormwater-only bill in the owner’s name."
+      },
+      {
+        "label": "Location",
+        "text": "About 35 miles northeast of downtown Indianapolis, with I-69 along the city’s southeast side and the White River through the north side. Mounds State Park, just east of the city off I-69, has 10 prehistoric earthworks and a 2.5-mile trail along the White River bluffs."
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to register a rental property in Anderson?",
+        "a": "No. As of July 2026, Anderson’s city code has no rental registration, licensing, or inspection requirement. Owners must install working smoke detectors at the start of each lease, and a home left vacant 90 days or more can draw civil penalties unless it is maintained and actively offered for rent or sale."
+      },
+      {
+        "q": "Where are evictions filed for an Anderson rental?",
+        "a": "In Madison Circuit Court Division 4 or 5, at the Madison County Government Center, 16 E. 9th St., Anderson. Under the county’s caseload plan (effective January 2026), eviction and small claims filings are split evenly between those two courts."
+      }
+    ],
+    "sources": [
+      {
+        "label": "Anderson code of ordinances",
+        "url": "https://codelibrary.amlegal.com/codes/andersonin/latest/overview"
+      },
+      {
+        "label": "Madison County caseload plan (2026)",
+        "url": "https://secure.in.gov/courts/files/order-local-rules-2025-25S-MS-211.pdf"
+      },
+      {
+        "label": "Madison County Treasurer",
+        "url": "http://treasurer.madisoncounty48.us/"
+      },
+      {
+        "label": "Indiana Code Title 6 (2% cap)",
+        "url": "https://iga.in.gov/laws/2026/ic/titles/6"
+      },
+      {
+        "label": "Anderson utility setup",
+        "url": "https://www.cityofanderson.com/220/Setting-Up-Service"
+      },
+      {
+        "label": "Mounds State Park",
+        "url": "https://www.in.gov/dnr/state-parks/parks-lakes/mounds-state-park/"
       }
     ]
   }
