@@ -36,25 +36,15 @@ export function getStaticPaths() {
 
 const { variant } = Astro.params as { variant: 'a' | 'b' };
 
-const PHOTOS = {
-  a: {
-    small: '/images/team/team-storefront-1000.webp',
-    large: '/images/team/team-storefront-2000.webp',
-    smallW: 1000,
-    largeW: 2000,
-    width: 2000,
-    height: 1334,
-  },
-  b: {
-    small: '/images/team/team-autumn-townhomes-900.webp',
-    large: '/images/team/team-autumn-townhomes-1500.webp',
-    smallW: 900,
-    largeW: 1500,
-    width: 1500,
-    height: 1000,
-  },
-} as const;
-const photo = PHOTOS[variant];
+// Resized from the photographer's 5000x3335 originals (102826_Red-Door_06
+// = storefront, _02 = autumn). 900 for phones, 1600 for standard desktop
+// screens, 2400 for high-density ones; the browser picks via srcset. No
+// 3200: the autumn photo's leaf texture made it ~1.3 MB for little
+// visible gain over 2400.
+const WIDTHS = [900, 1600, 2400];
+const BASE = { a: '/images/team/team-storefront', b: '/images/team/team-autumn-townhomes' } as const;
+const srcset = WIDTHS.map((w) => `${BASE[variant]}-${w}.webp ${w}w`).join(', ');
+const photo = { src: `${BASE[variant]}-1600.webp`, width: 2400, height: 1601 };
 
 const pageTitle = `Homepage Hero Preview ${variant.toUpperCase()} | Red Door Property Management`;
 const pageDescription = 'Internal preview of a homepage hero option. Not for public use.';
@@ -63,14 +53,14 @@ const pageDescription = 'Internal preview of a homepage hero option. Not for pub
 <BaseLayout title={pageTitle} description={pageDescription} path={`/hero-preview/${variant}`}>
   <Fragment slot="head">
     <meta name="robots" content="noindex, nofollow, noarchive" />
-    <link rel="preload" as="image" imagesrcset={`${photo.small} ${photo.smallW}w, ${photo.large} ${photo.largeW}w`} imagesizes="100vw" fetchpriority="high" />
+    <link rel="preload" as="image" imagesrcset={srcset} imagesizes="100vw" fetchpriority="high" />
   </Fragment>
 
   <section class={`hero hero-team hero-team--${variant}`} aria-labelledby="page-title">
     <img
       class="hero-team-photo"
-      src={photo.large}
-      srcset={`${photo.small} ${photo.smallW}w, ${photo.large} ${photo.largeW}w`}
+      src={photo.src}
+      srcset={srcset}
       sizes="100vw"
       width={photo.width}
       height={photo.height}
