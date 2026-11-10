@@ -1,0 +1,304 @@
+---
+// /hero-preview/a and /hero-preview/b — TEMPORARY, hidden mockups of two
+// homepage hero options built around the 2026 team photos (Michael,
+// 2026-11-10). Everything below the hero is the live homepage
+// (src/pages/index.astro) copied as-is, so each preview reads as the full
+// page; the hero copy and CTAs are unchanged too, so the only thing being
+// compared is the photo and layout.
+//
+//   A — storefront photo (public/images/team/team-storefront-*.webp):
+//       full-bleed, headline centred at the top over the brick, team in
+//       the lower half.
+//   B — autumn townhomes photo (team-autumn-townhomes-*.webp): full-bleed,
+//       headline left-aligned over the townhomes, team on the right.
+//
+// Kept out of search: noindex meta here, an X-Robots-Tag header for
+// /hero-preview/* in public/_headers, never linked from anywhere, and the
+// sitemap script already skips noindex pages. Deliberately NOT listed in
+// robots.txt — that would publish the path and stop crawlers from ever
+// seeing the noindex.
+//
+// Delete this file, the _headers rule, and whichever photo isn't chosen
+// once a hero is picked and moved onto the real homepage.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProofStrip from '../../components/ProofStrip.astro';
+import JourneyProcess from '../../components/JourneyProcess.astro';
+import WhyChooseAccordion from '../../components/WhyChooseAccordion.astro';
+import GuaranteeSection from '../../components/GuaranteeSection.astro';
+import ReviewsCarousel from '../../components/ReviewsCarousel.astro';
+import AreasServedGrid from '../../components/AreasServedGrid.astro';
+import LandlordLibrary from '../../components/LandlordLibrary.astro';
+import RentalAnalysisForm from '../../components/RentalAnalysisForm.astro';
+
+export function getStaticPaths() {
+  return [{ params: { variant: 'a' } }, { params: { variant: 'b' } }];
+}
+
+const { variant } = Astro.params as { variant: 'a' | 'b' };
+
+const PHOTOS = {
+  a: {
+    small: '/images/team/team-storefront-1000.webp',
+    large: '/images/team/team-storefront-2000.webp',
+    smallW: 1000,
+    largeW: 2000,
+    width: 2000,
+    height: 1334,
+  },
+  b: {
+    small: '/images/team/team-autumn-townhomes-900.webp',
+    large: '/images/team/team-autumn-townhomes-1500.webp',
+    smallW: 900,
+    largeW: 1500,
+    width: 1500,
+    height: 1000,
+  },
+} as const;
+const photo = PHOTOS[variant];
+
+const pageTitle = `Homepage Hero Preview ${variant.toUpperCase()} | Red Door Property Management`;
+const pageDescription = 'Internal preview of a homepage hero option. Not for public use.';
+---
+
+<BaseLayout title={pageTitle} description={pageDescription} path={`/hero-preview/${variant}`}>
+  <Fragment slot="head">
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <link rel="preload" as="image" imagesrcset={`${photo.small} ${photo.smallW}w, ${photo.large} ${photo.largeW}w`} imagesizes="100vw" fetchpriority="high" />
+  </Fragment>
+
+  <section class={`hero hero-team hero-team--${variant}`} aria-labelledby="page-title">
+    <img
+      class="hero-team-photo"
+      src={photo.large}
+      srcset={`${photo.small} ${photo.smallW}w, ${photo.large} ${photo.largeW}w`}
+      sizes="100vw"
+      width={photo.width}
+      height={photo.height}
+      alt="The Red Door Property Management team"
+      fetchpriority="high"
+    />
+    <div class="hero-team-shade" aria-hidden="true"></div>
+    <div class="hero-content">
+      <h1 id="page-title">
+        <span>Discover the Freedom of Truly</span>{' '}
+        <span>Hands-Off Property Management</span>
+      </h1>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis" data-track="hero-rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener" data-track="hero-schedule-call">Schedule a Call</a>
+      </div>
+    </div>
+  </section>
+
+  <ProofStrip cityLabel="Indianapolis" />
+
+  <JourneyProcess />
+
+  <WhyChooseAccordion cityName="Indianapolis" areaLabel="Indianapolis" />
+
+  <GuaranteeSection />
+
+  <ReviewsCarousel />
+
+  <section class="section-soft" id="rental-analysis">
+    <div class="container analysis-grid">
+      <div class="reveal">
+        <div class="section-kicker">Free Rental Analysis</div>
+        <h2>What Could Your Indianapolis Rental Earn?</h2>
+        <p class="lead">Get a professional rental analysis backed by local market activity, comparable homes, current competition, and Red Door's experience managing rentals across the Indianapolis area.</p>
+        <ul class="benefit-list">
+          <li><span>1</span>Understand your property's current rental value.</li>
+          <li><span>2</span>Identify improvements that may strengthen rent and tenant appeal.</li>
+          <li><span>3</span>See whether Red Door's management approach fits your goals.</li>
+        </ul>
+      </div>
+
+      <RentalAnalysisForm />
+    </div>
+  </section>
+
+  <AreasServedGrid
+    headingLine1="Indianapolis Property Management"
+    headingLine2="Where You Need It"
+    leadText="Red Door manages rental homes across Indianapolis and the surrounding Central Indiana communities where owners need steady leasing, responsive maintenance, and clear local guidance."
+  />
+
+  <LandlordLibrary
+    heading="The Indianapolis Landlord Library"
+    subheading="Market updates, investment insights, and practical property-management guidance for Indianapolis rental owners."
+  />
+
+  <section class="local-section">
+    <div class="container split">
+      <div class="reveal">
+        <h2>Indianapolis Property Management Built on Local Experience</h2>
+        <p class="lead">Red Door Property Management helps accidental landlords, out-of-state owners, and growth-minded investors navigate the complete rental lifecycle. Our Indianapolis team combines documented processes, modern technology, and hands-on local market knowledge to help owners avoid costly mistakes and make better decisions for their properties.</p>
+        <p class="statement">Smarter Property Management Powered by Process, Data-Driven Decisions, and Local Market Expertise.</p>
+        <div class="cta-row" style="justify-content:flex-start">
+          <a class="btn btn-primary" href="/about">Meet Our Team</a>
+          <a class="btn btn-secondary" href="/indianapolis-property-management">Explore Our Process</a>
+        </div>
+      </div>
+      <div class="image-frame reveal" role="img" aria-label="Red Door placeholder home photo representing local Indianapolis property management">
+        <div class="image-caption">Indianapolis knowledge, practical recommendations, and clear owner visibility.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-dark final-cta">
+    <div class="container reveal">
+      <h2>Ready for a More Hands-Off Rental Experience?</h2>
+      <p>Tell us about your Indianapolis rental property and discover how Red Door's proven management process can protect your investment, reduce day-to-day stress, and keep you informed without requiring you to manage every detail yourself.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/rental-analysis">Get a Free Rental Analysis</a>
+        <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener">Schedule a Call</a>
+        <a class="btn btn-secondary" href="tel:3176601626">Call 317.660.1626</a>
+      </div>
+    </div>
+  </section>
+
+  {/* Preview-only switcher so the two options are one click apart. */}
+  <nav class="preview-switch" aria-label="Hero preview options">
+    <span>Hero preview</span>
+    <a href="/hero-preview/a" aria-current={variant === 'a' ? 'page' : undefined}>A</a>
+    <a href="/hero-preview/b" aria-current={variant === 'b' ? 'page' : undefined}>B</a>
+    <a href="/">Live</a>
+  </nav>
+</BaseLayout>
+
+<style>
+  /* ---- Shared by both options ------------------------------------- */
+  .hero-team {
+    min-height: clamp(720px, 100svh, 1040px);
+    background: var(--charcoal);
+  }
+  .hero-team::after { display: none; }
+
+  .hero-team-photo {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hero-team-shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Global .hero h1 / .cta-row lift the text with translateY for the
+     current centred hero; these layouts position the block themselves. */
+  .hero-team h1,
+  .hero-team .cta-row { transform: none; }
+  .hero-team h1 {
+    font-size: clamp(2.2rem, 4vw, 3.6rem);
+    font-weight: 500;
+    letter-spacing: -.02em;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, .35);
+  }
+
+  /* ---- A: storefront, headline centred at the top ------------------ */
+  .hero-team--a { place-items: start center; }
+  /* Pinned to the top so the team (heads ~43% down the photo) always
+     sits below the headline block, which ends ~330px down. */
+  .hero-team--a .hero-team-photo { object-position: center top; }
+  .hero-team--a .hero-team-shade {
+    background:
+      linear-gradient(180deg, rgba(10, 12, 18, .8) 0%, rgba(10, 12, 18, .55) 26%, rgba(10, 12, 18, .1) 44%, rgba(10, 12, 18, 0) 75%, rgba(10, 12, 18, .25) 100%);
+  }
+  /* .hero already carries 104px top padding for the fixed header. */
+  .hero-team--a .hero-content { padding: 34px 0 0; }
+  .hero-team--a h1 { margin-bottom: 22px; font-size: clamp(2.2rem, 3.6vw, 3.2rem); }
+
+  /* ---- B: autumn townhomes, headline left over the facade ---------- */
+  .hero-team--b { place-items: start stretch; text-align: left; }
+  .hero-team--b .hero-team-photo { object-position: 60% center; }
+  .hero-team--b .hero-team-shade {
+    background:
+      linear-gradient(90deg, rgba(12, 10, 8, .82) 0%, rgba(12, 10, 8, .66) 30%, rgba(12, 10, 8, .2) 50%, rgba(12, 10, 8, 0) 62%),
+      linear-gradient(180deg, rgba(12, 10, 8, .45) 0%, rgba(12, 10, 8, 0) 28%, rgba(12, 10, 8, 0) 80%, rgba(12, 10, 8, .3) 100%);
+  }
+  .hero-team--b .hero-content {
+    width: min(var(--max), calc(100% - 64px));
+    margin: 0 auto;
+    padding: clamp(56px, 9vh, 110px) 0 0;
+  }
+  .hero-team--b h1 {
+    max-width: 560px;
+    margin: 0 0 28px;
+    font-size: clamp(2.2rem, 3.5vw, 3.3rem);
+  }
+  /* One flowing headline here — the two fixed lines don't fit a left column. */
+  .hero-team--b h1 span { display: inline; white-space: normal; }
+  .hero-team--b .cta-row { justify-content: flex-start; column-gap: 16px; }
+
+  /* ---- Phones and portrait tablets --------------------------------
+     A wide group photo can't be cover-cropped into a tall screen without
+     cutting people off, so below 900px the text sits on charcoal and the
+     photo follows at its own 3:2 ratio. */
+  @media (max-width: 900px) {
+    .hero-team {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      text-align: center;
+    }
+    .hero-team .hero-content,
+    .hero-team--b .hero-content {
+      order: 1;
+      width: calc(100% - 32px);
+      margin: 0 auto;
+      padding: 40px 0 34px;
+    }
+    .hero-team-photo {
+      order: 2;
+      position: static;
+      z-index: auto;
+      height: auto;
+      aspect-ratio: 3 / 2;
+    }
+    .hero-team-shade { display: none; }
+    .hero-team h1,
+    .hero-team--b h1 {
+      max-width: 100%;
+      margin: 0 auto 22px;
+      font-size: clamp(1.7rem, 6.4vw, 2.4rem);
+      text-shadow: none;
+    }
+    .hero-team h1 span { display: inline; white-space: normal; }
+    .hero-team .cta-row,
+    .hero-team--b .cta-row { justify-content: center; }
+  }
+
+  /* ---- Preview switcher (not part of either design) ---------------- */
+  .preview-switch {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 6px 6px 14px;
+    border-radius: 999px;
+    background: rgba(23, 23, 23, .92);
+    color: #f4f4f4;
+    font: 600 .78rem/1 var(--font);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, .25);
+  }
+  .preview-switch span { margin-right: 6px; letter-spacing: .04em; text-transform: uppercase; font-size: .7rem; color: #cfcfcf; }
+  .preview-switch a {
+    padding: 8px 12px;
+    border-radius: 999px;
+    color: #f4f4f4;
+    text-decoration: none;
+  }
+  .preview-switch a:hover { background: rgba(255, 255, 255, .12); }
+  .preview-switch a[aria-current='page'] { background: var(--brand-mid); color: #fff; }
+  @media (max-width: 720px) {
+    .preview-switch { bottom: 92px; right: 12px; }
+  }
+</style>
