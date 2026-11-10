@@ -5,3 +5,8 @@
 # launch (2026-10-22).
 https://red-door-site.mtaylor-0d7.workers.dev/*
   X-Robots-Tag: noindex, nofollow
+
+# Temporary homepage hero mockups (src/pages/hero-preview/[variant].astro).
+# Belt-and-braces with the page's own noindex meta. Remove with the pages.
+/hero-preview/*
+  X-Robots-Tag: noindex, nofollow, noarchive
