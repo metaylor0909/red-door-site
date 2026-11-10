@@ -44,7 +44,7 @@ function formatCurrency(value: number | null): string {
           {m.snapshot && (
             <span class="market-report-gallery-stats">
               <span><strong>{formatCurrency(m.snapshot.medianRent)}</strong> median rent</span>
-              <span><strong>{m.snapshot.activeListings}</strong> active rentals</span>
+              <span><strong>{m.snapshot.activeListings.toLocaleString('en-US')}</strong> active rentals</span>
             </span>
           )}
           {m.snapshot?.dataAsOf && <span class="market-report-gallery-asof">RentCast data as of {m.snapshot.dataAsOf}</span>}

@@ -235,6 +235,46 @@ facts['brownsburg'] = {
   sources: [WS.brownsburgCode, WS.hendricksRules, WS.hendricksTreasurer, WS.icTitle6, WS.brownsburgUtil, WS.brownsburgTrails],
 };
 
+// Danville added 2026-11-10 (pilot page); research in owner-facts-danville.json.
+facts['danville'] = {
+  facts: [
+    {
+      label: 'Rental registration',
+      text: 'None. Danville’s code of ordinances (current through November 2024) and its development ordinance have no rental registration, licensing, or inspection requirement. The rental-specific rule (Code 90.24): the owner or manager of a rented home must install and maintain the required smoke detectors; the tenant keeps batteries fresh in battery-powered units.',
+    },
+    {
+      label: 'Short-term rentals',
+      text: 'Danville’s development ordinance treats a short-term rental (under 30 days through a booking platform) as a special-exception use in its residential and central business zoning districts, which means Board of Zoning Appeals approval.',
+    },
+    { label: 'Eviction filings', text: HENDRICKS_COURT },
+    { label: 'Property tax', text: countyTax('Hendricks') },
+    {
+      label: 'Utilities',
+      text: 'The town runs water, sewer, and stormwater on one monthly bill from the Clerk-Treasurer’s office at Town Hall. A tenant opening an account pays a $100 deposit and names the property owner on the application. Sewer charges can be billed to the tenant, but under Code 52.06 the owner stays liable if they go unpaid and can check the town’s payment records for the account.',
+    },
+    {
+      label: 'Location',
+      text: 'About 20 miles west of downtown Indianapolis on US 36, which is Danville’s Main Street; SR 39 crosses town and reaches I-74 to the north and I-70 to the south. The Hendricks County Courthouse anchors the town square. Town parks include Ellis Park, Gary Eakin Park, and Jack Willard Park, with more than 20 miles of paved and recreation trails.',
+    },
+  ],
+  faqs: [
+    {
+      q: 'Do I need to register a rental property in Danville?',
+      a: 'No. As of its latest published update (November 2024), Danville’s town code has no rental registration, licensing, or inspection requirement. Owners of rented homes must install and maintain required smoke detectors, and a tenant opening the water and sewer account pays a $100 deposit.',
+    },
+    hendricksCourtFaq('Danville'),
+  ],
+  sources: [
+    { label: 'Danville code of ordinances', url: 'https://codelibrary.amlegal.com/codes/danvillein/latest/overview' },
+    { label: 'Danville Unified Development Ordinance', url: 'https://danvillein.gov/egov/documents/1709664739_70993.pdf' },
+    WS.hendricksRules,
+    WS.hendricksTreasurer,
+    WS.icTitle6,
+    { label: 'Danville water and sewer service application', url: 'https://danvillein.gov/egov/apps/action/center.egov?view=form;page=1;id=12' },
+    { label: 'Danville utility billing', url: 'https://danvillein.gov/department/division.php?structureid=71' },
+  ],
+};
+
 facts['zionsville'] = {
   facts: [
     {
