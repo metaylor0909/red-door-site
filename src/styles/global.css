@@ -4153,6 +4153,9 @@
     .criteria-cta h2 { margin: 0 0 8px; padding-top: 0; border-top: 0; color: var(--white); }
     .criteria-cta p { color: #dcdcdc; }
     .criteria-cta .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+    /* .criteria-content a (above) otherwise paints button text red on the red primary button. */
+    .criteria-content .btn { text-decoration: none; }
+    .criteria-content .btn-primary, .criteria-content .btn-primary:hover { color: var(--white); }
     @media (max-width: 720px) {
       .criteria-content h2 { margin-top: 40px; }
       .fee-list li { flex-direction: column; gap: 4px; }
