@@ -14,12 +14,15 @@
 interface Props {
   cityName: string;
   areaLabel: string;
+  /** Overrides the photo's accessible label when a page swaps the photo
+      (the hidden /hero-preview/a2 mockup). Every real page omits it. */
+  imageLabel?: string;
 }
-const { cityName, areaLabel } = Astro.props;
+const { cityName, areaLabel, imageLabel = `Well-kept ${cityName} area rental home with a red front door` } = Astro.props;
 ---
 <section class="section-soft">
   <div class="container split">
-    <div class="image-frame reveal" role="img" aria-label={`Well-kept ${cityName} area rental home with a red front door`}>
+    <div class="image-frame reveal" role="img" aria-label={imageLabel}>
       <div class="image-caption">A local team, a documented process, and fewer owner surprises.</div>
     </div>
     <div class="reveal">
