@@ -262,6 +262,10 @@ const pageDescription = 'Internal preview of a homepage hero option. Not for pub
     background-image: linear-gradient(180deg, rgba(7, 7, 7, .04) 45%, rgba(7, 7, 7, .5)), url('/images/team/team-photo-19-1600.webp');
     background-image: linear-gradient(180deg, rgba(7, 7, 7, .04) 45%, rgba(7, 7, 7, .5)), image-set(url('/images/team/team-photo-19-900.webp') 1x, url('/images/team/team-photo-19-1600.webp') 2x);
     background-position: center;
+    /* The default 520px-tall frame crops this 3:2 photo to ~80% of its
+       width and cut off the outer arms. 4:3 shows ~89% with everyone in. */
+    min-height: 0;
+    aspect-ratio: 4 / 3;
   }
   .a2-local-photo .image-frame {
     background-image: linear-gradient(180deg, rgba(7, 7, 7, .04) 45%, rgba(7, 7, 7, .5)), url('/images/team/team-photo-14-1600.webp');
