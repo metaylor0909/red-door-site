@@ -44,6 +44,14 @@ import AreasServedGrid from '../components/AreasServedGrid.astro';
 import LandlordLibrary from '../components/LandlordLibrary.astro';
 import RentalAnalysisForm from '../components/RentalAnalysisForm.astro';
 
+// Hero: team storefront photo (photographer's 102826_Red-Door_06, 5000x3335
+// original), chosen 2026-11-16 from the hidden /hero-preview mockups
+// ("A2"). 900 for phones, 1600 for standard desktop screens, 2400 for
+// high-density ones; the browser picks via srcset.
+const HERO_WIDTHS = [900, 1600, 2400];
+const heroSrcset = HERO_WIDTHS.map((w) => `/images/team/team-storefront-${w}.webp ${w}w`).join(', ');
+const heroPhoto = { src: '/images/team/team-storefront-1600.webp', width: 2400, height: 1601 };
+
 const pageTitle = 'Indianapolis Property Management | Red Door Property Management';
 const pageDescription =
   'Experience hands-off Indianapolis property management with local expertise, proactive communication, professional leasing, maintenance, and proven owner protections.';
@@ -89,12 +97,24 @@ const jsonLd = {
 <BaseLayout title={pageTitle} description={pageDescription} path="/">
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <link rel="preload" as="image" imagesrcset={heroSrcset} imagesizes="100vw" fetchpriority="high" />
   </Fragment>
 
-  <section class="hero" aria-labelledby="page-title">
+  <section class="hero hero-team" aria-labelledby="page-title">
+    <img
+      class="hero-team-photo"
+      src={heroPhoto.src}
+      srcset={heroSrcset}
+      sizes="100vw"
+      width={heroPhoto.width}
+      height={heroPhoto.height}
+      alt="The Red Door Property Management team"
+      fetchpriority="high"
+    />
+    <div class="hero-team-shade" aria-hidden="true"></div>
     <div class="hero-content">
       <h1 id="page-title">
-        <span>Discover the Freedom of Truly</span>
+        <span>Discover the Freedom of Truly</span>{' '}
         <span>Hands-Off Property Management</span>
       </h1>
       <div class="cta-row">
@@ -102,17 +122,22 @@ const jsonLd = {
         <a class="btn btn-secondary" href="https://calendly.com/cknight-19/phone-call" target="_blank" rel="noopener" data-track="hero-schedule-call">Schedule a Call</a>
       </div>
     </div>
-    <a class="scroll-cue" href="#trust-proof" aria-label="Scroll to proof points">
-      <span aria-hidden="true"></span>
-      Scroll
-    </a>
   </section>
 
   <ProofStrip cityLabel="Indianapolis" />
 
   <JourneyProcess />
 
-  <WhyChooseAccordion cityName="Indianapolis" areaLabel="Indianapolis" />
+  {/* Homepage-only photo swap (team photo 19); see .home-why-photo below.
+      The component itself, shared with every -property-management page,
+      keeps its default photo. */}
+  <div class="home-why-photo">
+    <WhyChooseAccordion
+      cityName="Indianapolis"
+      areaLabel="Indianapolis"
+      imageLabel="Three members of the Red Door Property Management team"
+    />
+  </div>
 
   <GuaranteeSection />
 
@@ -151,7 +176,7 @@ const jsonLd = {
     subheading="Market updates, investment insights, and practical property-management guidance for Indianapolis rental owners."
   />
 
-  <section class="local-section">
+  <section class="local-section home-local-photo">
     <div class="container split">
       <div class="reveal">
         <h2>Indianapolis Property Management Built on Local Experience</h2>
@@ -162,7 +187,7 @@ const jsonLd = {
           <a class="btn btn-secondary" href="/indianapolis-property-management">Explore Our Process</a>
         </div>
       </div>
-      <div class="image-frame reveal" role="img" aria-label="Red Door placeholder home photo representing local Indianapolis property management">
+      <div class="image-frame reveal" role="img" aria-label="Members of the Red Door Property Management team outside a storefront">
         <div class="image-caption">Indianapolis knowledge, practical recommendations, and clear owner visibility.</div>
       </div>
     </div>
@@ -180,3 +205,120 @@ const jsonLd = {
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  /* ---- Hero: full-bleed team photo, headline centred above the team -- */
+  .hero-team {
+    min-height: clamp(720px, 100svh, 1040px);
+    place-items: start center;
+    background: var(--charcoal); /* replaces the global .hero image */
+  }
+  .hero-team::after { display: none; }
+
+  /* Pinned to the top so the team (heads ~43% down the photo) always
+     sits below the headline block. */
+  .hero-team-photo {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  .hero-team-shade {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(10, 12, 18, .8) 0%, rgba(10, 12, 18, .55) 26%, rgba(10, 12, 18, .1) 44%, rgba(10, 12, 18, 0) 75%, rgba(10, 12, 18, .25) 100%);
+  }
+
+  /* .hero already carries 104px top padding for the fixed header. The
+     photo is width-fitted, so the tallest head sits at ~27.7% of the
+     viewport width while the CTA row would end at a fixed ~323px: the
+     gap grows with screen width. This drops the text by 40% of that gap
+     (11.07vw - 129px) on top of a 34px base, so it stays proportionate. */
+  .hero-team .hero-content { padding: max(34px, calc(11.07vw - 95px)) 0 0; }
+
+  /* Global .hero h1 / .cta-row lift the text with translateY for the old
+     centred hero; this layout positions the block itself. */
+  .hero-team h1,
+  .hero-team .cta-row { transform: none; }
+  .hero-team h1 {
+    margin-bottom: 22px;
+    font-size: clamp(2.2rem, 3.6vw, 3.2rem);
+    font-weight: 500;
+    letter-spacing: -.02em;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, .35);
+  }
+
+  /* Phones and portrait tablets: a wide group photo can't be cover-cropped
+     into a tall screen without cutting people off, so the text sits on
+     charcoal and the photo follows at its own 3:2 ratio. */
+  @media (max-width: 900px) {
+    .hero-team {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      text-align: center;
+    }
+    .hero-team .hero-content {
+      order: 1;
+      width: calc(100% - 32px);
+      margin: 0 auto;
+      padding: 40px 0 34px;
+    }
+    .hero-team-photo {
+      order: 2;
+      position: static;
+      z-index: auto;
+      height: auto;
+      aspect-ratio: 3 / 2;
+    }
+    .hero-team-shade { display: none; }
+    .hero-team h1 {
+      max-width: 100%;
+      margin: 0 auto 22px;
+      font-size: clamp(1.7rem, 6.4vw, 2.4rem);
+      text-shadow: none;
+    }
+    .hero-team h1 span { display: inline; white-space: normal; }
+    .hero-team .cta-row { justify-content: center; }
+  }
+
+  /* ---- Team photos in the two image sections ------------------------
+     900px for normal screens, 1600px for high-density (the frames are
+     ~580px wide at most). Same darkening gradient the frames already use
+     so the caption stays legible. */
+  .home-why-photo :global(.image-frame),
+  .home-local-photo .image-frame {
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .home-why-photo :global(.image-frame) {
+    background-image: linear-gradient(180deg, rgba(7, 7, 7, .04) 45%, rgba(7, 7, 7, .5)), url('/images/team/team-photo-19-1600.webp');
+    background-image: linear-gradient(180deg, rgba(7, 7, 7, .04) 45%, rgba(7, 7, 7, .5)), image-set(url('/images/team/team-photo-19-900.webp') 1x, url('/images/team/team-photo-19-1600.webp') 2x);
+    background-position: center;
+    /* The default 520px-tall frame crops this 3:2 photo to ~80% of its
+       width and cuts off the outer arms. 4:3 shows ~89% with everyone in. */
+    min-height: 0;
+    aspect-ratio: 4 / 3;
+  }
+  .home-local-photo .image-frame {
+    background-image: linear-gradient(180deg, rgba(7, 7, 7, .04) 45%, rgba(7, 7, 7, .5)), url('/images/team/team-photo-14-1600.webp');
+    background-image: linear-gradient(180deg, rgba(7, 7, 7, .04) 45%, rgba(7, 7, 7, .5)), image-set(url('/images/team/team-photo-14-900.webp') 1x, url('/images/team/team-photo-14-1600.webp') 2x);
+    /* The group stands right of centre; keep everyone in frame. */
+    background-position: 72% center;
+  }
+  /* On phones the frames turn narrow and tall, which would crop people
+     out; show the whole 3:2 photo instead. */
+  @media (max-width: 720px) {
+    .home-why-photo :global(.image-frame),
+    .home-local-photo .image-frame {
+      min-height: 0;
+      aspect-ratio: 3 / 2;
+    }
+  }
+</style>

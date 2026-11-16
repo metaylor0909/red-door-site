@@ -15,7 +15,8 @@ interface Props {
   cityName: string;
   areaLabel: string;
   /** Overrides the photo's accessible label when a page swaps the photo
-      (the hidden /hero-preview/a2 mockup). Every real page omits it. */
+      via CSS (the homepage uses a team photo; see index.astro). The
+      -property-management pages omit it. */
   imageLabel?: string;
 }
 const { cityName, areaLabel, imageLabel = `Well-kept ${cityName} area rental home with a red front door` } = Astro.props;
