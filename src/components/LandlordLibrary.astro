@@ -18,6 +18,14 @@ export interface Post {
   dek: string;
   date: string;
   category?: string;
+  // YouTube ID of the post's own video. When set, clicking the thumbnail
+  // plays the video in place instead of only linking through to the post.
+  // Opt-in per post on purpose: the pillar set
+  // (pillar-landlord-library-posts.ts) borrows these same thumbnails for
+  // DIFFERENT posts, so deriving the ID from the thumbnail URL would play
+  // the wrong video there. Only set it once the ID is confirmed to be the
+  // post's own video.
+  videoId?: string;
 }
 interface Props {
   heading: string;
@@ -29,6 +37,7 @@ const DEFAULT_POSTS: Post[] = [
     slug: 'is-westfield-indiana-still-worth-investing-in-with-127-rental-days-on-market--market-report',
     thumbnail: 'https://i.ytimg.com/vi/H1syUd2uJfE/hqdefault.jpg',
     thumbnailAlt: "Westfield market report video thumbnail from Red Door's blog",
+    videoId: 'H1syUd2uJfE',
     title: 'Is Westfield, Indiana Still Worth Investing In With 127 Rental Days on Market?',
     dek: 'Westfield remains one of the strongest long-term growth markets in the Indianapolis area, but the rental side is sending a clear warning.',
     date: 'August 17, 2026',
@@ -37,6 +46,7 @@ const DEFAULT_POSTS: Post[] = [
     slug: 'is-noblesville-indiana-the-best-rental-market-near-indianapolis--july-2026-market-report',
     thumbnail: 'https://i.ytimg.com/vi/t6v_HJ0A1YA/hqdefault.jpg',
     thumbnailAlt: "Noblesville market report video thumbnail from Red Door's blog",
+    videoId: 't6v_HJ0A1YA',
     title: 'Is Noblesville, Indiana the Best Rental Market Near Indianapolis?',
     dek: 'Noblesville continues to stand out as one of the strongest investor markets in the Indianapolis metro.',
     date: 'August 17, 2026',
@@ -45,6 +55,7 @@ const DEFAULT_POSTS: Post[] = [
     slug: 'is-fishers-indiana-still-a-strong-rental-market-for-investors--july-2026-market-report',
     thumbnail: 'https://i.ytimg.com/vi/2CqrHkZik6g/hqdefault.jpg',
     thumbnailAlt: "Fishers market report video thumbnail from Red Door's blog",
+    videoId: '2CqrHkZik6g',
     title: 'Is Fishers, Indiana Still a Strong Rental Market for Investors?',
     dek: 'Fishers continues to show the kind of stability rental property investors want to see, with tight inventory and healthy demand.',
     date: 'August 14, 2026',
@@ -62,7 +73,18 @@ const { heading, subheading, posts = DEFAULT_POSTS } = Astro.props;
     <div class="library-grid reveal">
       {posts.map((post) => (
         <article class="article-card">
-          <div class="article-image" style={`--article-image:url('${post.thumbnail}')`} role="img" aria-label={post.thumbnailAlt}></div>
+          {post.videoId ? (
+            <button
+              class="article-image is-video"
+              type="button"
+              style={`--article-image:url('${post.thumbnail}')`}
+              data-inline-video={post.videoId}
+              data-video-title={post.title}
+              aria-label={`Play video: ${post.title}`}
+            ></button>
+          ) : (
+            <div class="article-image" style={`--article-image:url('${post.thumbnail}')`} role="img" aria-label={post.thumbnailAlt}></div>
+          )}
           <div class="article-body">
             <span class="category">{post.category ?? 'Market Report'}</span>
             <h3><a href={`/blog/${post.slug}`}>{post.title}</a></h3>
@@ -78,3 +100,27 @@ const { heading, subheading, posts = DEFAULT_POSTS } = Astro.props;
     </div>
   </div>
 </section>
+
+<script>
+  // Swap a clicked video thumbnail for the YouTube player, in place.
+  // Starting another card's video puts the first card's thumbnail back,
+  // which also stops its playback.
+  let playing: { player: HTMLElement; thumbnail: HTMLButtonElement } | null = null;
+  document.querySelectorAll<HTMLButtonElement>('[data-inline-video]').forEach((button) => {
+    button.addEventListener('click', () => {
+      if (playing) playing.player.replaceWith(playing.thumbnail);
+      const frame = document.createElement('iframe');
+      frame.src = `https://www.youtube.com/embed/${button.dataset.inlineVideo}?autoplay=1&playsinline=1&rel=0`;
+      frame.title = button.dataset.videoTitle ?? 'Video';
+      frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      frame.referrerPolicy = 'strict-origin-when-cross-origin';
+      frame.allowFullscreen = true;
+      const player = document.createElement('div');
+      player.className = 'article-image is-playing';
+      player.appendChild(frame);
+      button.replaceWith(player);
+      playing = { player, thumbnail: button };
+      frame.focus();
+    });
+  });
+</script>

@@ -2005,6 +2005,36 @@
       border-left: 14px solid var(--white);
     }
 
+    /* Landlord Library cards whose post has a confirmed videoId play the
+       video in place (LandlordLibrary.astro, Nov 17, 2026). */
+    button.article-image {
+      display: block;
+      width: 100%;
+      padding: 0;
+      border: 0;
+      cursor: pointer;
+    }
+    .article-image.is-video::before { transition: transform .18s ease, background .18s ease; }
+    .article-image.is-video:hover::before,
+    .article-image.is-video:focus-visible::before {
+      background: var(--brand-mid);
+      transform: scale(1.08);
+    }
+    .article-image.is-video:focus-visible {
+      outline: 3px solid var(--brand-mid);
+      outline-offset: -3px;
+    }
+    .article-image.is-playing { background: #000; }
+    .article-image.is-playing::before,
+    .article-image.is-playing::after { content: none; }
+    .article-image.is-playing iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
     .article-body {
       padding: 22px;
     }
