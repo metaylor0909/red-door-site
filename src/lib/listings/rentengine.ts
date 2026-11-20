@@ -2,10 +2,12 @@
 // project. Base URL confirmed via the public OpenAPI spec (see
 // claude/listings-build-notes.md): https://app.rentengine.io/api/public/v1.
 //
-// Always query with statuses=Available — /units otherwise returns the
+// Always query with a statuses filter — /units otherwise returns the
 // account's entire multi-year unit history (confirmed: 93 of the first
-// 100 unfiltered records were status "Leased"). On Hold units are
-// deliberately excluded too (decided Sep 18, see the research doc).
+// 100 unfiltered records were status "Leased"). The site lists Available
+// and On Hold units, matching RentEngine's own listings widget. On Hold
+// was excluded from Sep 18 until Nov 20, 2026, when Michael asked for On
+// Hold homes to post to the website too.
 //
 // Confirmed 2026-09-20 against a real call: /units rejects an
 // `account_id` query param outright (400, "must NOT have additional
@@ -24,6 +26,7 @@
 // inventory.
 
 import type { RentEngineUnit } from './types';
+import { attachActiveSpecials } from './specials';
 
 const BASE_URL = 'https://app.rentengine.io/api/public/v1';
 
@@ -84,15 +87,19 @@ export function listingsKey(): string | undefined {
   return key || undefined;
 }
 
-/** Fetches every currently-Available unit, paginating through RentEngine's
- * 100-per-page limit until a short page signals the end. */
-export async function fetchAllAvailableUnits(config: ListingsFetchConfig): Promise<RentEngineUnit[]> {
+/** Unit statuses the website lists. */
+export const LISTED_STATUSES = ['Available', 'On Hold'];
+
+/** Fetches every unit the website lists (LISTED_STATUSES), paginating
+ * through RentEngine's 100-per-page limit until a short page signals the
+ * end, with each unit's running special offers attached. */
+export async function fetchAllListedUnits(config: ListingsFetchConfig): Promise<RentEngineUnit[]> {
   const units: RentEngineUnit[] = [];
   let pageNumber = 0;
 
   while (true) {
     const url = new URL(`${BASE_URL}/units`);
-    url.searchParams.set('statuses', 'Available');
+    url.searchParams.set('statuses', LISTED_STATUSES.join(','));
     url.searchParams.set('limit', '100');
     url.searchParams.set('page_number', String(pageNumber));
 
@@ -106,13 +113,13 @@ export async function fetchAllAvailableUnits(config: ListingsFetchConfig): Promi
     }
 
     const page = (await response.json()) as RentEngineUnit[];
-    units.push(...page.filter((u) => u.status === 'Available').map(normalizeUnit));
+    units.push(...page.filter((u) => LISTED_STATUSES.includes(u.status)).map(normalizeUnit));
 
     if (page.length < 100) break;
     pageNumber += 1;
   }
 
-  return units;
+  return attachActiveSpecials(units, config.accountId || RENTENGINE_ACCOUNT_ID);
 }
 
 export interface LeasedUnitLocation {

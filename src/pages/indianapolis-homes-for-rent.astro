@@ -66,7 +66,7 @@
 //     nest them, or the block centers instead of sitting flush-left.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { ORGANIZATION_JSONLD } from '../lib/schema/organization';
-import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID, isKeyRejected, listingsKey } from '../lib/listings/rentengine';
+import { fetchAllListedUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID, isKeyRejected, listingsKey } from '../lib/listings/rentengine';
 import { loadCityContentMap } from '../lib/listings/homes-for-rent-content';
 import type { RentEngineUnit } from '../lib/listings/types';
 import { petPolicy, petBadgeHtml, PET_BADGES, PET_DRAWER_HTML, type PetPolicy } from '../lib/listings/pets';
@@ -94,7 +94,7 @@ if (!apiKey) {
   );
 } else {
   try {
-    units = await fetchAllAvailableUnits({
+    units = await fetchAllListedUnits({
       apiKey,
       accountId: import.meta.env.RENTENGINE_LISTINGS_ACCOUNT_ID || RENTENGINE_ACCOUNT_ID,
     });
@@ -148,6 +148,8 @@ interface ListingRecord {
   photoCount: number;
   photo: string;
   detailPath: string;
+  /** First running special offer from RentEngine, shown as the card banner. */
+  special: string | null;
 }
 
 function toListingRecord(unit: RentEngineUnit): ListingRecord {
@@ -174,6 +176,7 @@ function toListingRecord(unit: RentEngineUnit): ListingRecord {
     photoCount: visiblePhotos.length,
     photo: visiblePhotos[0]?.original ?? '',
     detailPath: `/homes-for-rent/${citySlug(unit.address.city)}/${addressSlug(unit)}`,
+    special: unit.active_specials?.[0]?.description ?? null,
   };
 }
 
@@ -399,6 +402,7 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
               >
                 <div class="listing-card-photo">
                   {record.photo && <img src={record.photo} alt={record.address} loading="lazy" />}
+                  {record.special && <span class="listing-card-special">{record.special}</span>}
                   {record.photoCount > 0 && <span class="listing-card-photocount">&#128247; {record.photoCount}</span>}
                 </div>
                 <div class="listing-card-body">
@@ -480,9 +484,10 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
 
       function cardHtml(d) {
         var photoBadge = d.photoCount ? '<span class="listing-card-photocount">📷 ' + d.photoCount + '</span>' : '';
+        var specialBanner = d.special ? '<span class="listing-card-special">' + escapeHtml(d.special) + '</span>' : '';
         return (
           '<a class="listing-card" href="' + escapeHtml(d.detailPath) + '" data-listing-id="' + d.id + '" data-city="' + escapeHtml(d.citySlug) + '" data-beds="' + d.beds + '" data-rent="' + d.rent + '" data-sqft="' + (d.sqft || 0) + '" data-pets="' + escapeHtml(d.petPolicy) + '">' +
-          '<div class="listing-card-photo"><img src="' + escapeHtml(d.photo) + '" alt="' + escapeHtml(d.address) + '" loading="lazy">' + photoBadge + '</div>' +
+          '<div class="listing-card-photo"><img src="' + escapeHtml(d.photo) + '" alt="' + escapeHtml(d.address) + '" loading="lazy">' + specialBanner + photoBadge + '</div>' +
           '<div class="listing-card-body">' +
           '<p class="listing-card-rent">' + (d.rentDisplay || money(d.rent)) + '<span>/mo</span></p>' +
           '<p class="listing-card-address">' + escapeHtml(d.address) + '</p>' +

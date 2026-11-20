@@ -47,9 +47,21 @@ grid prototype but can't support a real detail page.
   "Leased"` — a full unit ledger going back years, not a current-inventory
   feed. **Always query with `statuses=Available`** (22 right now).
 - **`On Hold` (8 right now) is a separate status from `Available`.**
-  **Decided (Sep 18): hide entirely.** Query `/units` with
-  `statuses=Available` only — matches the original query recommendation
-  above, no separate On Hold handling needed.
+  ~~Decided (Sep 18): hide entirely.~~ **Reversed Nov 20, 2026:** On Hold
+  units post to the site like Available ones, matching RentEngine's own
+  widget (which lists them with no badge). `/units` is queried with
+  `statuses=Available,On Hold` (`LISTED_STATUSES` in
+  `src/lib/listings/rentengine.ts`).
+- **Special offers (Nov 20, 2026).** RentEngine's Special Offer entries
+  (Price step) show as a red banner across the top of each listing card's
+  photo and the detail page's main photo, plus a "Special offer" box atop
+  the detail sidebar with the end date when one is set. Read from the
+  public `/marketing/listings/{accountId}` feed (merges unit, floorplan
+  and building specials, drops expired ones), falling back to the unit's
+  own `/units` `specials`; filtered again to today's date at build time.
+  See `src/lib/listings/specials.ts`. An offer that ends drops off at the
+  next rebuild — the site has no scheduled rebuild, only listing and blog
+  webhooks.
 - **Current 22 Available units skew heavily to Indianapolis: 17 of 22.** The
   rest are one each in Westfield, Noblesville, Carmel, Fishers, and
   Pendleton. Beds range 1–4, rent $845–$2,545. **This makes the thin/empty
@@ -509,8 +521,8 @@ without a login:
 - Confirm Apply now points at `custom_application_url` (AppFolio), not
   Findigs — check with Michael whether the live PMW nav's Findigs link is
   stale or a separate flow.
-- ✅ **Decided (Sep 18): hide `On Hold` units entirely** — query
-  `/units?statuses=Available` only.
+- ✅ ~~Decided (Sep 18): hide `On Hold` units entirely~~ — reversed Nov 20,
+  2026: On Hold units are listed too (see "Real data findings" above).
 - ✅ **Decided (Sep 18): hotlink AppFolio-hosted listing photos**, don't
   mirror/cache.
 - Get the city list for which cities get a `-market-reports` page.
