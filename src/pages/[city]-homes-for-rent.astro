@@ -42,7 +42,7 @@
 import { env } from 'cloudflare:workers';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { ORGANIZATION_JSONLD } from '../lib/schema/organization';
-import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID, isKeyRejected, listingsKey } from '../lib/listings/rentengine';
+import { fetchAllListedUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID, isKeyRejected, listingsKey } from '../lib/listings/rentengine';
 import type { RentEngineUnit } from '../lib/listings/types';
 import { petPolicy, petBadgeHtml } from '../lib/listings/pets';
 import { loadCityContentMap, loadCityMarketData } from '../lib/listings/homes-for-rent-content';
@@ -71,7 +71,7 @@ export async function getStaticPaths() {
     );
   } else {
     try {
-      units = await fetchAllAvailableUnits({
+      units = await fetchAllListedUnits({
         apiKey,
         accountId: import.meta.env.RENTENGINE_LISTINGS_ACCOUNT_ID || RENTENGINE_ACCOUNT_ID,
       });
@@ -252,10 +252,12 @@ const jsonLd = { '@context': 'https://schema.org', '@graph': jsonLdGraph };
               const photo = unit.marketing_photos.find((p) => !p.hidden)?.original;
               const href = `/homes-for-rent/${citySlug(unit.address.city)}/${addressSlug(unit)}`;
               const rent = unit.target_rental_rate != null ? `$${unit.target_rental_rate.toLocaleString()}` : 'Contact for pricing';
+              const special = unit.active_specials?.[0]?.description;
               return (
                 <a class="listing-card" href={href}>
                   <div class="listing-card-photo">
                     {photo && <img src={photo} alt={unit.address.formatted_address} loading="lazy" />}
+                    {special && <span class="listing-card-special">{special}</span>}
                   </div>
                   <div class="listing-card-body">
                     <p class="listing-card-rent">

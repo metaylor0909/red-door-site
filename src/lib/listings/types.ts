@@ -23,7 +23,7 @@
 //   - Fee `amount` values are inconsistently numbers or numeric strings
 //     within the SAME array on the SAME unit (confirmed: one unit's
 //     monthly_fees had `{amount: 45}` and `{amount: "35"}` side by side)
-//     — `fetchAllAvailableUnits` normalizes these to real numbers before
+//     — `fetchAllListedUnits` normalizes these to real numbers before
 //     returning, so downstream code can trust `UnitFee.amount` is always
 //     a number despite the API's own inconsistency.
 //   - `security_deposit_amount` is real (not absent, as first assumed
@@ -43,7 +43,7 @@ export interface UnitAddress {
 export interface UnitFee {
   name: string;
   type: string;
-  /** Always a real number after fetchAllAvailableUnits's normalization —
+  /** Always a real number after fetchAllListedUnits's normalization —
    * see the module header on the API's own numeric-string inconsistency. */
   amount: number;
 }
@@ -65,9 +65,18 @@ export type ParkingType =
   | 'Private Garage'
   | 'Paid Parking';
 
+/** A move-in special ("special offer") from RentEngine's Price step. */
+export interface UnitSpecial {
+  description: string;
+  /** YYYY-MM-DD */
+  start_date: string;
+  /** YYYY-MM-DD; omitted for an ongoing offer. */
+  end_date?: string | null;
+}
+
 export interface RentEngineUnit {
   id: number;
-  status: string; // confirmed values seen: "Available", "Leased", "On Hold" — always query statuses=Available
+  status: string; // confirmed values seen: "Available", "Leased", "On Hold" — the site lists Available and On Hold (LISTED_STATUSES in rentengine.ts)
   property_type: string;
   address: UnitAddress;
   bedrooms: number;
@@ -110,6 +119,12 @@ export interface RentEngineUnit {
 
   key_access: string | null;
   showing_method: string | null;
+
+  /** The unit's own specials as /units returns them, expired ones included. */
+  specials?: UnitSpecial[];
+  /** Set by fetchAllListedUnits: specials running today, from RentEngine's
+   * marketing feed (falls back to `specials`). Drives the listing banners. */
+  active_specials?: UnitSpecial[];
 
   updated_at?: string;
 }

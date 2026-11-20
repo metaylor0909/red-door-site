@@ -1,7 +1,7 @@
 ---
 // /homes-for-rent/{city}/{address-slug} — RentEngine listing detail page.
 //
-// Static, built once per Available unit via getStaticPaths — CLAUDE.md's
+// Static, built once per listed unit (Available or On Hold) via getStaticPaths — CLAUDE.md's
 // locked decision: "Generate a static page per listing at build time; use
 // a webhook on the units table to trigger rebuilds." NOT an SSR route; the
 // rebuild-on-webhook piece is separate, later work.
@@ -24,11 +24,12 @@
 //   - The sitewide `section` double-padding bug — `#listing-main` zeroes
 //     its own section padding and controls spacing via `.listing-grid`.
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { fetchAllAvailableUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID, isKeyRejected, listingsKey } from '../../../lib/listings/rentengine';
+import { fetchAllListedUnits, addressSlug, citySlug, RENTENGINE_ACCOUNT_ID, isKeyRejected, listingsKey } from '../../../lib/listings/rentengine';
 import { haversineMiles } from '../../../lib/rental-analysis/geo';
 import type { RentEngineUnit } from '../../../lib/listings/types';
 import { petPolicy, petBadgeHtml } from '../../../lib/listings/pets';
 import { homesForRentHub } from '../../../lib/listings/hub';
+import { specialEndLabel } from '../../../lib/listings/specials';
 
 // Mapbox public token (`pk.` prefix — a publishable client-side key, not a
 // secret) already embedded directly in the approved static reference HTML
@@ -53,7 +54,7 @@ export async function getStaticPaths() {
 
   let units: RentEngineUnit[] = [];
   try {
-    units = await fetchAllAvailableUnits({
+    units = await fetchAllListedUnits({
       apiKey,
       accountId: import.meta.env.RENTENGINE_LISTINGS_ACCOUNT_ID || RENTENGINE_ACCOUNT_ID,
     });
@@ -117,6 +118,9 @@ const propertyTypeLabel = (unit.property_type || 'Home').toUpperCase();
 const bedsLabel = unit.bedrooms === 0 ? 'Studio' : `${unit.bedrooms}BR`;
 const bathsLabel = `${unit.bathrooms}BA`;
 const rentDisplay = unit.target_rental_rate != null ? `$${unit.target_rental_rate.toLocaleString()}` : 'Contact for pricing';
+// Running special offers from RentEngine (see lib/listings/specials.ts):
+// the first one bands the main photo, all of them sit atop the sidebar.
+const specials = unit.active_specials ?? [];
 
 // --- SEO: title/meta/H1/schema must all include the city plainly
 // (CLAUDE.md's RentEngine integration note, Sep 11) — individual listing
@@ -271,6 +275,7 @@ const jsonLd = {
           <div class="listing-gallery" data-listing-gallery>
             <button type="button" class="gallery-main" data-photo-index="0">
               <img src={mainPhoto} alt={unit.address.formatted_address} loading="eager" />
+              {specials.length > 0 && <span class="listing-card-special gallery-special">{specials[0].description}</span>}
             </button>
             {galleryTiles.length > 0 && (
               <div class={`gallery-thumbs gallery-thumbs-${galleryTiles.length}`}>
@@ -394,6 +399,20 @@ const jsonLd = {
 
       <aside class="listing-sidebar reveal">
         <div class="fee-block">
+          {specials.length > 0 && (
+            <div class="listing-special-offer">
+              <p class="listing-special-kicker">{specials.length > 1 ? 'Special offers' : 'Special offer'}</p>
+              {specials.map((s) => {
+                const ends = specialEndLabel(s);
+                return (
+                  <p class="listing-special-text">
+                    {s.description}
+                    {ends && <span class="listing-special-ends">Offer ends {ends}</span>}
+                  </p>
+                );
+              })}
+            </div>
+          )}
           {unit.showing_method && <span class="badge">{unit.showing_method}</span>}
           <p class="listing-rent" style="margin-bottom:6px">{rentDisplay}<span>/month</span></p>
           <div class="sidebar-cta-stack">
@@ -506,10 +525,12 @@ const jsonLd = {
               const nearbyPhoto = nearby.marketing_photos.find((p) => !p.hidden)?.original;
               const nearbyHref = `/homes-for-rent/${citySlug(nearby.address.city)}/${addressSlug(nearby)}`;
               const nearbyRent = nearby.target_rental_rate != null ? `$${nearby.target_rental_rate.toLocaleString()}` : 'Contact for pricing';
+              const nearbySpecial = nearby.active_specials?.[0]?.description;
               return (
                 <a class="listing-card" href={nearbyHref}>
                   <div class="listing-card-photo">
                     {nearbyPhoto && <img src={nearbyPhoto} alt={nearby.address.formatted_address} loading="lazy" />}
+                    {nearbySpecial && <span class="listing-card-special">{nearbySpecial}</span>}
                   </div>
                   <div class="listing-card-body">
                     <p class="listing-card-rent">{nearbyRent}<span>/mo</span></p>
